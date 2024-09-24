@@ -79,7 +79,7 @@ extension ThemeDataExtension on ThemeData {
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
-          secondary: const Color(0xffFF4C14),
+          secondary: const Color(0xffB4B4B4),
           // background: const Color(0xFF161A26),
           background: Colors.transparent,
           borderColorPrimary: const Color(0xff5E6FA5),
