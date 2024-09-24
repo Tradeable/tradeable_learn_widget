@@ -53,16 +53,21 @@ class CustomColors {
   final Color borderColorSecondary;
   final Color cardColorPrimary;
   final Color cardColorSecondary;
+  final Color bullishColor;
+  final Color bearishColor;
+  final Color selectedItemColor;
 
-  CustomColors({
-    required this.primary,
-    required this.secondary,
-    required this.background,
-    required this.borderColorPrimary,
-    required this.borderColorSecondary,
-    required this.cardColorPrimary,
-    required this.cardColorSecondary,
-  });
+  CustomColors(
+      {required this.primary,
+      required this.secondary,
+      required this.background,
+      required this.borderColorPrimary,
+      required this.borderColorSecondary,
+      required this.cardColorPrimary,
+      required this.cardColorSecondary,
+      required this.bullishColor,
+      required this.bearishColor,
+      required this.selectedItemColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -75,7 +80,10 @@ extension ThemeDataExtension on ThemeData {
           borderColorPrimary: const Color(0xffED1164),
           borderColorSecondary: const Color(0xffB4B4B4),
           cardColorPrimary: const Color(0xffF9EBEF),
-          cardColorSecondary: const Color(0xffe2e2e2));
+          cardColorSecondary: const Color(0xffe2e2e2),
+          bullishColor: Colors.green,
+          bearishColor: Colors.red,
+          selectedItemColor: Colors.purple);
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -85,7 +93,10 @@ extension ThemeDataExtension on ThemeData {
           borderColorPrimary: const Color(0xff5E6FA5),
           borderColorSecondary: const Color(0xffE3A85B),
           cardColorPrimary: const Color(0xff222838),
-          cardColorSecondary: const Color(0xFF463B32));
+          cardColorSecondary: const Color(0xFF463B32),
+          bullishColor: Colors.green,
+          bearishColor: Colors.red,
+          selectedItemColor: Colors.purple);
     }
   }
 

@@ -63,7 +63,8 @@ class _ATMWidgetState extends State<ATMWidget> {
           child: ButtonWidget(
               color:
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,
-              btnContent: "Submit"),
+              btnContent: "Submit",
+              onTap: () {}),
         ),
       ],
     );

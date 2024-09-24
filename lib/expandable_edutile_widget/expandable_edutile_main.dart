@@ -54,7 +54,8 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
           ),
           SizedBox(
             height: 50,
-            child: ButtonWidget(color: colors.primary, btnContent: "Next"),
+            child: ButtonWidget(
+                color: colors.primary, btnContent: "Next", onTap: () {}),
           ),
         ],
       ),
