@@ -61,9 +61,9 @@ class _ATMWidgetState extends State<ATMWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
-              color: userResponse.isNotEmpty
-                  ? colors.primary
-                  : colors.secondary),
+              color:
+                  userResponse.isNotEmpty ? colors.primary : colors.secondary,
+              btnContent: "Submit"),
         ),
       ],
     );

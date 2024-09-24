@@ -3,8 +3,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ButtonWidget extends StatelessWidget {
   final Color color;
+  final String btnContent;
 
-  const ButtonWidget({super.key, required this.color});
+  const ButtonWidget(
+      {super.key, required this.color, required this.btnContent});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class ButtonWidget extends StatelessWidget {
         color: color,
       ),
       child: Center(
-        child: Text("Submit",
+        child: Text(btnContent,
             style: textStyles.mediumBold
                 .copyWith(color: Colors.white, fontSize: 16)),
       ),

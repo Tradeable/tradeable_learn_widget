@@ -112,7 +112,8 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                     ButtonWidget(
                         color: answeredAllCorrectly()
                             ? colors.primary
-                            : colors.secondary),
+                            : colors.secondary,
+                        btnContent: "Submit"),
                     const SizedBox(height: 10),
                   ],
                 ),
