@@ -1,6 +1,8 @@
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
+import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edutile_model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 void main() {
@@ -47,6 +49,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "Dropdown Widget",
                   destination: AtmDropdownWidgetPage(),
+                ),
+                NavigationButton(
+                  text: "ExpandableEduTile Widget",
+                  destination: ExpandableEduCornerPage(),
                 ),
               ],
             ),
@@ -105,6 +111,19 @@ class AtmDropdownWidgetPage extends StatelessWidget {
       body: ATMWidget(
         model: ATMWidgetModel(atmItmDropdownModel),
       ),
+    );
+  }
+}
+
+class ExpandableEduCornerPage extends StatelessWidget {
+  const ExpandableEduCornerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: ExpandableEduTileMain(
+          model: ExpandableEduTileModel(expandableEduTileModelData)),
     );
   }
 }
