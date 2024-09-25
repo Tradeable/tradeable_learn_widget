@@ -14,3 +14,9 @@ export 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edut
 
 export 'package:tradeable_learn_widget/candle_body_select/candle_body_select.dart';
 export 'package:tradeable_learn_widget/candle_body_select/candle_body_select_model.dart';
+
+export 'package:tradeable_learn_widget/candle_match_the_pair/candle_part_match.dart';
+export 'package:tradeable_learn_widget/candle_match_the_pair/match_the_pair_model.dart';
+
+export 'package:tradeable_learn_widget/en1_matchthepair/en1_widget.dart';
+export 'package:tradeable_learn_widget/en1_matchthepair/en1_model.dart';
