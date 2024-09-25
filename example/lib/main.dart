@@ -1,6 +1,7 @@
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
+import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "Candle Match part Widget",
                   destination: CandlePartMatchPage(),
+                ),
+                NavigationButton(
+                  text: "EN1 Match the pair Widget",
+                  destination: EN1Page(),
                 ),
               ],
             ),
@@ -159,6 +164,18 @@ class CandlePartMatchPage extends StatelessWidget {
       title: "Problem",
       body: CandlePartMatchLink(
           model: CandleMatchThePairModel(candlePartMatchModelData)),
+    );
+  }
+}
+
+class EN1Page extends StatelessWidget {
+  const EN1Page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: EN1(model: EN1Model(en1DataModel)),
     );
   }
 }
