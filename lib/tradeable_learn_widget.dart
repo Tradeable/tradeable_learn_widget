@@ -20,3 +20,6 @@ export 'package:tradeable_learn_widget/candle_match_the_pair/match_the_pair_mode
 
 export 'package:tradeable_learn_widget/en1_matchthepair/en1_widget.dart';
 export 'package:tradeable_learn_widget/en1_matchthepair/en1_model.dart';
+
+export 'package:tradeable_learn_widget/candle_select_question/candle_select_model.dart';
+export 'package:tradeable_learn_widget/candle_select_question/candle_select_question.dart';

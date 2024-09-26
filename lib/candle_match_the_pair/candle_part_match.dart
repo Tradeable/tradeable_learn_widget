@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/candle_match_the_pair/match_the_pair_model.dart';
 import 'package:tradeable_learn_widget/candle_match_the_pair/widgets/match_painter.dart';
 import 'package:tradeable_learn_widget/candle_match_the_pair/widgets/option_container_widget.dart';
+import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -192,8 +193,6 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
   }
 
   void submitResponse() {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
     if (options != null && model.state == CandlePartMatchLinkState.loadUI) {
       int correctCount = options!.fold<int>(
           0,
@@ -208,42 +207,8 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
     showModalBottomSheet(
         isDismissible: false,
         context: context,
-        builder: (context) => Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(14),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12))),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 12),
-                      child: Image.asset(
-                        model.isCorrect
-                            ? "assets/btmsheet_correct.png"
-                            : "assets/btmsheet_incorrect.png",
-                        package: 'tradeable_learn_widget/lib',
-                        height: 120,
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                    Text(model.isCorrect ? "Great!" : "Incorrect",
-                        style: textStyles.largeBold),
-                    Text("Explanation goes here",
-                        style: textStyles.smallNormal),
-                    const SizedBox(height: 20),
-                    ButtonWidget(
-                        color: colors.primary,
-                        btnContent: "Next",
-                        onTap: () {}),
-                  ],
-                ),
-              ),
-            ));
+        builder: (context) => BottomSheetWidget(
+            isCorrect: model.isCorrect,
+            explanationString: "Explanation goes here"));
   }
 }
