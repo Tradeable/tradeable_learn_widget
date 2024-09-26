@@ -5,6 +5,7 @@ import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
+import 'package:example/data_model/mcq_static_model.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
@@ -72,6 +73,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "Candle Select Question Widget",
                   destination: CandleSelectQuestionPage(),
+                ),
+                NavigationButton(
+                  text: "MCQ Question Widget",
+                  destination: MCQQuestionPage(),
                 ),
               ],
             ),
@@ -193,7 +198,19 @@ class CandleSelectQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandleSelectQuestion(
-          type: '', model: CandleSelectModel(candleSelectQuestionStaticModel)),
+          model: CandleSelectModel(candleSelectQuestionStaticModel)),
+    );
+  }
+}
+
+class MCQQuestionPage extends StatelessWidget {
+  const MCQQuestionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: MCQQuestion(model: MCQModel(mcqStaticModel)),
     );
   }
 }

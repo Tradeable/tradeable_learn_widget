@@ -16,11 +16,9 @@ import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CandleSelectQuestion extends StatefulWidget {
-  final String type;
   final CandleSelectModel model;
 
-  const CandleSelectQuestion(
-      {super.key, required this.type, required this.model});
+  const CandleSelectQuestion({super.key, required this.model});
 
   @override
   State<CandleSelectQuestion> createState() => _CandleSelectQuestionState();
@@ -103,6 +101,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
             value: model.helperHorizontalLineValue,
             color: Colors.blue,
             textColor: colors.axisColor,
+            lineColor: colors.primary,
             onUpdate: (p0) {
               setState(() {
                 model.helperHorizontalLineValue = p0;
@@ -129,6 +128,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
             value: model.helperHorizontalLineValue,
             color: Colors.blue,
             textColor: colors.axisColor,
+            lineColor: colors.primary,
             onUpdate: (p0) {
               setState(() {
                 model.helperHorizontalLineValue = p0;
@@ -235,7 +235,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
         candle.selectedByModel = true;
       }
     }
-    if (!widget.type.contains("STATIC")) {
+    if (!widget.model.type.contains("STATIC")) {
       _loadCandlesTillEnd();
     }
     model.selectedCandles.sort();
@@ -256,7 +256,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   void initChartData() {
-    if (widget.type == "MultipleCandleSelect_STATIC") {
+    if (widget.model.type == "MultipleCandleSelect_STATIC") {
       _loadAllCandles();
     } else {
       _loadCandlesTillAt();

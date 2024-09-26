@@ -7,13 +7,15 @@ class LineLayer extends ChartLayer {
   final Color color;
   final Color textColor;
   final Function(double)? onUpdate;
+  final Color lineColor;
 
   LineLayer(
       {required this.id,
       required this.value,
       required this.color,
       required this.textColor,
-      this.onUpdate});
+      this.onUpdate,
+      required this.lineColor});
 
   static draw(
       {required Canvas canvas,
@@ -64,6 +66,8 @@ class LineLayer extends ChartLayer {
             size.width,
             ChartLayer.cocaY(
                 layer.value, h, xh, yh, vMax, vMin, originOffset, origin)),
-        Paint()..color = layer.color);
+        Paint()
+          ..color = layer.lineColor
+          ..strokeWidth = 1.4);
   }
 }

@@ -23,3 +23,6 @@ export 'package:tradeable_learn_widget/en1_matchthepair/en1_model.dart';
 
 export 'package:tradeable_learn_widget/candle_select_question/candle_select_model.dart';
 export 'package:tradeable_learn_widget/candle_select_question/candle_select_question.dart';
+
+export 'package:tradeable_learn_widget/mcq_question/mcq_model.dart';
+export 'package:tradeable_learn_widget/mcq_question/mcq_question.dart';
