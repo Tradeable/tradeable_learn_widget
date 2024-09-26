@@ -4,6 +4,7 @@ import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
+import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "MCQ Question Widget",
                   destination: MCQQuestionPage(),
+                ),
+                NavigationButton(
+                  text: "Horizontal line Widget",
+                  destination: HorizontalLineQuestionPage(),
                 ),
               ],
             ),
@@ -211,6 +216,19 @@ class MCQQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MCQQuestion(model: MCQModel(mcqStaticModel)),
+    );
+  }
+}
+
+class HorizontalLineQuestionPage extends StatelessWidget {
+  const HorizontalLineQuestionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: HorizontalLineQuestion(
+          model: HorizontalLineModel(horizontalLineModel)),
     );
   }
 }

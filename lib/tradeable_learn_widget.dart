@@ -26,3 +26,6 @@ export 'package:tradeable_learn_widget/candle_select_question/candle_select_ques
 
 export 'package:tradeable_learn_widget/mcq_question/mcq_model.dart';
 export 'package:tradeable_learn_widget/mcq_question/mcq_question.dart';
+
+export 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
+export 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_question.dart';

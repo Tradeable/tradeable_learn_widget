@@ -82,6 +82,7 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                     const SizedBox(height: 10),
                     Container(
                       width: double.infinity,
+                      height: 50,
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
                         border: Border.all(
