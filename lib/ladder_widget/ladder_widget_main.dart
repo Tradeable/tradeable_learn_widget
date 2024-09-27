@@ -163,6 +163,7 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
 
   Widget buildDragTarget(LadderCell cell) {
     final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -174,6 +175,9 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
             ? DottedBorderWidget(
                 backgroundColor: Colors.transparent,
                 borderColor: colors.borderColorPrimary,
+                child: Center(
+                  child: Text("         ", style: textStyles.largeBold),
+                ),
               )
             : buildDraggableOption(cell.capturedOption!);
       },

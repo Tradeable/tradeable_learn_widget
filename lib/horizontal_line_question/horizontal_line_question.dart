@@ -113,10 +113,10 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   Widget renderQuestion() {
+    final textStyles = Theme.of(context).customTextStyles;
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Text(model.question,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Text(model.question, style: textStyles.mediumNormal),
     );
   }
 
