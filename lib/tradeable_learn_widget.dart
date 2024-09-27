@@ -32,3 +32,6 @@ export 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_
 
 export 'package:tradeable_learn_widget/mcq_candle_question/mcq_candle_model.dart';
 export 'package:tradeable_learn_widget/mcq_candle_question/mcq_candle_question.dart';
+
+export 'package:tradeable_learn_widget/video_educorner/video_educorner_model.dart';
+export 'package:tradeable_learn_widget/video_educorner/video_educorner.dart';

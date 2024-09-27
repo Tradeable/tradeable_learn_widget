@@ -8,6 +8,7 @@ import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/video_educorner_model.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
@@ -87,6 +88,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "MCQ Candle Image Question Widget",
                   destination: MCQCandleImagePage(),
+                ),
+                NavigationButton(
+                  text: "Video Educorner Widget",
+                  destination: VideoEducornerPage(),
                 ),
               ],
             ),
@@ -246,6 +251,18 @@ class MCQCandleImagePage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MCQCandleQuestion(model: MCQCandleModel(mcqCandleImageModel)),
+    );
+  }
+}
+
+class VideoEducornerPage extends StatelessWidget {
+  const VideoEducornerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: VideoEduCorner(model: VideoEduCornerModel(videoEducornerModel)),
     );
   }
 }
