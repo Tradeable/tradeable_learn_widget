@@ -1,4 +1,5 @@
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
+import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
@@ -97,6 +98,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "Fno Scenario Widget",
                   destination: FnoScenarioPage(),
+                ),
+                NavigationButton(
+                  text: "Bucket Widget V1",
+                  destination: BucketWidgetPage(),
                 ),
               ],
             ),
@@ -280,6 +285,19 @@ class FnoScenarioPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: DragAndDropMatch(model: LadderModel(optionsScenarioModel)),
+    );
+  }
+}
+
+class BucketWidgetPage extends StatelessWidget {
+  const BucketWidgetPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body:
+          BucketContainerV1(model: BucketContainerModel(bucketContainerV1Model)),
     );
   }
 }
