@@ -35,3 +35,8 @@ export 'package:tradeable_learn_widget/mcq_candle_question/mcq_candle_question.d
 
 export 'package:tradeable_learn_widget/video_educorner/video_educorner_model.dart';
 export 'package:tradeable_learn_widget/video_educorner/video_educorner.dart';
+
+export 'package:tradeable_learn_widget/drag_and_drop_match_widget/drag_and_drop_match.dart';
+
+export 'package:tradeable_learn_widget/bucket_widgetv1/bucket_container.dart';
+export 'package:tradeable_learn_widget/bucket_widgetv1/models/bucket_model.dart';

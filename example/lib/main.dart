@@ -8,6 +8,7 @@ import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
@@ -92,6 +93,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "Video Educorner Widget",
                   destination: VideoEducornerPage(),
+                ),
+                NavigationButton(
+                  text: "Fno Scenario Widget",
+                  destination: FnoScenarioPage(),
                 ),
               ],
             ),
@@ -263,6 +268,18 @@ class VideoEducornerPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: VideoEduCorner(model: VideoEduCornerModel(videoEducornerModel)),
+    );
+  }
+}
+
+class FnoScenarioPage extends StatelessWidget {
+  const FnoScenarioPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: DragAndDropMatch(model: LadderModel(optionsScenarioModel)),
     );
   }
 }

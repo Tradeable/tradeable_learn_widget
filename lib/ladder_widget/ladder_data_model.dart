@@ -29,6 +29,7 @@ class LadderUnit {
 
 class LadderModel {
   final dynamic data;
+  late String type;
   late String? title;
   late String question;
   late List<LadderCell> phraseColumn;
@@ -37,6 +38,7 @@ class LadderModel {
   late String? content2;
 
   LadderModel(this.data) {
+    type = data["type"];
     title = data["title"] ?? "";
     question = data["question"];
     phraseColumn = (data["phrase_column"] as List)
