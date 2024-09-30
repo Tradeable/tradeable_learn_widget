@@ -3,6 +3,7 @@ import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
+import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
@@ -102,6 +103,10 @@ class MyHomePage extends StatelessWidget {
                 NavigationButton(
                   text: "Bucket Widget V1",
                   destination: BucketWidgetPage(),
+                ),
+                NavigationButton(
+                  text: "EduCorner Widget V1",
+                  destination: EducornerV1Page(),
                 ),
               ],
             ),
@@ -298,6 +303,19 @@ class BucketWidgetPage extends StatelessWidget {
       title: "Problem",
       body:
           BucketContainerV1(model: BucketContainerModel(bucketContainerV1Model)),
+    );
+  }
+}
+
+class EducornerV1Page extends StatelessWidget {
+  const EducornerV1Page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body:
+      EduCornerV1(model: EduCornerModel(educornerV1Model)),
     );
   }
 }

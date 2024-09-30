@@ -40,3 +40,6 @@ export 'package:tradeable_learn_widget/drag_and_drop_match_widget/drag_and_drop_
 
 export 'package:tradeable_learn_widget/bucket_widgetv1/bucket_container.dart';
 export 'package:tradeable_learn_widget/bucket_widgetv1/models/bucket_model.dart';
+
+export 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_model.dart';
+export 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_v1.dart';
