@@ -43,3 +43,6 @@ export 'package:tradeable_learn_widget/bucket_widgetv1/models/bucket_model.dart'
 
 export 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_model.dart';
 export 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_v1.dart';
+
+export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_model.dart';
+export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_widget.dart';
