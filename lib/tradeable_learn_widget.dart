@@ -46,3 +46,5 @@ export 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_v1.dart';
 
 export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_model.dart';
 export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_widget.dart';
+
+export 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
