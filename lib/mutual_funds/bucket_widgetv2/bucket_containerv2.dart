@@ -1,12 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/bucket_widgetv1/models/bucket_model.dart';
-import 'package:tradeable_learn_widget/bucket_widgetv1/models/stock_bucket_map.dart';
+import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucket_modelv2.dart';
+import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/stock_bucket_map.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class BucketContainerV2 extends StatefulWidget {
-  final BucketContainerModel model;
+  final BucketContainerV2Model model;
 
   const BucketContainerV2({super.key, required this.model});
 
@@ -15,7 +15,7 @@ class BucketContainerV2 extends StatefulWidget {
 }
 
 class _BucketContainerV2State extends State<BucketContainerV2> {
-  late BucketContainerModel model;
+  late BucketContainerV2Model model;
   int crossAxisCount = 0;
 
   @override
@@ -48,7 +48,7 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                   children: [
                     Text(model.bucketValues[0], style: textStyles.mediumBold),
                     const SizedBox(height: 10),
-                    DragTarget<StockBucketMap>(
+                    DragTarget<StockBucketMapV2>(
                       onAccept: (data) {
                         if (data.bucketName == model.bucketValues[0]) {
                           setState(() {
@@ -111,7 +111,7 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                   children: [
                     Text(model.bucketValues[1], style: textStyles.mediumBold),
                     const SizedBox(height: 10),
-                    DragTarget<StockBucketMap>(
+                    DragTarget<StockBucketMapV2>(
                       onAccept: (data) {
                         if (data.bucketName == model.bucketValues[1]) {
                           setState(() {
@@ -198,7 +198,7 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                   itemCount: model.stockBucketMap.length,
                   itemBuilder: (context, index) {
                     final value = model.stockBucketMap[index];
-                    return Draggable<StockBucketMap>(
+                    return Draggable<StockBucketMapV2>(
                       data: value,
                       feedback: Material(
                         child: Container(
@@ -206,7 +206,7 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                           height: 50,
                           width: 100,
                           decoration: BoxDecoration(
-                            color: colors.selectedItemColor,
+                            color: colors.cardColorSecondary,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(

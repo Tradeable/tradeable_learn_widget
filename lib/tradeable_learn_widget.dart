@@ -49,4 +49,8 @@ export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_
 
 export 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
 
-export 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/bucket_container.dart';
+export 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/bucket_containerv2.dart';
+export 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucket_modelv2.dart';
+
+export 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget/selectable_grid_image_main.dart';
+export 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget/selectable_image_grid_model.dart';
