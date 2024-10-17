@@ -60,3 +60,5 @@ export 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/ris
 
 export 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
 export 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
+
+export 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';

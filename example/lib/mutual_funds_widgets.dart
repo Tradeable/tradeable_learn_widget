@@ -9,6 +9,7 @@ import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucke
 import 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget/selectable_grid_image_main.dart';
@@ -41,7 +42,9 @@ class MutualFundsWidgets extends StatelessWidget {
                     text: "Risk reward ratio Widget",
                     destination: RiskRewardWidgetPage()),
                 NavigationButton(
-                    text: "Image MCQ Widget", destination: ImageMCQPage())
+                    text: "Image MCQ Widget", destination: ImageMCQPage()),
+                NavigationButton(
+                    text: "Investment Analysis Widget", destination: InvestmentAnalysisPage())
               ],
             ),
           ),
@@ -107,5 +110,14 @@ class ImageMCQPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
         title: "Problem", body: ImageMcq(model: ImageMCQModel(imageMCQModel)));
+  }
+}
+
+class InvestmentAnalysisPage extends StatelessWidget {
+  const InvestmentAnalysisPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(title: "Problem", body: InvestmentAnalysisMain());
   }
 }
