@@ -13,6 +13,7 @@ import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
+import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
@@ -34,7 +35,11 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const TradeableWidgetDemoPage(),
+        "/deepak": (context) => const MyHomePage()
+      },
     );
   }
 }
