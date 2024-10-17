@@ -1,11 +1,10 @@
 class ATMWidgetModel {
-  final dynamic data;
   late String question;
   late String correctResponse;
   late List<DataCell> entries;
   late List<String> options;
 
-  ATMWidgetModel(this.data) {
+  ATMWidgetModel.fromJson(dynamic data) {
     question = data["question"];
     correctResponse = data["correctResponse"];
     entries = (data["entries"] as List)

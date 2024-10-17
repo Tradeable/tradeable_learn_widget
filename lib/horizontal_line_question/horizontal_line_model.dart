@@ -6,7 +6,6 @@ import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_respo
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
 
 class HorizontalLineModel {
-  final dynamic data;
   late String type;
   late String question;
   late List<ReelRangeResponse> responseRange;
@@ -26,7 +25,7 @@ class HorizontalLineModel {
   late String timeframe;
   HorizontalLineQuestionState state = HorizontalLineQuestionState.loadUI;
 
-  HorizontalLineModel(this.data) {
+  HorizontalLineModel.fromJson(dynamic data) {
     type = data['type'];
     question = data['question'];
     responseRange = ((data["rangeResponses"]) as List)

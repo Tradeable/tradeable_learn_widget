@@ -1,8 +1,7 @@
 class MarkdownPreviewModel {
-  final dynamic data;
   late String content;
 
-  MarkdownPreviewModel(this.data) {
+  MarkdownPreviewModel.fromJson(dynamic data) {
     content = data["content"];
   }
 }

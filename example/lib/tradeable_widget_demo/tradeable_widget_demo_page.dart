@@ -1,18 +1,23 @@
 import 'package:chips_choice/chips_choice.dart';
 import 'package:device_frame/device_frame.dart';
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
+import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
+import 'package:example/data_model/candle_part_match_model.dart';
+import 'package:example/data_model/candle_select_question_model.dart';
+import 'package:example/data_model/content_preview_model.dart';
+import 'package:example/data_model/educorner_model_v1.dart';
+import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
+import 'package:example/data_model/horizontal_line_model.dart';
+import 'package:example/data_model/ladder_data_model.dart';
+import 'package:example/data_model/mcq_candle_image_model.dart';
+import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/options_educorner_model.dart';
+import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/atm_itm_dropdown_widget/atm_itm_dropdown_data_model.dart';
-import 'package:tradeable_learn_widget/atm_itm_dropdown_widget/atm_itm_dropdown_widget_main.dart';
-import 'package:tradeable_learn_widget/candle_body_select/candle_body_select.dart';
-import 'package:tradeable_learn_widget/candle_body_select/candle_body_select_model.dart';
-import 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edutile_main.dart';
-import 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edutile_model.dart';
-import 'package:tradeable_learn_widget/video_educorner/video_educorner.dart';
-import 'package:tradeable_learn_widget/video_educorner/video_educorner_model.dart';
+import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 class WidgetChips {
   final String label;
@@ -34,53 +39,102 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
   List<WidgetChips> widgetOptions = [
     WidgetChips(
         label: "Youtube Video Education Corner",
-        widget:
-            VideoEduCorner(model: VideoEduCornerModel(videoEducornerModel))),
+        widget: VideoEduCorner(
+            model: VideoEduCornerModel.fromJson(videoEducornerModel))),
     WidgetChips(
-        label: "AtmDropdownWidgetPage",
+        label: "Market Value Selector",
         widget: ATMWidget(
-          model: ATMWidgetModel(atmItmDropdownModel),
+          model: ATMWidgetModel.fromJson(atmItmDropdownModel),
         )),
     WidgetChips(
-      label: "ExpandableEduCornerPage",
+      label: "Expandable EduCorner",
       widget: ExpandableEduTileMain(
-          model: ExpandableEduTileModel(expandableEduTileModelData)),
+          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData)),
     ),
     WidgetChips(
-      label: "CandleBodySelect",
+      label: "Candle Part Identifier",
       widget: CandleBodySelect(
-          model: CandlePartSelectModel(candleBodySelectModelData)),
+          model: CandlePartSelectModel.fromJson(candleBodySelectModelData)),
     ),
+    WidgetChips(
+        label: "Options Wall",
+        widget: LadderWidgetMain(
+            ladderModel: LadderModel.fromJson(ladderQuestionData))),
+    WidgetChips(
+        label: "Candle Part Identifier V2",
+        widget: CandlePartMatchLink(
+            model: CandleMatchThePairModel.fromJson(candlePartMatchModelData))),
+    WidgetChips(
+        label: "Match the pair",
+        widget: EN1(model: EN1Model.fromJson(en1DataModel))),
+    WidgetChips(
+        label: "Candle Selection Tool",
+        widget: CandleSelectQuestion(
+            model:
+                CandleSelectModel.fromJson(candleSelectQuestionStaticModel))),
+    WidgetChips(
+        label: "MCQ Question",
+        widget: MCQQuestion(model: MCQModel.fromJson(mcqStaticModel))),
+    WidgetChips(
+        label: "Horizontal line Question",
+        widget: HorizontalLineQuestion(
+            model: HorizontalLineModel.fromJson(horizontalLineModel))),
+    WidgetChips(
+        label: "MCQ Question",
+        widget: MCQCandleQuestion(
+            model: MCQCandleModel.fromJson(mcqCandleImageModel))),
+    WidgetChips(
+        label: "FNO Scenario Page",
+        widget: DragAndDropMatch(
+            model: LadderModel.fromJson(optionsScenarioModel))),
+    WidgetChips(
+        label: "Categorisation Widget",
+        widget: BucketContainerV1(
+            model: BucketContainerModel.fromJson(bucketContainerV1Model))),
+    WidgetChips(
+        label: "Edu Corner V1",
+        widget: EduCornerV1(model: EduCornerModel.fromJson(educornerV1Model))),
+    WidgetChips(
+        label: "EduCorner V2",
+        widget: MarkdownPreviewWidget(
+            model: MarkdownPreviewModel.fromJson(contentPreviewModel))),
+    WidgetChips(
+        label: "Options EduCorner",
+        widget: OptionEduCorner(
+            model: OptionsEduCornerModel.fromJson(optionsEducornerModel))),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: LayoutBuilder(builder: (context, constraints) {
-          // print(constraints.maxHeight);
-          // print(constraints.maxWidth);
-          // double phoneHeight = constraints.maxHeight < 860
-          //     ? 860 * 0.7
-          //     : constraints.maxHeight * 0.7;
-          //double phoneHeight = 860 * 0.7;
-          //print("height : ${constraints.maxHeight} , phone : $phoneHeight");
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              SizedBox(
-                width: constraints.maxWidth * 0.3 < 550
-                    ? 550
-                    : constraints.maxWidth * 0.3,
-                child: renderWidgets(),
-              ),
-              Expanded(child: renderPreview())
-            ],
-          );
-        }),
+        child: SingleChildScrollView(
+          child: LayoutBuilder(builder: (context, constraints) {
+            // print(constraints.maxHeight);
+            // print(constraints.maxWidth);
+            // double phoneHeight = constraints.maxHeight < 860
+            //     ? 860 * 0.7
+            //     : constraints.maxHeight * 0.7;
+            //double phoneHeight = 860 * 0.7;
+            //print("height : ${constraints.maxHeight} , phone : $phoneHeight");
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                SizedBox(
+                  width: constraints.maxWidth * 0.3 < 550
+                      ? 550
+                      : constraints.maxWidth * 0.3,
+                  child: renderWidgets(),
+                ),
+                Expanded(child: renderPreview())
+              ],
+            );
+          }),
+        ),
       )),
     );
   }
