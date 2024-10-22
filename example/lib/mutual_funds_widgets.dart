@@ -1,4 +1,5 @@
 import 'package:example/data_model/bucket_containerV2_model.dart';
+import 'package:example/data_model/exit_fees_calculator_model.dart';
 import 'package:example/data_model/image_mcq_model.dart';
 import 'package:example/data_model/investment_analysis_model.dart';
 import 'package:example/data_model/mf_calculator_model.dart';
@@ -8,6 +9,8 @@ import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/bucket_containerv2.dart';
 import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucket_modelv2.dart';
+import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_main.dart';
+import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
@@ -57,7 +60,15 @@ class MutualFundsWidgets extends StatelessWidget {
                       title: "Mutual Fund Calculator",
                       body: MfCalculatorMain(
                           model: MfCalculatorModel.fromJson(mfCalculatorModel)),
-                    ))
+                    )),
+                NavigationButton(
+                    text: "Exit fees Calculator",
+                    destination: ScaffoldWithAppBar(
+                      title: "Exit fees Calculator",
+                      body: ExitFeesCalculatorMain(
+                          model: ExitFeeCalculatorModel.fromJson(
+                              exitFeesCalculatorModel)),
+                    )),
               ],
             ),
           ),
