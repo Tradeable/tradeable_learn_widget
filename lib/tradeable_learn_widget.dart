@@ -62,3 +62,7 @@ export 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
 export 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
 
 export 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';
+export 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_model.dart';
+
+export 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_main.dart';
+export 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_model.dart';
