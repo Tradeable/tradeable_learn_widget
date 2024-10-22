@@ -4,7 +4,9 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'investment_analysis_model.dart';
 
 class InvestmentAnalysisMain extends StatefulWidget {
-  const InvestmentAnalysisMain({super.key});
+  final InvestmentAnalysisModel model;
+
+  const InvestmentAnalysisMain({super.key, required this.model});
 
   @override
   State<InvestmentAnalysisMain> createState() => _InvestmentAnalysisMainState();
@@ -23,10 +25,7 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
   @override
   void initState() {
     super.initState();
-    model = InvestmentAnalysisModel.fromJson({
-      "question": "",
-      "chartData": [100, 150, 200, 120, 180, 210, 130, 170, 190, 160],
-    });
+    model = widget.model;
     droppedIcons = List.filled(model.chartData.length, null);
     investedAmounts = List.filled(model.chartData.length, 100)..[0] += 1200;
     avgReturns = List.filled(2, 0);
@@ -73,22 +72,30 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
 
-    return Stack(
-      alignment: Alignment.bottomCenter,
+    return Column(
       children: [
-        Column(
-          children: [
-            _buildChart(context),
-            const SizedBox(height: 40),
-            _buildDraggableIcons(context),
-            const SizedBox(height: 20),
-            _buildCalculateButton(),
-            if (isEvaluated) ...[
-              _buildInvestmentDataTable(),
-              _buildYearlyReturnsDataTable(),
-            ],
-          ],
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(model.question, style: textStyles.mediumNormal),
+                ),
+                _buildChart(context),
+                const SizedBox(height: 40),
+                _buildDraggableIcons(context),
+                _buildCalculateButton(),
+                const SizedBox(height: 20),
+                if (isEvaluated) ...[
+                  _buildInvestmentDataTable(),
+                  _buildYearlyReturnsDataTable(),
+                ],
+              ],
+            ),
+          ),
         ),
         Container(
           height: 60,
@@ -192,7 +199,7 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
     final colors = Theme.of(context).customColors;
 
     return Padding(
-      padding: const EdgeInsets.all(25.0),
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
       child: ButtonWidget(
         color: colors.primary,
         btnContent: 'Calculate',

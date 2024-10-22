@@ -1,5 +1,6 @@
 import 'package:example/data_model/bucket_containerV2_model.dart';
 import 'package:example/data_model/image_mcq_model.dart';
+import 'package:example/data_model/investment_analysis_model.dart';
 import 'package:example/data_model/risk_reward_ratio_model.dart';
 import 'package:example/data_model/selectable_image_grid_model.dart';
 import 'package:example/main.dart';
@@ -10,6 +11,7 @@ import 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widg
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget/selectable_grid_image_main.dart';
@@ -44,7 +46,8 @@ class MutualFundsWidgets extends StatelessWidget {
                 NavigationButton(
                     text: "Image MCQ Widget", destination: ImageMCQPage()),
                 NavigationButton(
-                    text: "Investment Analysis Widget", destination: InvestmentAnalysisPage())
+                    text: "Investment Analysis Widget",
+                    destination: InvestmentAnalysisPage())
               ],
             ),
           ),
@@ -118,6 +121,9 @@ class InvestmentAnalysisPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldWithAppBar(title: "Problem", body: InvestmentAnalysisMain());
+    return ScaffoldWithAppBar(
+        title: "Problem",
+        body: InvestmentAnalysisMain(
+            model: InvestmentAnalysisModel.fromJson(investmentAnalysisModel)));
   }
 }
