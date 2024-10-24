@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_data_table.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'investment_analysis_model.dart';
@@ -90,7 +91,11 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
                 _buildCalculateButton(),
                 const SizedBox(height: 20),
                 if (isEvaluated) ...[
-                  _buildInvestmentDataTable(),
+                  InvestmentDataTable(
+                      sipInvestmentAmount: 100,
+                      lumpsumInvestmentAmount: 1200,
+                      avgReturns: avgReturns,
+                      pnl: pnl),
                   _buildYearlyReturnsDataTable(),
                 ],
               ],
@@ -204,38 +209,6 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
         color: colors.primary,
         btnContent: 'Calculate',
         onTap: evaluateReturnsAndPnl,
-      ),
-    );
-  }
-
-  Widget _buildInvestmentDataTable() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: DataTable(
-        columns: [
-          const DataColumn(label: Text('')),
-          DataColumn(label: Text('SIP', style: textStyles.smallBold)),
-          DataColumn(label: Text('Lumpsum', style: textStyles.smallBold)),
-        ],
-        rows: [
-          DataRow(cells: [
-            DataCell(Text('Invested Amount', style: textStyles.smallBold)),
-            const DataCell(Text('100/- /Month')),
-            const DataCell(Text('1200/- Once')),
-          ]),
-          DataRow(cells: [
-            DataCell(Text('Avg Returns', style: textStyles.smallBold)),
-            DataCell(Text("${avgReturns[0].toStringAsFixed(2)}%")),
-            DataCell(Text("${avgReturns[1].toStringAsFixed(2)}%")),
-          ]),
-          DataRow(cells: [
-            DataCell(Text('PnL', style: textStyles.smallBold)),
-            DataCell(Text(pnl[0].toStringAsFixed(2))),
-            DataCell(Text(pnl[1].toStringAsFixed(2))),
-          ]),
-        ],
       ),
     );
   }

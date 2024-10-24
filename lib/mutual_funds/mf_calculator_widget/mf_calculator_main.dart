@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_comparsion_widget/savings_amount_widget.dart';
 import 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
-import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MfCalculatorMain extends StatefulWidget {
@@ -16,7 +16,7 @@ class MfCalculatorMain extends StatefulWidget {
 
 class _MfCalculatorMain extends State<MfCalculatorMain> {
   late MfCalculatorModel model;
-  double _currentSliderValue = 0;
+  double savingsAmount = 0;
   DateTime? startDate;
   DateTime? endDate;
   bool showChart = false;
@@ -28,34 +28,6 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
     super.initState();
   }
 
-  Future<void> _selectStartDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != startDate) {
-      setState(() {
-        startDate = picked;
-      });
-    }
-  }
-
-  Future<void> _selectEndDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != endDate) {
-      setState(() {
-        endDate = picked;
-      });
-    }
-  }
-
   void _calculateGraphData() {
     final colors = Theme.of(context).customColors;
 
@@ -63,9 +35,9 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
     double growthRatio = 0.35;
     double debtRatio = 0.25;
 
-    double liquidAmount = _currentSliderValue * liquidRatio;
-    double growthAmount = _currentSliderValue * growthRatio;
-    double debtAmount = _currentSliderValue * debtRatio;
+    double liquidAmount = savingsAmount * liquidRatio;
+    double growthAmount = savingsAmount * growthRatio;
+    double debtAmount = savingsAmount * debtRatio;
 
     chartData = [
       ChartData(
@@ -113,11 +85,15 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
           children: [
             _buildQuestionText(),
             const SizedBox(height: 20),
-            _buildSliderSection(),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildDatePickers(),
+            SavingsAmountWidget(
+              onValuesChanged:
+                  (double savings, DateTime? start, DateTime? end) {
+                setState(() {
+                  savingsAmount = savings;
+                  startDate = start;
+                  endDate = end;
+                });
+              },
             ),
             Center(
               child: Container(
@@ -142,90 +118,6 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(widget.model.question, style: textStyles.mediumNormal),
-    );
-  }
-
-  Widget _buildSliderSection() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 60),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Monthly Savings Amount", style: textStyles.mediumBold),
-          const SizedBox(height: 20),
-          Text(
-            "₹ ${_currentSliderValue.toStringAsFixed(0)}",
-            style: textStyles.largeBold,
-          ),
-          Slider(
-            value: _currentSliderValue,
-            min: 0,
-            max: 10000,
-            divisions: 100,
-            label: "₹ ${_currentSliderValue.toStringAsFixed(0)}",
-            onChanged: (double value) {
-              setState(() {
-                _currentSliderValue = value;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDatePickers() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildDateColumn("Start Date", startDate, _selectStartDate),
-        Padding(
-          padding: const EdgeInsets.only(top: 40),
-          child: Text(
-            'to',
-            style: textStyles.mediumBold,
-          ),
-        ),
-        _buildDateColumn("End Date", endDate, _selectEndDate),
-      ],
-    );
-  }
-
-  Widget _buildDateColumn(
-      String label, DateTime? date, VoidCallback onPressed) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: textStyles.mediumBold,
-        ),
-        const SizedBox(height: 15),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: colors.axisColor, width: 1.5),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: ElevatedButton(
-            onPressed: onPressed,
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent, // Transparent background
-                elevation: 0),
-            child: Text(
-              date != null
-                  ? DateFormat('MM-yyyy').format(date)
-                  : 'Select $label',
-            ),
-          ),
-        ),
-      ],
     );
   }
 

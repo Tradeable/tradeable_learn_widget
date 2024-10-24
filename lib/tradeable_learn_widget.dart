@@ -69,3 +69,5 @@ export 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calc
 
 export 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_main.dart';
 export 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_model.dart';
+
+export 'package:tradeable_learn_widget/mutual_funds/investment_comparsion_widget/investment_comparision_main.dart';

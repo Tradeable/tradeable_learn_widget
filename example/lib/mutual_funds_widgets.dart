@@ -16,6 +16,7 @@ import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
 import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_model.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_comparsion_widget/investment_comparision_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_main.dart';
@@ -68,6 +69,12 @@ class MutualFundsWidgets extends StatelessWidget {
                       body: ExitFeesCalculatorMain(
                           model: ExitFeeCalculatorModel.fromJson(
                               exitFeesCalculatorModel)),
+                    )),
+                const NavigationButton(
+                    text: "Investment Comparsion",
+                    destination: ScaffoldWithAppBar(
+                      title: "Investment Comparsion",
+                      body: InvestmentComparisionMain(),
                     )),
               ],
             ),
