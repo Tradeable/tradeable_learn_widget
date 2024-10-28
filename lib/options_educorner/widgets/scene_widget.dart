@@ -41,11 +41,13 @@ class OptionEduCornerScene extends StatelessWidget {
     return Stack(
       children: [
         Positioned(
-          left: buildingOffset,
-          bottom: 50,
-          child: Image.asset('assets/delta_tree.png',
-              height: 160),
-        ),
+            left: buildingOffset,
+            bottom: 50,
+            child: Image.asset(
+              "assets/delta_tree.png",
+              package: 'tradeable_learn_widget/lib',
+              height: 160,
+            )),
         Positioned(
           left: (screenWidth - 100) / 2,
           bottom: 50,
@@ -53,8 +55,11 @@ class OptionEduCornerScene extends StatelessWidget {
             alignment: Alignment.center,
             transform:
                 toggleValue ? Matrix4.identity() : Matrix4.rotationY(3.14159),
-            child: Image.asset('assets/delta_car.png',
-                height: 40),
+            child: Image.asset(
+              "assets/delta_car.png",
+              package: 'tradeable_learn_widget/lib',
+              height: 40,
+            ),
           ),
         ),
         Positioned(

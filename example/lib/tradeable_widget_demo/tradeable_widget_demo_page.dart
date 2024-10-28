@@ -22,6 +22,7 @@ import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/risk_reward_ratio_model.dart';
 import 'package:example/data_model/selectable_image_grid_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
+import 'package:example/data_model/bucket_container_v2_model.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
@@ -111,7 +112,7 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
     WidgetChips(
         label: "Bucket Container Widget",
         widget: BucketContainerV2(
-            model: BucketContainerV2Model.fromJson(BucketContainerV2Model))),
+            model: BucketContainerV2Model.fromJson(bucketContainerV2Model))),
     WidgetChips(label: "Family Plot", widget: const FamilyPlotWidget()),
     WidgetChips(
         label: "Mutual Fund Pool Widget",
@@ -210,7 +211,7 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
   }
 
   Widget renderPreview() {
-    double phoneHeight = 860 * 0.7;
+    double phoneHeight = 960 * 0.7;
     return Column(
       children: [
         const Text(
