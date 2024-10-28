@@ -28,6 +28,7 @@ class OptionEducornerInfoBtn extends StatelessWidget {
           alignment: const Alignment(0, -0.3),
           child: Image.asset(
             assetPath,
+            package: 'tradeable_learn_widget/lib',
             height: 30,
           ),
         ),
