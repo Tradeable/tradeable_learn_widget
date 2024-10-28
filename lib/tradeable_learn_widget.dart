@@ -1,8 +1,5 @@
 library tradeable_learn_widget;
 
-export 'package:tradeable_learn_widget/demo_widget/demo_widget_model.dart';
-export 'package:tradeable_learn_widget/demo_widget/demo_widget.dart';
-
 export 'package:tradeable_learn_widget/ladder_widget/ladder_widget_main.dart';
 export 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
 
@@ -46,6 +43,9 @@ export 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_v1.dart';
 
 export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_model.dart';
 export 'package:tradeable_learn_widget/markdown_preview_widget/markdown_preview_widget.dart';
+
+export 'package:tradeable_learn_widget/options_educorner/option_educorner_main.dart';
+export 'package:tradeable_learn_widget/options_educorner/options_educorner_model.dart';
 
 export 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
 

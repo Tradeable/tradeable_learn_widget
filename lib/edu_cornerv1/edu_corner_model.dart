@@ -1,11 +1,10 @@
 enum EduCornerContentType { imageAndText, onlyImage, onlyText }
 
 class EduCornerModel {
-  final dynamic data;
   late String title;
   late List<EduCornerContent> cards;
 
-  EduCornerModel(this.data) {
+  EduCornerModel.fromJson(dynamic data) {
     title = data["title"];
     cards = ((data["cards"]) as List)
         .map((x) => EduCornerContent.fromJson(x))

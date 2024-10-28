@@ -7,7 +7,6 @@ enum CandleSelectState {
 }
 
 class CandleSelectModel {
-  final dynamic data;
   late String type;
   late String question;
   late List<int> correctResponse;
@@ -26,7 +25,7 @@ class CandleSelectModel {
 
   CandleSelectState state = CandleSelectState.loadUI;
 
-  CandleSelectModel(this.data) {
+  CandleSelectModel.fromJson(dynamic data) {
     type = data["type"];
     question = data['question'];
     correctResponse = (data["selectedCandleIds"] as List)

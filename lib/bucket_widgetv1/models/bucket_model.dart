@@ -3,13 +3,12 @@ import 'package:tradeable_learn_widget/bucket_widgetv1/models/stock_bucket_map.d
 enum BucketContainerState { loadUi, submitResponse }
 
 class BucketContainerModel {
-  final dynamic data;
   late String question;
   late List<String> bucketValues;
   late List<StockBucketMap> stockBucketMap;
   late List<StockBucketMap> acceptedValues = [];
 
-  BucketContainerModel(this.data) {
+  BucketContainerModel.fromJson(dynamic data) {
     question = data["question"];
     bucketValues = List<String>.from(data["buckets"]);
     stockBucketMap = List<StockBucketMap>.from(

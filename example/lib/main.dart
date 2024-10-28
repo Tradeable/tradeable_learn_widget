@@ -11,8 +11,10 @@ import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
+import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
@@ -35,7 +37,11 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomeIntermediateScreen(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const TradeableWidgetDemoPage(),
+        "/deepak": (context) => const MyHomePage()
+      },
     );
   }
 }
@@ -114,6 +120,10 @@ class MyHomePage extends StatelessWidget {
                   text: "Markdown Widget",
                   destination: ContentPreviewPage(),
                 ),
+                NavigationButton(
+                  text: "Options edu ",
+                  destination: OptionsEduPage(),
+                ),
               ],
             ),
           ),
@@ -147,6 +157,20 @@ class NavigationButton extends StatelessWidget {
   }
 }
 
+class OptionsEduPage extends StatelessWidget {
+  const OptionsEduPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: OptionEduCorner(
+        model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
+      ),
+    );
+  }
+}
+
 class LadderWidgetPage extends StatelessWidget {
   const LadderWidgetPage({super.key});
 
@@ -155,7 +179,7 @@ class LadderWidgetPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: LadderWidgetMain(
-        ladderModel: LadderModel(ladderQuestionData),
+        ladderModel: LadderModel.fromJson(ladderQuestionData),
       ),
     );
   }
@@ -169,7 +193,7 @@ class AtmDropdownWidgetPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: ATMWidget(
-        model: ATMWidgetModel(atmItmDropdownModel),
+        model: ATMWidgetModel.fromJson(atmItmDropdownModel),
       ),
     );
   }
@@ -183,7 +207,7 @@ class ExpandableEduCornerPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: ExpandableEduTileMain(
-          model: ExpandableEduTileModel(expandableEduTileModelData)),
+          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData)),
     );
   }
 }
@@ -196,7 +220,7 @@ class CandleBodySelectPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandleBodySelect(
-          model: CandlePartSelectModel(candleBodySelectModelData)),
+          model: CandlePartSelectModel.fromJson(candleBodySelectModelData)),
     );
   }
 }
@@ -209,7 +233,7 @@ class CandlePartMatchPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandlePartMatchLink(
-          model: CandleMatchThePairModel(candlePartMatchModelData)),
+          model: CandleMatchThePairModel.fromJson(candlePartMatchModelData)),
     );
   }
 }
@@ -221,7 +245,7 @@ class EN1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: EN1(model: EN1Model(en1DataModel)),
+      body: EN1(model: EN1Model.fromJson(en1DataModel)),
     );
   }
 }
@@ -234,7 +258,7 @@ class CandleSelectQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandleSelectQuestion(
-          model: CandleSelectModel(candleSelectQuestionStaticModel)),
+          model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel)),
     );
   }
 }
@@ -246,7 +270,7 @@ class MCQQuestionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: MCQQuestion(model: MCQModel(mcqStaticModel)),
+      body: MCQQuestion(model: MCQModel.fromJson(mcqStaticModel)),
     );
   }
 }
@@ -259,7 +283,7 @@ class HorizontalLineQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: HorizontalLineQuestion(
-          model: HorizontalLineModel(horizontalLineModel)),
+          model: HorizontalLineModel.fromJson(horizontalLineModel)),
     );
   }
 }
@@ -271,7 +295,7 @@ class MCQCandleImagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: MCQCandleQuestion(model: MCQCandleModel(mcqCandleImageModel)),
+      body: MCQCandleQuestion(model: MCQCandleModel.fromJson(mcqCandleImageModel)),
     );
   }
 }
@@ -283,7 +307,7 @@ class VideoEducornerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: VideoEduCorner(model: VideoEduCornerModel(videoEducornerModel)),
+      body: VideoEduCorner(model: VideoEduCornerModel.fromJson(videoEducornerModel)),
     );
   }
 }
@@ -295,7 +319,7 @@ class FnoScenarioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: DragAndDropMatch(model: LadderModel(optionsScenarioModel)),
+      body: DragAndDropMatch(model: LadderModel.fromJson(optionsScenarioModel)),
     );
   }
 }
@@ -308,7 +332,7 @@ class BucketWidgetPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: BucketContainerV1(
-          model: BucketContainerModel(bucketContainerV1Model)),
+          model: BucketContainerModel.fromJson(bucketContainerV1Model)),
     );
   }
 }
@@ -320,7 +344,7 @@ class EducornerV1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: EduCornerV1(model: EduCornerModel(educornerV1Model)),
+      body: EduCornerV1(model: EduCornerModel.fromJson(educornerV1Model)),
     );
   }
 }
@@ -333,7 +357,7 @@ class ContentPreviewPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MarkdownPreviewWidget(
-          model: MarkdownPreviewModel(contentPreviewModel)),
+          model: MarkdownPreviewModel.fromJson(contentPreviewModel)),
     );
   }
 }

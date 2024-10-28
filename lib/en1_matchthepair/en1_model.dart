@@ -2,7 +2,6 @@
 import 'package:tradeable_learn_widget/en1_matchthepair/match_the_pair_item.dart';
 
 class EN1Model {
-  final dynamic data;
   late List<LeftColumItem> leftColumn;
   late List<RightColumnItem> rightColumn;
   late int startTime;
@@ -14,7 +13,7 @@ class EN1Model {
 
   EN1State state = EN1State.isMatching;
 
-  EN1Model(this.data) {
+  EN1Model.fromJson(dynamic data) {
     leftColumn =
         (data["leftColumn"] as List).map((e) => LeftColumItem(e)).toList();
     rightColumn = (data["rightColumn"] as List)

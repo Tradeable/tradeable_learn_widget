@@ -4,7 +4,6 @@ import 'dart:math';
 enum CandleBodySelectState { loadUI, submitResponse }
 
 class CandlePartSelectModel {
-  final dynamic data;
   late String question;
   late String correctAnswer;
   late String correctResponse;
@@ -18,7 +17,7 @@ class CandlePartSelectModel {
   late int startTime;
   bool isCorrect = false;
 
-  CandlePartSelectModel(this.data) {
+  CandlePartSelectModel.fromJson(dynamic data) {
     question = data['question'];
     correctResponse = data["correctResponse"];
     correctAnswer = correctResponse;

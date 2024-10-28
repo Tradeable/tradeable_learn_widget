@@ -8,7 +8,6 @@ enum MCQState {
 }
 
 class MCQModel {
-  final dynamic data;
   late String type;
   late String question;
   late List<String> options;
@@ -26,7 +25,7 @@ class MCQModel {
   late String ticker;
   late String timeframe;
 
-  MCQModel(this.data) {
+  MCQModel.fromJson(dynamic data) {
     type = data["type"];
     question = data['question'];
     options = ((data["options"]) as List).map((x) => x.toString()).toList();

@@ -231,8 +231,9 @@ class _EduCornerV1State extends State<EduCornerV1> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        VideoEduCorner(model: VideoEduCornerModel({}))));
+                    builder: (context) => VideoEduCorner(
+                        model: VideoEduCornerModel.fromJson(
+                            {"video_id": videoId}))));
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
