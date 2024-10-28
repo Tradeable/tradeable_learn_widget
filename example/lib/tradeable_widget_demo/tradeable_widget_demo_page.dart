@@ -1,7 +1,6 @@
 import 'package:chips_choice/chips_choice.dart';
 import 'package:device_frame/device_frame.dart';
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
-import 'package:example/data_model/bucket_containerV2_model.dart';
 import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
@@ -112,8 +111,8 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
     WidgetChips(
         label: "Bucket Container Widget",
         widget: BucketContainerV2(
-            model: BucketContainerV2Model.fromJson(bucketContainerV2Model))),
-    WidgetChips(label: "Family Plot", widget: FamilyPlotWidget()),
+            model: BucketContainerV2Model.fromJson(BucketContainerV2Model))),
+    WidgetChips(label: "Family Plot", widget: const FamilyPlotWidget()),
     WidgetChips(
         label: "Mutual Fund Pool Widget",
         widget: SelectableImageGridWidget(

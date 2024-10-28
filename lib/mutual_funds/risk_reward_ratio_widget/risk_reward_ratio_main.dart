@@ -6,8 +6,7 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 class RiskRewardRatioWidget extends StatefulWidget {
   final RiskRewardRatioModel model;
 
-  const RiskRewardRatioWidget({Key? key, required this.model})
-      : super(key: key);
+  const RiskRewardRatioWidget({super.key, required this.model});
 
   @override
   State<RiskRewardRatioWidget> createState() => _RiskRewardRatioWidgetState();
@@ -177,8 +176,7 @@ class _RiskRewardRatioWidgetState extends State<RiskRewardRatioWidget> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Column(
                   children: [
                     _buildDialogRow(

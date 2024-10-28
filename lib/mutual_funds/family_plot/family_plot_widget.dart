@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class FamilyPlotWidget extends StatefulWidget {
+  const FamilyPlotWidget({super.key});
+
   @override
-  _FamilyPlotWidgetState createState() => _FamilyPlotWidgetState();
+  State<FamilyPlotWidget> createState() => _FamilyPlotWidgetState();
 }
 
 class _FamilyPlotWidgetState extends State<FamilyPlotWidget> {

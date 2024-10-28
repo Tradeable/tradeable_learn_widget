@@ -1,4 +1,3 @@
-import 'package:example/data_model/bucket_containerV2_model.dart';
 import 'package:example/data_model/exit_fees_calculator_model.dart';
 import 'package:example/data_model/image_mcq_model.dart';
 import 'package:example/data_model/investment_analysis_model.dart';
@@ -91,7 +90,7 @@ class FamilyPlotPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldWithAppBar(
+    return const ScaffoldWithAppBar(
       title: "Problem",
       body: FamilyPlotWidget(),
     );
@@ -106,7 +105,7 @@ class BucketContainerV2Page extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: BucketContainerV2(
-          model: BucketContainerV2Model.fromJson(bucketContainerV2Model)),
+          model: BucketContainerV2Model.fromJson(BucketContainerV2Model)),
     );
   }
 }
@@ -119,7 +118,8 @@ class SelectableGridImagePage extends StatelessWidget {
     return ScaffoldWithAppBar(
         title: "Problem",
         body: SelectableImageGridWidget(
-            model: SelectableImageGridModel.fromJson(selectableImageGridModel)));
+            model:
+                SelectableImageGridModel.fromJson(selectableImageGridModel)));
   }
 }
 
@@ -142,8 +142,8 @@ class ImageMCQPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
         title: "Problem",
-        body:
-            MutualFundImageMCQ(model: MutualFundImageMCQModel.fromJson(imageMCQModel)));
+        body: MutualFundImageMCQ(
+            model: MutualFundImageMCQModel.fromJson(imageMCQModel)));
   }
 }
 
