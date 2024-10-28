@@ -8,7 +8,6 @@ const bucketContainerV2Model = {
     {"imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/41/Zerodha-logo.png", "bucketName": "High Risk"},
     {"imageUrl": "https://groww.in/logo.png", "bucketName": "High Risk"},
     {"imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/eb/SEBI-logo.jpg", "bucketName": "Low Risk"},
-    {"imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/RBI_logo.svg/1280px-RBI_logo.svg.png", "bucketName": "Low Risk"}
   ],
   "type": "drag_drop_logo"
 };

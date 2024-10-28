@@ -4,7 +4,6 @@ enum MutualFundImageMcqState {
 }
 
 class MutualFundImageMCQModel {
-  final dynamic data;
   late String question;
   late List<String> options;
   late List<String>? imgSrc;
@@ -13,7 +12,7 @@ class MutualFundImageMCQModel {
   MutualFundImageMcqState state = MutualFundImageMcqState.loadUI;
   String? userResponse;
 
-  MutualFundImageMCQModel(this.data) {
+  MutualFundImageMCQModel.fromJson(dynamic data) {
     question = data['question'];
     options = ((data["options"]) as List).map((x) => x.toString()).toList();
     imgSrc = ((data["imgSrc"]) as List).map((x) => x.toString()).toList();

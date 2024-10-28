@@ -1,5 +1,4 @@
 class SelectableImageGridModel {
-  final dynamic data;
   late String imageTitle;
   late String title;
   late String question;
@@ -7,7 +6,7 @@ class SelectableImageGridModel {
   late List<String> correctResponses;
   late bool isCorrect;
 
-  SelectableImageGridModel(this.data) {
+  SelectableImageGridModel.fromJson(dynamic data) {
     title = data["imageTitle"] ?? "";
     title = data["title"] ?? "";
     question = data['question'] ?? '';

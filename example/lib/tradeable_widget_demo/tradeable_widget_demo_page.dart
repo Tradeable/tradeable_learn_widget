@@ -1,6 +1,7 @@
 import 'package:chips_choice/chips_choice.dart';
 import 'package:device_frame/device_frame.dart';
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
+import 'package:example/data_model/bucket_containerV2_model.dart';
 import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
@@ -8,13 +9,19 @@ import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/content_preview_model.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
+import 'package:example/data_model/exit_fees_calculator_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
+import 'package:example/data_model/image_mcq_model.dart';
+import 'package:example/data_model/investment_analysis_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/mf_calculator_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/risk_reward_ratio_model.dart';
+import 'package:example/data_model/selectable_image_grid_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
@@ -102,6 +109,39 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
         label: "Options EduCorner",
         widget: OptionEduCorner(
             model: OptionsEduCornerModel.fromJson(optionsEducornerModel))),
+    WidgetChips(
+        label: "Bucket Container Widget",
+        widget: BucketContainerV2(
+            model: BucketContainerV2Model.fromJson(bucketContainerV2Model))),
+    WidgetChips(label: "Family Plot", widget: FamilyPlotWidget()),
+    WidgetChips(
+        label: "Mutual Fund Pool Widget",
+        widget: SelectableImageGridWidget(
+            model:
+                SelectableImageGridModel.fromJson(selectableImageGridModel))),
+    WidgetChips(
+        label: "Risk Reward Widget",
+        widget: RiskRewardRatioWidget(
+            model: RiskRewardRatioModel.fromJson(riskRewardRatioModel))),
+    WidgetChips(
+        label: "Mf Image MCQ",
+        widget: MutualFundImageMCQ(
+            model: MutualFundImageMCQModel.fromJson(imageMCQModel))),
+    WidgetChips(
+        label: "Investment Analysis",
+        widget: InvestmentAnalysisMain(
+            model: InvestmentAnalysisModel.fromJson(investmentAnalysisModel))),
+    WidgetChips(
+        label: "Mutual Funds Calculator",
+        widget: MfCalculatorMain(
+            model: MfCalculatorModel.fromJson(mfCalculatorModel))),
+    WidgetChips(
+        label: "Exit fees Calculator",
+        widget: ExitFeesCalculatorMain(
+            model: ExitFeeCalculatorModel.fromJson(exitFeesCalculatorModel))),
+    WidgetChips(
+        label: "Investment Comparision",
+        widget: const InvestmentComparisionMain()),
   ];
 
   @override

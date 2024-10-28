@@ -51,7 +51,8 @@ class MutualFundsWidgets extends StatelessWidget {
                     text: "Risk reward ratio Widget (done)",
                     destination: RiskRewardWidgetPage()),
                 const NavigationButton(
-                    text: "Mf Image MCQ Widget (done)", destination: ImageMCQPage()),
+                    text: "Mf Image MCQ Widget (done)",
+                    destination: ImageMCQPage()),
                 const NavigationButton(
                     text: "Investment Analysis Widget(done)",
                     destination: InvestmentAnalysisPage()),
@@ -105,7 +106,7 @@ class BucketContainerV2Page extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: BucketContainerV2(
-          model: BucketContainerV2Model(bucketContainerV2Model)),
+          model: BucketContainerV2Model.fromJson(bucketContainerV2Model)),
     );
   }
 }
@@ -118,7 +119,7 @@ class SelectableGridImagePage extends StatelessWidget {
     return ScaffoldWithAppBar(
         title: "Problem",
         body: SelectableImageGridWidget(
-            model: SelectableImageGridModel(selectableImageGridModel)));
+            model: SelectableImageGridModel.fromJson(selectableImageGridModel)));
   }
 }
 
@@ -130,7 +131,7 @@ class RiskRewardWidgetPage extends StatelessWidget {
     return ScaffoldWithAppBar(
         title: "Problem",
         body: RiskRewardRatioWidget(
-            model: RiskRewardRatioModel(riskRewardRatioModel)));
+            model: RiskRewardRatioModel.fromJson(riskRewardRatioModel)));
   }
 }
 
@@ -142,7 +143,7 @@ class ImageMCQPage extends StatelessWidget {
     return ScaffoldWithAppBar(
         title: "Problem",
         body:
-            MutualFundImageMCQ(model: MutualFundImageMCQModel(imageMCQModel)));
+            MutualFundImageMCQ(model: MutualFundImageMCQModel.fromJson(imageMCQModel)));
   }
 }
 

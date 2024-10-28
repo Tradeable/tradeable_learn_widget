@@ -1,12 +1,11 @@
 class RiskRewardRatioModel {
-  final dynamic data;
   late String title;
   late String description;
   late List<String> riskLevels;
   late List<String> averageReturns;
   late List<Map<String, String>> fundDetails;
 
-  RiskRewardRatioModel(this.data) {
+  RiskRewardRatioModel.fromJson(dynamic data) {
     title = data['title'];
     description = data['description'];
     riskLevels = List<String>.from(data['riskLevels']);
