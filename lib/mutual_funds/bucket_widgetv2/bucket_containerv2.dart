@@ -16,19 +16,18 @@ class BucketContainerV2 extends StatefulWidget {
 
 class _BucketContainerV2State extends State<BucketContainerV2> {
   late BucketContainerV2Model model;
-  int crossAxisCount = 0;
+  late int crossAxisCount = 0;
 
   @override
   void initState() {
     super.initState();
     model = widget.model;
-    crossAxisCount = (model.stockBucketMap.length / 2).ceil();
+    crossAxisCount = (model.stockBucketMap.length ~/ 2).ceil();
   }
 
   @override
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,60 +47,7 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                   children: [
                     Text(model.bucketValues[0], style: textStyles.mediumBold),
                     const SizedBox(height: 10),
-                    DragTarget<StockBucketMapV2>(
-                      onAccept: (data) {
-                        if (data.bucketName == model.bucketValues[0]) {
-                          setState(() {
-                            model.acceptedValues.add(data);
-                            model.stockBucketMap.removeWhere(
-                                (item) => item.imageUrl == data.imageUrl);
-                          });
-                        }
-                      },
-                      builder: (context, candidateData, rejectedData) {
-                        final acceptedItems = model.acceptedValues
-                            .where((item) =>
-                                item.bucketName == model.bucketValues[0])
-                            .toList();
-                        return Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: colors.borderColorSecondary),
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 200,
-                          child: ListView.builder(
-                            itemCount: acceptedItems.length,
-                            itemBuilder: (context, itemIndex) {
-                              final item = acceptedItems[itemIndex];
-                              return Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: colors.borderColorPrimary,
-                                        width: 2),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Center(
-                                  child: item.imageUrl.startsWith('https://')
-                                      ? Image.network(
-                                          item.imageUrl,
-                                          fit: BoxFit.contain,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  const Icon(Icons.error),
-                                        )
-                                      : AutoSizeText(
-                                          item.imageUrl,
-                                          style: textStyles.smallNormal,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                    _buildDragTarget(model.bucketValues[0]),
                   ],
                 ),
               ),
@@ -111,60 +57,7 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                   children: [
                     Text(model.bucketValues[1], style: textStyles.mediumBold),
                     const SizedBox(height: 10),
-                    DragTarget<StockBucketMapV2>(
-                      onAccept: (data) {
-                        if (data.bucketName == model.bucketValues[1]) {
-                          setState(() {
-                            model.acceptedValues.add(data);
-                            model.stockBucketMap.removeWhere(
-                                (item) => item.imageUrl == data.imageUrl);
-                          });
-                        }
-                      },
-                      builder: (context, candidateData, rejectedData) {
-                        final acceptedItems = model.acceptedValues
-                            .where((item) =>
-                                item.bucketName == model.bucketValues[1])
-                            .toList();
-                        return Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: colors.borderColorSecondary),
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 200,
-                          child: ListView.builder(
-                            itemCount: acceptedItems.length,
-                            itemBuilder: (context, itemIndex) {
-                              final item = acceptedItems[itemIndex];
-                              return Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: colors.borderColorPrimary,
-                                        width: 2),
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: Center(
-                                  child: item.imageUrl.startsWith('https://')
-                                      ? Image.network(
-                                          item.imageUrl,
-                                          fit: BoxFit.contain,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  const Icon(Icons.error),
-                                        )
-                                      : AutoSizeText(
-                                          item.imageUrl,
-                                          style: textStyles.smallNormal,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                    _buildDragTarget(model.bucketValues[1]),
                   ],
                 ),
               ),
@@ -183,7 +76,9 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                 padding: const EdgeInsets.all(14),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  border: Border.all(color: colors.borderColorSecondary),
+                  border: Border.all(
+                      color:
+                          Theme.of(context).customColors.borderColorSecondary),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: GridView.builder(
@@ -206,19 +101,17 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                           height: 50,
                           width: 100,
                           decoration: BoxDecoration(
-                            color: colors.cardColorSecondary,
+                            color: Theme.of(context)
+                                .customColors
+                                .cardColorSecondary,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
                             child: value.imageUrl.startsWith('https://')
-                                ? Image.network(
-                                    value.imageUrl,
-                                    fit: BoxFit.contain,
-                                  )
-                                : AutoSizeText(
-                                    value.imageUrl,
-                                    textAlign: TextAlign.center,
-                                  ),
+                                ? Image.network(value.imageUrl,
+                                    fit: BoxFit.contain)
+                                : AutoSizeText(value.imageUrl,
+                                    textAlign: TextAlign.center),
                           ),
                         ),
                       ),
@@ -228,19 +121,18 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
                         width: 100,
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
-                          border: Border.all(color: colors.borderColorPrimary),
+                          border: Border.all(
+                              color: Theme.of(context)
+                                  .customColors
+                                  .borderColorPrimary),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Center(
                           child: value.imageUrl.startsWith('https://')
-                              ? Image.network(
-                                  value.imageUrl,
-                                  fit: BoxFit.contain,
-                                )
-                              : AutoSizeText(
-                                  value.imageUrl,
-                                  textAlign: TextAlign.center,
-                                ),
+                              ? Image.network(value.imageUrl,
+                                  fit: BoxFit.contain)
+                              : AutoSizeText(value.imageUrl,
+                                  textAlign: TextAlign.center),
                         ),
                       ),
                     );
@@ -254,13 +146,64 @@ class _BucketContainerV2State extends State<BucketContainerV2> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
-              color: model.stockBucketMap.isEmpty
-                  ? colors.primary
-                  : colors.secondary,
-              btnContent: "Next",
-              onTap: () {}),
-        )
+            color: model.stockBucketMap.isEmpty
+                ? Theme.of(context).customColors.primary
+                : Theme.of(context).customColors.secondary,
+            btnContent: "Next",
+            onTap: () {},
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _buildDragTarget(String bucketValue) {
+    return DragTarget<StockBucketMapV2>(
+      onAccept: (data) {
+        if (data.bucketName == bucketValue) {
+          setState(() {
+            model.acceptedValues.add(data);
+            model.stockBucketMap
+                .removeWhere((item) => item.imageUrl == data.imageUrl);
+          });
+        }
+      },
+      builder: (context, candidateData, rejectedData) {
+        final acceptedItems = model.acceptedValues
+            .where((item) => item.bucketName == bucketValue)
+            .toList();
+        return Container(
+          padding: const EdgeInsets.all(10),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/shopping_bag.png',
+                  package: 'tradeable_learn_widget/lib'),
+            ),
+          ),
+          height: 250,
+          child: ListView.builder(
+            reverse: true,
+            itemCount: acceptedItems.length,
+            itemBuilder: (context, itemIndex) {
+              final item = acceptedItems[itemIndex];
+              return Container(
+                height: 40,
+                padding: const EdgeInsets.all(5),
+                child: Center(
+                  child: item.imageUrl.startsWith('https://')
+                      ? Image.network(item.imageUrl,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(Icons.error))
+                      : AutoSizeText(item.imageUrl,
+                          style: Theme.of(context).customTextStyles.smallNormal,
+                          textAlign: TextAlign.center),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

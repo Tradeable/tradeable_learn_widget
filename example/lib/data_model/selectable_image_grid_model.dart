@@ -1,4 +1,6 @@
 const selectableImageGridModel = {
+  "imageTitle": "",
+  "title": "",
   "question": "Which images best represent nature?",
   "imageUrls": [
     "https://lakshmishree.com/blog/wp-content/uploads/2022/07/Central_Depository_Services_India_Limited.svg_-1024x360.png",
@@ -10,5 +12,6 @@ const selectableImageGridModel = {
   "correctResponses": [
     "http://logothunderbird.s3.ap-south-1.amazonaws.com/TATAMOTORS.jpg",
     "http://logothunderbird.s3.ap-south-1.amazonaws.com/APPOLOTYRES.png"
-  ]
+  ],
+  "type": "mf_selectable_image_grid"
 };

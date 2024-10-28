@@ -1,22 +1,22 @@
-enum ImageMcqState {
+enum MutualFundImageMcqState {
   loadUI,
   submitResponse,
 }
 
-class ImageMCQModel {
+class MutualFundImageMCQModel {
   final dynamic data;
   late String question;
   late List<String> options;
-  late String? imgSrc;
+  late List<String>? imgSrc;
   late String correctResponse;
   bool isCorrect = false;
-  ImageMcqState state = ImageMcqState.loadUI;
+  MutualFundImageMcqState state = MutualFundImageMcqState.loadUI;
   String? userResponse;
 
-  ImageMCQModel(this.data) {
+  MutualFundImageMCQModel(this.data) {
     question = data['question'];
     options = ((data["options"]) as List).map((x) => x.toString()).toList();
-    imgSrc = data["imgSrc"] ?? "";
+    imgSrc = ((data["imgSrc"]) as List).map((x) => x.toString()).toList();
     correctResponse = data["correctResponse"];
   }
 }

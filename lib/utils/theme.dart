@@ -57,6 +57,9 @@ class CustomColors {
   final Color bearishColor;
   final Color selectedItemColor;
   final Color axisColor;
+  final Color sipColor;
+  final Color lumpSumColor;
+  final Color cardBasicBackground;
 
   CustomColors(
       {required this.primary,
@@ -69,7 +72,10 @@ class CustomColors {
       required this.bullishColor,
       required this.bearishColor,
       required this.selectedItemColor,
-      required this.axisColor});
+      required this.axisColor,
+      required this.sipColor,
+      required this.lumpSumColor,
+      required this.cardBasicBackground});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -86,7 +92,10 @@ extension ThemeDataExtension on ThemeData {
           bullishColor: Colors.green,
           bearishColor: Colors.red,
           selectedItemColor: Colors.purple,
-          axisColor: Colors.black);
+          axisColor: Colors.black,
+          sipColor: Colors.orangeAccent,
+          lumpSumColor: Colors.blueAccent,
+          cardBasicBackground: Colors.white);
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -100,7 +109,10 @@ extension ThemeDataExtension on ThemeData {
           bullishColor: Colors.green,
           bearishColor: Colors.red,
           selectedItemColor: Colors.purple,
-          axisColor: Colors.white);
+          axisColor: Colors.white,
+          sipColor: Colors.orangeAccent,
+          lumpSumColor: Colors.blueAccent,
+          cardBasicBackground: Colors.black);
     }
   }
 

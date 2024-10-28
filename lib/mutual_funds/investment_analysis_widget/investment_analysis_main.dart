@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_data_table.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_icon.dart';
+import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_returns_table.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'investment_analysis_model.dart';
@@ -17,55 +18,43 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
   late InvestmentAnalysisModel model;
   List<String?> droppedIcons = [];
   List<double> investedAmounts = [];
-  List<double> avgReturns = [];
-  List<double> pnl = [];
+  List<double> avgReturns = List.filled(2, 0);
   bool isEvaluated = false;
-  List<double> yearlySipReturns = [];
-  List<double> yearlyLumpsumReturns = [];
 
   @override
   void initState() {
     super.initState();
     model = widget.model;
     droppedIcons = List.filled(model.chartData.length, null);
-    investedAmounts = List.filled(model.chartData.length, 100)..[0] += 1200;
-    avgReturns = List.filled(2, 0);
-    pnl = List.filled(2, 0);
-    yearlySipReturns = List.filled(model.chartData.length, 0);
-    yearlyLumpsumReturns = List.filled(model.chartData.length, 0);
+    investedAmounts =
+        List.generate(model.chartData.length, (i) => i == 0 ? 1300 : 100);
   }
 
   void evaluateReturnsAndPnl() {
-    double totalSipReturns = 0;
-    double totalLumpsumReturns = 0;
-    double totalSipPnl = 0;
-    double totalLumpsumPnl = 0;
-    int sipCount = 0;
-    int lumpsumCount = 0;
+    double totalSipReturns = 0, totalLumpsumReturns = 0;
+    List<double> sipInvestments = List.filled(model.chartData.length, 0);
+    double lumpsumInvestment = investedAmounts[1];
+
+    for (int i = 0; i < droppedIcons.length; i++) {
+      if (droppedIcons[i] == 'SIP') {
+        sipInvestments[i] += 1200;
+        totalSipReturns += sipInvestments[i] * 0.08 * model.chartData[i] / 100;
+      } else if (droppedIcons[i] == 'Lump Sum') {
+        totalLumpsumReturns +=
+            lumpsumInvestment * 0.12 * model.chartData[i] / 100;
+      }
+    }
+
+    int sipYears = droppedIcons.where((icon) => icon == 'SIP').length;
+    int lumpsumYears = droppedIcons.where((icon) => icon == 'Lump Sum').length;
 
     setState(() {
-      for (int i = 0; i < droppedIcons.length; i++) {
-        if (droppedIcons[i] == 'SIP') {
-          double sipReturn =
-              investedAmounts[i] * 0.08 * model.chartData[i] / 100;
-          yearlySipReturns[i] = sipReturn;
-          totalSipReturns += sipReturn;
-          totalSipPnl += investedAmounts[i] + sipReturn;
-          sipCount++;
-        } else if (droppedIcons[i] == 'Lumpsum') {
-          double lumpsumReturn =
-              investedAmounts[i] * 0.12 * model.chartData[i] / 100;
-          yearlyLumpsumReturns[i] = lumpsumReturn;
-          totalLumpsumReturns += lumpsumReturn;
-          totalLumpsumPnl += investedAmounts[i] + lumpsumReturn;
-          lumpsumCount++;
-        }
-      }
-
-      avgReturns[0] = sipCount > 0 ? totalSipReturns / sipCount : 0;
-      avgReturns[1] = lumpsumCount > 0 ? totalLumpsumReturns / lumpsumCount : 0;
-      pnl[0] = totalSipPnl;
-      pnl[1] = totalLumpsumPnl;
+      avgReturns[0] = sipYears > 0
+          ? (totalSipReturns / sipYears) * 100 / (sipYears * 1200)
+          : 0;
+      avgReturns[1] = lumpsumYears > 0
+          ? (totalLumpsumReturns / lumpsumYears) * 100 / lumpsumInvestment
+          : 0;
       isEvaluated = true;
     });
   }
@@ -81,23 +70,28 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(model.question, style: textStyles.mediumNormal),
-                ),
                 _buildChart(context),
-                const SizedBox(height: 40),
-                _buildDraggableIcons(context),
-                _buildCalculateButton(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(model.question, style: textStyles.smallBold),
+                      Text(model.description, style: textStyles.mediumNormal),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 20),
-                if (isEvaluated) ...[
-                  InvestmentDataTable(
-                      sipInvestmentAmount: 100,
-                      lumpsumInvestmentAmount: 1200,
-                      avgReturns: avgReturns,
-                      pnl: pnl),
-                  _buildYearlyReturnsDataTable(),
-                ],
+                InvestmentReturnsTable(
+                  avgReturns: avgReturns,
+                  onIconDropped: (icon, index) {
+                    setState(() {
+                      droppedIcons[index] = icon; // Now you have the index here
+                      evaluateReturnsAndPnl();
+                    });
+                  },
+                ),
               ],
             ),
           ),
@@ -120,7 +114,11 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
         MediaQuery.of(context).size.width / model.chartData.length * 0.6;
     final colors = Theme.of(context).customColors;
 
-    return SizedBox(
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
+      decoration:
+          BoxDecoration(border: Border.all(color: colors.borderColorSecondary)),
       height: 300,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -128,9 +126,9 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _buildDragTarget(index, barWidth, colors),
+              _buildDragTarget(index),
               const SizedBox(height: 10),
-              _buildBar(index, barWidth, colors),
+              _buildBar(index, barWidth),
             ],
           );
         }),
@@ -138,109 +136,45 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
     );
   }
 
-  Widget _buildDragTarget(int index, double barWidth, CustomColors colors) {
+  Widget _buildDragTarget(int index) {
     return DragTarget<String>(
       builder: (context, candidateData, rejectedData) {
-        return Container(
-          height: 40,
-          width: barWidth,
-          decoration: BoxDecoration(
-            color: droppedIcons[index] != null
-                ? colors.selectedItemColor
-                : colors.cardColorSecondary,
-            shape: BoxShape.circle,
-          ),
-          child: droppedIcons[index] != null
-              ? Icon(_getIcon(droppedIcons[index]!), color: Colors.white)
-              : const SizedBox.shrink(),
+        return InvestmentIcon(
+          width: 30,
+          height: 30,
+          color: _getColor(droppedIcons[index] ?? ""),
         );
       },
       onAccept: (data) {
         setState(() {
           droppedIcons[index] = data;
+          evaluateReturnsAndPnl();
         });
       },
     );
   }
 
-  Widget _buildBar(int index, double barWidth, CustomColors colors) {
+  Widget _buildBar(int index, double barWidth) {
+    double maxDataValue = model.chartData.reduce((a, b) => a > b ? a : b);
+    double barHeight = (model.chartData[index] / maxDataValue) * 200;
+
     return Container(
       width: barWidth,
-      height: model.chartData[index].toDouble(),
+      height: barHeight,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          // gradient: LinearGradient(
-          //   colors: [colors.borderColorSecondary, colors.borderColorPrimary],
-          //   begin: Alignment.bottomCenter,
-          //   end: Alignment.topCenter,
-          // ),
-          color: colors.axisColor.withOpacity(0.8)),
-    );
-  }
-
-  Widget _buildDraggableIcons(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: ['SIP', 'Lumpsum'].map((icon) {
-        return Draggable<String>(
-          data: icon,
-          feedback: Icon(_getIcon(icon), color: colors.primary, size: 40),
-          childWhenDragging: Icon(_getIcon(icon),
-              color: colors.borderColorSecondary, size: 40),
-          child: Column(
-            children: [
-              Icon(_getIcon(icon), color: colors.primary, size: 40),
-              Text(icon),
-            ],
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildCalculateButton() {
-    final colors = Theme.of(context).customColors;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
-      child: ButtonWidget(
-        color: colors.primary,
-        btnContent: 'Calculate',
-        onTap: evaluateReturnsAndPnl,
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).customColors.axisColor.withOpacity(0.8),
       ),
     );
   }
 
-  Widget _buildYearlyReturnsDataTable() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: DataTable(
-        columns: const [
-          DataColumn(label: Text('Year')),
-          DataColumn(label: Text('SIP')),
-          DataColumn(label: Text('Lumpsum')),
-        ],
-        rows: List.generate(model.chartData.length, (year) {
-          return DataRow(cells: [
-            DataCell(Text('${2024 - year}')),
-            DataCell(Text(yearlySipReturns[year].toStringAsFixed(2))),
-            DataCell(Text(yearlyLumpsumReturns[year].toStringAsFixed(2))),
-          ]);
-        }),
-      ),
-    );
-  }
+  Color _getColor(String icon) {
+    final colors = Theme.of(context).customColors;
 
-  IconData _getIcon(String icon) {
-    switch (icon) {
-      case 'SIP':
-        return Icons.star;
-      case 'Lumpsum':
-        return Icons.favorite;
-      default:
-        return Icons.help;
-    }
+    return icon == 'SIP'
+        ? colors.sipColor
+        : icon == 'Lump Sum'
+            ? colors.lumpSumColor
+            : colors.cardColorSecondary;
   }
 }

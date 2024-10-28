@@ -58,8 +58,8 @@ export 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget
 export 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_main.dart';
 export 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_model.dart';
 
-export 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
-export 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
+export 'package:tradeable_learn_widget/mutual_funds/mutual_fund_image_mcq/mutual_fund_image_mcq.dart';
+export 'package:tradeable_learn_widget/mutual_funds/mutual_fund_image_mcq/image_mcq_model.dart';
 
 export 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';
 export 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_model.dart';

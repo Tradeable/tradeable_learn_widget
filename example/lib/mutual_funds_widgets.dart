@@ -12,13 +12,13 @@ import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucke
 import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
-import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq.dart';
-import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_analysis_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_comparsion_widget/investment_comparision_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calculator_model.dart';
+import 'package:tradeable_learn_widget/mutual_funds/mutual_fund_image_mcq/image_mcq_model.dart';
+import 'package:tradeable_learn_widget/mutual_funds/mutual_fund_image_mcq/mutual_fund_image_mcq.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/risk_reward_ratio_widget/risk_reward_ratio_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget/selectable_grid_image_main.dart';
@@ -42,18 +42,18 @@ class MutualFundsWidgets extends StatelessWidget {
                 const NavigationButton(
                     text: "Family Plot", destination: FamilyPlotPage()),
                 const NavigationButton(
-                    text: "Bucket Container V2",
+                    text: "Bucket Container V2(done)",
                     destination: BucketContainerV2Page()),
                 const NavigationButton(
-                    text: "Selectable Image Widget",
+                    text: "Selectable Image Widget(done)",
                     destination: SelectableGridImagePage()),
                 const NavigationButton(
-                    text: "Risk reward ratio Widget",
+                    text: "Risk reward ratio Widget (done)",
                     destination: RiskRewardWidgetPage()),
                 const NavigationButton(
-                    text: "Image MCQ Widget", destination: ImageMCQPage()),
+                    text: "Mf Image MCQ Widget (done)", destination: ImageMCQPage()),
                 const NavigationButton(
-                    text: "Investment Analysis Widget",
+                    text: "Investment Analysis Widget(done)",
                     destination: InvestmentAnalysisPage()),
                 NavigationButton(
                     text: "Mutual Funds Calculator",
@@ -71,7 +71,7 @@ class MutualFundsWidgets extends StatelessWidget {
                               exitFeesCalculatorModel)),
                     )),
                 const NavigationButton(
-                    text: "Investment Comparsion",
+                    text: "Investment Comparsion(done)",
                     destination: ScaffoldWithAppBar(
                       title: "Investment Comparsion",
                       body: InvestmentComparisionMain(),
@@ -140,7 +140,9 @@ class ImageMCQPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
-        title: "Problem", body: ImageMcq(model: ImageMCQModel(imageMCQModel)));
+        title: "Problem",
+        body:
+            MutualFundImageMCQ(model: MutualFundImageMCQModel(imageMCQModel)));
   }
 }
 

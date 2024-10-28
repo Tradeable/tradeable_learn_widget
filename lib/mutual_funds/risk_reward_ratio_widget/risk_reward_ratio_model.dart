@@ -3,12 +3,15 @@ class RiskRewardRatioModel {
   late String title;
   late String description;
   late List<String> riskLevels;
-  late Map<String, String> rewardRanges;
+  late List<String> averageReturns;
+  late List<Map<String, String>> fundDetails;
 
   RiskRewardRatioModel(this.data) {
     title = data['title'];
     description = data['description'];
     riskLevels = List<String>.from(data['riskLevels']);
-    rewardRanges = Map<String, String>.from(data['rewardRanges']);
+    averageReturns = List<String>.from(data['averageReturns']);
+    fundDetails = List<Map<String, String>>.from(
+        data['fundDetails'].map((fund) => Map<String, String>.from(fund)));
   }
 }

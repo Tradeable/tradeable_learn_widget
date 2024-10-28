@@ -60,17 +60,22 @@ class _SelectableImageGridWidgetState extends State<SelectableImageGridWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Text(model.question, style: textStyles.mediumNormal),
-        ),
-        const SizedBox(height: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Text(model.title, style: textStyles.smallBold)),
         SizedBox(
           height: 300,
           width: double.infinity,
           child: Container(
             padding: const EdgeInsets.all(8),
             margin: const EdgeInsets.all(20),
-            color: colors.cardColorSecondary,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/folder.png',
+                  package: 'tradeable_learn_widget/lib',
+                ),
+              ),
+            ),
             child: selectedImages.isEmpty
                 ? const Center(child: Text('No Images Selected'))
                 : Center(
@@ -89,6 +94,9 @@ class _SelectableImageGridWidgetState extends State<SelectableImageGridWidget> {
                   ),
           ),
         ),
+        Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Text(model.question, style: textStyles.mediumNormal)),
         const SizedBox(height: 20),
         Expanded(
           child: Padding(

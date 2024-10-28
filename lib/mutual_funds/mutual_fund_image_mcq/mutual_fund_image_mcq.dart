@@ -1,21 +1,21 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/mutual_funds/image_mcq/image_mcq_model.dart';
+import 'package:tradeable_learn_widget/mutual_funds/mutual_fund_image_mcq/image_mcq_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
-class ImageMcq extends StatefulWidget {
-  final ImageMCQModel model;
+class MutualFundImageMCQ extends StatefulWidget {
+  final MutualFundImageMCQModel model;
 
-  const ImageMcq({super.key, required this.model});
+  const MutualFundImageMCQ({super.key, required this.model});
 
   @override
-  State<ImageMcq> createState() => _ImageMcqState();
+  State<MutualFundImageMCQ> createState() => _MutualFundImageMCQState();
 }
 
-class _ImageMcqState extends State<ImageMcq> {
-  late ImageMCQModel model;
+class _MutualFundImageMCQState extends State<MutualFundImageMCQ> {
+  late MutualFundImageMCQModel model;
 
   @override
   void initState() {
@@ -29,14 +29,38 @@ class _ImageMcqState extends State<ImageMcq> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        model.imgSrc!.isNotEmpty
-            ? Center(
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(model.imgSrc!,
-                        height: 350, fit: BoxFit.cover)),
-              )
-            : const SizedBox(height: 40),
+        SizedBox(
+          height: 300,
+          width: double.infinity,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/folder.png',
+                  package: 'tradeable_learn_widget/lib',
+                ),
+              ),
+            ),
+            child: (model.imgSrc ?? []).isEmpty
+                ? const Center(child: Text('No Images Selected'))
+                : Center(
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: model.imgSrc!
+                          .map((image) => Image.network(
+                                image,
+                                width: 80,
+                                height: 80,
+                              ))
+                          .toList(),
+                    ),
+                  ),
+          ),
+        ),
         const SizedBox(height: 20),
         renderQuestion(),
         renderOptions(),
@@ -65,9 +89,9 @@ class _ImageMcqState extends State<ImageMcq> {
 
   Widget renderOptions() {
     switch (model.state) {
-      case ImageMcqState.loadUI:
+      case MutualFundImageMcqState.loadUI:
         return buildOptions(correctResponse: null);
-      case ImageMcqState.submitResponse:
+      case MutualFundImageMcqState.submitResponse:
         return buildOptions(correctResponse: model.correctResponse);
     }
   }
@@ -90,7 +114,7 @@ class _ImageMcqState extends State<ImageMcq> {
           correctResponse: correctResponse,
           onTap: (option) {
             setState(() {
-              if (model.state == ImageMcqState.loadUI) {
+              if (model.state == MutualFundImageMcqState.loadUI) {
                 model.userResponse = option;
               }
             });
@@ -103,7 +127,7 @@ class _ImageMcqState extends State<ImageMcq> {
 
   void submit() {
     setState(() {
-      model.state = ImageMcqState.submitResponse;
+      model.state = MutualFundImageMcqState.submitResponse;
       if (model.userResponse == model.correctResponse) {
         model.isCorrect = true;
       }
