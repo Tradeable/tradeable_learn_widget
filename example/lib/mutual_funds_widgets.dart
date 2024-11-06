@@ -8,6 +8,7 @@ import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/bucket_containerv2.dart';
 import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucket_modelv2.dart';
+import 'package:tradeable_learn_widget/mutual_funds/dart_eval/darteval_trail.dart';
 import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_main.dart';
 import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fees_calculator_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/family_plot/family_plot_widget.dart';
@@ -75,6 +76,12 @@ class MutualFundsWidgets extends StatelessWidget {
                     destination: ScaffoldWithAppBar(
                       title: "Investment Comparsion",
                       body: InvestmentComparisionMain(),
+                    )),
+                const NavigationButton(
+                    text: "Dart Eval",
+                    destination: ScaffoldWithAppBar(
+                      title: "Investment Comparsion",
+                      body: DynamicWidget(),
                     )),
               ],
             ),

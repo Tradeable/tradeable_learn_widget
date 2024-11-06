@@ -5,17 +5,34 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class SavingsAmountWidget extends StatefulWidget {
   final Function(double, DateTime?, DateTime?) onValuesChanged;
+  final double initialSavingsAmount;
+  final DateTime? initialStartDate;
+  final DateTime? initialEndDate;
 
-  const SavingsAmountWidget({super.key, required this.onValuesChanged});
+  const SavingsAmountWidget({
+    super.key,
+    required this.onValuesChanged,
+    this.initialSavingsAmount = 0,
+    this.initialStartDate,
+    this.initialEndDate,
+  });
 
   @override
   State<SavingsAmountWidget> createState() => _SavingsAmountWidgetState();
 }
 
 class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
-  double _currentSliderValue = 0;
+  late double _currentSliderValue;
   DateTime? startDate;
   DateTime? endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSliderValue = widget.initialSavingsAmount;
+    startDate = widget.initialStartDate;
+    endDate = widget.initialEndDate;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +65,15 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
           children: [
             Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: colors.bullishColor)),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: colors.bullishColor),
+              ),
               child: InkWell(
                 child: const Icon(Icons.remove),
                 onTap: () {
                   setState(() {
                     if (_currentSliderValue > 0) {
-                      _currentSliderValue -= 100; // adjust increment as needed
+                      _currentSliderValue -= 100;
                       _updateValues();
                     }
                   });
@@ -68,9 +86,10 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
             ),
             Container(
               decoration: BoxDecoration(
-                  color: colors.bullishColor,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: colors.bullishColor)),
+                color: colors.bullishColor,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: colors.bullishColor),
+              ),
               child: InkWell(
                 child: Icon(Icons.add, color: colors.cardBasicBackground),
                 onTap: () {
@@ -141,7 +160,7 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
   Future<void> _selectStartDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: startDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
@@ -156,7 +175,7 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
   Future<void> _selectEndDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: endDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );

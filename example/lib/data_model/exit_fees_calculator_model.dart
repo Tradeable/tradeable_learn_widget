@@ -5,5 +5,7 @@ const exitFeesCalculatorModel = {
     "Total Investment": "",
     "Current NAV": "",
     "Redemption Amount": ""
-  }
+  },
+  "program":
+      "((CURRENT_NAV - NAV_AT_INVESTMENT) / NAV_AT_INVESTMENT) * TOTAL_INVESTMENT * (EXIT_FEE_PERCENTAGE / 100)"
 };
