@@ -17,6 +17,7 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   syncfusion_flutter_charts: ^27.1.55
   syncfusion_flutter_gauges: ^27.1.53
+  dart_eval: ^0.7.9
 
 dev_dependencies:
   flutter_test:
