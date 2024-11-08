@@ -73,3 +73,6 @@ export 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fe
 export 'package:tradeable_learn_widget/mutual_funds/investment_comparsion_widget/investment_comparision_main.dart';
 
 export 'package:tradeable_learn_widget/mutual_funds/dart_eval/darteval_trail.dart';
+
+export 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_main.dart';
+export 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_model.dart';

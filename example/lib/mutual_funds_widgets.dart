@@ -1,3 +1,4 @@
+import 'package:example/data_model/chart_user_story_model.dart';
 import 'package:example/data_model/exit_fees_calculator_model.dart';
 import 'package:example/data_model/image_mcq_model.dart';
 import 'package:example/data_model/investment_analysis_model.dart';
@@ -6,6 +7,8 @@ import 'package:example/data_model/risk_reward_ratio_model.dart';
 import 'package:example/data_model/selectable_image_grid_model.dart';
 import 'package:example/main.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_main.dart';
+import 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_model.dart';
 import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/bucket_containerv2.dart';
 import 'package:tradeable_learn_widget/mutual_funds/bucket_widgetv2/models/bucket_modelv2.dart';
 import 'package:tradeable_learn_widget/mutual_funds/dart_eval/darteval_trail.dart';
@@ -82,6 +85,14 @@ class MutualFundsWidgets extends StatelessWidget {
                     destination: ScaffoldWithAppBar(
                       title: "Investment Comparsion",
                       body: DynamicWidget(),
+                    )),
+                NavigationButton(
+                    text: "User story 1",
+                    destination: ScaffoldWithAppBar(
+                      title: "User Story 1",
+                      body: ChartUserStoryMain(
+                          model: ChartUserStoryModel.fromJson(
+                              chartUserStoryModel)),
                     )),
               ],
             ),
