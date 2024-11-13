@@ -18,6 +18,7 @@ class ChartUserStoryModel {
               successMessage: x["successMessage"],
               failureMessage: x["failureMessage"],
               nextStep: x["nextStep"],
+              skippable: x["skippable"] ?? false,
             ))
         .toList();
   }
@@ -32,6 +33,7 @@ class WorkflowStep {
   String? successMessage;
   String? failureMessage;
   String? nextStep;
+  bool skippable;
 
   WorkflowStep({
     required this.stepId,
@@ -42,5 +44,6 @@ class WorkflowStep {
     this.successMessage,
     this.failureMessage,
     this.nextStep,
+    this.skippable = false,
   });
 }

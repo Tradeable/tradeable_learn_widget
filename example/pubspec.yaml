@@ -38,6 +38,7 @@ dependencies:
     path: ../
   device_frame: ^1.2.0
   chips_choice: ^3.0.1
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

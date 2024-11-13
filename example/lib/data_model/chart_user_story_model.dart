@@ -8,6 +8,7 @@ const chartUserStoryModel = {
       "widget": "AnimatedText",
       "title": "Welcome Message",
       "prompt": "Welcome to the quiz! Get ready for the first question.",
+      "skippable": false,
       "nextStep": "2"
     },
     {
@@ -15,16 +16,18 @@ const chartUserStoryModel = {
       "widget": "Container",
       "title": "Chart Display",
       "prompt": "Here is some chart data.",
+      "skippable": true,
       "nextStep": "3"
     },
     {
       "stepId": "3",
       "widget": "TextInput",
       "title": "Number Guess",
-      "prompt": "Guess the correct number:",
-      "validationCriteria": "42", // Directly set the correct answer here
+      "prompt": "Guess a number greater than 40:",
+      "validationCriteria": "int.parse(input) > 40",
       "successMessage": "Correct! Click Next to continue.",
-      "failureMessage": "Try again.",
+      "failureMessage": "Try again. Hint: It's greater than 40.",
+      "skippable": false,
       "nextStep": "4"
     },
     {
@@ -32,9 +35,10 @@ const chartUserStoryModel = {
       "widget": "TextInput",
       "title": "Capital Guess",
       "prompt": "What is the capital of France?",
-      "validationCriteria": "Paris", // Directly set the correct answer here
+      "validationCriteria": "input.toLowerCase() == 'paris'",
       "successMessage": "Well done! Click Next to proceed.",
       "failureMessage": "Incorrect. Please try again.",
+      "skippable": false,
       "nextStep": "5"
     },
     {
@@ -42,6 +46,7 @@ const chartUserStoryModel = {
       "widget": "AnimatedText",
       "title": "Completion Message",
       "prompt": "Congratulations! You have completed the quiz.",
+      "skippable": true,
       "nextStep": null
     }
   ]

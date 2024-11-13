@@ -1,3 +1,4 @@
+import 'package:example/axis_levels_screen.dart';
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
 import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const TradeableWidgetDemoPage(),
         "/deepak": (context) => const MyHomePage(),
-        "/homeIntermediate":(context)=> const HomeIntermediateScreen()
+        "/homeIntermediate": (context) => const HomeIntermediateScreen(),
+        "/axis_levels": (context) => const AxisLevelsScreen()
       },
     );
   }
