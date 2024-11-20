@@ -76,3 +76,9 @@ export 'package:tradeable_learn_widget/mutual_funds/dart_eval/darteval_trail.dar
 
 export 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_main.dart';
 export 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_model.dart';
+
+export 'package:tradeable_learn_widget/calender_widget/calender_question.dart';
+export 'package:tradeable_learn_widget/calender_widget/calender_model.dart';
+
+export 'package:tradeable_learn_widget/formula_placeholder_widget/formula_placeholder_widget.dart';
+export 'package:tradeable_learn_widget/formula_placeholder_widget/formula_placeholder_model.dart';

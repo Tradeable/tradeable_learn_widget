@@ -23,10 +23,10 @@ const chartUserStoryModel = {
       "stepId": "3",
       "widget": "TextInput",
       "title": "Number Guess",
-      "prompt": "Guess a number greater than 40:",
-      "validationCriteria": "int.parse(input) > 40",
+      "prompt": "Guess a number lesser than 40:",
+      "validationCriteria": "int.parse(input) < 40",
       "successMessage": "Correct! Click Next to continue.",
-      "failureMessage": "Try again. Hint: It's greater than 40.",
+      "failureMessage": "Try again. Hint: It's lesser than 40.",
       "skippable": false,
       "nextStep": "4"
     },

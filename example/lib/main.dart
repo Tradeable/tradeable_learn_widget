@@ -1,6 +1,7 @@
 import 'package:example/axis_levels_screen.dart';
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
 import 'package:example/data_model/bucket_containerv1_model.dart';
+import 'package:example/data_model/calender_question_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
@@ -8,6 +9,7 @@ import 'package:example/data_model/content_preview_model.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
+import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
@@ -18,6 +20,7 @@ import 'package:example/data_model/video_educorner_model.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/calender_widget/calender_question.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 void main() {
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      initialRoute: "/homeIntermediate",
+      initialRoute: "/axis_levels",
       routes: {
         "/": (context) => const TradeableWidgetDemoPage(),
         "/deepak": (context) => const MyHomePage(),
@@ -56,78 +59,96 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: const SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                NavigationButton(
-                  text: "Ladder Widget",
-                  destination: LadderWidgetPage(),
-                ),
-                NavigationButton(
-                  text: "Dropdown Widget",
-                  destination: AtmDropdownWidgetPage(),
-                ),
-                NavigationButton(
-                  text: "ExpandableEduTile Widget",
-                  destination: ExpandableEduCornerPage(),
-                ),
-                NavigationButton(
-                  text: "Candle part select Widget",
-                  destination: CandleBodySelectPage(),
-                ),
-                NavigationButton(
-                  text: "Candle Match part Widget",
-                  destination: CandlePartMatchPage(),
-                ),
-                NavigationButton(
-                  text: "EN1 Match the pair Widget",
-                  destination: EN1Page(),
-                ),
-                NavigationButton(
-                  text: "Candle Select Question Widget",
-                  destination: CandleSelectQuestionPage(),
-                ),
-                NavigationButton(
-                  text: "MCQ Question Widget",
-                  destination: MCQQuestionPage(),
-                ),
-                NavigationButton(
-                  text: "Horizontal line Widget",
-                  destination: HorizontalLineQuestionPage(),
-                ),
-                NavigationButton(
-                  text: "MCQ Candle Image Question Widget",
-                  destination: MCQCandleImagePage(),
-                ),
-                NavigationButton(
-                  text: "Video Educorner Widget",
-                  destination: VideoEducornerPage(),
-                ),
-                NavigationButton(
-                  text: "Fno Scenario Widget",
-                  destination: FnoScenarioPage(),
-                ),
-                NavigationButton(
-                  text: "Bucket Widget V1",
-                  destination: BucketWidgetPage(),
-                ),
-                NavigationButton(
-                  text: "EduCorner Widget V1",
-                  destination: EducornerV1Page(),
-                ),
-                NavigationButton(
-                  text: "Markdown Widget",
-                  destination: ContentPreviewPage(),
-                ),
-                NavigationButton(
-                  text: "Options edu ",
-                  destination: OptionsEduPage(),
-                ),
-              ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const NavigationButton(
+                    text: "Ladder Widget",
+                    destination: LadderWidgetPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Dropdown Widget",
+                    destination: AtmDropdownWidgetPage(),
+                  ),
+                  const NavigationButton(
+                    text: "ExpandableEduTile Widget",
+                    destination: ExpandableEduCornerPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Candle part select Widget",
+                    destination: CandleBodySelectPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Candle Match part Widget",
+                    destination: CandlePartMatchPage(),
+                  ),
+                  const NavigationButton(
+                    text: "EN1 Match the pair Widget",
+                    destination: EN1Page(),
+                  ),
+                  const NavigationButton(
+                    text: "Candle Select Question Widget",
+                    destination: CandleSelectQuestionPage(),
+                  ),
+                  const NavigationButton(
+                    text: "MCQ Question Widget",
+                    destination: MCQQuestionPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Horizontal line Widget",
+                    destination: HorizontalLineQuestionPage(),
+                  ),
+                  const NavigationButton(
+                    text: "MCQ Candle Image Question Widget",
+                    destination: MCQCandleImagePage(),
+                  ),
+                  const NavigationButton(
+                    text: "Video Educorner Widget",
+                    destination: VideoEducornerPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Fno Scenario Widget",
+                    destination: FnoScenarioPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Bucket Widget V1",
+                    destination: BucketWidgetPage(),
+                  ),
+                  const NavigationButton(
+                    text: "EduCorner Widget V1",
+                    destination: EducornerV1Page(),
+                  ),
+                  const NavigationButton(
+                    text: "Markdown Widget",
+                    destination: ContentPreviewPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Options edu",
+                    destination: OptionsEduPage(),
+                  ),
+                  NavigationButton(
+                      text: "Calender Question",
+                      destination: ScaffoldWithAppBar(
+                        title: "Calender Question",
+                        body: CalenderQuestion(
+                            model: CalenderQuestionModel.fromJson(
+                                calenderQuestionModel)),
+                      )),
+                  NavigationButton(
+                      text: "Formula Placeholder Widget",
+                      destination: ScaffoldWithAppBar(
+                        title: "Formula Placeholder Widget",
+                        body: FormulaPlaceholderWidget(
+                            model: FormulaPlaceHolderModel.fromJson(
+                                formulaPlaceholderDataModel)),
+                      ))
+                ],
+              ),
             ),
           ),
         ),

@@ -18,6 +18,7 @@ dependencies:
   syncfusion_flutter_charts: ^27.1.55
   syncfusion_flutter_gauges: ^27.1.53
   dart_eval: ^0.7.9
+  flutter_heatmap_calendar: ^1.0.5
 
 dev_dependencies:
   flutter_test:
