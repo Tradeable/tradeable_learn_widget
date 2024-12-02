@@ -1,6 +1,7 @@
 import 'package:example/main.dart';
 import 'package:example/mutual_funds_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
 
 class HomeIntermediateScreen extends StatelessWidget {
   const HomeIntermediateScreen({super.key});
@@ -24,7 +25,13 @@ class HomeIntermediateScreen extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const MutualFundsWidgets()));
                 },
-                child: const Text("MutualFunds Widgets"))
+                child: const Text("MutualFunds Widgets")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const OptionStrategyContainer()));
+                },
+                child: const Text("Option strategy")),
           ],
         ),
       )),

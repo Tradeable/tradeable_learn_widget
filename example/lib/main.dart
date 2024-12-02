@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const TradeableWidgetDemoPage(),
         "/deepak": (context) => const MyHomePage(),
-        "/homeIntermediate":(context)=> const HomeIntermediateScreen()
+        "/homeIntermediate": (context) => const HomeIntermediateScreen()
       },
     );
   }
@@ -55,77 +55,79 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: const SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                NavigationButton(
-                  text: "Ladder Widget",
-                  destination: LadderWidgetPage(),
-                ),
-                NavigationButton(
-                  text: "Dropdown Widget",
-                  destination: AtmDropdownWidgetPage(),
-                ),
-                NavigationButton(
-                  text: "ExpandableEduTile Widget",
-                  destination: ExpandableEduCornerPage(),
-                ),
-                NavigationButton(
-                  text: "Candle part select Widget",
-                  destination: CandleBodySelectPage(),
-                ),
-                NavigationButton(
-                  text: "Candle Match part Widget",
-                  destination: CandlePartMatchPage(),
-                ),
-                NavigationButton(
-                  text: "EN1 Match the pair Widget",
-                  destination: EN1Page(),
-                ),
-                NavigationButton(
-                  text: "Candle Select Question Widget",
-                  destination: CandleSelectQuestionPage(),
-                ),
-                NavigationButton(
-                  text: "MCQ Question Widget",
-                  destination: MCQQuestionPage(),
-                ),
-                NavigationButton(
-                  text: "Horizontal line Widget",
-                  destination: HorizontalLineQuestionPage(),
-                ),
-                NavigationButton(
-                  text: "MCQ Candle Image Question Widget",
-                  destination: MCQCandleImagePage(),
-                ),
-                NavigationButton(
-                  text: "Video Educorner Widget",
-                  destination: VideoEducornerPage(),
-                ),
-                NavigationButton(
-                  text: "Fno Scenario Widget",
-                  destination: FnoScenarioPage(),
-                ),
-                NavigationButton(
-                  text: "Bucket Widget V1",
-                  destination: BucketWidgetPage(),
-                ),
-                NavigationButton(
-                  text: "EduCorner Widget V1",
-                  destination: EducornerV1Page(),
-                ),
-                NavigationButton(
-                  text: "Markdown Widget",
-                  destination: ContentPreviewPage(),
-                ),
-                NavigationButton(
-                  text: "Options edu ",
-                  destination: OptionsEduPage(),
-                ),
-              ],
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  NavigationButton(
+                    text: "Ladder Widget",
+                    destination: LadderWidgetPage(),
+                  ),
+                  NavigationButton(
+                    text: "Dropdown Widget",
+                    destination: AtmDropdownWidgetPage(),
+                  ),
+                  NavigationButton(
+                    text: "ExpandableEduTile Widget",
+                    destination: ExpandableEduCornerPage(),
+                  ),
+                  NavigationButton(
+                    text: "Candle part select Widget",
+                    destination: CandleBodySelectPage(),
+                  ),
+                  NavigationButton(
+                    text: "Candle Match part Widget",
+                    destination: CandlePartMatchPage(),
+                  ),
+                  NavigationButton(
+                    text: "EN1 Match the pair Widget",
+                    destination: EN1Page(),
+                  ),
+                  NavigationButton(
+                    text: "Candle Select Question Widget",
+                    destination: CandleSelectQuestionPage(),
+                  ),
+                  NavigationButton(
+                    text: "MCQ Question Widget",
+                    destination: MCQQuestionPage(),
+                  ),
+                  NavigationButton(
+                    text: "Horizontal line Widget",
+                    destination: HorizontalLineQuestionPage(),
+                  ),
+                  NavigationButton(
+                    text: "MCQ Candle Image Question Widget",
+                    destination: MCQCandleImagePage(),
+                  ),
+                  NavigationButton(
+                    text: "Video Educorner Widget",
+                    destination: VideoEducornerPage(),
+                  ),
+                  NavigationButton(
+                    text: "Fno Scenario Widget",
+                    destination: FnoScenarioPage(),
+                  ),
+                  NavigationButton(
+                    text: "Bucket Widget V1",
+                    destination: BucketWidgetPage(),
+                  ),
+                  NavigationButton(
+                    text: "EduCorner Widget V1",
+                    destination: EducornerV1Page(),
+                  ),
+                  NavigationButton(
+                    text: "Markdown Widget",
+                    destination: ContentPreviewPage(),
+                  ),
+                  NavigationButton(
+                    text: "Options edu ",
+                    destination: OptionsEduPage(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
