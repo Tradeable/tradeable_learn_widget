@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/option_strategy/option_strategy_info_component.dart';
 
 class PayoffGraphWidget extends StatefulWidget {
   const PayoffGraphWidget({super.key});
@@ -16,6 +17,7 @@ class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Test your results by moving the slider below"),
+          OptionStrategyInfoComponent()
         ],
       ),
     );
