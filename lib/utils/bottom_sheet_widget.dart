@@ -49,6 +49,7 @@ class BottomSheetWidget extends StatelessWidget {
                 color: colors.primary,
                 btnContent: "Next",
                 onTap: () {
+                  Navigator.of(context).pop();
                   onNextClick();
                 }),
           ],
