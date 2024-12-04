@@ -3,6 +3,7 @@ import 'package:example/data_model/atm_itm_dropdown_model.dart';
 import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/calender_question_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
+import 'package:example/data_model/candle_formation_v2.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/content_preview_model.dart';
@@ -14,6 +15,7 @@ import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
@@ -137,7 +139,8 @@ class MyHomePage extends StatelessWidget {
                         title: "Calender Question",
                         body: CalenderQuestion(
                             model: CalenderQuestionModel.fromJson(
-                                calenderQuestionModel)),
+                                calenderQuestionModel),
+                            onNextClick: () {}),
                       )),
                   NavigationButton(
                       text: "Formula Placeholder Widget",
@@ -145,8 +148,26 @@ class MyHomePage extends StatelessWidget {
                         title: "Formula Placeholder Widget",
                         body: FormulaPlaceholderWidget(
                             model: FormulaPlaceHolderModel.fromJson(
-                                formulaPlaceholderDataModel)),
-                      ))
+                                formulaPlaceholderDataModel),
+                            onNextClick: () {}),
+                      )),
+                  NavigationButton(
+                      text: "Candle Formation V2",
+                      destination: ScaffoldWithAppBar(
+                        title: "Candle Formation V2",
+                        body: CandleFormationV2Main(
+                            model: CandleFormationV2Model.fromJson(
+                                candleFormationV2),
+                            onNextClick: () => {}),
+                      )),
+                  NavigationButton(
+                      text: "Multiple Select MCQ",
+                      destination: ScaffoldWithAppBar(
+                        title: "Multiple Select MCQ",
+                        body: MultipleMCQSelect(
+                            model: MultipleMCQModel.fromJson(multipleSelectMCQ),
+                            onNextClick: () => {}),
+                      )),
                 ],
               ),
             ),
@@ -189,8 +210,8 @@ class OptionsEduPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: OptionEduCorner(
-        model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
-      ),
+          model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
+          onNextClick: () {}),
     );
   }
 }
@@ -204,6 +225,7 @@ class LadderWidgetPage extends StatelessWidget {
       title: "Problem",
       body: LadderWidgetMain(
         ladderModel: LadderModel.fromJson(ladderQuestionData),
+        onNextClick: () {},
       ),
     );
   }
@@ -218,6 +240,7 @@ class AtmDropdownWidgetPage extends StatelessWidget {
       title: "Problem",
       body: ATMWidget(
         model: ATMWidgetModel.fromJson(atmItmDropdownModel),
+        onNextClick: () {},
       ),
     );
   }
@@ -231,7 +254,8 @@ class ExpandableEduCornerPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: ExpandableEduTileMain(
-          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData)),
+          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
+          onNextClick: () {}),
     );
   }
 }
@@ -244,7 +268,8 @@ class CandleBodySelectPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandleBodySelect(
-          model: CandlePartSelectModel.fromJson(candleBodySelectModelData)),
+          model: CandlePartSelectModel.fromJson(candleBodySelectModelData),
+          onNextClick: () {}),
     );
   }
 }
@@ -257,7 +282,8 @@ class CandlePartMatchPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandlePartMatchLink(
-          model: CandleMatchThePairModel.fromJson(candlePartMatchModelData)),
+          model: CandleMatchThePairModel.fromJson(candlePartMatchModelData),
+          onNextClick: () {}),
     );
   }
 }
@@ -269,7 +295,7 @@ class EN1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: EN1(model: EN1Model.fromJson(en1DataModel)),
+      body: EN1(model: EN1Model.fromJson(en1DataModel), onNextClick: () {}),
     );
   }
 }
@@ -282,7 +308,8 @@ class CandleSelectQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: CandleSelectQuestion(
-          model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel)),
+          model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel),
+          onNextClick: () {}),
     );
   }
 }
@@ -294,7 +321,8 @@ class MCQQuestionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: MCQQuestion(model: MCQModel.fromJson(mcqStaticModel)),
+      body: MCQQuestion(
+          model: MCQModel.fromJson(mcqStaticModel), onNextClick: () {}),
     );
   }
 }
@@ -307,7 +335,8 @@ class HorizontalLineQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: HorizontalLineQuestion(
-          model: HorizontalLineModel.fromJson(horizontalLineModel)),
+          model: HorizontalLineModel.fromJson(horizontalLineModel),
+          onNextClick: () {}),
     );
   }
 }
@@ -320,7 +349,8 @@ class MCQCandleImagePage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MCQCandleQuestion(
-          model: MCQCandleModel.fromJson(mcqCandleImageModel)),
+          model: MCQCandleModel.fromJson(mcqCandleImageModel),
+          onNextClick: () {}),
     );
   }
 }
@@ -333,7 +363,8 @@ class VideoEducornerPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: VideoEduCorner(
-          model: VideoEduCornerModel.fromJson(videoEducornerModel)),
+          model: VideoEduCornerModel.fromJson(videoEducornerModel),
+          onNextClick: () {}),
     );
   }
 }
@@ -345,7 +376,9 @@ class FnoScenarioPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: DragAndDropMatch(model: LadderModel.fromJson(optionsScenarioModel)),
+      body: DragAndDropMatch(
+          model: LadderModel.fromJson(optionsScenarioModel),
+          onNextClick: () {}),
     );
   }
 }
@@ -358,7 +391,8 @@ class BucketWidgetPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: BucketContainerV1(
-          model: BucketContainerModel.fromJson(bucketContainerV1Model)),
+          model: BucketContainerModel.fromJson(bucketContainerV1Model),
+          onNextClick: () {}),
     );
   }
 }
@@ -370,7 +404,8 @@ class EducornerV1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: EduCornerV1(model: EduCornerModel.fromJson(educornerV1Model)),
+      body: EduCornerV1(
+          model: EduCornerModel.fromJson(educornerV1Model), onNextClick: () {}),
     );
   }
 }
@@ -383,7 +418,8 @@ class ContentPreviewPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MarkdownPreviewWidget(
-          model: MarkdownPreviewModel.fromJson(contentPreviewModel)),
+          model: MarkdownPreviewModel.fromJson(contentPreviewModel),
+          onNextClick: () {}),
     );
   }
 }

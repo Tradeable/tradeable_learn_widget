@@ -137,7 +137,8 @@ class _MutualFundImageMCQState extends State<MutualFundImageMCQ> {
         context: context,
         builder: (context) => BottomSheetWidget(
             isCorrect: model.isCorrect,
-            explanationString: "Explanation goes here"));
+            explanationString: "Explanation goes here",
+            onNextClick: () {}));
   }
 }
 

@@ -7,8 +7,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class BucketContainerV1 extends StatefulWidget {
   final BucketContainerModel model;
+  final VoidCallback onNextClick;
 
-  const BucketContainerV1({super.key, required this.model});
+  const BucketContainerV1(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<BucketContainerV1> createState() => _BucketContainerV1State();
@@ -194,7 +196,9 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
                   ? colors.primary
                   : colors.secondary,
               btnContent: "Next",
-              onTap: () {}),
+              onTap: () {
+                widget.onNextClick();
+              }),
         )
       ],
     );

@@ -6,8 +6,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MarkdownPreviewWidget extends StatefulWidget {
   final MarkdownPreviewModel model;
+  final VoidCallback onNextClick;
 
-  const MarkdownPreviewWidget({super.key, required this.model});
+  const MarkdownPreviewWidget(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<MarkdownPreviewWidget> createState() => _TextImagePreviewWidget();
@@ -44,7 +46,9 @@ class _TextImagePreviewWidget extends State<MarkdownPreviewWidget> {
             data: model.content,
           ),
         ),
-        ButtonWidget(color: colors.primary, btnContent: "Next", onTap: () {})
+        ButtonWidget(color: colors.primary, btnContent: "Next", onTap: () {
+          widget.onNextClick();
+        })
       ]),
     );
   }

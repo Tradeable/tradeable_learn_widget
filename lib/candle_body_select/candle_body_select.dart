@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/candle_body_select/candle_body_select_model.dart';
+import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CandleBodySelect extends StatefulWidget {
   final CandlePartSelectModel model;
+  final VoidCallback onNextClick;
 
-  const CandleBodySelect({super.key, required this.model});
+  const CandleBodySelect(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<CandleBodySelect> createState() => _CandleBodySelectState();
@@ -124,10 +127,15 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
         model.state = CandleBodySelectState.submitResponse;
       });
       showModalBottomSheet(
-        isDismissible: false,
-        context: context,
-        builder: (context) => buildBottomSheet(),
-      );
+          isDismissible: false,
+          context: context,
+          builder: (context) => BottomSheetWidget(
+              isCorrect: model.isCorrect,
+              explanationString: "Explanation goes here",
+              onNextClick: () {
+
+                widget.onNextClick();
+              }));
     }
   }
 
@@ -177,7 +185,9 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
             ButtonWidget(
               color: colors.primary,
               btnContent: "Next",
-              onTap: () {},
+              onTap: () {
+                widget.onNextClick();
+              },
             ),
           ],
         ),

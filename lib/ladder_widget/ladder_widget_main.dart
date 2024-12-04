@@ -10,8 +10,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LadderWidgetMain extends StatefulWidget {
   final LadderModel ladderModel;
+  final VoidCallback onNextClick;
 
-  const LadderWidgetMain({super.key, required this.ladderModel});
+  const LadderWidgetMain(
+      {super.key, required this.ladderModel, required this.onNextClick});
 
   @override
   State<LadderWidgetMain> createState() => _LadderWidgetMainState();
@@ -114,8 +116,10 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                         color: answeredAllCorrectly()
                             ? colors.primary
                             : colors.secondary,
-                        btnContent: "Submit",
-                        onTap: () {}),
+                        btnContent: "Next",
+                        onTap: () {
+                          widget.onNextClick();
+                        }),
                     const SizedBox(height: 10),
                   ],
                 ),

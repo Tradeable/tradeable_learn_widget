@@ -8,8 +8,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class EduCornerV1 extends StatefulWidget {
   final EduCornerModel model;
+  final VoidCallback onNextClick;
 
-  const EduCornerV1({super.key, required this.model});
+  const EduCornerV1(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<EduCornerV1> createState() => _EduCornerV1State();
@@ -63,7 +65,11 @@ class _EduCornerV1State extends State<EduCornerV1> {
                   ? colors.primary
                   : colors.secondary,
               btnContent: "Next",
-              onTap: () {},
+              onTap: () {
+                if (currentPage == model.cards.length - 1) {
+                  widget.onNextClick();
+                }
+              },
             ),
           )
         ],
@@ -232,8 +238,9 @@ class _EduCornerV1State extends State<EduCornerV1> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => VideoEduCorner(
-                        model: VideoEduCornerModel.fromJson(
-                            {"video_id": videoId}))));
+                        model:
+                            VideoEduCornerModel.fromJson({"video_id": videoId}),
+                        onNextClick: () {})));
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,

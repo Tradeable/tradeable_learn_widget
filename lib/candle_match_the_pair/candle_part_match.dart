@@ -8,8 +8,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CandlePartMatchLink extends StatefulWidget {
   final CandleMatchThePairModel model;
+  final VoidCallback onNextClick;
 
-  const CandlePartMatchLink({super.key, required this.model});
+  const CandlePartMatchLink(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<CandlePartMatchLink> createState() => _CandlePartMatchLinkState();
@@ -205,10 +207,15 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
       }
     }
     showModalBottomSheet(
-        isDismissible: false,
-        context: context,
-        builder: (context) => BottomSheetWidget(
-            isCorrect: model.isCorrect,
-            explanationString: "Explanation goes here"));
+      isDismissible: false,
+      context: context,
+      builder: (context) => BottomSheetWidget(
+        isCorrect: model.isCorrect,
+        explanationString: "Explanation goes here",
+        onNextClick: () {
+          widget.onNextClick();
+        },
+      ),
+    );
   }
 }

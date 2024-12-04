@@ -7,8 +7,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MCQCandleQuestion extends StatefulWidget {
   final MCQCandleModel model;
+  final VoidCallback onNextClick;
 
-  const MCQCandleQuestion({super.key, required this.model});
+  const MCQCandleQuestion(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<MCQCandleQuestion> createState() => _MCQCandleQuestionState();
@@ -113,7 +115,10 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
         context: context,
         builder: (context) => BottomSheetWidget(
             isCorrect: model.isCorrect,
-            explanationString: "Explanation goes here"));
+            explanationString: "Explanation goes here",
+            onNextClick: () {
+              widget.onNextClick();
+            }));
   }
 }
 

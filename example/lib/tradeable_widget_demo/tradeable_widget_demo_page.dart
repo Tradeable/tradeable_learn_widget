@@ -47,68 +47,84 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
     WidgetChips(
         label: "Youtube Video Education Corner",
         widget: VideoEduCorner(
-            model: VideoEduCornerModel.fromJson(videoEducornerModel))),
+            model: VideoEduCornerModel.fromJson(videoEducornerModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "Market Value Selector",
         widget: ATMWidget(
           model: ATMWidgetModel.fromJson(atmItmDropdownModel),
+          onNextClick: () {},
         )),
     WidgetChips(
       label: "Expandable EduCorner",
       widget: ExpandableEduTileMain(
-          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData)),
+          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
+          onNextClick: () {}),
     ),
     WidgetChips(
       label: "Candle Part Identifier",
       widget: CandleBodySelect(
-          model: CandlePartSelectModel.fromJson(candleBodySelectModelData)),
+          model: CandlePartSelectModel.fromJson(candleBodySelectModelData),
+          onNextClick: () {}),
     ),
     WidgetChips(
         label: "Options Wall",
         widget: LadderWidgetMain(
-            ladderModel: LadderModel.fromJson(ladderQuestionData))),
+            ladderModel: LadderModel.fromJson(ladderQuestionData),
+            onNextClick: () {})),
     WidgetChips(
         label: "Candle Part Identifier V2",
         widget: CandlePartMatchLink(
-            model: CandleMatchThePairModel.fromJson(candlePartMatchModelData))),
+            model: CandleMatchThePairModel.fromJson(candlePartMatchModelData),
+            onNextClick: () {})),
     WidgetChips(
         label: "Match the pair",
-        widget: EN1(model: EN1Model.fromJson(en1DataModel))),
+        widget:
+            EN1(model: EN1Model.fromJson(en1DataModel), onNextClick: () {})),
     WidgetChips(
         label: "Candle Selection Tool",
         widget: CandleSelectQuestion(
-            model:
-                CandleSelectModel.fromJson(candleSelectQuestionStaticModel))),
+            model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "MCQ Question",
-        widget: MCQQuestion(model: MCQModel.fromJson(mcqStaticModel))),
+        widget: MCQQuestion(
+            model: MCQModel.fromJson(mcqStaticModel), onNextClick: () {})),
     WidgetChips(
         label: "Horizontal line Question",
         widget: HorizontalLineQuestion(
-            model: HorizontalLineModel.fromJson(horizontalLineModel))),
+            model: HorizontalLineModel.fromJson(horizontalLineModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "MCQ Question",
         widget: MCQCandleQuestion(
-            model: MCQCandleModel.fromJson(mcqCandleImageModel))),
+            model: MCQCandleModel.fromJson(mcqCandleImageModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "FNO Scenario Page",
         widget: DragAndDropMatch(
-            model: LadderModel.fromJson(optionsScenarioModel))),
+            model: LadderModel.fromJson(optionsScenarioModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "Categorisation Widget",
         widget: BucketContainerV1(
-            model: BucketContainerModel.fromJson(bucketContainerV1Model))),
+            model: BucketContainerModel.fromJson(bucketContainerV1Model),
+            onNextClick: () {})),
     WidgetChips(
         label: "Edu Corner V1",
-        widget: EduCornerV1(model: EduCornerModel.fromJson(educornerV1Model))),
+        widget: EduCornerV1(
+            model: EduCornerModel.fromJson(educornerV1Model),
+            onNextClick: () {})),
     WidgetChips(
         label: "EduCorner V2",
         widget: MarkdownPreviewWidget(
-            model: MarkdownPreviewModel.fromJson(contentPreviewModel))),
+            model: MarkdownPreviewModel.fromJson(contentPreviewModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "Options EduCorner",
         widget: OptionEduCorner(
-            model: OptionsEduCornerModel.fromJson(optionsEducornerModel))),
+            model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
+            onNextClick: () {})),
     WidgetChips(
         label: "Bucket Container Widget",
         widget: BucketContainerV2(

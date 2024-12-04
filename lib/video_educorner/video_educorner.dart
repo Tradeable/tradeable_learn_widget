@@ -6,8 +6,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoEduCorner extends StatefulWidget {
   final VideoEduCornerModel model;
+  final VoidCallback onNextClick;
 
-  const VideoEduCorner({super.key, required this.model});
+  const VideoEduCorner(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<VideoEduCorner> createState() => _VideoEduCorner();
@@ -103,7 +105,11 @@ class _VideoEduCorner extends State<VideoEduCorner> {
         Padding(
             padding: const EdgeInsets.all(16.0),
             child: ButtonWidget(
-                color: colors.primary, btnContent: "Next", onTap: () {})),
+                color: colors.primary,
+                btnContent: "Next",
+                onTap: () {
+                  widget.onNextClick();
+                })),
       ],
     );
   }

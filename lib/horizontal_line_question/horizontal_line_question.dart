@@ -18,8 +18,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class HorizontalLineQuestion extends StatefulWidget {
   final HorizontalLineModel model;
+  final VoidCallback onNextClick;
 
-  const HorizontalLineQuestion({super.key, required this.model});
+  const HorizontalLineQuestion(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<HorizontalLineQuestion> createState() => _HorizontalLineQuestionState();
@@ -236,7 +238,11 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
                   Text("Explanation goes here", style: textStyles.smallNormal),
                   const SizedBox(height: 20),
                   ButtonWidget(
-                      color: colors.primary, btnContent: "Next", onTap: () {}),
+                      color: colors.primary,
+                      btnContent: "Next",
+                      onTap: () {
+                        widget.onNextClick();
+                      }),
                 ],
               ),
             ),

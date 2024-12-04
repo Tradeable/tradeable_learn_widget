@@ -5,8 +5,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ExpandableEduTileMain extends StatefulWidget {
   final ExpandableEduTileModel model;
+  final VoidCallback onNextClick;
 
-  const ExpandableEduTileMain({super.key, required this.model});
+  const ExpandableEduTileMain(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<StatefulWidget> createState() => _ExpandableEduTileMainState();
@@ -55,7 +57,9 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
           SizedBox(
             height: 50,
             child: ButtonWidget(
-                color: colors.primary, btnContent: "Next", onTap: () {}),
+                color: colors.primary, btnContent: "Next", onTap: () {
+                  widget.onNextClick();
+            }),
           ),
         ],
       ),

@@ -5,8 +5,9 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ATMWidget extends StatefulWidget {
   final ATMWidgetModel model;
+  final VoidCallback onNextClick;
 
-  const ATMWidget({super.key, required this.model});
+  const ATMWidget({super.key, required this.model, required this.onNextClick});
 
   @override
   State<ATMWidget> createState() => _ATMWidgetState();
@@ -63,8 +64,10 @@ class _ATMWidgetState extends State<ATMWidget> {
           child: ButtonWidget(
               color:
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,
-              btnContent: "Submit",
-              onTap: () {}),
+              btnContent: "Next",
+              onTap: () {
+                widget.onNextClick();
+              }),
         ),
       ],
     );

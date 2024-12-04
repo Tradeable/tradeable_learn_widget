@@ -6,8 +6,9 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class EN1 extends StatefulWidget {
   final EN1Model model;
+  final VoidCallback onNextClick;
 
-  const EN1({super.key, required this.model});
+  const EN1({super.key, required this.model, required this.onNextClick});
 
   @override
   State<EN1> createState() => _EN1State();
@@ -97,7 +98,9 @@ class _EN1State extends State<EN1> {
                             ? colors.secondary
                             : colors.primary,
                         btnContent: "Next",
-                        onTap: () {}),
+                        onTap: () {
+                          widget.onNextClick();
+                        }),
                   )
                 ],
               ),

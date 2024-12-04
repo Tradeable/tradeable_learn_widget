@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:tradeable_learn_widget/calender_widget/calender_model.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CalenderQuestion extends StatefulWidget {
   final CalenderQuestionModel model;
+  final VoidCallback onNextClick;
 
-  const CalenderQuestion({super.key, required this.model});
+  const CalenderQuestion(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<CalenderQuestion> createState() => _CalenderQuestionState();
@@ -75,6 +78,17 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
                   });
                 }
               },
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              child: ButtonWidget(
+                color: colors.primary,
+                btnContent: "Submit",
+                onTap: (){
+                  widget.onNextClick();
+                },
+              ),
             ),
           ],
         ),

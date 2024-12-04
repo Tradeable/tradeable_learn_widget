@@ -8,8 +8,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class DragAndDropMatch extends StatefulWidget {
   final LadderModel model;
+  final VoidCallback onNextClick;
 
-  const DragAndDropMatch({super.key, required this.model});
+  const DragAndDropMatch(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<DragAndDropMatch> createState() => _DragAndDropMatchState();
@@ -140,8 +142,10 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
               color: answeredAllCorrectly() ? colors.primary : colors.secondary,
-              btnContent: "Submit",
-              onTap: () {}),
+              btnContent: "Next",
+              onTap: () {
+                widget.onNextClick();
+              }),
         ),
         const SizedBox(height: 10),
       ],

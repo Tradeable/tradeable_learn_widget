@@ -17,8 +17,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CandleSelectQuestion extends StatefulWidget {
   final CandleSelectModel model;
+  final VoidCallback onNextClick;
 
-  const CandleSelectQuestion({super.key, required this.model});
+  const CandleSelectQuestion(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<CandleSelectQuestion> createState() => _CandleSelectQuestionState();
@@ -249,8 +251,12 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
         isDismissible: false,
         context: context,
         builder: (context) => BottomSheetWidget(
-            isCorrect: model.isCorrect,
-            explanationString: "Explanation goes here"));
+              isCorrect: model.isCorrect,
+              explanationString: "Explanation goes here",
+              onNextClick: () {
+                widget.onNextClick();
+              },
+            ));
     //todo
     // finish(widget.node.edges?.first.pathId ?? "finished", model.isCorrect);
   }

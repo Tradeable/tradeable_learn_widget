@@ -10,11 +10,10 @@ import 'package:tradeable_learn_widget/options_educorner/widgets/toggle_widget.d
 
 class OptionEduCorner extends StatefulWidget {
   final OptionsEduCornerModel model;
+  final VoidCallback onNextClick;
 
-  const OptionEduCorner({
-    super.key,
-    required this.model,
-  });
+  const OptionEduCorner(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<OptionEduCorner> createState() => _OptionEduCornerState();
@@ -306,6 +305,7 @@ class _OptionEduCornerState extends State<OptionEduCorner>
         ],
       ),
       onNextPressed: () {
+        widget.onNextClick();
         // finish(widget.node.edges?.first.pathId ?? "finished", true);
       },
     );

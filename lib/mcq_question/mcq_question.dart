@@ -17,8 +17,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MCQQuestion extends StatefulWidget {
   final MCQModel model;
+  final VoidCallback onNextClick;
 
-  const MCQQuestion({super.key, required this.model});
+  const MCQQuestion(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<MCQQuestion> createState() => _MCQQuestionState();
@@ -182,11 +184,16 @@ class _MCQQuestionState extends State<MCQQuestion> {
 
   void showSheet() {
     showModalBottomSheet(
-        isDismissible: false,
-        context: context,
-        builder: (context) => BottomSheetWidget(
-            isCorrect: model.isCorrect,
-            explanationString: "Explanaiton goes here"));
+      isDismissible: false,
+      context: context,
+      builder: (context) => BottomSheetWidget(
+        isCorrect: model.isCorrect,
+        explanationString: "Explanaiton goes here",
+        onNextClick: () {
+          widget.onNextClick();
+        },
+      ),
+    );
   }
 
   void initChartData() {

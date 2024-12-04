@@ -82,3 +82,12 @@ export 'package:tradeable_learn_widget/calender_widget/calender_model.dart';
 
 export 'package:tradeable_learn_widget/formula_placeholder_widget/formula_placeholder_widget.dart';
 export 'package:tradeable_learn_widget/formula_placeholder_widget/formula_placeholder_model.dart';
+
+export 'package:tradeable_learn_widget/candle_formation_v2/candle_formation_v2_main.dart';
+export 'package:tradeable_learn_widget/candle_formation_v2/candle_formation_v2_model.dart';
+
+export 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_json.dart';
+export 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_main.dart';
+
+export 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_model.dart';
+export 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_question.dart';

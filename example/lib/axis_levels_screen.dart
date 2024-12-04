@@ -17,39 +17,39 @@ class AxisLevelsScreen extends StatelessWidget {
           ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyLevelWidget(levelId: 283)));
+                    builder: (context) => const MyLevelWidget(levelId: 288)));
               },
               child: const Text("Intro to TA")),
           ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyLevelWidget(levelId: 284)));
-              },
-              child: const Text("Support & Resistance")),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyLevelWidget(levelId: 286)));
-              },
-              child: const Text("Greeks")),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyLevelWidget(levelId: 287)));
-              },
-              child: const Text("Trading Fundamentals")),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MyLevelWidget(levelId: 285)));
+                    builder: (context) => const MyLevelWidget(levelId: 290)));
               },
               child: const Text("Options")),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MyLevelWidget(levelId: 289)));
+              },
+              child: const Text("Support & Resistance")),
           ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const MyLevelWidget(levelId: 291)));
               },
               child: const Text("Moneyness")),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MyLevelWidget(levelId: 292)));
+              },
+              child: const Text("Candlestick Patterns")),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MyLevelWidget(levelId: 293)));
+              },
+              child: const Text("Upper circuit and Lower circuit")),
         ],
       )),
     );
@@ -126,60 +126,101 @@ class _MyLevelWidget extends State<MyLevelWidget> {
   }
 
   Widget getViewByType(String levelType, Map<String, dynamic>? data) {
+    print(levelType);
     switch (levelType) {
       case "Edu_Corner":
-        return EduCornerV1(model: EduCornerModel.fromJson(data));
+        // case "EduCornerV1":
+        return EduCornerV1(
+            model: EduCornerModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "CA1.1":
-        return CandleBodySelect(model: CandlePartSelectModel.fromJson(data));
+        return CandleBodySelect(
+            model: CandlePartSelectModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "ladder_question":
-        return LadderWidgetMain(ladderModel: LadderModel.fromJson(data));
+        return LadderWidgetMain(
+            ladderModel: LadderModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "call_put_atm":
-        return ATMWidget(model: ATMWidgetModel.fromJson(data));
+        return ATMWidget(
+            model: ATMWidgetModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "expandableEduTileModelData":
         return ExpandableEduTileMain(
-            model: ExpandableEduTileModel.fromJson(data));
+            model: ExpandableEduTileModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "CA1.2":
         return CandlePartMatchLink(
-            model: CandleMatchThePairModel.fromJson(data));
+            model: CandleMatchThePairModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "EN1":
-        return EN1(model: EN1Model.fromJson(data));
+        return EN1(
+            model: EN1Model.fromJson(data), onNextClick: () => onNextClick());
       case "MultipleCandleSelect_STATIC":
       case "MultipleCandleSelect_DYNAMIC":
-        return CandleSelectQuestion(model: CandleSelectModel.fromJson(data));
+        return CandleSelectQuestion(
+            model: CandleSelectModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "MCQ_STATIC":
       case "MCQ_DYNAMIC":
-        return MCQQuestion(model: MCQModel.fromJson(data));
+        return MCQQuestion(
+            model: MCQModel.fromJson(data), onNextClick: () => onNextClick());
       case "HorizontalLine_STATIC":
       case "HorizontalLine_DYNAMIC":
       case "MultipleHorizontalLine_STATIC":
       case "MultipleHorizontalLine_DYNAMIC":
         return HorizontalLineQuestion(
-            model: HorizontalLineModel.fromJson(data));
+            model: HorizontalLineModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "MCQ_CANDLE":
-        return MCQCandleQuestion(model: MCQCandleModel.fromJson(data));
+        return MCQCandleQuestion(
+            model: MCQCandleModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "video_educorner":
-        return VideoEduCorner(model: VideoEduCornerModel.fromJson(data));
+        return VideoEduCorner(
+            model: VideoEduCornerModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "drag_and_drop_match":
       case "fno_scenario_1":
-        return DragAndDropMatch(model: LadderModel.fromJson(data));
+        return DragAndDropMatch(
+            model: LadderModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "Bucket_containerv1":
       case "drag_drop_logo":
-        return BucketContainerV1(model: BucketContainerModel.fromJson(data));
-      case "EduCornerV1":
-        return EduCornerV1(model: EduCornerModel.fromJson(data));
+        return BucketContainerV1(
+            model: BucketContainerModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "content_preview":
         return MarkdownPreviewWidget(
-            model: MarkdownPreviewModel.fromJson(data));
+            model: MarkdownPreviewModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "Calender_Question":
-        return CalenderQuestion(model: CalenderQuestionModel.fromJson(data));
+        return CalenderQuestion(
+            model: CalenderQuestionModel.fromJson(data),
+            onNextClick: () => onNextClick());
       case "formula_placeholder":
         return FormulaPlaceholderWidget(
-            model: FormulaPlaceHolderModel.fromJson(data));
+            model: FormulaPlaceHolderModel.fromJson(data),
+            onNextClick: () => onNextClick());
+      case "candle_formationv2":
+        return CandleFormationV2Main(
+            model: CandleFormationV2Model.fromJson(data),
+            onNextClick: () => onNextClick());
+      case "multiple_select_mcq":
+        return MultipleMCQSelect(
+            model: MultipleMCQModel.fromJson(data),
+            onNextClick: () => onNextClick());
       default:
         return Container(
           padding: const EdgeInsets.all(8.0),
           child: Text("Unsupported Type: $levelType"),
         );
     }
+  }
+
+  void onNextClick() {
+    setState(() {
+      currentIndex = (currentIndex + 1) % level.graph!.length;
+    });
   }
 }

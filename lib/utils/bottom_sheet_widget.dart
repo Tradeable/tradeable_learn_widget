@@ -5,9 +5,13 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 class BottomSheetWidget extends StatelessWidget {
   final bool isCorrect;
   final String explanationString;
+  final VoidCallback onNextClick;
 
   const BottomSheetWidget(
-      {super.key, required this.isCorrect, required this.explanationString});
+      {super.key,
+      required this.isCorrect,
+      required this.explanationString,
+      required this.onNextClick});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,11 @@ class BottomSheetWidget extends StatelessWidget {
             Text("Explanation goes here", style: textStyles.smallNormal),
             const SizedBox(height: 20),
             ButtonWidget(
-                color: colors.primary, btnContent: "Next", onTap: () {}),
+                color: colors.primary,
+                btnContent: "Next",
+                onTap: () {
+                  onNextClick();
+                }),
           ],
         ),
       ),
