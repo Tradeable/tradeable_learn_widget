@@ -18,11 +18,11 @@ import 'package:example/data_model/mcq_static_model.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/calender_widget/calender_question.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 void main() {
@@ -166,6 +166,14 @@ class MyHomePage extends StatelessWidget {
                         title: "Multiple Select MCQ",
                         body: MultipleMCQSelect(
                             model: MultipleMCQModel.fromJson(multipleSelectMCQ),
+                            onNextClick: () => {}),
+                      )),
+                  NavigationButton(
+                      text: "Trend Line",
+                      destination: ScaffoldWithAppBar(
+                        title: "Trend Line",
+                        body: TrendLineWidget(
+                            model: TrendLineModel.fromJson(trendLineModel),
                             onNextClick: () => {}),
                       )),
                 ],

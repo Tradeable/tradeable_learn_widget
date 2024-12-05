@@ -35,7 +35,7 @@ class QuizQuestionOption extends StatelessWidget {
                       : colors.selectedItemColor
                   : correctResponse == option
                       ? colors.bullishColor
-                      : colors.cardColorSecondary,
+                      : Colors.transparent,
               border: Border.all(color: colors.borderColorSecondary)),
           child: Center(
             child: AutoSizeText(option,

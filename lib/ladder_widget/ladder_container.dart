@@ -18,16 +18,18 @@ class LadderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
 
-    double phraseHeight = constraints.maxHeight / (phrases.length + 1);
+    // double phraseHeight = constraints.maxHeight / (phrases.length + 1);
     double phraseWidth = constraints.maxWidth * 1.2;
+    //
+    // double totalPhraseHeight =
+    //     phrases.length * phraseHeight + (phrases.length - 1) * 10;
+    //
+    // if (totalPhraseHeight > constraints.maxHeight) {
+    //   phraseHeight =
+    //       (constraints.maxHeight - (phrases.length - 1) * 20) / phrases.length;
+    // }
+    double phraseHeight = constraints.maxHeight / (phrases.length) - 20;
 
-    double totalPhraseHeight =
-        phrases.length * phraseHeight + (phrases.length - 1) * 10;
-
-    if (totalPhraseHeight > constraints.maxHeight) {
-      phraseHeight =
-          (constraints.maxHeight - (phrases.length - 1) * 20) / phrases.length;
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,

@@ -57,10 +57,6 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
     setState(() {
       model.state = CandleFormationState.submitted;
     });
-    print(model.selectedBody);
-    print(model.selectedWick);
-    print(model.selectedTail);
-    print(model.correctOptions);
     _animationController.forward().then((_) {
       if (listEquals(model.correctOptions,
           [model.selectedWick, model.selectedBody, model.selectedTail])) {

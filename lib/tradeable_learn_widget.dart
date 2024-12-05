@@ -91,3 +91,6 @@ export 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_main.dart';
 
 export 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_model.dart';
 export 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_question.dart';
+
+export 'package:tradeable_learn_widget/trend_line/trend_line.dart';
+export 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';

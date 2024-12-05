@@ -66,7 +66,9 @@ class _ATMWidgetState extends State<ATMWidget> {
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,
               btnContent: "Next",
               onTap: () {
-                widget.onNextClick();
+                if(userResponse.isNotEmpty) {
+                  widget.onNextClick();
+                }
               }),
         ),
       ],

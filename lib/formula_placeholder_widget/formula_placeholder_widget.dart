@@ -169,10 +169,12 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: ButtonWidget(
-            color: colors.primary,
+            color: model.options.isEmpty ? colors.primary : colors.secondary,
             btnContent: "Next",
             onTap: () {
-              widget.onNextClick();
+              if(model.options.isEmpty) {
+                widget.onNextClick();
+              }
             },
           ),
         ),

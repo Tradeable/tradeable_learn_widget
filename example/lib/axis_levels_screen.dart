@@ -79,7 +79,7 @@ class _MyLevelWidget extends State<MyLevelWidget> {
         isLoading = false;
         level = val;
       });
-      startIndexUpdater();
+      // startIndexUpdater();
     });
   }
 

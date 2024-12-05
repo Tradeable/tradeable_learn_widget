@@ -118,7 +118,9 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                             : colors.secondary,
                         btnContent: "Next",
                         onTap: () {
-                          widget.onNextClick();
+                          if(answeredAllCorrectly()) {
+                            widget.onNextClick();
+                          }
                         }),
                     const SizedBox(height: 10),
                   ],

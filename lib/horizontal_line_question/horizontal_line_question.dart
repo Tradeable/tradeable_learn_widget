@@ -12,6 +12,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle_setting.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/line_layer/line_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
+import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -207,7 +208,15 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
         model.isCorrect = false;
       });
     }
-    showSheet();
+    showModalBottomSheet(
+        isDismissible: false,
+        context: context,
+        builder: (context) => BottomSheetWidget(
+            isCorrect: model.isCorrect,
+            explanationString: "Explanation goes here",
+            onNextClick: () {
+              widget.onNextClick();
+            }));
     //todo
     // finish(widget.node.edges?.first.pathId ?? "finished", model.isCorrect);
   }

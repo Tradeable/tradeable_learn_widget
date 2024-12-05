@@ -99,7 +99,9 @@ class _EN1State extends State<EN1> {
                             : colors.primary,
                         btnContent: "Next",
                         onTap: () {
-                          widget.onNextClick();
+                          if(model.state == EN1State.submitResponse) {
+                            widget.onNextClick();
+                          }
                         }),
                   )
                 ],
