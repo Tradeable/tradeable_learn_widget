@@ -2,6 +2,7 @@ import 'package:example/main.dart';
 import 'package:example/mutual_funds_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
+import 'package:tradeable_learn_widget/option_strategy/option_strategy_leg.model.dart';
 
 class HomeIntermediateScreen extends StatelessWidget {
   const HomeIntermediateScreen({super.key});
@@ -29,7 +30,20 @@ class HomeIntermediateScreen extends StatelessWidget {
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const OptionStrategyContainer()));
+                      builder: (context) => OptionStrategyContainer(
+                            spotPrice: 24431,
+                            legs: [
+                              OptionLeg(
+                                symbol: "NIFTY",
+                                strike: 24450,
+                                type: PositionType.buy,
+                                optionType: OptionType.call,
+                                expiry: DateTime.parse("2024-12-05 15:30:00"),
+                                quantity: 25,
+                                premium: 106.75,
+                              )
+                            ],
+                          )));
                 },
                 child: const Text("Option strategy")),
           ],
