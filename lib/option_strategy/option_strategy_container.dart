@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/option_strategy/black_scholes.dart';
+import 'package:tradeable_learn_widget/option_strategy/option_strategy_helper.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_leg.model.dart';
 import 'package:tradeable_learn_widget/option_strategy/payoff_graph_widget.dart';
 import 'package:tradeable_learn_widget/option_strategy/payoff_table_widget.dart';
@@ -29,31 +30,37 @@ class _OptionStrategyContainerState extends State<OptionStrategyContainer>
     _tabController = TabController(length: 2, vsync: this);
     _pageViewController = PageController();
 
-    List<double> pnl = calculateExpirationPnL(
-        underlyingPrices: generateRange(widget.spotPrice, 100),
-        strikePrice: widget.legs.first.strike,
-        optionType: widget.legs.first.optionType,
-        premium: widget.legs.first.premium,
-        quanity: widget.legs.first.quantity);
+    // List<double> pnl = calculateExpirationPnL(
+    //     underlyingPrices: generateRange(widget.spotPrice, 100),
+    //     strikePrice: widget.legs.first.strike,
+    //     optionType: widget.legs.first.optionType,
+    //     premium: widget.legs.first.premium,
+    //     quanity: widget.legs.first.quantity);
 
-    List<double> tpnl = calculateTheoreticalPnL(
-        underlyingPrices: generateRange(widget.spotPrice, 100),
-        strikePrice: widget.legs.first.strike,
-        timeToExpiry: timeToExpiry(DateTime.now(), widget.legs.first.expiry),
-        riskFreeRate: 0.1,
-        sigma: BlackScholes.impliedVolatility(
-            widget.legs.first.premium,
-            widget.spotPrice,
-            widget.legs.first.strike,
-            timeToExpiry(DateTime.now(), widget.legs.first.expiry),
-            0.1,
-            widget.legs.first.optionType),
-        optionType: widget.legs.first.optionType,
-        premium: widget.legs.first.premium,
-        quanity: widget.legs.first.quantity);
-    print(generateRange(widget.spotPrice, 100));
-    print(pnl);
-    print(tpnl);
+    // List<double> tpnl = calculateTheoreticalPnL(
+    //     underlyingPrices: generateRange(widget.spotPrice, 100),
+    //     strikePrice: widget.legs.first.strike,
+    //     timeToExpiry: timeToExpiry(DateTime.now(), widget.legs.first.expiry),
+    //     riskFreeRate: 0.1,
+    //     sigma: BlackScholes.impliedVolatility(
+    //         widget.legs.first.premium,
+    //         widget.spotPrice,
+    //         widget.legs.first.strike,
+    //         timeToExpiry(DateTime.now(), widget.legs.first.expiry),
+    //         0.1,
+    //         widget.legs.first.optionType),
+    //     optionType: widget.legs.first.optionType,
+    //     premium: widget.legs.first.premium,
+    //     quanity: widget.legs.first.quantity);
+    // print(generateRange(widget.spotPrice, 100));
+    // print(generateXAxisValues(widget.legs));
+    // print(calculateStatistics(widget.legs));
+
+    OptionStrategyHelper helper = OptionStrategyHelper(legs: widget.legs);
+
+    print(helper.calculateStatistics());
+    // print(pnl);
+    // print(tpnl);
   }
 
   @override
@@ -96,11 +103,11 @@ class _OptionStrategyContainerState extends State<OptionStrategyContainer>
   }
 
   double timeToExpiry(DateTime currentDate, DateTime expirationDate) {
-    print("cu : $currentDate");
-    print("ex : $expirationDate");
+    //print("cu : $currentDate");
+    //print("ex : $expirationDate");
     Duration delta = expirationDate.difference(currentDate);
-    print("delta : $delta");
-    print("delta in days : ${delta.inMinutes / (60 * 24 * 365)}");
+    //print("delta : $delta");
+    //print("delta in days : ${delta.inMinutes / (60 * 24 * 365)}");
     return delta.inMinutes / 60 / 24 / 365.0;
   }
 

@@ -58,11 +58,11 @@ class BlackScholes {
     double sigma = 0.5; // Initial guess
     double tolerance = 0.0001;
     int maxIter = 100;
-    print("s : $S");
-    print("k : $K");
-    print("t : $t");
-    print("r : $r");
-    print("signma : $sigma");
+    // print("s : $S");
+    // print("k : $K");
+    // print("t : $t");
+    // print("r : $r");
+    // print("signma : $sigma");
     for (int i = 0; i < maxIter; i++) {
       double price_estimate = optionPrice(S, K, t, r, sigma, optionType);
       print(price_estimate);
