@@ -48,7 +48,7 @@ class _SelectableImageGridWidgetState extends State<SelectableImageGridWidget> {
         context: context,
         builder: (context) => BottomSheetWidget(
             isCorrect: model.isCorrect,
-            explanationString: "Explanation goes here",
+            model: model.explanationV1,
             onNextClick: () {}));
   }
 

@@ -180,16 +180,14 @@ class _MCQQuestionState extends State<MCQQuestion> {
 
   void showSheet() {
     showModalBottomSheet(
-      isDismissible: false,
-      context: context,
-      builder: (context) => BottomSheetWidget(
-        isCorrect: model.isCorrect,
-        explanationString: "Explanaiton goes here",
-        onNextClick: () {
-          widget.onNextClick();
-        },
-      ),
-    );
+        isDismissible: false,
+        context: context,
+        builder: (context) => BottomSheetWidget(
+            isCorrect: model.isCorrect,
+            model: model.explanationV1,
+            onNextClick: () {
+              widget.onNextClick();
+            }));
   }
 
   void initChartData() {

@@ -251,12 +251,11 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
         isDismissible: false,
         context: context,
         builder: (context) => BottomSheetWidget(
-              isCorrect: model.isCorrect,
-              explanationString: "Explanation goes here",
-              onNextClick: () {
-                widget.onNextClick();
-              },
-            ));
+            isCorrect: model.isCorrect,
+            model: model.explanationV1,
+            onNextClick: () {
+              widget.onNextClick();
+            }));
     //todo
     // finish(widget.node.edges?.first.pathId ?? "finished", model.isCorrect);
   }

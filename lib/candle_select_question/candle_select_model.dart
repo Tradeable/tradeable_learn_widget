@@ -1,5 +1,6 @@
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
+import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 
 enum CandleSelectState {
   loadUI,
@@ -24,6 +25,7 @@ class CandleSelectModel {
   late String timeframe;
 
   CandleSelectState state = CandleSelectState.loadUI;
+  ExplanationV1? explanationV1;
 
   CandleSelectModel.fromJson(dynamic data) {
     type = data["type"];
@@ -53,7 +55,29 @@ class CandleSelectModel {
     showChips = data.containsKey("showChips") ? data["showChips"] : false;
     ticker = data.containsKey("ticker") ? data["ticker"] : "";
     timeframe = data.containsKey("timeframe") ? data["timeframe"] : "";
-
+    explanationV1 = data["explanation"] != null
+        ? ExplanationV1(
+            forCorrect: (data["explanation"]["forCorrect"] as List<dynamic>?)
+                ?.map((e) => ExplainerV1.fromJson(e))
+                .toList(),
+            forIncorrect:
+                (data["explanation"]["forIncorrect"] as List<dynamic>?)
+                    ?.map((e) => ExplainerV1.fromJson(e))
+                    .toList(),
+          )
+        : ExplanationV1(forCorrect: [
+            ExplainerV1(
+              title: "Correct",
+              data: "You got it correct",
+              imageUrl: "assets/btmsheet_correct.png",
+            )
+          ], forIncorrect: [
+            ExplainerV1(
+              title: "Incorrect",
+              data: "You got it incorrect",
+              imageUrl: "assets/btmsheet_incorrect.png",
+            )
+          ]);
     if (data.containsKey("atTime")) {
       atTime = data["atTime"];
     } else {

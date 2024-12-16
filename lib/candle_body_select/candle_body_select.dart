@@ -131,9 +131,8 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
           context: context,
           builder: (context) => BottomSheetWidget(
               isCorrect: model.isCorrect,
-              explanationString: "Explanation goes here",
+              model: model.explanationV1,
               onNextClick: () {
-
                 widget.onNextClick();
               }));
     }

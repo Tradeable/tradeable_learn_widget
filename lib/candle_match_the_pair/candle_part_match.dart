@@ -207,15 +207,13 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
       }
     }
     showModalBottomSheet(
-      isDismissible: false,
-      context: context,
-      builder: (context) => BottomSheetWidget(
-        isCorrect: model.isCorrect,
-        explanationString: "Explanation goes here",
-        onNextClick: () {
-          widget.onNextClick();
-        },
-      ),
-    );
+        isDismissible: false,
+        context: context,
+        builder: (context) => BottomSheetWidget(
+            isCorrect: model.isCorrect,
+            model: model.explanationV1,
+            onNextClick: () {
+              widget.onNextClick();
+            }));
   }
 }
