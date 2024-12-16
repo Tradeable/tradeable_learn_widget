@@ -78,4 +78,4 @@ export 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_main.
 export 'package:tradeable_learn_widget/chart_user_story_1/chart_user_story_model.dart';
 
 export 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
-export 'package:tradeable_learn_widget/option_strategy/option_strategy_leg.model.dart';
+export 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';

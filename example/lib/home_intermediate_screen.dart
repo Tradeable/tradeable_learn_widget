@@ -1,8 +1,8 @@
 import 'package:example/main.dart';
 import 'package:example/mutual_funds_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
-import 'package:tradeable_learn_widget/option_strategy/option_strategy_leg.model.dart';
 
 class HomeIntermediateScreen extends StatelessWidget {
   const HomeIntermediateScreen({super.key});
@@ -31,16 +31,28 @@ class HomeIntermediateScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => OptionStrategyContainer(
-                            spotPrice: 24431,
+                            spotPrice: 24662,
+                            spotPriceDayDelta: 17.70,
+                            spotPriceDayDeltaPer: 0.07,
+                            onExecute: () {},
                             legs: [
                               OptionLeg(
                                 symbol: "NIFTY",
-                                strike: 24450,
+                                strike: 24750,
                                 type: PositionType.buy,
                                 optionType: OptionType.call,
-                                expiry: DateTime.parse("2024-12-17 15:30:00"),
+                                expiry: DateTime.parse("2024-12-19 15:30:00"),
                                 quantity: 25,
-                                premium: 106.75,
+                                premium: 121.8,
+                              ),
+                              OptionLeg(
+                                symbol: "NIFTY",
+                                strike: 24900,
+                                type: PositionType.sell,
+                                optionType: OptionType.call,
+                                expiry: DateTime.parse("2024-12-19 15:30:00"),
+                                quantity: 25,
+                                premium: 73.35,
                               )
                             ],
                           )));

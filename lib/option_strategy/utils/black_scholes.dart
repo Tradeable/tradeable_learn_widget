@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 class BlackScholes {
@@ -58,15 +59,10 @@ class BlackScholes {
     double sigma = 0.5; // Initial guess
     double tolerance = 0.0001;
     int maxIter = 100;
-    // print("s : $S");
-    // print("k : $K");
-    // print("t : $t");
-    // print("r : $r");
-    // print("signma : $sigma");
     for (int i = 0; i < maxIter; i++) {
-      double price_estimate = optionPrice(S, K, t, r, sigma, optionType);
-      print(price_estimate);
-      double diff = price - price_estimate;
+      double priceEstimate = optionPrice(S, K, t, r, sigma, optionType);
+      //print(price_estimate);
+      double diff = price - priceEstimate;
 
       if (diff.abs() < tolerance) {
         return sigma;
@@ -74,10 +70,10 @@ class BlackScholes {
 
       // Calculate vega
       List<double> d = _d1d2(S, K, t, r, sigma);
-      print(d);
+      //print(d);
       double d1 = d[0];
       double vega = S * sqrt(t) * exp(-d1 * d1 / 2) / sqrt(2 * pi);
-      print(vega);
+      //print(vega);
       sigma = sigma + diff / vega;
 
       // Ensure sigma stays within reasonable bounds
