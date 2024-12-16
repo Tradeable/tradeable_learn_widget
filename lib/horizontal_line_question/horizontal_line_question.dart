@@ -126,48 +126,15 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   Widget renderSubmitBtn() {
     final colors = Theme.of(context).customColors;
 
-    switch (model.state) {
-      case HorizontalLineQuestionState.loadUI:
-        // return Container(
-        //     height: 40,
-        //     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        //     decoration: BoxDecoration(
-        //       // color: defaultBgColor,
-        //       borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //       border: Border.all(
-        //         color: Colors.green,
-        //       ),
-        //     ),
-        //     child: ClipRRect(
-        //       borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //       child: MaterialButton(
-        //         onPressed: () {
-        //           // model.acceptResponse();
-        //           showAnimation();
-        //         },
-        //         child: const Padding(
-        //           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //           child: Center(
-        //             child: Text("Submit",
-        //                 style: TextStyle(
-        //                     color: Colors.white,
-        //                     fontWeight: FontWeight.normal)),
-        //           ),
-        //         ),
-        //       ),
-        //     ));
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-          child: ButtonWidget(
-              color: colors.primary,
-              btnContent: "Submit",
-              onTap: () {
-                showAnimation();
-              }),
-        );
-      case HorizontalLineQuestionState.submitResponse:
-        return Container();
-    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+      child: ButtonWidget(
+          color: colors.primary,
+          btnContent: "Submit",
+          onTap: () {
+            showAnimation();
+          }),
+    );
   }
 
   void showAnimation() {
