@@ -231,7 +231,9 @@ class _TrendLineState extends State<TrendLineWidget> {
             });
           }
         }
-        model.lineCorrectResponse.add(userLineResponses);
+        setState(() {
+          model.lineCorrectResponse.add(userLineResponses);
+        });
       }
     }
   }

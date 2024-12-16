@@ -66,17 +66,15 @@ class _MCQQuestionState extends State<MCQQuestion> {
                     const SizedBox(height: 10),
                     renderOptions(),
                     const Spacer(),
-                    model.state == MCQState.loadUI
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: ButtonWidget(
-                                color: colors.primary,
-                                btnContent: "Submit",
-                                onTap: () {
-                                  showAnimation();
-                                }),
-                          )
-                        : Container()
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ButtonWidget(
+                          color: colors.primary,
+                          btnContent: "Submit",
+                          onTap: () {
+                            showAnimation();
+                          }),
+                    )
                   ])),
         ],
       );
@@ -173,9 +171,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
         model.isCorrect = true;
       });
     }
-    Future.delayed(const Duration(seconds: 2)).then((val) {
-      showSheet();
-    });
+    showSheet();
     //todo
     // Future.delayed(const Duration(seconds: 2)).then((value) {
     //   finish(widget.node.edges?.first.pathId ?? "finished", model.isCorrect);
