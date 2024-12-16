@@ -20,6 +20,7 @@ class BottomSheetWidget extends StatelessWidget {
 
     return Container(
       width: double.infinity,
+      color: colors.cardBasicBackground,
       padding: const EdgeInsets.all(14),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
