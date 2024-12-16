@@ -1,3 +1,4 @@
+import 'package:example/data_model/bucket_container_v2_model.dart';
 import 'package:example/data_model/chart_user_story_model.dart';
 import 'package:example/data_model/exit_fees_calculator_model.dart';
 import 'package:example/data_model/image_mcq_model.dart';
@@ -123,7 +124,7 @@ class BucketContainerV2Page extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: BucketContainerV2(
-          model: BucketContainerV2Model.fromJson(BucketContainerV2Model)),
+          model: BucketContainerV2Model.fromJson(bucketContainerV2Model)),
     );
   }
 }

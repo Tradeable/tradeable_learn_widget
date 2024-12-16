@@ -7,6 +7,7 @@ import 'package:tradeable_learn_widget/options_educorner/widgets/info_button.dar
 import 'package:tradeable_learn_widget/options_educorner/widgets/play_button.dart';
 import 'package:tradeable_learn_widget/options_educorner/widgets/scene_widget.dart';
 import 'package:tradeable_learn_widget/options_educorner/widgets/toggle_widget.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class OptionEduCorner extends StatefulWidget {
   final OptionsEduCornerModel model;
@@ -130,6 +131,9 @@ class _OptionEduCornerState extends State<OptionEduCorner>
 
   @override
   Widget build(BuildContext context) {
+    final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
+
     return OptionsEduCorner(
       title: model.educornerType,
       topSection: OptionEduCornerScene(
@@ -148,48 +152,33 @@ class _OptionEduCornerState extends State<OptionEduCorner>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 100,
-                        child: Text(
-                          'Implied Volatilty: ',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        child: Text('Implied Volatilty: ',
+                            style: textStyles.mediumBold),
                       ),
                       Container(
                         color: const Color(0xff121216),
                         padding: const EdgeInsets.all(8),
-                        child: const Text("0.00",
-                            style: TextStyle(
-                                color: Color(0xffFFCA28),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16)),
+                        child: Text("0.00",
+                            style: textStyles.mediumBold
+                                .copyWith(color: const Color(0xffFFCA28))),
                       )
                     ],
                   ),
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 100,
-                        child: Text(
-                          'Vega: ',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        child: Text('Vega: ', style: textStyles.mediumBold),
                       ),
                       Container(
                         color: const Color(0xff121216),
                         padding: const EdgeInsets.all(8),
                         child: Text(_needleAnimation.value.toStringAsFixed(2),
-                            style: const TextStyle(
-                                color: Color(0xffFFCA28),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16)),
+                            style: textStyles.mediumBold
+                                .copyWith(color: const Color(0xffFFCA28))),
                       )
                     ],
                   ),
@@ -224,11 +213,12 @@ class _OptionEduCornerState extends State<OptionEduCorner>
                 : model.educornerType == "Gamma"
                     ? Row(
                         children: [
-                          const SizedBox(
+                          SizedBox(
                               width: 100,
                               child: Text(
                                 "Change in delta:",
-                                style: TextStyle(fontSize: 15),
+                                style: textStyles.mediumNormal
+                                    .copyWith(fontSize: 14),
                               )),
                           Container(
                             color: const Color(0xff121216),
@@ -238,10 +228,8 @@ class _OptionEduCornerState extends State<OptionEduCorner>
                                         double.parse(_needleAnimation.value
                                             .toStringAsFixed(2)))]
                                     .toString(),
-                                style: const TextStyle(
-                                    color: Color(0xffFFCA28),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16)),
+                                style: textStyles.mediumBold
+                                    .copyWith(color: const Color(0xffFFCA28))),
                           )
                         ],
                       )
@@ -265,10 +253,9 @@ class _OptionEduCornerState extends State<OptionEduCorner>
       explanationSection: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14),
-            child: Text("Explanation",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Text("Explanation", style: textStyles.smallBold),
           ),
           Container(
             width: double.infinity,
@@ -276,9 +263,8 @@ class _OptionEduCornerState extends State<OptionEduCorner>
             padding: const EdgeInsets.all(14),
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              color: const Color(0xff373740),
-            ),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: colors.borderColorPrimary)),
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: LayoutBuilder(
@@ -294,7 +280,7 @@ class _OptionEduCornerState extends State<OptionEduCorner>
                             ? model.explanations[0]
                             : model.explanations[1],
                         softWrap: true,
-                        style: const TextStyle(color: Colors.white),
+                        style: textStyles.smallNormal,
                       ),
                     ),
                   );
@@ -312,6 +298,8 @@ class _OptionEduCornerState extends State<OptionEduCorner>
   }
 
   List<Widget> buildFixedCounterContainers(String number) {
+    final textStyles = Theme.of(context).customTextStyles;
+
     String numberStr = number.toString().padLeft(number.toString().length, '0');
     return numberStr.split('').map((digit) {
       return Container(
@@ -321,14 +309,7 @@ class _OptionEduCornerState extends State<OptionEduCorner>
           color: const Color(0xff121216),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(
-          digit,
-          style: const TextStyle(
-            fontSize: 28,
-            color: Color(0xffFFCA28),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: Text(digit, style: textStyles.largeBold),
       );
     }).toList();
   }

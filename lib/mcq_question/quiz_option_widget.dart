@@ -29,21 +29,23 @@ class QuizQuestionOption extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: selectedOption == option
-                  ? correctResponse == option
-                      ? colors.bullishColor
-                      : colors.selectedItemColor
-                  : correctResponse == option
-                      ? colors.bullishColor
-                      : Colors.transparent,
-              border: Border.all(color: colors.borderColorSecondary)),
+              color: colors.cardColorSecondary.withOpacity(0.1),
+              border: Border.all(
+                  color: selectedOption == option
+                      ? correctResponse == option
+                          ? colors.bullishColor
+                          : colors.primary
+                      : correctResponse == option
+                          ? colors.bullishColor
+                          : colors.borderColorSecondary)),
           child: Center(
             child: AutoSizeText(option,
                 group: group,
                 maxLines: 1,
                 minFontSize: 10,
                 maxFontSize: 20,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: colors.primary)),
           )),
     );
   }

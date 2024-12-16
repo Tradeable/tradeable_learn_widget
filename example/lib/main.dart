@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      initialRoute: "/axis_levels",
+      initialRoute: "/homeIntermediate",
       routes: {
         "/": (context) => const TradeableWidgetDemoPage(),
         "/deepak": (context) => const MyHomePage(),
@@ -244,9 +244,8 @@ class AtmDropdownWidgetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldWithAppBar(
-      title: "Problem",
-      body: ATMWidget(
+    return Material(
+      child: ATMWidget(
         model: ATMWidgetModel.fromJson(atmItmDropdownModel),
         onNextClick: () {},
       ),

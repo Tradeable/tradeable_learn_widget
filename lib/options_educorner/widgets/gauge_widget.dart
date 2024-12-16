@@ -33,7 +33,6 @@ class OptionEduCornerGaugeWidget extends StatelessWidget {
             canScaleToFit: true,
             minimum: min,
             maximum: max,
-            axisLabelStyle: const GaugeTextStyle(color: Colors.white),
             pointers: <GaugePointer>[
               NeedlePointer(
                 value: needleAnimation.value,

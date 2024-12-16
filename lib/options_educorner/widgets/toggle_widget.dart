@@ -15,13 +15,7 @@ class OptionEducornerToggle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          'PUT',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-        ),
+        const Text('PUT'),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Switch(
@@ -32,13 +26,7 @@ class OptionEducornerToggle extends StatelessWidget {
             inactiveTrackColor: Colors.orange.withOpacity(0.4),
           ),
         ),
-        const Text(
-          'CALL',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-        ),
+        const Text('CALL'),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class OptionEduCornerScene extends StatelessWidget {
   final Animation<double> animation;
@@ -21,6 +22,9 @@ class OptionEduCornerScene extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
+
     final screenWidth = MediaQuery.of(context).size.width;
     final double animationValue = animation.value * 2 * screenWidth;
 
@@ -74,9 +78,9 @@ class OptionEduCornerScene extends StatelessWidget {
                     : Container(
                         width: 70,
                         padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Color(0xff373740),
-                          borderRadius: BorderRadius.only(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: colors.borderColorPrimary),
+                          borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(8),
                               topRight: Radius.circular(8)),
                         ),
@@ -87,15 +91,16 @@ class OptionEduCornerScene extends StatelessWidget {
                                 : modelType == "Gamma"
                                     ? "Delta"
                                     : "",
-                            style: const TextStyle(fontSize: 12),
+                            style: textStyles.smallNormal,
                           ),
                         )),
                 Container(
                   width: 70,
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border.all(color: Colors.white, width: 1),
+                    color: colors.cardColorSecondary,
+                    border:
+                        Border.all(color: colors.borderColorPrimary, width: 1),
                     borderRadius: modelType == "Vega"
                         ? BorderRadius.circular(8)
                         : const BorderRadius.only(
@@ -103,14 +108,8 @@ class OptionEduCornerScene extends StatelessWidget {
                             bottomRight: Radius.circular(8)),
                   ),
                   child: Center(
-                    child: Text(
-                      carValues[strikePriceIndex].toString(),
-                      style: const TextStyle(
-                        color: Color(0xffFFCA28),
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: Text(carValues[strikePriceIndex].toString(),
+                        style: textStyles.smallBold),
                   ),
                 ),
               ],
@@ -144,7 +143,7 @@ class OptionEduCornerScene extends StatelessWidget {
                   children: [
                     Text(
                       strikePrices[index].toString(),
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                      style: textStyles.smallNormal,
                     ),
                     Text(
                       btexts[index].toString(),

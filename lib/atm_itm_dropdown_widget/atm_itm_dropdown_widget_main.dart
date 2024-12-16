@@ -45,7 +45,7 @@ class _ATMWidgetState extends State<ATMWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         renderQuestion(),
-        const SizedBox(height: 40),
+        const SizedBox(height: 60),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -53,10 +53,13 @@ class _ATMWidgetState extends State<ATMWidget> {
                 textContent(e.model.title, e.model.value, e.model.isQuestion))
           ],
         ),
+        const SizedBox(height: 30),
         submitted
-            ? Text(model.correctResponse != userResponse
-                ? "${model.correctResponse} is the correct value"
-                : "")
+            ? Center(
+                child: Text(model.correctResponse != userResponse
+                    ? "${model.correctResponse} is the correct value"
+                    : ""),
+              )
             : Container(),
         const Spacer(),
         Padding(
@@ -66,7 +69,7 @@ class _ATMWidgetState extends State<ATMWidget> {
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,
               btnContent: "Next",
               onTap: () {
-                if(userResponse.isNotEmpty) {
+                if (userResponse.isNotEmpty) {
                   widget.onNextClick();
                 }
               }),
@@ -143,7 +146,7 @@ class _ATMWidgetState extends State<ATMWidget> {
                             submitted = true;
                           });
                         },
-                        focusNode: _focusNode,
+                        // focusNode: _focusNode,
                       ),
                     ),
                     if (isDropdownOpen)

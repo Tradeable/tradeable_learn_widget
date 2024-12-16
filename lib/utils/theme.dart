@@ -91,7 +91,7 @@ extension ThemeDataExtension on ThemeData {
           cardColorSecondary: const Color(0xffe2e2e2),
           bullishColor: Colors.green,
           bearishColor: Colors.red,
-          selectedItemColor: Colors.purple,
+          selectedItemColor: const Color(0xffF9B0CC),
           axisColor: Colors.black,
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,

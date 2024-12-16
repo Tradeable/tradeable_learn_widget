@@ -19,7 +19,7 @@ class ChartInfoChips extends StatelessWidget {
 
     BoxDecoration containerDecoration = BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: colors.cardColorSecondary.withOpacity(0.2),
+        color: colors.cardBasicBackground,
         boxShadow: [
           BoxShadow(
               color: colors.borderColorSecondary.withOpacity(0.6),
