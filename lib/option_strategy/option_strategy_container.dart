@@ -58,7 +58,7 @@ class _OptionStrategyContainerState extends State<OptionStrategyContainer>
 
     OptionStrategyHelper helper = OptionStrategyHelper(legs: widget.legs);
 
-    print(helper.calculateStatistics());
+    // print(helper.calculateStatistics());
     // print(pnl);
     // print(tpnl);
   }
@@ -201,7 +201,12 @@ class _OptionStrategyContainerState extends State<OptionStrategyContainer>
           child: PageView(
         controller: _pageViewController,
         onPageChanged: _handlePageViewChanged,
-        children: const [PayoffGraphWidget(), PayoffTableWidget()],
+        children: [
+          PayoffGraphWidget(
+            helper: OptionStrategyHelper(legs: widget.legs),
+          ),
+          const PayoffTableWidget()
+        ],
       )),
     );
   }
