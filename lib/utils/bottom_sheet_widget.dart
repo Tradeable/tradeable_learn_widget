@@ -21,8 +21,6 @@ class BottomSheetWidget extends StatelessWidget {
     final textStyles = Theme.of(context).customTextStyles;
 
     final explainer = model?.getExplanation(isCorrect).first;
-    print(model);
-    print(explainer);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
