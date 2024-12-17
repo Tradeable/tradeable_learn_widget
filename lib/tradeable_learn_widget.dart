@@ -94,3 +94,6 @@ export 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_question
 
 export 'package:tradeable_learn_widget/trend_line/trend_line.dart';
 export 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
+
+export 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
+export 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
