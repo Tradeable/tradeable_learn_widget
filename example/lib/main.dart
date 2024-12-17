@@ -1,3 +1,27 @@
+import 'package:example/axis_levels_screen.dart';
+import 'package:example/data_model/atm_itm_dropdown_model.dart';
+import 'package:example/data_model/bucket_containerv1_model.dart';
+import 'package:example/data_model/calender_question_model.dart';
+import 'package:example/data_model/candle_body_select_model.dart';
+import 'package:example/data_model/candle_formation_v2.dart';
+import 'package:example/data_model/candle_part_match_model.dart';
+import 'package:example/data_model/candle_select_question_model.dart';
+import 'package:example/data_model/content_preview_model.dart';
+import 'package:example/data_model/educorner_model_v1.dart';
+import 'package:example/data_model/en1_model.dart';
+import 'package:example/data_model/expandable_edutile_model.dart';
+import 'package:example/data_model/formula_placeholder_model.dart';
+import 'package:example/data_model/horizontal_line_model.dart';
+import 'package:example/data_model/ladder_data_model.dart';
+import 'package:example/data_model/mcq_candle_image_model.dart';
+import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/multiple_mcq_select_model.dart';
+import 'package:example/data_model/options_educorner_model.dart';
+import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/trend_line_model.dart';
+import 'package:example/data_model/video_educorner_model.dart';
+import 'package:example/home_intermediate_screen.dart';
+import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
@@ -8,122 +32,434 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
-      routes: {"/": (context) => const MyHomePage(title: "title")},
+      initialRoute: "/homeIntermediate",
+      routes: {
+        "/": (context) => const TradeableWidgetDemoPage(),
+        "/deepak": (context) => const MyHomePage(),
+        "/homeIntermediate": (context) => const HomeIntermediateScreen(),
+        "/axis_levels": (context) => const AxisLevelsScreen()
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            DemoWidget(
-              demoWidgetModel: DemoWidgetModel(),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const NavigationButton(
+                    text: "Ladder Widget",
+                    destination: LadderWidgetPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Dropdown Widget",
+                    destination: AtmDropdownWidgetPage(),
+                  ),
+                  const NavigationButton(
+                    text: "ExpandableEduTile Widget",
+                    destination: ExpandableEduCornerPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Candle part select Widget",
+                    destination: CandleBodySelectPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Candle Match part Widget",
+                    destination: CandlePartMatchPage(),
+                  ),
+                  const NavigationButton(
+                    text: "EN1 Match the pair Widget",
+                    destination: EN1Page(),
+                  ),
+                  const NavigationButton(
+                    text: "Candle Select Question Widget",
+                    destination: CandleSelectQuestionPage(),
+                  ),
+                  const NavigationButton(
+                    text: "MCQ Question Widget",
+                    destination: MCQQuestionPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Horizontal line Widget",
+                    destination: HorizontalLineQuestionPage(),
+                  ),
+                  const NavigationButton(
+                    text: "MCQ Candle Image Question Widget",
+                    destination: MCQCandleImagePage(),
+                  ),
+                  const NavigationButton(
+                    text: "Video Educorner Widget",
+                    destination: VideoEducornerPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Fno Scenario Widget",
+                    destination: FnoScenarioPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Bucket Widget V1",
+                    destination: BucketWidgetPage(),
+                  ),
+                  const NavigationButton(
+                    text: "EduCorner Widget V1",
+                    destination: EducornerV1Page(),
+                  ),
+                  const NavigationButton(
+                    text: "Markdown Widget",
+                    destination: ContentPreviewPage(),
+                  ),
+                  const NavigationButton(
+                    text: "Options edu",
+                    destination: OptionsEduPage(),
+                  ),
+                  NavigationButton(
+                      text: "Calender Question",
+                      destination: ScaffoldWithAppBar(
+                        title: "Calender Question",
+                        body: CalenderQuestion(
+                            model: CalenderQuestionModel.fromJson(
+                                calenderQuestionModel),
+                            onNextClick: () {}),
+                      )),
+                  NavigationButton(
+                      text: "Formula Placeholder Widget",
+                      destination: ScaffoldWithAppBar(
+                        title: "Formula Placeholder Widget",
+                        body: FormulaPlaceholderWidget(
+                            model: FormulaPlaceHolderModel.fromJson(
+                                formulaPlaceholderDataModel),
+                            onNextClick: () {}),
+                      )),
+                  NavigationButton(
+                      text: "Candle Formation V2",
+                      destination: ScaffoldWithAppBar(
+                        title: "Candle Formation V2",
+                        body: CandleFormationV2Main(
+                            model: CandleFormationV2Model.fromJson(
+                                candleFormationV2),
+                            onNextClick: () => {}),
+                      )),
+                  NavigationButton(
+                      text: "Multiple Select MCQ",
+                      destination: ScaffoldWithAppBar(
+                        title: "Multiple Select MCQ",
+                        body: MultipleMCQSelect(
+                            model: MultipleMCQModel.fromJson(multipleSelectMCQ),
+                            onNextClick: () => {}),
+                      )),
+                  NavigationButton(
+                      text: "Trend Line",
+                      destination: ScaffoldWithAppBar(
+                        title: "Trend Line",
+                        body: TrendLineWidget(
+                            model: TrendLineModel.fromJson(trendLineModel),
+                            onNextClick: () => {}),
+                      )),
+                ],
+              ),
             ),
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class NavigationButton extends StatelessWidget {
+  final String text;
+  final Widget destination;
+
+  const NavigationButton({
+    super.key,
+    required this.text,
+    required this.destination,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => destination),
+        );
+      },
+      child: Text(text),
+    );
+  }
+}
+
+class OptionsEduPage extends StatelessWidget {
+  const OptionsEduPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: OptionEduCorner(
+          model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class LadderWidgetPage extends StatelessWidget {
+  const LadderWidgetPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: LadderWidgetMain(
+        ladderModel: LadderModel.fromJson(ladderQuestionData),
+        onNextClick: () {},
+      ),
+    );
+  }
+}
+
+class AtmDropdownWidgetPage extends StatelessWidget {
+  const AtmDropdownWidgetPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: ATMWidget(
+        model: ATMWidgetModel.fromJson(atmItmDropdownModel),
+        onNextClick: () {},
+      ),
+    );
+  }
+}
+
+class ExpandableEduCornerPage extends StatelessWidget {
+  const ExpandableEduCornerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: ExpandableEduTileMain(
+          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class CandleBodySelectPage extends StatelessWidget {
+  const CandleBodySelectPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: CandleBodySelect(
+          model: CandlePartSelectModel.fromJson(candleBodySelectModelData),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class CandlePartMatchPage extends StatelessWidget {
+  const CandlePartMatchPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: CandlePartMatchLink(
+          model: CandleMatchThePairModel.fromJson(candlePartMatchModelData),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class EN1Page extends StatelessWidget {
+  const EN1Page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: EN1(model: EN1Model.fromJson(en1DataModel), onNextClick: () {}),
+    );
+  }
+}
+
+class CandleSelectQuestionPage extends StatelessWidget {
+  const CandleSelectQuestionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: CandleSelectQuestion(
+          model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class MCQQuestionPage extends StatelessWidget {
+  const MCQQuestionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: MCQQuestion(
+          model: MCQModel.fromJson(mcqStaticModel), onNextClick: () {}),
+    );
+  }
+}
+
+class HorizontalLineQuestionPage extends StatelessWidget {
+  const HorizontalLineQuestionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: HorizontalLineQuestion(
+          model: HorizontalLineModel.fromJson(horizontalLineModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class MCQCandleImagePage extends StatelessWidget {
+  const MCQCandleImagePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: MCQCandleQuestion(
+          model: MCQCandleModel.fromJson(mcqCandleImageModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class VideoEducornerPage extends StatelessWidget {
+  const VideoEducornerPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: VideoEduCorner(
+          model: VideoEduCornerModel.fromJson(videoEducornerModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class FnoScenarioPage extends StatelessWidget {
+  const FnoScenarioPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: DragAndDropMatch(
+          model: LadderModel.fromJson(optionsScenarioModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class BucketWidgetPage extends StatelessWidget {
+  const BucketWidgetPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: BucketContainerV1(
+          model: BucketContainerModel.fromJson(bucketContainerV1Model),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class EducornerV1Page extends StatelessWidget {
+  const EducornerV1Page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: EduCornerV1(
+          model: EduCornerModel.fromJson(educornerV1Model), onNextClick: () {}),
+    );
+  }
+}
+
+class ContentPreviewPage extends StatelessWidget {
+  const ContentPreviewPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: MarkdownPreviewWidget(
+          model: MarkdownPreviewModel.fromJson(contentPreviewModel),
+          onNextClick: () {}),
+    );
+  }
+}
+
+class ScaffoldWithAppBar extends StatelessWidget {
+  final String title;
+  final Widget body;
+
+  const ScaffoldWithAppBar({
+    super.key,
+    required this.title,
+    required this.body,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.close),
+          ),
+        ],
+      ),
+      body: body,
     );
   }
 }
