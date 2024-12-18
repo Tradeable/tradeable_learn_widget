@@ -55,13 +55,13 @@ class CandleSelectModel {
     showChips = data.containsKey("showChips") ? data["showChips"] : false;
     ticker = data.containsKey("ticker") ? data["ticker"] : "";
     timeframe = data.containsKey("timeframe") ? data["timeframe"] : "";
-    explanationV1 = data["explanation"] != null
+    explanationV1 = data["explaination"] != null
         ? ExplanationV1(
-            forCorrect: (data["explanation"]["forCorrect"] as List<dynamic>?)
+            forCorrect: (data["explaination"]["forCorrect"] as List<dynamic>?)
                 ?.map((e) => ExplainerV1.fromJson(e))
                 .toList(),
             forIncorrect:
-                (data["explanation"]["forIncorrect"] as List<dynamic>?)
+                (data["explaination"]["forIncorrect"] as List<dynamic>?)
                     ?.map((e) => ExplainerV1.fromJson(e))
                     .toList(),
           )
