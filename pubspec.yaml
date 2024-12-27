@@ -37,6 +37,7 @@ flutter:
   assets:
     - lib/assets/
     - lib/assets/risk_reward_ratio/
+    - lib/assets/market_depth/
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/to/asset-from-package

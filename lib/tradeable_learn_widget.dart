@@ -97,3 +97,9 @@ export 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
 
 export 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
 export 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
+
+export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_main.dart';
+export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_model.dart';
+
+export 'package:tradeable_learn_widget/market_depth_user_story/market_depth_ui_main.dart';
+export 'package:tradeable_learn_widget/market_depth_user_story/market_depth_user_story_model.dart';

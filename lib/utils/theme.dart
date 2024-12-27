@@ -60,6 +60,8 @@ class CustomColors {
   final Color sipColor;
   final Color lumpSumColor;
   final Color cardBasicBackground;
+  final Color buttonColor;
+  final Color buttonBorderColor;
 
   CustomColors(
       {required this.primary,
@@ -75,7 +77,9 @@ class CustomColors {
       required this.axisColor,
       required this.sipColor,
       required this.lumpSumColor,
-      required this.cardBasicBackground});
+      required this.cardBasicBackground,
+      required this.buttonColor,
+      required this.buttonBorderColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -95,7 +99,9 @@ extension ThemeDataExtension on ThemeData {
           axisColor: Colors.black,
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,
-          cardBasicBackground: Colors.white);
+          cardBasicBackground: Colors.white,
+          buttonColor: const Color(0xffF9F9F9),
+          buttonBorderColor: const Color(0xffE2E2E2));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -112,7 +118,9 @@ extension ThemeDataExtension on ThemeData {
           axisColor: Colors.white,
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,
-          cardBasicBackground: Colors.black);
+          cardBasicBackground: Colors.black,
+          buttonColor: Colors.white,
+          buttonBorderColor: Colors.white38);
     }
   }
 

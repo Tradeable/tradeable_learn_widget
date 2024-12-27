@@ -13,16 +13,19 @@ import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
+import 'package:example/data_model/market_depth_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/supply_demand_educorner_model.dart';
 import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/market_depth_user_story/market_depth_model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 void main() {
@@ -176,6 +179,22 @@ class MyHomePage extends StatelessWidget {
                             model: TrendLineModel.fromJson(trendLineModel),
                             onNextClick: () => {}),
                       )),
+                  NavigationButton(
+                      text: "Supply Demand Educorner",
+                      destination: ScaffoldWithAppBar(
+                        title: "Supply Demand Educorner",
+                        body: DemandSuplyEduCornerMain(
+                            model: DemandSupplyEduCornerModel.fromJson(
+                                supplyDemandModel)),
+                      )),
+                  NavigationButton(
+                      text: "Market Depth",
+                      destination: ScaffoldWithAppBar(
+                          title: "Supply Demand Educorner",
+                          body: MarketDepthUserStoryWidget(
+                              model:
+                                  MarketDepthModel.fromJson(marketDepthModel),
+                              onNextClick: () {}))),
                 ],
               ),
             ),
