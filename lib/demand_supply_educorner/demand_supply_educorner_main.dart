@@ -5,8 +5,10 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class DemandSuplyEduCornerMain extends StatefulWidget {
   final DemandSupplyEduCornerModel model;
+  final VoidCallback onNextClick;
 
-  const DemandSuplyEduCornerMain({super.key, required this.model});
+  const DemandSuplyEduCornerMain(
+      {super.key, required this.model, required this.onNextClick});
 
   @override
   State<StatefulWidget> createState() => _DemandSuplyEduCornerMain();

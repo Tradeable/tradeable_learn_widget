@@ -186,12 +186,13 @@ class MyHomePage extends StatelessWidget {
                         title: "Supply Demand Educorner",
                         body: DemandSuplyEduCornerMain(
                             model: DemandSupplyEduCornerModel.fromJson(
-                                supplyDemandModel)),
+                                supplyDemandModel),
+                            onNextClick: () {}),
                       )),
                   NavigationButton(
                       text: "Market Depth",
                       destination: ScaffoldWithAppBar(
-                          title: "Supply Demand Educorner",
+                          title: "Market Depth",
                           body: MarketDepthUserStoryWidget(
                               model:
                                   MarketDepthModel.fromJson(marketDepthModel),
