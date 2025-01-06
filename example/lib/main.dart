@@ -12,6 +12,7 @@ import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
+import 'package:example/data_model/horizontal_line_model_v1.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/market_depth_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
@@ -194,6 +195,14 @@ class MyHomePage extends StatelessWidget {
                           body: MarketDepthUserStoryWidget(
                               model:
                                   MarketDepthModel.fromJson(marketDepthModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Horizontal Line V1",
+                      destination: ScaffoldWithAppBar(
+                          title: "Horizontal Line V1",
+                          body: HorizontalLineQuestionV1(
+                              model: HorizontalLineModelV1.fromJson(
+                                  horizontalLineModelV1),
                               onNextClick: () {}))),
                 ],
               ),
