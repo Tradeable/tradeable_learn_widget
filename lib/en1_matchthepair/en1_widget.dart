@@ -99,7 +99,7 @@ class _EN1State extends State<EN1> {
                             : colors.primary,
                         btnContent: "Next",
                         onTap: () {
-                          if(model.state == EN1State.submitResponse) {
+                          if (model.state == EN1State.submitResponse) {
                             widget.onNextClick();
                           }
                         }),
@@ -286,7 +286,7 @@ class RightColumnItemWidget extends StatelessWidget {
                     color: shadowColor,
                     spreadRadius: 1,
                     blurRadius: 1,
-                    offset: const Offset(0, 0), // changes position of shadow
+                    offset: const Offset(0, 0),
                   ),
                 ],
               ),
@@ -311,7 +311,7 @@ class RightColumnItemWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             border: Border.all(color: colors.borderColorSecondary),
-            color: colors.cardColorSecondary,
+            color: colors.cardColorSecondary.withOpacity(0.2),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(

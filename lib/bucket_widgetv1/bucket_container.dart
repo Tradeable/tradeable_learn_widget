@@ -101,12 +101,18 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
                                         color: colors.borderColorPrimary,
                                         width: 2),
                                     borderRadius: BorderRadius.circular(8)),
-                                child: Center(
-                                  child: AutoSizeText(
-                                      acceptedItems[itemIndex].imageUrl,
-                                      style: textStyles.smallNormal,
-                                      textAlign: TextAlign.center),
-                                ),
+                                child: acceptedItems[itemIndex]
+                                        .imageUrl
+                                        .startsWith('https://')
+                                    ? Image.network(
+                                        acceptedItems[itemIndex].imageUrl,
+                                        fit: BoxFit.contain)
+                                    : Center(
+                                        child: AutoSizeText(
+                                            acceptedItems[itemIndex].imageUrl,
+                                            style: textStyles.smallNormal,
+                                            textAlign: TextAlign.center),
+                                      ),
                               );
                             },
                           ),
@@ -157,12 +163,15 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
                             color: colors.selectedItemColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Center(
-                            child: AutoSizeText(
-                              value.imageUrl,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          child: value.imageUrl.startsWith('https://')
+                              ? Image.network(value.imageUrl,
+                                  fit: BoxFit.contain)
+                              : Center(
+                                  child: AutoSizeText(
+                                    value.imageUrl,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
                         ),
                       ),
                       childWhenDragging: Container(),
