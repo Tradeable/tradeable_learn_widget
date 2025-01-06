@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_model.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class DemandSuplyEduCornerMain extends StatefulWidget {
@@ -126,6 +127,17 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 },
               ),
             ],
+          ),
+        ),
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          child: ButtonWidget(
+            color: colors.primary,
+            btnContent: "Next",
+            onTap: () {
+              widget.onNextClick();
+            },
           ),
         ),
       ],

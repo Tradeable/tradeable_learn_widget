@@ -144,7 +144,9 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
               color: answeredAllCorrectly() ? colors.primary : colors.secondary,
               btnContent: "Next",
               onTap: () {
-                widget.onNextClick();
+                if(answeredAllCorrectly()) {
+                  widget.onNextClick();
+                }
               }),
         ),
         const SizedBox(height: 10),
