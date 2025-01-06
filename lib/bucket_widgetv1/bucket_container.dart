@@ -183,12 +183,14 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
                           border: Border.all(color: colors.borderColorPrimary),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Center(
-                          child: AutoSizeText(
-                            value.imageUrl,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                        child: value.imageUrl.startsWith('https://')
+                            ? Image.network(value.imageUrl, fit: BoxFit.contain)
+                            : Center(
+                                child: AutoSizeText(
+                                  value.imageUrl,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                       ),
                     );
                   },
