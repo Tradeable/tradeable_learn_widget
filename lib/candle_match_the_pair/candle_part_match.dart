@@ -42,13 +42,10 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Text(
-              "Drag and drop",
-              style: textStyles.mediumNormal,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(model.question, style: textStyles.smallNormal),
           ),
           const SizedBox(height: 10),
           renderProblem(constraints),
@@ -195,7 +192,8 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
   }
 
   void submitResponse() {
-    if (options != null && model.state == CandlePartMatchLinkState.loadUI) {
+    if (options != null &&
+        model.state == CandlePartMatchLinkState.submitResponse) {
       int correctCount = options!.fold<int>(
           0,
           (previousValue, element) =>

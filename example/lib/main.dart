@@ -273,8 +273,9 @@ class AtmDropdownWidgetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: ATMWidget(
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: ATMWidget(
         model: ATMWidgetModel.fromJson(atmItmDropdownModel),
         onNextClick: () {},
       ),

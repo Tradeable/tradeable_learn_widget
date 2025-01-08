@@ -10,10 +10,9 @@ class QuestionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
 
-    return Text(
-      question,
-      style: textStyles.mediumBold,
-      textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(question, style: textStyles.smallNormal),
     );
   }
 }

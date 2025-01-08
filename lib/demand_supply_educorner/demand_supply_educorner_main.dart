@@ -65,17 +65,13 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
           ],
         ),
         const SizedBox(height: 20),
-        Text(
-          'Demand: ${currentBidCondition!.demand}',
-          style: textStyles.mediumNormal,
-        ),
-        Text(
-          'Supply: ${currentAskCondition!.supply}',
-          style: textStyles.mediumNormal,
-        ),
-        Text(
-          'Market: ${currentBidCondition!.market}',
-          style: textStyles.mediumNormal,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            infoWidget("Demand", currentBidCondition!.demand),
+            infoWidget("Supply", currentAskCondition!.supply),
+            infoWidget("Market", currentBidCondition!.market),
+          ],
         ),
         const SizedBox(height: 20),
         Padding(
@@ -94,9 +90,9 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 min: 0,
                 max: 1,
                 divisions: marketCondition.length - 1,
-                label: currentBidCondition?.bidPrice,
-                thumbColor: colors.primary,
-                activeColor: colors.primary,
+                label: currentBidCondition!.demand,
+                thumbColor: colors.borderColorPrimary,
+                activeColor: colors.borderColorPrimary,
                 inactiveColor: colors.cardColorPrimary,
                 onChanged: (value) {
                   setState(() {
@@ -115,11 +111,11 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 value: askSliderValue,
                 min: 0,
                 max: 1,
-                thumbColor: colors.primary,
-                activeColor: colors.primary,
+                thumbColor: colors.borderColorPrimary,
+                activeColor: colors.borderColorPrimary,
                 inactiveColor: colors.cardColorPrimary,
                 divisions: marketCondition.length - 1,
-                label: currentAskCondition?.askPrice,
+                label: currentAskCondition?.demand,
                 onChanged: (value) {
                   setState(() {
                     askSliderValue = value;
@@ -140,6 +136,47 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
             },
           ),
         ),
+      ],
+    );
+  }
+
+  Widget infoWidget(String heading, String content) {
+    final textStyles = Theme.of(context).customTextStyles;
+    return Column(
+      children: [
+        Text(
+          heading,
+          style: textStyles.smallNormal,
+        ),
+        Text(content, style: textStyles.mediumBold),
+        const SizedBox(height: 10),
+        if (heading == "Demand")
+          Image.asset(
+            content == "Strong"
+                ? "assets/supply_demand_educorner/high_demand.png"
+                : "assets/supply_demand_educorner/weak_demand.png",
+            package: 'tradeable_learn_widget/lib',
+            height: 35,
+            fit: BoxFit.fitHeight,
+          )
+        else if (heading == "Supply")
+          Image.asset(
+            content == "High"
+                ? "assets/supply_demand_educorner/high_supply.png"
+                : "assets/supply_demand_educorner/low_supply.png",
+            package: 'tradeable_learn_widget/lib',
+            height: 35,
+            fit: BoxFit.fitHeight,
+          )
+        else if (heading == "Market")
+          Image.asset(
+            content == "Bullish"
+                ? "assets/supply_demand_educorner/bullish.png"
+                : "assets/supply_demand_educorner/bearish.png",
+            package: 'tradeable_learn_widget/lib',
+            height: 35,
+            fit: BoxFit.fitHeight,
+          )
       ],
     );
   }

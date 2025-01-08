@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 enum CandlePartMatchLinkState { loadUI, submitResponse }
 
 class CandleMatchThePairModel {
+  late String question;
   late List<String> pairFor;
   late bool isBullish;
   late int startTime;
@@ -12,6 +13,7 @@ class CandleMatchThePairModel {
   bool isCorrect = false;
 
   CandleMatchThePairModel.fromJson(dynamic data) {
+    question = data["question"] ?? "Drag and drop";
     pairFor = (data["pairFor"] as List).map((e) => e.toString()).toList();
     isBullish = data["isBullish"];
     explanationV1 = data["explaination"] != null

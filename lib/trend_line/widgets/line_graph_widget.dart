@@ -3,7 +3,10 @@ import 'package:tradeable_learn_widget/fin_chart/fin_chart.dart';
 import 'package:tradeable_learn_widget/fin_chart/layers/point_label.dart';
 import 'package:tradeable_learn_widget/fin_chart/layers/trend_line.dart';
 import 'package:tradeable_learn_widget/fin_chart/settings/axis_settings/x_axis_settings.dart';
+import 'package:tradeable_learn_widget/fin_chart/settings/axis_settings/y_axis_settings.dart';
+import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_setting.dart';
 import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LineGraphWidget extends StatelessWidget {
   final TrendLineModel model;
@@ -18,6 +21,9 @@ class LineGraphWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
+
     return Center(
       child: Column(
         children: [
@@ -27,6 +33,9 @@ class LineGraphWidget extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   height: constraints.maxHeight * 0.45,
                   child: FinChart(
+                      yAxisSettings: YAxisSettings(
+                          axisTextStyle: textStyles.smallNormal
+                              .copyWith(color: colors.axisColor)),
                       xAxisSettings: const XAxisSettings(
                           strokeWidth: 1,
                           axisTextStyle: TextStyle(color: Colors.transparent)),

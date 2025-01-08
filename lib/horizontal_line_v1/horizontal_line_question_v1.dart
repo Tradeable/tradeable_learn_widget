@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_model.dart';
-import 'package:tradeable_learn_widget/horizontal_line_v1/reel_range_response.dart';
+import 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_model_v1.dart';
+import 'package:tradeable_learn_widget/horizontal_line_v1/reel_range_response_v1.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/chart.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_setting.dart';
@@ -63,8 +63,10 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
                   Icon(iconData,
                       size: 24,
                       color: response.isCorrect == null
-                          ? colors.primary
-                          : (response.isCorrect! ? Colors.green : Colors.red)),
+                          ? colors.borderColorPrimary
+                          : (response.isCorrect!
+                              ? colors.bullishColor
+                              : colors.bearishColor)),
                   Text(response.title, style: const TextStyle(fontSize: 16)),
                 ],
               );
@@ -141,8 +143,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   Widget renderQuestion() {
     final textStyles = Theme.of(context).customTextStyles;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Text(model.question, style: textStyles.mediumNormal),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(model.question, style: textStyles.smallNormal),
     );
   }
 

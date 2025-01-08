@@ -1,10 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
-import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MultipleMCQSelect extends StatefulWidget {
@@ -36,25 +34,10 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    model.candles.isNotEmpty
-                        ? ChartInfoChips(
-                            ticker: model.ticker,
-                            timeFrame: model.timeframe,
-                            date: DateFormat("dd MMM yyyy").format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    model.candles.first.time)))
-                        : Container(),
-                    renderQuestion(),
-                    const SizedBox(height: 10),
-                    renderOptions()
-                  ]),
-            ),
-          ),
+          renderQuestion(),
+          const Spacer(),
+          renderOptions(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             child: ButtonWidget(
@@ -74,9 +57,9 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
     final textStyles = Theme.of(context).customTextStyles;
 
     return Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(model.question,
-            textAlign: TextAlign.center, style: textStyles.mediumNormal));
+            textAlign: TextAlign.start, style: textStyles.smallNormal));
   }
 
   Widget renderOptions() {
@@ -95,7 +78,7 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
       crossAxisCount: 1,
       crossAxisSpacing: 20,
       mainAxisSpacing: 20,
-      childAspectRatio: 1 / 0.2,
+      childAspectRatio: 1 / 0.18,
       padding: const EdgeInsets.all(10),
       children: model.options
           .map(
@@ -182,9 +165,9 @@ class _QuestionOptionsState extends State<QuestionOptions> {
             ? colors.bullishColor
             : widget.userResponses.contains(widget.option)
                 ? colors.bearishColor
-                : Colors.transparent;
+                : colors.cardColorSecondary;
       } else {
-        return isTapped ? colors.selectedItemColor : Colors.transparent;
+        return isTapped ? colors.selectedItemColor : colors.cardColorSecondary;
       }
     }
 
@@ -196,18 +179,17 @@ class _QuestionOptionsState extends State<QuestionOptions> {
         widget.onTap(widget.option);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: getColor(),
-            border: Border.all(color: colors.borderColorPrimary)),
+            border: Border.all(color: getColor())),
         child: Center(
           child: AutoSizeText(widget.option,
               group: widget.group,
               minFontSize: 10,
               maxFontSize: 20,
               textAlign: TextAlign.center,
-              style: textStyles.mediumNormal),
+              style: textStyles.mediumBold.copyWith(color: colors.primary)),
         ),
       ),
     );

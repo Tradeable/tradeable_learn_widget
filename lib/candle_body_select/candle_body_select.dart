@@ -32,6 +32,7 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 10),
         renderQuestion(theme),
         Center(
             child:
@@ -51,11 +52,8 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
 
   Widget renderQuestion(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Text(
-        model.question,
-        style: theme.customTextStyles.smallNormal,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(model.question, style: theme.customTextStyles.smallNormal),
     );
   }
 

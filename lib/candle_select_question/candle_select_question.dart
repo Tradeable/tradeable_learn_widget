@@ -42,13 +42,14 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           renderQuestion(),
-          const SizedBox(height: 40),
+          const SizedBox(height: 20),
           SizedBox(
             height: constraints.maxHeight * 0.5,
             child: renderChart(),
           ),
+          const SizedBox(height: 10),
           SizedBox(
               height: constraints.maxHeight * 0.3,
               child: Stack(
@@ -97,6 +98,8 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
                   model.onCandleSelect(p0);
                 });
               },
+              shouldBlackOutCandles:
+                  model.state == CandleSelectState.submitResponse,
               candles: model.uiCandles),
           LineLayer(
             id: "main",
@@ -145,8 +148,8 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
     final textStyles = Theme.of(context).customTextStyles;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Text(model.question, style: textStyles.mediumNormal),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(model.question, style: textStyles.smallNormal),
     );
   }
 

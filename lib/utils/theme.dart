@@ -62,6 +62,7 @@ class CustomColors {
   final Color cardBasicBackground;
   final Color buttonColor;
   final Color buttonBorderColor;
+  final Color sliderColor;
 
   CustomColors(
       {required this.primary,
@@ -79,7 +80,8 @@ class CustomColors {
       required this.lumpSumColor,
       required this.cardBasicBackground,
       required this.buttonColor,
-      required this.buttonBorderColor});
+      required this.buttonBorderColor,
+      required this.sliderColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -89,11 +91,11 @@ extension ThemeDataExtension on ThemeData {
           primary: const Color(0xff97144D),
           secondary: const Color(0xffB4B4B4),
           background: Colors.transparent,
-          borderColorPrimary: const Color(0xffED1164),
+          borderColorPrimary: const Color(0xffF14687),
           borderColorSecondary: const Color(0xffB4B4B4),
           cardColorPrimary: const Color(0xffF9EBEF),
           cardColorSecondary: const Color(0xffe2e2e2),
-          bullishColor: Colors.green,
+          bullishColor: const Color(0xff278829),
           bearishColor: Colors.red,
           selectedItemColor: const Color(0xffF9B0CC),
           axisColor: Colors.black,
@@ -101,7 +103,8 @@ extension ThemeDataExtension on ThemeData {
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.white,
           buttonColor: const Color(0xffF9F9F9),
-          buttonBorderColor: const Color(0xffE2E2E2));
+          buttonBorderColor: const Color(0xffE2E2E2),
+          sliderColor: const Color(0xffED1164));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -120,7 +123,8 @@ extension ThemeDataExtension on ThemeData {
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.black,
           buttonColor: Colors.white,
-          buttonBorderColor: Colors.white38);
+          buttonBorderColor: Colors.white38,
+          sliderColor: const Color(0xffED1164));
     }
   }
 

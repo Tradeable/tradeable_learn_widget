@@ -1,5 +1,5 @@
 import 'package:flutter/animation.dart';
-import 'package:tradeable_learn_widget/horizontal_line_v1/reel_range_response.dart';
+import 'package:tradeable_learn_widget/horizontal_line_v1/reel_range_response_v1.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
 import 'package:tradeable_learn_widget/candle_select_question/candle_select_model.dart';

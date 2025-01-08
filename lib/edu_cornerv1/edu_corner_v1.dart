@@ -128,23 +128,19 @@ class _EduCornerV1State extends State<EduCornerV1> {
           SizedBox(
             width: constraints.maxWidth * 0.9,
             height: constraints.maxHeight * 0.6,
-            child: DottedBorderWidget(
-              backgroundColor: Colors.transparent,
-              borderColor: colors.borderColorSecondary,
-              child: Stack(children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: videoBtnHeight / 2),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Image.network(card.imgUrl!, fit: BoxFit.fill),
-                  ),
+            child: Stack(children: [
+              Container(
+                margin: EdgeInsets.only(bottom: videoBtnHeight / 2),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Image.network(card.imgUrl!, fit: BoxFit.fill),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: videoButton(card.videoId),
-                ),
-              ]),
-            ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: videoButton(card.videoId),
+              ),
+            ]),
           ),
           const SizedBox(height: 30),
           Row(
@@ -241,7 +237,9 @@ class _EduCornerV1State extends State<EduCornerV1> {
                           child: VideoEduCorner(
                               model: VideoEduCornerModel.fromJson(
                                   {"video_id": videoId}),
-                              onNextClick: () {}),
+                              onNextClick: () {
+                                Navigator.of(context).pop();
+                              }),
                         )));
           },
           style: ElevatedButton.styleFrom(
@@ -253,7 +251,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          icon: const Icon(Icons.play_arrow),
+          icon: const Icon(Icons.play_arrow, color: Colors.white),
           label: const Text('Watch Video'),
         ),
       );

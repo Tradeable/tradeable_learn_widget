@@ -15,12 +15,7 @@ class LineQuestion extends StatelessWidget {
     final colors = Theme.of(context).customColors;
     return Column(
       children: [
-        QuestionWidget(question: question),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
-          child: ButtonWidget(
-              color: colors.primary, btnContent: 'Submit', onTap: onSubmit),
-        )
+
         // Container(
         //     height: 40,
         //     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),

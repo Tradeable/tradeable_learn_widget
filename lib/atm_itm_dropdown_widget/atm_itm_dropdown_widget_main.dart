@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/atm_itm_dropdown_widget/atm_itm_dropdown_data_model.dart';
+import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -44,8 +45,9 @@ class _ATMWidgetState extends State<ATMWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 20),
         renderQuestion(),
-        const SizedBox(height: 60),
+        const SizedBox(height: 40),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -81,16 +83,9 @@ class _ATMWidgetState extends State<ATMWidget> {
   Widget renderQuestion() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("SUB HEADING",
-              style: Theme.of(context).customTextStyles.smallBold),
-          Text(
-            model.question,
-            style: Theme.of(context).customTextStyles.smallNormal,
-          ),
-        ],
+      child: Text(
+        model.question,
+        style: Theme.of(context).customTextStyles.smallNormal,
       ),
     );
   }
@@ -100,74 +95,90 @@ class _ATMWidgetState extends State<ATMWidget> {
     final colors = Theme.of(context).customColors;
     final double containerWidth = MediaQuery.of(context).size.width * 0.4;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(title, style: textStyles.mediumBold),
-        ),
-        isToBeAnswered
-            ? Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: [
-                    Container(
-                      width: containerWidth,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: colors.borderColorPrimary),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: DropdownButtonFormField<String>(
-                        dropdownColor: Colors.white,
-                        decoration:
-                            const InputDecoration.collapsed(hintText: ''),
-                        isExpanded: true,
-                        iconSize: 30,
-                        iconEnabledColor: colors.borderColorPrimary,
-                        value: userResponse.isEmpty ? null : userResponse,
-                        hint: Text(
-                          'Pick a value',
-                          style: textStyles.smallNormal
-                              .copyWith(color: colors.secondary),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(title, style: textStyles.mediumBold),
+          ),
+          isToBeAnswered
+              ? Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: containerWidth,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: model.correctResponse != userResponse
+                                  ? colors.borderColorPrimary
+                                  : colors.bullishColor),
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        items: model.options.map((String optionValue) {
-                          return DropdownMenuItem<String>(
-                            value: optionValue,
-                            child: Text(optionValue,
-                                style: textStyles.mediumNormal),
-                          );
-                        }).toList(),
-                        onChanged: (a) {
-                          setState(() {
-                            userResponse = a!;
-                            submitted = true;
-                          });
-                        },
-                        // focusNode: _focusNode,
+                        child: DropdownButtonFormField<String>(
+                          dropdownColor: Colors.white,
+                          decoration:
+                              const InputDecoration.collapsed(hintText: ''),
+                          isExpanded: true,
+                          iconSize: 30,
+                          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                          value: userResponse.isEmpty ? null : userResponse,
+                          hint: Text(
+                            'Pick a value',
+                            style: textStyles.smallNormal
+                                .copyWith(color: colors.secondary),
+                          ),
+                          items: model.options.map((String optionValue) {
+                            return DropdownMenuItem<String>(
+                              value: optionValue,
+                              child: Text(optionValue,
+                                  style: textStyles.mediumNormal),
+                            );
+                          }).toList(),
+                          onChanged: (a) {
+                            setState(() {
+                              userResponse = a!;
+                              submitted = true;
+                            });
+                            showModalBottomSheet(
+                                isDismissible: false,
+                                context: context,
+                                builder: (context) => BottomSheetWidget(
+                                    isCorrect:
+                                        model.correctResponse == userResponse,
+                                    model: model.explanationV1,
+                                    onNextClick: () {
+                                      widget.onNextClick();
+                                    }));
+                          },
+                          // focusNode: _focusNode,
+                        ),
                       ),
-                    ),
-                    if (isDropdownOpen)
-                      SizedBox(height: model.options.length * 40),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: containerWidth,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: colors.borderColorSecondary),
-                    borderRadius: BorderRadius.circular(6),
+                      if (isDropdownOpen)
+                        SizedBox(height: model.options.length * 40),
+                    ],
                   ),
-                  child: Text(value, style: textStyles.mediumNormal),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    width: containerWidth,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: colors.borderColorSecondary),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(value, style: textStyles.mediumNormal),
+                  ),
                 ),
-              ),
-      ],
+        ],
+      ),
     );
   }
 }

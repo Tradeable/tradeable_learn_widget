@@ -136,16 +136,9 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   Widget renderHeader() {
     return Padding(
       padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("SUB HEADING",
-              style: Theme.of(context).customTextStyles.smallBold),
-          Text(
-            model.question,
-            style: Theme.of(context).customTextStyles.smallNormal,
-          ),
-        ],
+      child: Text(
+        model.question,
+        style: Theme.of(context).customTextStyles.smallNormal,
       ),
     );
   }
@@ -271,8 +264,8 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
           color: option.type == "phrase"
               ? colors.cardColorPrimary
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: colors.primary, width: 1)),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: colors.borderColorPrimary, width: 1)),
       child: Center(
         child: Text(
           option.option,

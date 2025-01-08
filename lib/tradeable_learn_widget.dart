@@ -104,5 +104,5 @@ export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_edu
 export 'package:tradeable_learn_widget/market_depth_user_story/market_depth_ui_main.dart';
 export 'package:tradeable_learn_widget/market_depth_user_story/market_depth_user_story_model.dart';
 
-export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_model.dart';
-export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_question.dart';
+export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_model_v1.dart';
+export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_question_v1.dart';

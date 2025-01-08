@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
@@ -116,7 +117,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Text(model.question, style: textStyles.mediumNormal),
+      child: AutoSizeText(model.question,
+          maxLines: 2, style: textStyles.smallNormal),
     );
   }
 
