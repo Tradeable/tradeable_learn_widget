@@ -52,45 +52,43 @@ class UiData {
   List<String>? correctResponse;
   String? action;
 
-  UiData({
-    required this.widget,
-    required this.title,
-    required this.prompt,
-    this.tableAlignment,
-    this.tableData,
-    this.buttonsFormat,
-    this.buttonsData,
-    this.format,
-    this.options,
-    this.correctResponse,
-    this.action
-  });
+  UiData(
+      {required this.widget,
+      required this.title,
+      required this.prompt,
+      this.tableAlignment,
+      this.tableData,
+      this.buttonsFormat,
+      this.buttonsData,
+      this.format,
+      this.options,
+      this.correctResponse,
+      this.action});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
-      widget: json['widget'] ?? '',
-      title: json['title'] ?? '',
-      prompt: json['prompt'] ?? '',
-      tableAlignment: json['tableAlignment'],
-      tableData: json['tableData'] != null
-          ? (json['tableData'] as List<dynamic>)
-              .map((tableItem) => TableData.fromJson(tableItem))
-              .toList()
-          : null,
-      buttonsFormat: json['buttonsFormat'],
-      buttonsData: json['buttonsData'] != null
-          ? (json['buttonsData'] as List<dynamic>)
-              .map((buttonItem) => ButtonData.fromJson(buttonItem))
-              .toList()
-          : null,
-      format: json['format'],
-      options:
-          json['options'] != null ? List<String>.from(json['options']) : null,
-      correctResponse: json['correctResponse'] != null
-          ? List<String>.from(json['correctResponse'])
-          : null,
-      action: json['action'] ?? ''
-    );
+        widget: json['widget'] ?? '',
+        title: json['title'] ?? '',
+        prompt: json['prompt'] ?? '',
+        tableAlignment: json['tableAlignment'],
+        tableData: json['tableData'] != null
+            ? (json['tableData'] as List<dynamic>)
+                .map((tableItem) => TableData.fromJson(tableItem))
+                .toList()
+            : null,
+        buttonsFormat: json['buttonsFormat'],
+        buttonsData: json['buttonsData'] != null
+            ? (json['buttonsData'] as List<dynamic>)
+                .map((buttonItem) => ButtonData.fromJson(buttonItem))
+                .toList()
+            : null,
+        format: json['format'],
+        options:
+            json['options'] != null ? List<String>.from(json['options']) : null,
+        correctResponse: json['correctResponse'] != null
+            ? List<String>.from(json['correctResponse'])
+            : null,
+        action: json['action'] ?? '');
   }
 }
 
@@ -110,7 +108,7 @@ class TableData {
   factory TableData.fromJson(Map<String, dynamic> json) {
     return TableData(
       title: json['title'] ?? '',
-      tableColors: json['tableColors'] as List<String>,
+      tableColors: List<String>.from(json['tableColors']),
       data: (json['data'] as List<dynamic>)
           .map((rowItem) => RowData.fromJson(rowItem))
           .toList(),
