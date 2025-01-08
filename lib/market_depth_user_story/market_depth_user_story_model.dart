@@ -108,7 +108,9 @@ class TableData {
   factory TableData.fromJson(Map<String, dynamic> json) {
     return TableData(
       title: json['title'] ?? '',
-      tableColors: List<String>.from(json['tableColors']),
+      tableColors: (json['tableColors'] as List<dynamic>)
+          .map((color) => color.toString())
+          .toList(),
       data: (json['data'] as List<dynamic>)
           .map((rowItem) => RowData.fromJson(rowItem))
           .toList(),
