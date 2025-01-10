@@ -20,14 +20,15 @@ import 'package:example/data_model/mcq_static_model.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
 import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/market_depth_model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -193,9 +194,9 @@ class MyHomePage extends StatelessWidget {
                       text: "Market Depth",
                       destination: ScaffoldWithAppBar(
                           title: "Market Depth",
-                          body: MarketDepthUserStoryWidget(
+                          body: UserStoryUIMain(
                               model:
-                                  MarketDepthModel.fromJson(marketDepthModel),
+                                  UserStoryModel.fromJson(marketDepthModel),
                               onNextClick: () {}))),
                   NavigationButton(
                       text: "Horizontal Line V1",
@@ -204,6 +205,14 @@ class MyHomePage extends StatelessWidget {
                           body: HorizontalLineQuestionV1(
                               model: HorizontalLineModelV1.fromJson(
                                   horizontalLineModelV1),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Stock High Low user story",
+                      destination: ScaffoldWithAppBar(
+                          title: "Stock High Low user story",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  stockHighLowUserStoryModel),
                               onNextClick: () {}))),
                 ],
               ),

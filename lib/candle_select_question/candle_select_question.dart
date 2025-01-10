@@ -104,7 +104,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
           LineLayer(
             id: "main",
             value: model.helperHorizontalLineValue,
-            color: Colors.blue,
+            color: const Color(0xffF9B0CC),
             textColor: colors.axisColor,
             lineColor: colors.primary,
             onUpdate: (p0) {
@@ -131,7 +131,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
           LineLayer(
             id: "main",
             value: model.helperHorizontalLineValue,
-            color: Colors.blue,
+            color: const Color(0xffF9B0CC),
             textColor: colors.axisColor,
             lineColor: colors.primary,
             onUpdate: (p0) {

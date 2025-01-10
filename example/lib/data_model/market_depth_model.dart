@@ -1,5 +1,5 @@
 const marketDepthModel = {
-  "marketDepthUserStory": {
+  "userStory": {
     "id": "",
     "name": "",
     "description": "",
@@ -58,6 +58,7 @@ const marketDepthModel = {
             "action": "submitResponse"
           }
         ],
+        "isActionNeeded": true,
       },
       {
         "stepId": "2",
@@ -112,6 +113,7 @@ const marketDepthModel = {
             "action": "submitResponse"
           }
         ],
+        "isActionNeeded": true,
       },
       {
         "stepId": "3",
@@ -161,6 +163,7 @@ const marketDepthModel = {
             "action": "confirmOrder"
           }
         ],
+        "isActionNeeded": true,
       },
       {
         "stepId": "4",
@@ -206,6 +209,7 @@ const marketDepthModel = {
           {"widget": "TradeInfo", "title": "BANKNIFTY2003CE"},
           {"widget": "NextButtonWidget", "title": "Next", "action": "moveNext"}
         ],
+        "isActionNeeded": false,
       }
     ]
   }

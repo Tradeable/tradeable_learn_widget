@@ -39,6 +39,23 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
   MarketCondition? get currentAskCondition =>
       marketCondition.isNotEmpty ? marketCondition[askConditionIndex] : null;
 
+  String get marketImage {
+    if (currentBidCondition == null || currentAskCondition == null) {
+      return '';
+    }
+
+    if (bidSliderValue > 0.5 && askSliderValue < 0.5) {
+      return "assets/supply_demand_educorner/bullish.png";
+    } else if (bidSliderValue < 0.5 && askSliderValue > 0.5) {
+      return "assets/supply_demand_educorner/bearish.png";
+    } else if (bidSliderValue > 0.5 && askSliderValue > 0.5) {
+      return "assets/supply_demand_educorner/bullish.png";
+    } else if (bidSliderValue < 0.5 && askSliderValue < 0.5) {
+      return "assets/supply_demand_educorner/bearish.png";
+    }
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
@@ -68,9 +85,9 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            infoWidget("Demand", currentBidCondition!.demand),
-            infoWidget("Supply", currentAskCondition!.supply),
-            infoWidget("Market", currentBidCondition!.market),
+            infoWidget("Demand", getDemandText()),
+            infoWidget("Supply", getSupplyText()),
+            infoWidget("Market", getMarketCondition()),
           ],
         ),
         const SizedBox(height: 20),
@@ -90,7 +107,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 min: 0,
                 max: 1,
                 divisions: marketCondition.length - 1,
-                label: currentBidCondition!.demand,
+                label: getDemandText(),
                 thumbColor: colors.borderColorPrimary,
                 activeColor: colors.borderColorPrimary,
                 inactiveColor: colors.cardColorPrimary,
@@ -115,7 +132,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 activeColor: colors.borderColorPrimary,
                 inactiveColor: colors.cardColorPrimary,
                 divisions: marketCondition.length - 1,
-                label: currentAskCondition?.demand,
+                label: getSupplyText(),
                 onChanged: (value) {
                   setState(() {
                     askSliderValue = value;
@@ -138,6 +155,37 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
         ),
       ],
     );
+  }
+
+  String getDemandText() {
+    if (bidSliderValue > 0.5) {
+      return 'Strong';
+    } else {
+      return 'Weak';
+    }
+  }
+
+  String getSupplyText() {
+    if (askSliderValue < 0.5) {
+      return 'Low';
+    } else if (askSliderValue > 0.5 && askSliderValue <= 0.8) {
+      return 'Limited';
+    } else {
+      return 'High';
+    }
+  }
+
+  String getMarketCondition() {
+    if (bidSliderValue > 0.5 && askSliderValue < 0.5) {
+      return 'Bullish';
+    } else if (bidSliderValue < 0.5 && askSliderValue > 0.5) {
+      return 'Bearish';
+    } else if (bidSliderValue > 0.5 && askSliderValue > 0.5) {
+      return 'Bullish';
+    } else if (bidSliderValue < 0.5 && askSliderValue < 0.5) {
+      return 'Bearish';
+    }
+    return '';
   }
 
   Widget infoWidget(String heading, String content) {

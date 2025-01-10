@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/market_depth_user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CustomTable extends StatelessWidget {

@@ -101,8 +101,11 @@ export 'package:tradeable_learn_widget/option_strategy/models/option_strategy_le
 export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_main.dart';
 export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_model.dart';
 
-export 'package:tradeable_learn_widget/market_depth_user_story/market_depth_ui_main.dart';
-export 'package:tradeable_learn_widget/market_depth_user_story/market_depth_user_story_model.dart';
+export 'package:tradeable_learn_widget/user_story_widget/user_story_ui_main.dart';
+export 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 
 export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_model_v1.dart';
 export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_question_v1.dart';
+
+export 'package:tradeable_learn_widget/level_complete_screen/level_complete_screen.dart';
+export 'package:tradeable_learn_widget/level_complete_screen/recommendation_model.dart';

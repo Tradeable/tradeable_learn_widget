@@ -116,7 +116,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
               return LineLayer(
                 id: e.id,
                 value: e.value,
-                color: Colors.blue,
+                color: const Color(0xffF9B0CC),
                 textColor: colors.axisColor,
                 onUpdate: (p0) {
                   setState(() {

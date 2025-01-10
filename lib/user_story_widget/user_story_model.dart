@@ -1,15 +1,15 @@
 import 'package:tradeable_learn_widget/utils/explanation_model.dart';
-import 'market_depth_user_story_model.dart';
+import 'user_story_data_model.dart';
 
 enum CurrentStepState { mcqQuestion, takingTrade, executingTrade, completed }
 
-class MarketDepthModel {
-  late MarketDepthUserStory marketDepthUserStory;
+class UserStoryModel {
+  late UserStoryDataModel marketDepthUserStory;
   ExplanationV1? explanationV1;
 
-  MarketDepthModel.fromJson(dynamic data) {
+  UserStoryModel.fromJson(dynamic data) {
     marketDepthUserStory =
-        MarketDepthUserStory.fromJson(data["marketDepthUserStory"] ?? {});
+        UserStoryDataModel.fromJson(data["userStory"] ?? {});
     explanationV1 = data["explaination"] != null
         ? ExplanationV1(
             forCorrect: (data["explaination"]["forCorrect"] as List<dynamic>?)

@@ -70,6 +70,7 @@ class _MyLevelWidget extends State<MyLevelWidget> {
   bool isLoading = true;
   int currentIndex = 0;
   Timer? _timer;
+  Recommendations? recommendations;
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ class _MyLevelWidget extends State<MyLevelWidget> {
       setState(() {
         isLoading = false;
         level = val;
+        recommendations = level.recommendations;
       });
       // startIndexUpdater();
     });
@@ -126,7 +128,6 @@ class _MyLevelWidget extends State<MyLevelWidget> {
   }
 
   Widget getViewByType(String levelType, Map<String, dynamic>? data) {
-    print(levelType);
     switch (levelType) {
       case "Edu_Corner":
         // case "EduCornerV1":
@@ -210,6 +211,8 @@ class _MyLevelWidget extends State<MyLevelWidget> {
         return MultipleMCQSelect(
             model: MultipleMCQModel.fromJson(data),
             onNextClick: () => onNextClick());
+      case "End":
+        return LevelCompleteScreen(recommendations: recommendations);
       default:
         return Container(
           padding: const EdgeInsets.all(8.0),

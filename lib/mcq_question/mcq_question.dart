@@ -94,7 +94,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
       LineLayer(
         id: "main",
         value: model.helperHorizontalLineValue,
-        color: Colors.blue,
+        color: const Color(0xffF9B0CC),
         textColor: colors.axisColor,
         lineColor: colors.borderColorPrimary,
         onUpdate: (p0) {

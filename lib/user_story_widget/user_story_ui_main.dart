@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/market_depth_model.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/market_depth_user_story_model.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/widgets/custom_buttons.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/widgets/custom_table.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/widgets/custom_text.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/widgets/mcq_widget.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/widgets/trade_info.dart';
-import 'package:tradeable_learn_widget/market_depth_user_story/widgets/trade_sheet.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_table.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/tradeable_chart.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
-class MarketDepthUserStoryWidget extends StatefulWidget {
-  final MarketDepthModel model;
+class UserStoryUIMain extends StatefulWidget {
+  final UserStoryModel model;
   final VoidCallback onNextClick;
 
-  const MarketDepthUserStoryWidget(
+  const UserStoryUIMain(
       {super.key, required this.model, required this.onNextClick});
 
   @override
-  State<StatefulWidget> createState() => _MarketDepthUserStoryWidgetState();
+  State<StatefulWidget> createState() => _UserStoryUIMainState();
 }
 
-class _MarketDepthUserStoryWidgetState
-    extends State<MarketDepthUserStoryWidget> {
+class _UserStoryUIMainState
+    extends State<UserStoryUIMain> {
   String currentStepId = '';
   final ScrollController _scrollController = ScrollController();
   RowData? highlightedRowData;
@@ -72,8 +74,8 @@ class _MarketDepthUserStoryWidgetState
             widget.model.marketDepthUserStory.steps[currentIndex + 1].stepId;
       });
 
-      for (var step in widget.model.marketDepthUserStory.steps) {
-        for (var uiData in step.ui) {
+      for (StepData step in widget.model.marketDepthUserStory.steps) {
+        for (UiData uiData in step.ui) {
           if (uiData.tableData != null) {
             for (var table in uiData.tableData!) {
               for (var row in table.data) {
@@ -111,7 +113,7 @@ class _MarketDepthUserStoryWidgetState
 
     final step = widget.model.marketDepthUserStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,
-      orElse: () => StepData(stepId: '', ui: []),
+      orElse: () => StepData(stepId: '', ui: [], isActionNeeded: false),
     );
 
     return Column(
@@ -174,6 +176,15 @@ class _MarketDepthUserStoryWidgetState
                         });
                       },
                     );
+                  case "PlainText":
+                    return Markdown(
+                      data: uiData.prompt,
+                      shrinkWrap: true,
+                    );
+                  case "HorizontalLineChart":
+                    return SizedBox(
+                        height: 350,
+                        child: TradeableChart(model: uiData.chart!));
                   case "TradeInfo":
                     return TradeInfo(
                         title: uiData.title,
@@ -190,12 +201,16 @@ class _MarketDepthUserStoryWidgetState
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
-            color: isAnsweredCorrect != null || highlightedRowData != null
+            color: !(step.isActionNeeded) ||
+                    isAnsweredCorrect != null ||
+                    highlightedRowData != null
                 ? colors.primary
                 : colors.secondary,
             btnContent: step.ui.last.title,
             onTap: () {
-              if (isAnsweredCorrect != null || highlightedRowData != null) {
+              if (isAnsweredCorrect != null ||
+                  highlightedRowData != null ||
+                  !(step.isActionNeeded)) {
                 switch (step.ui.last.action) {
                   case "moveNext":
                     widget.onNextClick();
@@ -213,6 +228,9 @@ class _MarketDepthUserStoryWidgetState
                             onNextClick: () {
                               moveToNextStep();
                             }));
+                    break;
+                  case "moveToNextStep":
+                    moveToNextStep();
                     break;
                 }
               }
