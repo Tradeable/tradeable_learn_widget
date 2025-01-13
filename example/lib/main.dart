@@ -24,6 +24,7 @@ import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
 import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/video_educorner_model.dart';
+import 'package:example/data_model/volume_user_story.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
@@ -195,8 +196,7 @@ class MyHomePage extends StatelessWidget {
                       destination: ScaffoldWithAppBar(
                           title: "Market Depth",
                           body: UserStoryUIMain(
-                              model:
-                                  UserStoryModel.fromJson(marketDepthModel),
+                              model: UserStoryModel.fromJson(marketDepthModel),
                               onNextClick: () {}))),
                   NavigationButton(
                       text: "Horizontal Line V1",
@@ -213,6 +213,13 @@ class MyHomePage extends StatelessWidget {
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(
                                   stockHighLowUserStoryModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Volume User story",
+                      destination: ScaffoldWithAppBar(
+                          title: "Volume User story",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(volumeUserStory),
                               onNextClick: () {}))),
                 ],
               ),

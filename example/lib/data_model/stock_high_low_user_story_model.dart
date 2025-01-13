@@ -270,7 +270,7 @@ const stockHighLowUserStoryModel = {
             "title": "",
             "format": "grid",
             "options": ["Go Long", "Go Short"],
-            "correctResponse": ["Go Long"]
+            "correctResponse": ["Go Short"]
           },
           {
             "widget": "NextButtonWidget",

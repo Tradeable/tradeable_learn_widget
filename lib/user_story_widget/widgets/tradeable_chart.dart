@@ -37,7 +37,50 @@ class _TradeableChart extends State<TradeableChart>
   @override
   void initState() {
     _loadAllCandles();
+    animateLine();
     super.initState();
+  }
+
+  void animateLine() {
+    if (!isAnimating) {
+      for (int i = 0; i < widget.model.userResponse.length; i++) {
+        final value = widget.model.userResponse[i].value;
+        final endValue = value + 15;
+
+        final controller = AnimationController(
+          duration: const Duration(milliseconds: 1500),
+          vsync: this,
+        );
+
+        final animation = Tween<double>(
+          begin: value,
+          end: endValue,
+        ).animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: const Interval(0.0, 1.0, curve: Curves.easeIn),
+          ),
+        );
+
+        controller.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            controller.reverse();
+          }
+        });
+
+        controller.addListener(() {
+          setState(() {
+            widget.model.userResponse[i].value = animation.value;
+          });
+        });
+
+        controller.forward();
+      }
+
+      setState(() {
+        isAnimating = true;
+      });
+    }
   }
 
   void _loadAllCandles() async {

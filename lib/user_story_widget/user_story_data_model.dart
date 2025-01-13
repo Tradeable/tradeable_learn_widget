@@ -54,6 +54,8 @@ class UiData {
   List<String>? correctResponse;
   String? action;
   HorizontalLineModel? chart;
+  List<Candle>? candles;
+  List<VolumePriceTextData>? volumePriceTextData;
 
   UiData(
       {required this.widget,
@@ -67,36 +69,47 @@ class UiData {
       this.options,
       this.correctResponse,
       this.action,
-      this.chart});
+      this.chart,
+      this.candles,
+      this.volumePriceTextData});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
-      widget: json['widget'] ?? '',
-      title: json['title'] ?? '',
-      prompt: json['prompt'] ?? '',
-      tableAlignment: json['tableAlignment'],
-      tableData: json['tableData'] != null
-          ? (json['tableData'] as List<dynamic>)
-              .map((tableItem) => TableData.fromJson(tableItem))
-              .toList()
-          : null,
-      buttonsFormat: json['buttonsFormat'],
-      buttonsData: json['buttonsData'] != null
-          ? (json['buttonsData'] as List<dynamic>)
-              .map((buttonItem) => ButtonData.fromJson(buttonItem))
-              .toList()
-          : null,
-      format: json['format'],
-      options:
-          json['options'] != null ? List<String>.from(json['options']) : null,
-      correctResponse: json['correctResponse'] != null
-          ? List<String>.from(json['correctResponse'])
-          : null,
-      action: json['action'] ?? '',
-      chart: json["chart"] != null
-          ? HorizontalLineModel.fromJson(json["chart"])
-          : null,
-    );
+        widget: json['widget'] ?? '',
+        title: json['title'] ?? '',
+        prompt: json['prompt'] ?? '',
+        tableAlignment: json['tableAlignment'],
+        tableData: json['tableData'] != null
+            ? (json['tableData'] as List<dynamic>)
+                .map((tableItem) => TableData.fromJson(tableItem))
+                .toList()
+            : null,
+        buttonsFormat: json['buttonsFormat'],
+        buttonsData: json['buttonsData'] != null
+            ? (json['buttonsData'] as List<dynamic>)
+                .map((buttonItem) => ButtonData.fromJson(buttonItem))
+                .toList()
+            : null,
+        format: json['format'],
+        options:
+            json['options'] != null ? List<String>.from(json['options']) : null,
+        correctResponse: json['correctResponse'] != null
+            ? List<String>.from(json['correctResponse'])
+            : null,
+        action: json['action'] ?? '',
+        chart: json["chart"] != null
+            ? HorizontalLineModel.fromJson(json["chart"])
+            : null,
+        candles: json["candles"] != null
+            ? ((json["candles"]) as List)
+                .map((x) => Candle.fromJson(x))
+                .toList()
+            : [],
+        volumePriceTextData: json["textData"] != null
+            ? (json['textData'] as List<dynamic>)
+                .map((buttonItem) => VolumePriceTextData.fromJson(buttonItem))
+                .toList()
+            : null);
   }
 }
 
@@ -153,6 +166,26 @@ class ButtonData {
     return ButtonData(
       title: json['title'] ?? '',
       action: json['action'] ?? '',
+    );
+  }
+}
+
+class VolumePriceTextData {
+  final String volume;
+  final String price;
+  final String interpretation;
+
+  VolumePriceTextData({
+    required this.volume,
+    required this.price,
+    required this.interpretation,
+  });
+
+  factory VolumePriceTextData.fromJson(Map<String, dynamic> json) {
+    return VolumePriceTextData(
+      volume: json['volume'],
+      price: json['price'],
+      interpretation: json['interpretation'],
     );
   }
 }

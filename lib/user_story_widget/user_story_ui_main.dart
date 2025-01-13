@@ -1,5 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
+import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_response.dart';
+import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
@@ -9,6 +14,8 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/tradeable_chart.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_chart.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_slider.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -24,13 +31,13 @@ class UserStoryUIMain extends StatefulWidget {
   State<StatefulWidget> createState() => _UserStoryUIMainState();
 }
 
-class _UserStoryUIMainState
-    extends State<UserStoryUIMain> {
+class _UserStoryUIMainState extends State<UserStoryUIMain> {
   String currentStepId = '';
   final ScrollController _scrollController = ScrollController();
   RowData? highlightedRowData;
   bool? isAnsweredCorrect;
   String status = 'Open';
+  List<String> selectedResponses = [];
 
   @override
   void initState() {
@@ -43,6 +50,7 @@ class _UserStoryUIMainState
   void moveToNextStep() {
     setState(() {
       isAnsweredCorrect = null;
+      selectedResponses.clear();
     });
     final currentIndex = widget.model.marketDepthUserStory.steps
         .indexWhere((step) => step.stepId == currentStepId);
@@ -107,6 +115,54 @@ class _UserStoryUIMainState
     }
   }
 
+  void showAnimation(HorizontalLineModel model) {
+    for (ReelRangeResponse reelRangeResponse in model.responseRange) {
+      setState(() {
+        model.correctResponseLayer.add(RangeLayer(
+            value1: max(reelRangeResponse.max, reelRangeResponse.min),
+            value2: min(reelRangeResponse.max, reelRangeResponse.min),
+            color: const Color.fromARGB(100, 50, 100, 29)));
+      });
+    }
+    int correctCount = 0;
+    for (ReelRangeResponse reelRangeResponse in model.responseRange) {
+      for (var element in model.userResponse) {
+        if (min(reelRangeResponse.min, reelRangeResponse.max) <=
+            element.value &&
+            max(reelRangeResponse.min, reelRangeResponse.max) >=
+                element.value) {
+          setState(() {
+            correctCount++;
+          });
+        }
+      }
+    }
+
+    if (correctCount == model.userResponse.length) {
+      setState(() {
+        model.isCorrect = true;
+      });
+    } else {
+      setState(() {
+        model.isCorrect = false;
+      });
+    }
+    showModalBottomSheet(
+        isDismissible: false,
+        context: context,
+        builder: (context) => BottomSheetWidget(
+            isCorrect: model.isCorrect,
+            model: model.explanationV1,
+            onNextClick: () {
+              moveToNextStep();
+              setState(() {
+                model.isCorrect = false;
+                model.correctResponseLayer = [];
+                model.userResponse = [];
+              });
+            }));
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
@@ -167,11 +223,14 @@ class _UserStoryUIMainState
                       correctResponse: uiData.correctResponse ?? [],
                       onOptionSelected: (selectedItems) {
                         setState(() {
+                          selectedResponses = selectedItems;
+                        });
+                        setState(() {
                           isAnsweredCorrect = Set.from(selectedItems)
                                   .difference(
                                       Set.from(uiData.correctResponse ?? []))
                                   .isEmpty &&
-                              selectedItems.length ==
+                              selectedResponses.length ==
                                   (uiData.correctResponse ?? []).length;
                         });
                       },
@@ -185,6 +244,15 @@ class _UserStoryUIMainState
                     return SizedBox(
                         height: 350,
                         child: TradeableChart(model: uiData.chart!));
+                  case "VolumeChart":
+                    return VolumeBarChart(candles: uiData.candles ?? []);
+                  case "VolumePriceSlider":
+                    return VolumePriceSlider(
+                        title: uiData.title,
+                        prompt: uiData.prompt,
+                        textData: uiData.volumePriceTextData ?? [],
+                        candles: uiData.candles ?? [],
+                        onSliderChanged: (sliderVal) {});
                   case "TradeInfo":
                     return TradeInfo(
                         title: uiData.title,
@@ -229,6 +297,10 @@ class _UserStoryUIMainState
                               moveToNextStep();
                             }));
                     break;
+                  case "showCorrectHorizontalLines":
+                    showAnimation(step.ui
+                        .firstWhere((a) => a.widget == "HorizontalLineChart")
+                        .chart!);
                   case "moveToNextStep":
                     moveToNextStep();
                     break;
