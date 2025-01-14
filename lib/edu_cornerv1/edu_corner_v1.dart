@@ -51,7 +51,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
               count: model.cards.length,
               effect: WormEffect(
                 dotHeight: 7,
-                dotWidth: currentPage == model.cards.length - 1 ? 10 : 7,
+                dotWidth: 7,
                 activeDotColor: colors.borderColorPrimary,
                 type: WormType.thin,
               ),
