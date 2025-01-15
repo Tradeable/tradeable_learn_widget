@@ -26,11 +26,8 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
 
   void toggleOption(String option) {
     setState(() {
-      if (selectedOptions.contains(option)) {
-        selectedOptions.remove(option);
-      } else {
-        selectedOptions.add(option);
-      }
+      selectedOptions.clear();
+      selectedOptions.add(option);
       widget.onOptionSelected(selectedOptions);
     });
   }
