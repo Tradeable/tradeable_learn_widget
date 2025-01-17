@@ -82,7 +82,19 @@ class CustomTable extends StatelessWidget {
 
     return TableRow(
       decoration: isHighlighted
-          ? BoxDecoration(border: Border.all(color: colors.primary))
+          ? BoxDecoration(
+              border: Border.all(color: colors.borderColorPrimary),
+              color: colors.buttonColor,
+              boxShadow: [
+                BoxShadow(
+                  color: colors.borderColorPrimary
+                      .withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2), // Offset (horizontal, vertical)
+                ),
+              ],
+            )
           : null,
       children: cells.map((cell) {
         return Container(

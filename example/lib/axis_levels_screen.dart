@@ -119,10 +119,11 @@ class _MyLevelWidget extends State<MyLevelWidget> {
       body: SafeArea(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : getViewByType(
-                level.graph![currentIndex].model ?? "",
-                level.graph![currentIndex].data as Map<String, dynamic>?,
-              ),
+            // : getViewByType(
+            //     level.graph![currentIndex].model ?? "",
+            //     level.graph![currentIndex].data as Map<String, dynamic>?,
+            //   ),
+        :getViewByType("End", {})
       ),
     );
   }

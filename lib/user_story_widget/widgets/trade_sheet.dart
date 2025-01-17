@@ -105,6 +105,9 @@ class _TradeSheetState extends State<TradeSheet> {
                 double.parse(controller.text.isEmpty ? '0' : controller.text),
             min: 0,
             max: sliderMaxValue,
+            thumbColor: colors.axisColor,
+            activeColor: colors.axisColor,
+            inactiveColor: colors.borderColorSecondary,
             divisions: 100,
             onChanged: (value) {
               setState(() {
@@ -144,7 +147,7 @@ class _TradeSheetState extends State<TradeSheet> {
                   Row(
                     children: [
                       Checkbox(
-                        checkColor: colors.primary,
+                        activeColor: colors.borderColorPrimary,
                         value: isNotificationChecked,
                         onChanged: (bool? newValue) {
                           setState(() {
@@ -159,7 +162,7 @@ class _TradeSheetState extends State<TradeSheet> {
                   Row(
                     children: [
                       Checkbox(
-                        checkColor: colors.primary,
+                        activeColor: colors.borderColorPrimary,
                         value: isAutoExecutionChecked,
                         onChanged: (bool? newValue) {
                           setState(() {

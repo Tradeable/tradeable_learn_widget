@@ -45,7 +45,25 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     if (widget.model.marketDepthUserStory.steps.isNotEmpty) {
       currentStepId = widget.model.marketDepthUserStory.steps.first.stepId;
     }
+    WidgetsBinding.instance.addPostFrameCallback((a) {
+      animatePageScroll();
+    });
   }
+
+  void animatePageScroll() {
+    if (_scrollController.position.maxScrollExtent > 0) {
+      _scrollController
+          .animateTo(200,
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeInOut)
+          .then((_) {
+        _scrollController.animateTo(0,
+            duration: const Duration(milliseconds: 1000),
+            curve: Curves.easeInOut);
+      });
+    }
+  }
+
 
   void moveToNextStep() {
     setState(() {
@@ -60,15 +78,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         currentStepId =
             widget.model.marketDepthUserStory.steps[currentIndex + 1].stepId;
       });
-      _scrollController
-          .animateTo(200,
-              duration: const Duration(milliseconds: 1000),
-              curve: Curves.easeInOut)
-          .then((_) {
-        _scrollController.animateTo(0,
-            duration: const Duration(milliseconds: 1000),
-            curve: Curves.easeInOut);
-      });
+      animatePageScroll();
     }
   }
 
@@ -128,7 +138,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     for (ReelRangeResponse reelRangeResponse in model.responseRange) {
       for (var element in model.userResponse) {
         if (min(reelRangeResponse.min, reelRangeResponse.max) <=
-            element.value &&
+                element.value &&
             max(reelRangeResponse.min, reelRangeResponse.max) >=
                 element.value) {
           setState(() {

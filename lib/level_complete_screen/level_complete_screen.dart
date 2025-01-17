@@ -56,10 +56,34 @@ class LevelCompleteScreen extends StatelessWidget {
                 ),
               )),
         const Spacer(),
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
-                color: colors.primary, btnContent: 'Next', onTap: () {})),
+        InkWell(
+          onTap: () {},
+          child: Container(
+            height: 50,
+            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              gradient: const LinearGradient(
+                  colors: [Color(0xff97144D), Color(0xffED1164)]),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("assets/action_btn_icon.png",
+                    package: 'tradeable_learn_widget/lib', height: 30),
+                const SizedBox(width: 10),
+                Text("Take an Option Trade",
+                    style: textStyles.mediumBold
+                        .copyWith(color: Colors.white, fontSize: 16)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text("TAKE ME TO LEARN DASHBOARD",
+            style: textStyles.smallBold
+                .copyWith(color: colors.borderColorPrimary)),
+        const SizedBox(height: 30),
       ],
     );
   }

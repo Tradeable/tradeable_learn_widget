@@ -49,12 +49,17 @@ class _EduCornerV1State extends State<EduCornerV1> {
             child: SmoothPageIndicator(
               controller: controller,
               count: model.cards.length,
-              effect: WormEffect(
-                dotHeight: 7,
-                dotWidth: 7,
-                activeDotColor: colors.borderColorPrimary,
-                type: WormType.thin,
-              ),
+              effect: CustomizableEffect(
+                  dotDecoration: DotDecoration(
+                      width: 7,
+                      height: 7,
+                      color: colors.secondary,
+                      borderRadius: BorderRadius.circular(20)),
+                  activeDotDecoration: DotDecoration(
+                      width: 16,
+                      height: 7,
+                      color: colors.borderColorPrimary,
+                      borderRadius: BorderRadius.circular(14))),
             ),
           ),
           const Spacer(),
