@@ -5,23 +5,26 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 class AnimatedTextWidget extends StatelessWidget {
   final String title;
   final String prompt;
+  final String logo;
 
   const AnimatedTextWidget(
-      {super.key, required this.title, required this.prompt});
+      {super.key,
+      required this.title,
+      required this.prompt,
+      required this.logo});
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            "assets/market_depth/profile_guy.png",
+            logo,
             package: 'tradeable_learn_widget/lib',
-            height: 140,
+            height: 60,
           ),
           const SizedBox(width: 20),
           Expanded(

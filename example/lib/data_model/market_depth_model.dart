@@ -14,10 +14,15 @@ const marketDepthModel = {
                 "What is higher in the current market as per the given data points?",
           },
           {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
+          },
+          {
             "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
-            "tableAlignment": "vertical",
+            "tableAlignment": "horizontal",
             "tableData": [
               {
                 "title": "Bid Price",

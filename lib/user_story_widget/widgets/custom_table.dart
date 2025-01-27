@@ -59,19 +59,19 @@ class CustomTable extends StatelessWidget {
               ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(footerLabel),
-              Text(
-                footerValue,
-                style: TextStyle(color: footerValueColor),
-              ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text(footerLabel),
+        //       Text(
+        //         footerValue,
+        //         style: TextStyle(color: footerValueColor),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }

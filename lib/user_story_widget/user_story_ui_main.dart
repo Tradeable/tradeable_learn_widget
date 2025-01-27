@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
@@ -8,9 +7,12 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
-import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_table.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/tradeable_chart.dart';
@@ -42,9 +44,13 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   @override
   void initState() {
     super.initState();
-    if (widget.model.marketDepthUserStory.steps.isNotEmpty) {
-      currentStepId = widget.model.marketDepthUserStory.steps.first.stepId;
+    if (widget.model.userStory.steps.isNotEmpty) {
+      currentStepId = widget.model.userStory.steps
+          .firstWhere((step) => step.stepId == "1",
+              orElse: () => widget.model.userStory.steps.first)
+          .stepId;
     }
+
     WidgetsBinding.instance.addPostFrameCallback((a) {
       animatePageScroll();
     });
@@ -54,8 +60,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     if (_scrollController.position.maxScrollExtent > 0) {
       _scrollController
           .animateTo(200,
-          duration: const Duration(milliseconds: 1000),
-          curve: Curves.easeInOut)
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeInOut)
           .then((_) {
         _scrollController.animateTo(0,
             duration: const Duration(milliseconds: 1000),
@@ -64,35 +70,32 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     }
   }
 
-
   void moveToNextStep() {
     setState(() {
       isAnsweredCorrect = null;
       selectedResponses.clear();
     });
-    final currentIndex = widget.model.marketDepthUserStory.steps
+    final currentIndex = widget.model.userStory.steps
         .indexWhere((step) => step.stepId == currentStepId);
     if (currentIndex >= 0 &&
-        currentIndex < widget.model.marketDepthUserStory.steps.length - 1) {
+        currentIndex < widget.model.userStory.steps.length - 1) {
       setState(() {
-        currentStepId =
-            widget.model.marketDepthUserStory.steps[currentIndex + 1].stepId;
+        currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
       });
       animatePageScroll();
     }
   }
 
   void confirmOrder() {
-    final currentIndex = widget.model.marketDepthUserStory.steps
+    final currentIndex = widget.model.userStory.steps
         .indexWhere((step) => step.stepId == currentStepId);
     if (currentIndex >= 0 &&
-        currentIndex < widget.model.marketDepthUserStory.steps.length - 1) {
+        currentIndex < widget.model.userStory.steps.length - 1) {
       setState(() {
-        currentStepId =
-            widget.model.marketDepthUserStory.steps[currentIndex + 1].stepId;
+        currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
       });
 
-      for (StepData step in widget.model.marketDepthUserStory.steps) {
+      for (StepData step in widget.model.userStory.steps) {
         for (UiData uiData in step.ui) {
           if (uiData.tableData != null) {
             for (var table in uiData.tableData!) {
@@ -177,7 +180,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
 
-    final step = widget.model.marketDepthUserStory.steps.firstWhere(
+    final step = widget.model.userStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,
       orElse: () => StepData(stepId: '', ui: [], isActionNeeded: false),
     );
@@ -192,7 +195,12 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                 switch (uiData.widget) {
                   case "AnimatedText":
                     return AnimatedTextWidget(
-                        prompt: uiData.prompt, title: uiData.title);
+                        prompt: uiData.prompt,
+                        title: uiData.title,
+                        logo: uiData.imageUrl != null &&
+                                uiData.imageUrl!.isNotEmpty
+                            ? uiData.imageUrl!
+                            : "assets/market_depth/profile_guy.png");
                   case "MarketDepthTable":
                     return MarketDepthTableWidget(
                       tableAlignment: uiData.tableAlignment ?? "horizontal",
@@ -209,7 +217,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "TradeSheet":
                     return TradeSheet(
                       tableRowDataMap: getTableRowDataAsMap(
-                        widget.model.marketDepthUserStory.steps
+                        widget.model.userStory.steps
                             .firstWhere(
                               (step) => step.stepId == currentStepId,
                             )
@@ -249,6 +257,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     return Markdown(
                       data: uiData.prompt,
                       shrinkWrap: true,
+                      styleSheet:
+                          MarkdownStyleSheet(h1Align: WrapAlignment.center),
                     );
                   case "HorizontalLineChart":
                     return SizedBox(
@@ -269,6 +279,55 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         limitPrice: highlightedRowData?.price ?? '',
                         quantity: highlightedRowData?.quantity ?? '',
                         status: status);
+                  case "ImageWidget":
+                    return Image.network(uiData.imageUrl!,
+                        fit: BoxFit.cover,
+                        height: double.parse(uiData.height ?? "150"));
+                  case "CustomMCQWidget":
+                    return CustomMCQWidget(
+                      format: uiData.format ?? "",
+                      question: uiData.prompt,
+                      ui: uiData.uiWidgets ?? [],
+                      onOptionSelected: (selectedOption) {
+                        setState(() {
+                          selectedResponses = [selectedOption.prompt];
+                          isAnsweredCorrect = Set.from(selectedResponses)
+                                  .difference(
+                                      Set.from(uiData.correctResponse ?? []))
+                                  .isEmpty &&
+                              selectedResponses.length ==
+                                  (uiData.correctResponse ?? []).length;
+                        });
+                      },
+                    );
+                  case "CouponWidget":
+                    return TicketCouponWidget(model: uiData.ticketCouponModel!);
+                  case "SizedBox":
+                    return SizedBox(
+                        height: double.parse(uiData.height ?? "0"),
+                        width: uiData.width != null && uiData.width!.isNotEmpty
+                            ? double.parse(uiData.width!)
+                            : double.infinity);
+                  case "MCQQuestionV1":
+                    return MCQQuestionWidgetV1(
+                      title: uiData.title,
+                      format: uiData.format ?? "",
+                      options: uiData.options ?? [],
+                      correctResponse: uiData.correctResponse ?? [],
+                      onOptionSelected: (selectedItems) {
+                        setState(() {
+                          selectedResponses = selectedItems;
+                        });
+                        setState(() {
+                          isAnsweredCorrect = Set.from(selectedItems)
+                                  .difference(
+                                      Set.from(uiData.correctResponse ?? []))
+                                  .isEmpty &&
+                              selectedResponses.length ==
+                                  (uiData.correctResponse ?? []).length;
+                        });
+                      },
+                    );
                   default:
                     return const SizedBox.shrink();
                 }
@@ -331,58 +390,5 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     }
 
     return tableRowDataMap;
-  }
-}
-
-class MarketDepthTableWidget extends StatelessWidget {
-  final String title;
-  final String tableAlignment;
-  final List<TableData> tableData;
-  final RowData? highlightedRowData;
-
-  const MarketDepthTableWidget({
-    super.key,
-    required this.title,
-    required this.tableAlignment,
-    required this.tableData,
-    this.highlightedRowData,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> tables = tableData.map((tableEntry) {
-      final headers = ['Bid', 'Orders', 'Qty'];
-
-      final rows = tableEntry.data
-          .map((row) => [
-                row.price,
-                row.orders,
-                row.quantity,
-              ])
-          .toList();
-
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CustomTable(
-          title: tableEntry.title,
-          headers: headers,
-          rows: rows,
-          headerGradientColors:
-              tableEntry.tableColors.map((e) => Color(int.parse(e))).toList(),
-          footerLabel: 'Total Orders',
-          footerValue: tableEntry.totalValue,
-          footerValueColor: Colors.black,
-          highlightedRowData: highlightedRowData,
-        ),
-      );
-    }).toList();
-
-    return tableAlignment == 'horizontal'
-        ? Row(
-            children: tables.map((table) => Expanded(child: table)).toList(),
-          )
-        : Column(
-            children: tables.map((table) => table).toList(),
-          );
   }
 }

@@ -63,6 +63,7 @@ class CustomColors {
   final Color buttonColor;
   final Color buttonBorderColor;
   final Color sliderColor;
+  final Color textColorSecondary;
 
   CustomColors(
       {required this.primary,
@@ -81,7 +82,8 @@ class CustomColors {
       required this.cardBasicBackground,
       required this.buttonColor,
       required this.buttonBorderColor,
-      required this.sliderColor});
+      required this.sliderColor,
+      required this.textColorSecondary});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -104,7 +106,8 @@ extension ThemeDataExtension on ThemeData {
           cardBasicBackground: Colors.white,
           buttonColor: const Color(0xffF9F9F9),
           buttonBorderColor: const Color(0xffE2E2E2),
-          sliderColor: const Color(0xffED1164));
+          sliderColor: const Color(0xffED1164),
+          textColorSecondary: const Color(0xff6E6E6E));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -124,7 +127,8 @@ extension ThemeDataExtension on ThemeData {
           cardBasicBackground: Colors.black,
           buttonColor: Colors.white,
           buttonBorderColor: Colors.white38,
-          sliderColor: const Color(0xffED1164));
+          sliderColor: const Color(0xffED1164),
+          textColorSecondary: Colors.white);
     }
   }
 

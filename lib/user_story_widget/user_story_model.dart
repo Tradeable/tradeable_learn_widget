@@ -4,11 +4,11 @@ import 'user_story_data_model.dart';
 enum CurrentStepState { mcqQuestion, takingTrade, executingTrade, completed }
 
 class UserStoryModel {
-  late UserStoryDataModel marketDepthUserStory;
+  late UserStoryDataModel userStory;
   ExplanationV1? explanationV1;
 
   UserStoryModel.fromJson(dynamic data) {
-    marketDepthUserStory =
+    userStory =
         UserStoryDataModel.fromJson(data["userStory"] ?? {});
     explanationV1 = data["explaination"] != null
         ? ExplanationV1(
