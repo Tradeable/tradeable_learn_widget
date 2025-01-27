@@ -36,7 +36,7 @@ class _TextImagePreviewWidget extends State<MarkdownPreviewWidget> {
             shrinkWrap: true,
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
                 .copyWith(
-                    textAlign: WrapAlignment.center,
+                    textAlign: WrapAlignment.start,
                     h1Padding: const EdgeInsets.only(top: 25, bottom: 15),
                     h3Padding: const EdgeInsets.only(top: 25, bottom: 15),
                     pPadding: const EdgeInsets.symmetric(vertical: 15),
@@ -46,9 +46,12 @@ class _TextImagePreviewWidget extends State<MarkdownPreviewWidget> {
             data: model.content,
           ),
         ),
-        ButtonWidget(color: colors.primary, btnContent: "Next", onTap: () {
-          widget.onNextClick();
-        })
+        ButtonWidget(
+            color: colors.primary,
+            btnContent: "Next",
+            onTap: () {
+              widget.onNextClick();
+            })
       ]),
     );
   }

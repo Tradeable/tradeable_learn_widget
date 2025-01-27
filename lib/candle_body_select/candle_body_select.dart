@@ -32,6 +32,7 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 10),
         renderQuestion(theme),
         Center(
             child:
@@ -51,11 +52,8 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
 
   Widget renderQuestion(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Text(
-        model.question,
-        style: theme.customTextStyles.smallNormal,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(model.question, style: theme.customTextStyles.smallNormal),
     );
   }
 
@@ -136,62 +134,6 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
                 widget.onNextClick();
               }));
     }
-  }
-
-  Widget buildBottomSheet() {
-    final theme = Theme.of(context);
-    final colors = theme.customColors;
-    final candleColor =
-        model.isBullish ? colors.bullishColor : colors.bearishColor;
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(12),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(10),
-          topLeft: Radius.circular(10),
-        ),
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: 300,
-                  width: double.infinity,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: model.isCorrect
-                        ? colors.bullishColor.withOpacity(0.4)
-                        : colors.bearishColor.withOpacity(0.4),
-                  ),
-                ),
-                SizedBox(
-                    height: 300, child: buildCandleModel(colors, candleColor)),
-              ],
-            ),
-            Text(model.isCorrect ? "Great!" : "Incorrect",
-                style: theme.customTextStyles.mediumBold),
-            Text("Explanation comes here",
-                style: theme.customTextStyles.smallNormal),
-            const SizedBox(height: 10),
-            ButtonWidget(
-              color: colors.primary,
-              btnContent: "Next",
-              onTap: () {
-                widget.onNextClick();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget buildCandleModel(CustomColors colors, Color candleColor) {

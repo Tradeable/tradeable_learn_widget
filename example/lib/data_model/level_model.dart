@@ -1,3 +1,5 @@
+import 'package:tradeable_learn_widget/level_complete_screen/recommendation_model.dart';
+
 class Level {
   final String levelInternalName;
   final int levelId;
@@ -8,8 +10,8 @@ class Level {
   final String status;
   List<Node>? graph;
   final bool isDemo;
-  // final RejectReasonModel rejectReason;
   final List<String>? tickers;
+  final Recommendations? recommendations;
 
   Level({
     required this.levelInternalName,
@@ -21,8 +23,8 @@ class Level {
     required this.status,
     this.graph,
     required this.isDemo,
-    // required this.rejectReason,
     this.tickers,
+    this.recommendations,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
@@ -36,8 +38,11 @@ class Level {
       status: json['status'] ?? "",
       graph: (json['graph'] as List?)?.map((e) => Node.fromJson(e)).toList(),
       isDemo: json['is_demo'],
-      // rejectReason: RejectReasonModel.fromJson(json['reject_reason']),
       tickers: (json['tickers'] as List?)?.map((e) => e as String).toList(),
+      recommendations: json['recommendations'] != null
+          ? Recommendations.fromJson(
+              json['recommendations'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -52,8 +57,8 @@ class Level {
       'status': status,
       'graph': graph?.map((e) => e.toJson()).toList(),
       'is_demo': isDemo,
-      // 'reject_reason': rejectReason.toJson(),
       'tickers': tickers,
+      'recommendations': recommendations?.toJson(),
     };
   }
 }
@@ -68,28 +73,26 @@ class Node {
   bool? isVisited;
   dynamic data;
 
-  Node({
-    required this.nodeId,
-    required this.type,
-    this.model,
-    this.edges,
-    this.isVisited = false,
-    this.data
-  });
+  Node(
+      {required this.nodeId,
+      required this.type,
+      this.model,
+      this.edges,
+      this.isVisited = false,
+      this.data});
 
   factory Node.fromJson(Map<String, dynamic> json) {
     return Node(
-      nodeId: json['node_id'],
-      type:
-          Type.values.firstWhere((e) => e.toString() == 'Type.${json['type']}'),
-      // model: json['model'] != null
-      //     ? ExperienceBaseModel.fromJson(json['model'])
-      //     : null,
-      model: json["model_type"],
-      edges: (json['edges'] as List?)?.map((e) => Edge.fromJson(e)).toList(),
-      isVisited: json['isVisited'] ?? false,
-      data: json["data"]
-    );
+        nodeId: json['node_id'],
+        type: Type.values
+            .firstWhere((e) => e.toString() == 'Type.${json['type']}'),
+        // model: json['model'] != null
+        //     ? ExperienceBaseModel.fromJson(json['model'])
+        //     : null,
+        model: json["model_type"],
+        edges: (json['edges'] as List?)?.map((e) => Edge.fromJson(e)).toList(),
+        isVisited: json['isVisited'] ?? false,
+        data: json["data"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -144,27 +147,6 @@ class ExperienceBaseModel {
     return {
       'type': type,
       'data': data,
-    };
-  }
-}
-
-class RejectReasonModel {
-  final int mode;
-  final String message;
-
-  RejectReasonModel({required this.mode, required this.message});
-
-  factory RejectReasonModel.fromJson(Map<String, dynamic> json) {
-    return RejectReasonModel(
-      mode: json['mode'],
-      message: json['message'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'mode': mode,
-      'message': message,
     };
   }
 }

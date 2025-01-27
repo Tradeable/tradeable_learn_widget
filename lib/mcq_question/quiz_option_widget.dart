@@ -34,7 +34,7 @@ class QuizQuestionOption extends StatelessWidget {
                   color: selectedOption == option
                       ? correctResponse == option
                           ? colors.bullishColor
-                          : colors.primary
+                          : colors.borderColorPrimary
                       : correctResponse == option
                           ? colors.bullishColor
                           : colors.borderColorSecondary)),

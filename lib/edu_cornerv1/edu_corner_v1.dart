@@ -49,12 +49,17 @@ class _EduCornerV1State extends State<EduCornerV1> {
             child: SmoothPageIndicator(
               controller: controller,
               count: model.cards.length,
-              effect: WormEffect(
-                dotHeight: 7,
-                dotWidth: currentPage == model.cards.length - 1 ? 10 : 7,
-                activeDotColor: colors.borderColorPrimary,
-                type: WormType.thin,
-              ),
+              effect: CustomizableEffect(
+                  dotDecoration: DotDecoration(
+                      width: 7,
+                      height: 7,
+                      color: colors.secondary,
+                      borderRadius: BorderRadius.circular(20)),
+                  activeDotDecoration: DotDecoration(
+                      width: 16,
+                      height: 7,
+                      color: colors.borderColorPrimary,
+                      borderRadius: BorderRadius.circular(14))),
             ),
           ),
           const Spacer(),
@@ -128,23 +133,19 @@ class _EduCornerV1State extends State<EduCornerV1> {
           SizedBox(
             width: constraints.maxWidth * 0.9,
             height: constraints.maxHeight * 0.6,
-            child: DottedBorderWidget(
-              backgroundColor: Colors.transparent,
-              borderColor: colors.borderColorSecondary,
-              child: Stack(children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: videoBtnHeight / 2),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Image.network(card.imgUrl!, fit: BoxFit.fill),
-                  ),
+            child: Stack(children: [
+              Container(
+                margin: EdgeInsets.only(bottom: videoBtnHeight / 2),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Image.network(card.imgUrl!, fit: BoxFit.fill),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: videoButton(card.videoId),
-                ),
-              ]),
-            ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: videoButton(card.videoId),
+              ),
+            ]),
           ),
           const SizedBox(height: 30),
           Row(
@@ -237,10 +238,14 @@ class _EduCornerV1State extends State<EduCornerV1> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => VideoEduCorner(
-                        model:
-                            VideoEduCornerModel.fromJson({"video_id": videoId}),
-                        onNextClick: () {})));
+                    builder: (context) => Material(
+                          child: VideoEduCorner(
+                              model: VideoEduCornerModel.fromJson(
+                                  {"video_id": videoId}),
+                              onNextClick: () {
+                                Navigator.of(context).pop();
+                              }),
+                        )));
           },
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -251,7 +256,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          icon: const Icon(Icons.play_arrow),
+          icon: const Icon(Icons.play_arrow, color: Colors.white),
           label: const Text('Watch Video'),
         ),
       );

@@ -99,7 +99,7 @@ class _EN1State extends State<EN1> {
                             : colors.primary,
                         btnContent: "Next",
                         onTap: () {
-                          if(model.state == EN1State.submitResponse) {
+                          if (model.state == EN1State.submitResponse) {
                             widget.onNextClick();
                           }
                         }),
@@ -225,7 +225,7 @@ class LeftColumnItemWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: shadowColor, width: 2),
+          border: Border.all(color: shadowColor, width: 1),
           color: itemColor.withOpacity(0.2),
         ),
         child: Center(
@@ -255,13 +255,13 @@ class RightColumnItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
 
-    Color shadowColor = const HSLColor.fromAHSL(1, 240, 0.2, 0.2).toColor();
+    Color shadowColor = colors.borderColorSecondary;
     switch (item.state) {
       case ColumnItemState.unselected:
-        shadowColor = Colors.transparent;
+        shadowColor = colors.cardColorSecondary;
         break;
       case ColumnItemState.selected:
-        shadowColor = colors.selectedItemColor;
+        shadowColor = colors.primary;
         break;
       case ColumnItemState.correct:
         shadowColor = colors.bullishColor;
@@ -286,7 +286,7 @@ class RightColumnItemWidget extends StatelessWidget {
                     color: shadowColor,
                     spreadRadius: 1,
                     blurRadius: 1,
-                    offset: const Offset(0, 0), // changes position of shadow
+                    offset: const Offset(0, 0),
                   ),
                 ],
               ),
@@ -310,17 +310,9 @@ class RightColumnItemWidget extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 10),
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            border: Border.all(color: colors.borderColorSecondary),
-            color: colors.cardColorSecondary,
+            border: Border.all(color: shadowColor, width: 1),
+            color: colors.cardColorSecondary.withOpacity(0.2),
             borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: shadowColor,
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, 0), // changes position of shadow
-              ),
-            ],
           ),
           child: Center(
             child: AutoSizeText(

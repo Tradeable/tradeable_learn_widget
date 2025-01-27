@@ -11,7 +11,7 @@ class ExplanationV1 {
             ExplainerV1(
               title: "Correct",
               data: "You got it correct",
-              imageUrl: "assets/btmsheet_correct.png",
+              imageUrl: "/assets/btmsheet_correct.png",
             )
           ];
     } else {
@@ -20,7 +20,7 @@ class ExplanationV1 {
             ExplainerV1(
               title: "Incorrect",
               data: "You got it incorrect",
-              imageUrl: "assets/btmsheet_incorrect.png",
+              imageUrl: "/assets/btmsheet_incorrect.png",
             )
           ];
     }

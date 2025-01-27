@@ -125,8 +125,7 @@ class _OptionContainerState extends State<OptionContainer>
               border: Border.all(
                   color: isSnapped
                       ? Colors.transparent
-                      : colors.borderColorPrimary,
-                  width: 2)),
+                      : colors.borderColorPrimary)),
           width: widget.width,
           height: widget.height,
           child: Center(
