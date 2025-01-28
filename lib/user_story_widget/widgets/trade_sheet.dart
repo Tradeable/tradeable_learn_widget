@@ -58,7 +58,8 @@ class _TradeSheetState extends State<TradeSheet> {
               double quantity = double.parse(row.quantity);
               setState(() {
                 sliderMaxValue = quantity;
-                sliderValue = widget.isQuantitySquared ? quantity * 0.4 : quantity;
+                sliderValue =
+                    widget.isQuantitySquared ? quantity * 0.4 : quantity;
               });
               if (widget.onRowDataSelected != null) {
                 widget.onRowDataSelected!(row);
@@ -105,17 +106,23 @@ class _TradeSheetState extends State<TradeSheet> {
     final bidPriceItems = getBidPrices();
 
     return Container(
-      color: colors.cardBasicBackground,
       padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom + 16,
           top: 16,
           left: 16,
           right: 16),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+        color: colors.cardBasicBackground,
+      ),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10),
+            Text("BANKNIFTY2003CE", style: textStyles.smallBold),
             const SizedBox(height: 20),
             Row(
               children: [
@@ -198,6 +205,11 @@ class _TradeSheetState extends State<TradeSheet> {
               color: colors.primary,
               btnContent: "Confirm Order",
               onTap: () {
+                if (selectedTableIndex != null && selectedBidPrice != null) {
+                  final newQuantity = double.tryParse(controller.text) ?? 0;
+                  updateRowQuantity(
+                      selectedTableIndex!, selectedBidPrice!, newQuantity);
+                }
                 Navigator.of(context).pop();
                 widget.moveNext();
               },
@@ -206,6 +218,24 @@ class _TradeSheetState extends State<TradeSheet> {
         ),
       ),
     );
+  }
+
+  void updateRowQuantity(int tableIndex, String bidPrice, double newQuantity) {
+    setState(() {
+      final rows = widget.tableRowDataMap[tableIndex];
+      if (rows != null) {
+        for (var row in rows) {
+          if (row.price == bidPrice) {
+            final currentQuantity = double.tryParse(row.quantity) ?? 0;
+            row.quantity = (currentQuantity + newQuantity).toStringAsFixed(0);
+            if (widget.onRowDataSelected != null) {
+              widget.onRowDataSelected!(row);
+            }
+            break;
+          }
+        }
+      }
+    });
   }
 }
 

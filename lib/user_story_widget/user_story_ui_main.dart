@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -88,47 +89,47 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   }
 
   void confirmOrder() {
-    final currentIndex = widget.model.userStory.steps
-        .indexWhere((step) => step.stepId == currentStepId);
-    if (currentIndex >= 0 &&
-        currentIndex < widget.model.userStory.steps.length - 1) {
-      setState(() {
-        currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
-      });
-
-      for (StepData step in widget.model.userStory.steps) {
-        for (UiData uiData in step.ui) {
-          if (uiData.tableModel != null) {
-            for (var table in uiData.tableModel!.tableData!) {
-              for (var row in table.data) {
-                if (row.price == highlightedRowData?.price &&
-                    row.orders == highlightedRowData?.orders &&
-                    row.quantity == highlightedRowData?.quantity) {
-                  int currentQuantity = int.parse(row.quantity);
-                  Future.doWhile(() async {
-                    if (currentQuantity > 0) {
-                      await Future.delayed(const Duration(milliseconds: 20),
-                          () {
-                        setState(() {
-                          currentQuantity--;
-                          row.quantity = currentQuantity.toString();
-                        });
-                      });
-                      return true;
-                    } else {
-                      setState(() {
-                        status = 'Executed';
-                      });
-                    }
-                    return false;
-                  });
-                }
+    moveToNextStep();
+    for (StepData step in widget.model.userStory.steps) {
+      for (UiData uiData in step.ui) {
+        if (uiData.tableModel != null) {
+          for (var table in uiData.tableModel!.tableData!) {
+            for (var row in table.data) {
+              if (row.price == highlightedRowData?.price &&
+                  row.orders == highlightedRowData?.orders) {
+                setState(() {
+                  row.quantity = highlightedRowData?.quantity ?? row.quantity;
+                });
+                _decreaseQuantity(row);
+                break;
               }
             }
           }
         }
       }
     }
+  }
+
+  void _decreaseQuantity(RowData row) {
+    int initialQuantity = int.parse(row.quantity);
+    Duration duration = const Duration(milliseconds: 600);
+    int step = initialQuantity ~/ 10;
+
+    Timer.periodic(duration, (timer) {
+      setState(() {
+        if (int.parse(row.quantity) > 0) {
+          row.quantity = (int.parse(row.quantity) - step).toString();
+        }
+      });
+
+      if (int.parse(row.quantity) <= 0) {
+        row.quantity = '0';
+        timer.cancel();
+        setState(() {
+          status = "Executed";
+        });
+      }
+    });
   }
 
   void showAnimation(HorizontalLineModel model) {
@@ -355,8 +356,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                           final tableModel = uiWithTableModel.tableModel!;
 
                           return TradeSheet(
-                            tableRowDataMap:
-                                getTableRowDataAsMap(tableModel.tableData!),
+                            tableRowDataMap: {
+                              0: tableModel.tableData!.first.data
+                            },
                             onRowDataSelected: (RowData data) {
                               setState(() {
                                 highlightedRowData = data;
@@ -395,13 +397,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     );
   }
 
-  Map<int, List<RowData>> getTableRowDataAsMap(List<TableData> tableDataList) {
-    Map<int, List<RowData>> tableRowDataMap = {};
-
-    for (int tableIndex = 0; tableIndex < tableDataList.length; tableIndex++) {
-      tableRowDataMap[tableIndex] = tableDataList[tableIndex].data;
-    }
-
-    return tableRowDataMap;
+  List<RowData> getFirstTableRowData(List<TableData> tableDataList) {
+    return tableDataList.isNotEmpty ? tableDataList.first.data : [];
   }
 }
