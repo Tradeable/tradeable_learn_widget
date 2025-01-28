@@ -98,8 +98,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
       for (StepData step in widget.model.userStory.steps) {
         for (UiData uiData in step.ui) {
-          if (uiData.tableData != null) {
-            for (var table in uiData.tableData!) {
+          if (uiData.tableModel != null) {
+            for (var table in uiData.tableModel!.tableData!) {
               for (var row in table.data) {
                 if (row.price == highlightedRowData?.price &&
                     row.orders == highlightedRowData?.orders &&
@@ -206,8 +206,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                             : "assets/market_depth/profile_guy.png");
                   case "MarketDepthTable":
                     return MarketDepthTableWidget(
-                      tableAlignment: uiData.tableAlignment ?? "horizontal",
-                      tableData: uiData.tableData ?? [],
+                      tableAlignment:
+                          uiData.tableModel?.tableAlignment ?? "horizontal",
+                      tableData: uiData.tableModel?.tableData ?? [],
                       title: uiData.title,
                       highlightedRowData: highlightedRowData,
                     );
@@ -343,24 +344,28 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {
+                          final step = widget.model.userStory.steps.firstWhere(
+                            (step) => step.stepId == currentStepId,
+                          );
+
+                          final uiWithTableModel = step.ui.firstWhere(
+                            (ui) => ui.tableModel != null,
+                          );
+
+                          final tableModel = uiWithTableModel.tableModel!;
+
                           return TradeSheet(
-                              tableRowDataMap: getTableRowDataAsMap(
-                                widget.model.userStory.steps
-                                    .firstWhere(
-                                      (step) => step.stepId == currentStepId,
-                                    )
-                                    .ui
-                                    .firstWhere(
-                                      (ui) => ui.tableData != null,
-                                    )
-                                    .tableData!,
-                              ),
-                              onRowDataSelected: (RowData data) {
-                                setState(() {
-                                  highlightedRowData = data;
-                                });
-                              },
-                              moveNext: confirmOrder);
+                            tableRowDataMap:
+                                getTableRowDataAsMap(tableModel.tableData!),
+                            onRowDataSelected: (RowData data) {
+                              setState(() {
+                                highlightedRowData = data;
+                              });
+                            },
+                            moveNext: confirmOrder,
+                            isQuantitySquared:
+                                tableModel.isQuantitySquared ?? false,
+                          );
                         });
                     break;
                   case "submitResponse":

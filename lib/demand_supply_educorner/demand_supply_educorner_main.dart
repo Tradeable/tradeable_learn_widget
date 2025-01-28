@@ -36,49 +36,19 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
     });
   }
 
-  int get bidConditionIndex =>
-      ((bidSliderValue * (marketCondition.length - 1)).round());
-
-  int get askConditionIndex =>
-      ((askSliderValue * (marketCondition.length - 1)).round());
-
-  MarketCondition? get currentBidCondition =>
-      marketCondition.isNotEmpty ? marketCondition[bidConditionIndex] : null;
-
-  MarketCondition? get currentAskCondition =>
-      marketCondition.isNotEmpty ? marketCondition[askConditionIndex] : null;
-
-  String get marketImage {
-    if (currentBidCondition == null || currentAskCondition == null) {
-      return '';
-    }
-
-    if (bidSliderValue > 0.5 && askSliderValue < 0.5) {
-      return "assets/supply_demand_educorner/bullish.png";
-    } else if (bidSliderValue < 0.5 && askSliderValue > 0.5) {
-      return "assets/supply_demand_educorner/bearish.png";
-    } else if (bidSliderValue > 0.5 && askSliderValue > 0.5) {
-      return "assets/supply_demand_educorner/bullish.png";
-    } else if (bidSliderValue < 0.5 && askSliderValue < 0.5) {
-      return "assets/supply_demand_educorner/bearish.png";
-    }
-    return '';
-  }
-
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
     final colors = Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 30),
         AnimatedTextWidget(
             title: '',
             prompt: getExplanation(),
             logo: "assets/market_depth/profile_guy.png"),
-        const SizedBox(height: 20),
+        const SizedBox(height: 40),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -87,54 +57,17 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
             infoWidget("Market", getMarketCondition()),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 40),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Text('Bid Price', style: textStyles.mediumNormal),
-                  IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20)),
-                        ),
-                        builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Bid Price Info",
-                                  style: textStyles.mediumBold,
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "The bid price is the price at which a buyer is willing to purchase a security, asset, or commodity. In other words, it's the highest price that a buyer is prepared to pay for an asset at any given time.\nJust like the ask price, the bid price is a crucial part of market transactions. The bid price reflects the demand side of the market, while the ask price reflects the supply side.",
-                                  style: textStyles.smallNormal,
-                                ),
-                                const SizedBox(height: 20),
-                                ButtonWidget(
-                                    color: colors.primary,
-                                    btnContent: "Okay",
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    })
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.info_outline),
-                  ),
-                ],
+              _buildPriceRow(
+                context,
+                title: 'Bid Price',
+                infoTitle: 'Bid Price',
+                infoContent:
+                    "The bid price is the price at which a buyer is willing to purchase a security, asset, or commodity. In other words, it's the highest price that a buyer is prepared to pay for an asset at any given time.\nJust like the ask price, the bid price is a crucial part of market transactions. The bid price reflects the demand side of the market, while the ask price reflects the supply side.",
               ),
               Slider(
                 value: bidSliderValue,
@@ -152,48 +85,12 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                   });
                 },
               ),
-              Row(
-                children: [
-                  Text('Ask Price', style: textStyles.mediumNormal),
-                  IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20)),
-                          ),
-                          builder: (context) {
-                            return Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Ask Price",
-                                    style: textStyles.mediumBold,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "The ask price (also known as the offer price) is the price at which a seller is willing to sell a security, asset, or commodity. In financial markets, it's the price that a seller is asking for when they are offering to sell an asset. It represents the lowest price a seller is willing to accept for the asset at any given moment.",
-                                    style: textStyles.smallNormal,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  ButtonWidget(
-                                      color: colors.primary,
-                                      btnContent: "Okay",
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                      })
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(Icons.info_outline))
-                ],
+              _buildPriceRow(
+                context,
+                title: 'Ask Price',
+                infoTitle: 'Ask Price',
+                infoContent:
+                    "The ask price (also known as the offer price) is the price at which a seller is willing to sell a security, asset, or commodity. In financial markets, it's the price that a seller is asking for when they are offering to sell an asset. It represents the lowest price a seller is willing to accept for the asset at any given moment.",
               ),
               Slider(
                 value: askSliderValue,
@@ -231,6 +128,53 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
               }
             },
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPriceRow(BuildContext context,
+      {required String title,
+      required String infoTitle,
+      required String infoContent}) {
+    final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
+
+    return Row(
+      children: [
+        Text(title, style: textStyles.smallNormal),
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              builder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(infoTitle, style: textStyles.mediumBold),
+                      const SizedBox(height: 10),
+                      Text(infoContent, style: textStyles.smallNormal),
+                      const SizedBox(height: 20),
+                      ButtonWidget(
+                        color: colors.primary,
+                        btnContent: "Okay",
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+          icon: const Icon(Icons.info_outline, size: 20),
         ),
       ],
     );

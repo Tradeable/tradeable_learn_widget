@@ -14,6 +14,7 @@ import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/horizontal_line_model_v1.dart';
 import 'package:example/data_model/ladder_data_model.dart';
+import 'package:example/data_model/market_depth_1.dart';
 import 'package:example/data_model/market_depth_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
@@ -237,6 +238,13 @@ class MyHomePage extends StatelessWidget {
                           title: "Ticket User Story",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(ticketUserStory),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Market Depth",
+                      destination: ScaffoldWithAppBar(
+                          title: "Market Depth",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(marketDepth1),
                               onNextClick: () {}))),
                 ],
               ),

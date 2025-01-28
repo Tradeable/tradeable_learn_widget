@@ -79,8 +79,7 @@ class UiData {
   String widget;
   String title;
   String prompt;
-  String? tableAlignment;
-  List<TableData>? tableData;
+  TableModel? tableModel;
   String? buttonsFormat;
   List<ButtonData>? buttonsData;
   String? format;
@@ -100,8 +99,7 @@ class UiData {
       {required this.widget,
       required this.title,
       required this.prompt,
-      this.tableAlignment,
-      this.tableData,
+      this.tableModel,
       this.buttonsFormat,
       this.buttonsData,
       this.format,
@@ -122,11 +120,8 @@ class UiData {
       widget: json['widget'] ?? '',
       title: json['title'] ?? '',
       prompt: json['prompt'] ?? '',
-      tableAlignment: json['tableAlignment'],
-      tableData: json['tableData'] != null
-          ? (json['tableData'] as List<dynamic>)
-              .map((tableItem) => TableData.fromJson(tableItem))
-              .toList()
+      tableModel: json["tableData"] != null
+          ? TableModel.fromJson(json["tableData"])
           : null,
       buttonsFormat: json['buttonsFormat'],
       buttonsData: json['buttonsData'] != null
@@ -167,30 +162,50 @@ class UiData {
   }
 }
 
+class TableModel {
+  final List<TableData>? tableData;
+  final String? tableAlignment;
+  final bool? isQuantitySquared;
+
+  TableModel({this.tableData, this.tableAlignment, this.isQuantitySquared});
+
+  factory TableModel.fromJson(Map<String, dynamic> json) {
+    return TableModel(
+        tableData: json['data'] != null
+            ? (json['data'] as List<dynamic>)
+                .map((tableItem) => TableData.fromJson(tableItem))
+                .toList()
+            : null,
+        tableAlignment: json["tableAlignment"] ?? "",
+        isQuantitySquared: json["isQuantitySquared"] ?? false);
+  }
+}
+
 class TableData {
   String title;
   List<String> tableColors;
   List<RowData> data;
   String totalValue;
+  bool isQuantitySquared;
 
-  TableData({
-    required this.title,
-    required this.tableColors,
-    required this.data,
-    required this.totalValue,
-  });
+  TableData(
+      {required this.title,
+      required this.tableColors,
+      required this.data,
+      required this.totalValue,
+      required this.isQuantitySquared});
 
   factory TableData.fromJson(Map<String, dynamic> json) {
     return TableData(
-      title: json['title'] ?? '',
-      tableColors: (json['tableColors'] as List<dynamic>)
-          .map((color) => color.toString())
-          .toList(),
-      data: (json['data'] as List<dynamic>)
-          .map((rowItem) => RowData.fromJson(rowItem))
-          .toList(),
-      totalValue: json['totalValue'],
-    );
+        title: json['title'] ?? '',
+        tableColors: (json['tableColors'] as List<dynamic>)
+            .map((color) => color.toString())
+            .toList(),
+        data: (json['data'] as List<dynamic>)
+            .map((rowItem) => RowData.fromJson(rowItem))
+            .toList(),
+        totalValue: json['totalValue'],
+        isQuantitySquared: json["isQuantitySquared"] ?? false);
   }
 }
 

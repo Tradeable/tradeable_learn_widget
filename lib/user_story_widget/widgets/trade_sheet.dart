@@ -8,13 +8,14 @@ class TradeSheet extends StatefulWidget {
   final Map<int, List<RowData>> tableRowDataMap;
   final Function(RowData)? onRowDataSelected;
   final VoidCallback moveNext;
+  final bool isQuantitySquared;
 
-  const TradeSheet({
-    super.key,
-    required this.tableRowDataMap,
-    this.onRowDataSelected,
-    required this.moveNext,
-  });
+  const TradeSheet(
+      {super.key,
+      required this.tableRowDataMap,
+      this.onRowDataSelected,
+      required this.moveNext,
+      required this.isQuantitySquared});
 
   @override
   State<TradeSheet> createState() => _TradeSheetState();
@@ -28,6 +29,7 @@ class _TradeSheetState extends State<TradeSheet> {
   TextEditingController controller = TextEditingController();
   double sliderMaxValue = 100;
   bool showBottomSheet = false;
+  double sliderValue = 0;
 
   List<BidPriceItem> getBidPrices() {
     List<BidPriceItem> bidPriceItems = [];
@@ -50,9 +52,13 @@ class _TradeSheetState extends State<TradeSheet> {
         if (rows != null) {
           for (var row in rows) {
             if (row.price == selectedBidPrice) {
-              controller.text = row.quantity;
+              controller.text = widget.isQuantitySquared
+                  ? (double.parse(row.quantity) * 0.4).toStringAsFixed(0)
+                  : row.quantity;
+              double quantity = double.parse(row.quantity);
               setState(() {
-                sliderMaxValue = double.parse(row.quantity);
+                sliderMaxValue = quantity;
+                sliderValue = widget.isQuantitySquared ? quantity * 0.4 : quantity;
               });
               if (widget.onRowDataSelected != null) {
                 widget.onRowDataSelected!(row);
@@ -98,96 +104,106 @@ class _TradeSheetState extends State<TradeSheet> {
     final colors = Theme.of(context).customColors;
     final bidPriceItems = getBidPrices();
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              Text("Quantity to Trade", style: textStyles.smallNormal),
-              const Spacer(),
-              SizedBox(
-                width: 180,
-                child: TextField(
-                  controller: controller,
-                  decoration: const InputDecoration(
-                    hintText: "Enter quantity",
-                    border: OutlineInputBorder(),
+    return Container(
+      color: colors.cardBasicBackground,
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+          top: 16,
+          left: 16,
+          right: 16),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Text("Quantity to Trade", style: textStyles.smallNormal),
+                const Spacer(),
+                SizedBox(
+                  width: 180,
+                  child: TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      hintText: "Enter quantity",
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d+$')),
+                    ],
+                    enabled: selectedBidPrice != null,
+                    onChanged: (value) {
+                      setState(() {
+                        double newValue = double.tryParse(value) ?? 0;
+                        if (newValue > sliderMaxValue) {
+                          newValue = sliderMaxValue;
+                        }
+                        controller.text = newValue.toStringAsFixed(0);
+                      });
+                    },
                   ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d+$')),
-                  ],
-                  enabled: selectedBidPrice != null,
-                  onChanged: (value) {
-                    setState(() {
-                      double newValue = double.tryParse(value) ?? 0;
-                      controller.text = newValue.toStringAsFixed(0);
-                    });
-                  },
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Slider(
-            value:
-                double.parse(controller.text.isEmpty ? '0' : controller.text),
-            min: 0,
-            max: sliderMaxValue,
-            thumbColor: colors.axisColor,
-            activeColor: colors.axisColor,
-            inactiveColor: colors.borderColorSecondary,
-            divisions: 100,
-            onChanged: (value) {
-              setState(() {
-                controller.text = value.toStringAsFixed(0);
-              });
-            },
-          ),
-          const SizedBox(height: 20),
-          const Text("Select limit order price"),
-          DropdownButton<BidPriceItem>(
-            value: selectedBidPrice != null && selectedTableIndex != null
-                ? bidPriceItems.firstWhere(
-                    (item) =>
-                        item.bidPrice == selectedBidPrice &&
-                        item.tableIndex == selectedTableIndex,
-                    orElse: () => bidPriceItems.first,
-                  )
-                : null,
-            isExpanded: true,
-            hint: const Text("Select Bid Price"),
-            onChanged: (BidPriceItem? newValue) {
-              if (newValue != null) {
+              ],
+            ),
+            const SizedBox(height: 10),
+            Slider(
+              value: sliderValue.clamp(0, sliderMaxValue),
+              min: 0,
+              max: sliderMaxValue,
+              thumbColor: colors.axisColor,
+              activeColor: colors.axisColor,
+              inactiveColor: colors.borderColorSecondary,
+              divisions: 100,
+              onChanged: (value) {
                 setState(() {
-                  selectedBidPrice = newValue.bidPrice;
-                  selectedTableIndex = newValue.tableIndex;
-                  setQuantityForSelectedBidPrice();
+                  sliderValue = value;
+                  controller.text = value.toStringAsFixed(0);
                 });
-              }
-            },
-            items: bidPriceItems
-                .map<DropdownMenuItem<BidPriceItem>>((BidPriceItem item) {
-              return DropdownMenuItem<BidPriceItem>(
-                value: item,
-                child: Text(item.bidPrice),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 20),
-          ButtonWidget(
-            color: colors.primary,
-            btnContent: "Confirm Order",
-            onTap: () {
-              Navigator.of(context).pop();
-              widget.moveNext();
-            },
-          ),
-        ],
+              },
+            ),
+            const SizedBox(height: 20),
+            const Text("Select limit order price"),
+            DropdownButton<BidPriceItem>(
+              value: selectedBidPrice != null && selectedTableIndex != null
+                  ? bidPriceItems.firstWhere(
+                      (item) =>
+                          item.bidPrice == selectedBidPrice &&
+                          item.tableIndex == selectedTableIndex,
+                      orElse: () => bidPriceItems.first,
+                    )
+                  : null,
+              isExpanded: true,
+              hint: const Text("Select Bid Price"),
+              onChanged: (BidPriceItem? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedBidPrice = newValue.bidPrice;
+                    selectedTableIndex = newValue.tableIndex;
+                    setQuantityForSelectedBidPrice();
+                  });
+                }
+              },
+              items: bidPriceItems
+                  .map<DropdownMenuItem<BidPriceItem>>((BidPriceItem item) {
+                return DropdownMenuItem<BidPriceItem>(
+                  value: item,
+                  child: Text(item.bidPrice),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            ButtonWidget(
+              color: colors.primary,
+              btnContent: "Confirm Order",
+              onTap: () {
+                Navigator.of(context).pop();
+                widget.moveNext();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
