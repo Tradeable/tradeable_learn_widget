@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_model.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -20,11 +20,20 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
   double askSliderValue = 0;
 
   late final List<MarketCondition> marketCondition;
+  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     marketCondition = widget.model.marketCondition;
+    setSlidersBasedOnCondition(marketCondition[currentIndex]);
+  }
+
+  void setSlidersBasedOnCondition(MarketCondition condition) {
+    setState(() {
+      bidSliderValue = condition.bidPrice == "High" ? 1.0 : 0.0;
+      askSliderValue = condition.askPrice == "Low" ? 0.0 : 1.0;
+    });
   }
 
   int get bidConditionIndex =>
@@ -65,22 +74,10 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(
-              "assets/market_depth/profile_guy.png",
-              package: 'tradeable_learn_widget/lib',
-              height: 140,
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-                child: Markdown(
-              data: widget.model.introMd,
-              shrinkWrap: true,
-            )),
-          ],
-        ),
+        AnimatedTextWidget(
+            title: '',
+            prompt: getExplanation(),
+            logo: "assets/market_depth/profile_guy.png"),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -99,7 +96,44 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 children: [
                   Text('Bid Price', style: textStyles.mediumNormal),
                   IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.info_outline))
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (context) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Bid Price Info",
+                                  style: textStyles.mediumBold,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  "The bid price is the price at which a buyer is willing to purchase a security, asset, or commodity. In other words, it's the highest price that a buyer is prepared to pay for an asset at any given time.\nJust like the ask price, the bid price is a crucial part of market transactions. The bid price reflects the demand side of the market, while the ask price reflects the supply side.",
+                                  style: textStyles.smallNormal,
+                                ),
+                                const SizedBox(height: 20),
+                                ButtonWidget(
+                                    color: colors.primary,
+                                    btnContent: "Okay",
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                    })
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.info_outline),
+                  ),
                 ],
               ),
               Slider(
@@ -114,6 +148,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 onChanged: (value) {
                   setState(() {
                     bidSliderValue = value;
+                    askSliderValue = 1 - value;
                   });
                 },
               ),
@@ -121,7 +156,43 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 children: [
                   Text('Ask Price', style: textStyles.mediumNormal),
                   IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.info_outline))
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          builder: (context) {
+                            return Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Ask Price",
+                                    style: textStyles.mediumBold,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "The ask price (also known as the offer price) is the price at which a seller is willing to sell a security, asset, or commodity. In financial markets, it's the price that a seller is asking for when they are offering to sell an asset. It represents the lowest price a seller is willing to accept for the asset at any given moment.",
+                                    style: textStyles.smallNormal,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  ButtonWidget(
+                                      color: colors.primary,
+                                      btnContent: "Okay",
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                      })
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.info_outline))
                 ],
               ),
               Slider(
@@ -136,6 +207,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                 onChanged: (value) {
                   setState(() {
                     askSliderValue = value;
+                    bidSliderValue = 1 - value;
                   });
                 },
               ),
@@ -149,7 +221,14 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
             color: colors.primary,
             btnContent: "Next",
             onTap: () {
-              widget.onNextClick();
+              if (currentIndex == 1) {
+                widget.onNextClick();
+              } else {
+                setState(() {
+                  currentIndex = (currentIndex + 1) % marketCondition.length;
+                  setSlidersBasedOnCondition(marketCondition[currentIndex]);
+                });
+              }
             },
           ),
         ),
@@ -172,6 +251,18 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
       return 'Limited';
     } else {
       return 'High';
+    }
+  }
+
+  String getExplanation() {
+    switch (getMarketCondition()) {
+      case "Bullish":
+        return "As you can see when the bid is high and ask is low there is strong demand and low supply. This makes the market movement favour the bullish side.";
+      case "Bearish":
+        return "As you can see low bid and high ask which means there is weak demand and low supply. This makes the movement favour the bearish side.";
+
+      default:
+        return "";
     }
   }
 

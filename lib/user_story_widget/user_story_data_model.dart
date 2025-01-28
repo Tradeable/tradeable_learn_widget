@@ -1,4 +1,5 @@
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 
 class UserStoryDataModel {
   String id;
@@ -27,9 +28,13 @@ class StepData {
   String stepId;
   List<UiData> ui;
   bool isActionNeeded;
+  ExplanationV1? explanationV1;
 
   StepData(
-      {required this.stepId, required this.ui, required this.isActionNeeded});
+      {required this.stepId,
+      required this.ui,
+      required this.isActionNeeded,
+      this.explanationV1});
 
   factory StepData.fromJson(Map<String, dynamic> json) {
     return StepData(
@@ -37,7 +42,36 @@ class StepData {
         ui: (json['ui'] as List<dynamic>)
             .map((uiItem) => UiData.fromJson(uiItem))
             .toList(),
-        isActionNeeded: json["isActionNeeded"]);
+        isActionNeeded: json["isActionNeeded"],
+        explanationV1: json["explaination"] != null
+            ? ExplanationV1(
+                forCorrect: (json["explaination"]["forCorrect"]
+                        as List<dynamic>?)
+                    ?.map(
+                        (e) => ExplainerV1.fromJson(e as Map<String, dynamic>))
+                    .toList(),
+                forIncorrect: (json["explaination"]["forIncorrect"]
+                        as List<dynamic>?)
+                    ?.map(
+                        (e) => ExplainerV1.fromJson(e as Map<String, dynamic>))
+                    .toList(),
+              )
+            : ExplanationV1(
+                forCorrect: [
+                  ExplainerV1(
+                    title: "Correct",
+                    data: "You got it correct",
+                    imageUrl: "assets/btmsheet_correct.png",
+                  )
+                ],
+                forIncorrect: [
+                  ExplainerV1(
+                    title: "Incorrect",
+                    data: "You got it incorrect",
+                    imageUrl: "assets/btmsheet_incorrect.png",
+                  )
+                ],
+              ));
   }
 }
 

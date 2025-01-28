@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class TradeSheet extends StatefulWidget {
   final Map<int, List<RowData>> tableRowDataMap;
   final Function(RowData)? onRowDataSelected;
+  final VoidCallback moveNext;
 
   const TradeSheet({
     super.key,
     required this.tableRowDataMap,
     this.onRowDataSelected,
+    required this.moveNext,
   });
 
   @override
@@ -24,6 +27,7 @@ class _TradeSheetState extends State<TradeSheet> {
   int? selectedTableIndex;
   TextEditingController controller = TextEditingController();
   double sliderMaxValue = 100;
+  bool showBottomSheet = false;
 
   List<BidPriceItem> getBidPrices() {
     List<BidPriceItem> bidPriceItems = [];
@@ -40,23 +44,25 @@ class _TradeSheetState extends State<TradeSheet> {
   }
 
   void setQuantityForSelectedBidPrice() {
-    if (selectedTableIndex != null && selectedBidPrice != null) {
-      var rows = widget.tableRowDataMap[selectedTableIndex!];
-      if (rows != null) {
-        for (var row in rows) {
-          if (row.price == selectedBidPrice) {
-            controller.text = row.quantity;
-            setState(() {
-              sliderMaxValue = double.parse(row.quantity);
-            });
-            if (widget.onRowDataSelected != null) {
-              widget.onRowDataSelected!(row);
+    setState(() {
+      if (selectedTableIndex != null && selectedBidPrice != null) {
+        var rows = widget.tableRowDataMap[selectedTableIndex!];
+        if (rows != null) {
+          for (var row in rows) {
+            if (row.price == selectedBidPrice) {
+              controller.text = row.quantity;
+              setState(() {
+                sliderMaxValue = double.parse(row.quantity);
+              });
+              if (widget.onRowDataSelected != null) {
+                widget.onRowDataSelected!(row);
+              }
+              break;
             }
-            break;
           }
         }
       }
-    }
+    });
   }
 
   void handleBidPriceSelection(BidPriceItem selectedItem) {
@@ -64,6 +70,25 @@ class _TradeSheetState extends State<TradeSheet> {
       selectedBidPrice = selectedItem.bidPrice;
       selectedTableIndex = selectedItem.tableIndex;
       setQuantityForSelectedBidPrice();
+    });
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initializeDefaults();
+    });
+    super.initState();
+  }
+
+  void initializeDefaults() {
+    setState(() {
+      final bidPriceItems = getBidPrices();
+      if (bidPriceItems.isNotEmpty) {
+        selectedBidPrice = bidPriceItems.first.bidPrice;
+        selectedTableIndex = bidPriceItems.first.tableIndex;
+        setQuantityForSelectedBidPrice();
+      }
     });
   }
 
@@ -76,14 +101,16 @@ class _TradeSheetState extends State<TradeSheet> {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
           Row(
             children: [
-              Text("Quantity to Trade", style: textStyles.mediumBold),
-              const SizedBox(width: 10),
-              Expanded(
+              Text("Quantity to Trade", style: textStyles.smallNormal),
+              const Spacer(),
+              SizedBox(
+                width: 180,
                 child: TextField(
                   controller: controller,
                   decoration: const InputDecoration(
@@ -92,9 +119,15 @@ class _TradeSheetState extends State<TradeSheet> {
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d{1,2}$')),
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+$')),
                   ],
                   enabled: selectedBidPrice != null,
+                  onChanged: (value) {
+                    setState(() {
+                      double newValue = double.tryParse(value) ?? 0;
+                      controller.text = newValue.toStringAsFixed(0);
+                    });
+                  },
                 ),
               ),
             ],
@@ -114,68 +147,45 @@ class _TradeSheetState extends State<TradeSheet> {
                 controller.text = value.toStringAsFixed(0);
               });
             },
-            onChangeStart: selectedBidPrice == null ? null : (value) {},
-            onChangeEnd: selectedBidPrice == null ? null : (value) {},
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              DropdownButton<BidPriceItem>(
-                value: selectedBidPrice != null && selectedTableIndex != null
-                    ? bidPriceItems.firstWhere((item) =>
+          const Text("Select limit order price"),
+          DropdownButton<BidPriceItem>(
+            value: selectedBidPrice != null && selectedTableIndex != null
+                ? bidPriceItems.firstWhere(
+                    (item) =>
                         item.bidPrice == selectedBidPrice &&
-                        item.tableIndex == selectedTableIndex)
-                    : null,
-                hint: const Text("Select Bid Price"),
-                onChanged: (BidPriceItem? newValue) {
-                  if (newValue != null) {
-                    handleBidPriceSelection(newValue);
-                  }
-                },
-                items: bidPriceItems
-                    .map<DropdownMenuItem<BidPriceItem>>((BidPriceItem item) {
-                  return DropdownMenuItem<BidPriceItem>(
-                    value: item,
-                    child: Text(item.bidPrice),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(
-                        activeColor: colors.borderColorPrimary,
-                        value: isNotificationChecked,
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            isNotificationChecked = newValue!;
-                          });
-                        },
-                      ),
-                      Text("Trigger Notification",
-                          style: textStyles.smallNormal),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Checkbox(
-                        activeColor: colors.borderColorPrimary,
-                        value: isAutoExecutionChecked,
-                        onChanged: (bool? newValue) {
-                          setState(() {
-                            isAutoExecutionChecked = newValue!;
-                          });
-                        },
-                      ),
-                      Text("Auto Execution", style: textStyles.smallNormal),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                        item.tableIndex == selectedTableIndex,
+                    orElse: () => bidPriceItems.first,
+                  )
+                : null,
+            isExpanded: true,
+            hint: const Text("Select Bid Price"),
+            onChanged: (BidPriceItem? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  selectedBidPrice = newValue.bidPrice;
+                  selectedTableIndex = newValue.tableIndex;
+                  setQuantityForSelectedBidPrice();
+                });
+              }
+            },
+            items: bidPriceItems
+                .map<DropdownMenuItem<BidPriceItem>>((BidPriceItem item) {
+              return DropdownMenuItem<BidPriceItem>(
+                value: item,
+                child: Text(item.bidPrice),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
+          ButtonWidget(
+            color: colors.primary,
+            btnContent: "Confirm Order",
+            onTap: () {
+              Navigator.of(context).pop();
+              widget.moveNext();
+            },
           ),
         ],
       ),

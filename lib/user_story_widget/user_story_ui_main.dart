@@ -40,6 +40,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   bool? isAnsweredCorrect;
   String status = 'Open';
   List<String> selectedResponses = [];
+  bool showBottomSheet = false;
 
   @override
   void initState() {
@@ -100,7 +101,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
           if (uiData.tableData != null) {
             for (var table in uiData.tableData!) {
               for (var row in table.data) {
-                if (row.price == highlightedRowData?.price) {
+                if (row.price == highlightedRowData?.price &&
+                    row.orders == highlightedRowData?.orders &&
+                    row.quantity == highlightedRowData?.quantity) {
                   int currentQuantity = int.parse(row.quantity);
                   Future.doWhile(() async {
                     if (currentQuantity > 0) {
@@ -213,25 +216,6 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       buttonsFormat: uiData.buttonsFormat ?? "horizontal",
                       buttonsData: uiData.buttonsData ?? [],
                       onAction: moveToNextStep,
-                    );
-                  case "TradeSheet":
-                    return TradeSheet(
-                      tableRowDataMap: getTableRowDataAsMap(
-                        widget.model.userStory.steps
-                            .firstWhere(
-                              (step) => step.stepId == currentStepId,
-                            )
-                            .ui
-                            .firstWhere(
-                              (ui) => ui.tableData != null,
-                            )
-                            .tableData!,
-                      ),
-                      onRowDataSelected: (RowData data) {
-                        setState(() {
-                          highlightedRowData = data;
-                        });
-                      },
                     );
                   case "MCQQuestion":
                     return MCQQuestionWidget(
@@ -355,13 +339,37 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "confirmOrder":
                     confirmOrder();
                     break;
+                  case "showBottomSheet":
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return TradeSheet(
+                              tableRowDataMap: getTableRowDataAsMap(
+                                widget.model.userStory.steps
+                                    .firstWhere(
+                                      (step) => step.stepId == currentStepId,
+                                    )
+                                    .ui
+                                    .firstWhere(
+                                      (ui) => ui.tableData != null,
+                                    )
+                                    .tableData!,
+                              ),
+                              onRowDataSelected: (RowData data) {
+                                setState(() {
+                                  highlightedRowData = data;
+                                });
+                              },
+                              moveNext: confirmOrder);
+                        });
+                    break;
                   case "submitResponse":
                     showModalBottomSheet(
                         isDismissible: false,
                         context: context,
                         builder: (context) => BottomSheetWidget(
                             isCorrect: isAnsweredCorrect ?? false,
-                            model: widget.model.explanationV1,
+                            model: step.explanationV1,
                             onNextClick: () {
                               moveToNextStep();
                             }));

@@ -30,7 +30,7 @@ class MarketDepthTableWidget extends StatelessWidget {
           .toList();
 
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12),
         child: CustomTable(
           title: tableEntry.title,
           headers: headers,

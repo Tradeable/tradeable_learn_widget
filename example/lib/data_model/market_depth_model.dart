@@ -51,6 +51,11 @@ const marketDepthModel = {
             ]
           },
           {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
+          },
+          {
             "widget": "MCQQuestion",
             "title": "",
             "format": "grid",
@@ -72,6 +77,11 @@ const marketDepthModel = {
             "widget": "AnimatedText",
             "title": "",
             "prompt": "How will market behave as per higher demand?",
+          },
+          {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
           },
           {
             "widget": "MarketDepthTable",
@@ -106,6 +116,11 @@ const marketDepthModel = {
             ]
           },
           {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
+          },
+          {
             "widget": "MCQQuestion",
             "title": "",
             "format": "grid",
@@ -130,6 +145,11 @@ const marketDepthModel = {
                 "As per the given stock price, place a limit order and add preferred quantity to analyse how ask & bid works.",
           },
           {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
+          },
+          {
             "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
@@ -161,14 +181,19 @@ const marketDepthModel = {
               }
             ]
           },
+          {
+            "widget": "SizedBox",
+            "height": "20",
+            "width": "",
+          },
           {"widget": "TradeSheet", "title": ""},
           {
             "widget": "NextButtonWidget",
-            "title": "Confirm Order",
-            "action": "confirmOrder"
+            "title": "Place Order",
+            "action": "showBottomSheet"
           }
         ],
-        "isActionNeeded": true,
+        "isActionNeeded": false,
       },
       {
         "stepId": "4",
@@ -180,10 +205,15 @@ const marketDepthModel = {
                 "As you can see the order you placed is currently an pending position which will be placed after all ask prices above are executed",
           },
           {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
+          },
+          {
             "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
-            "tableAlignment": "vertical",
+            "tableAlignment": "horizontal",
             "tableData": [
               {
                 "title": "Bid Price",
@@ -210,6 +240,11 @@ const marketDepthModel = {
                 "totalValue": "9,21,678"
               }
             ]
+          },
+          {
+            "widget": "SizedBox",
+            "height": "40",
+            "width": "",
           },
           {"widget": "TradeInfo", "title": "BANKNIFTY2003CE"},
           {"widget": "NextButtonWidget", "title": "Next", "action": "moveNext"}
