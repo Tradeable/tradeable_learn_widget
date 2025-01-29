@@ -2,220 +2,232 @@ const marketDepthModel = {
   "userStory": {
     "id": "",
     "name": "",
-    "description": "",
+    "type": "market_depth_user_story",
     "steps": [
       {
-        "stepId": "1",
         "ui": [
           {
-            "widget": "AnimatedText",
             "title": "",
             "prompt":
                 "What is higher in the current market as per the given data points?",
+            "widget": "AnimatedText"
           },
+          {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "SizedBox",
-            "height": "40",
-            "width": "",
-          },
-          {
-            "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
-            "tableAlignment": "horizontal",
-            "tableData": [
-              {
-                "title": "Bid Price",
-                "tableColors": ['0xFFFDDACD', '0xffFF7E55'],
-                "data": [
-                  {"price": "653.35", "orders": "2", "quantity": "103"},
-                  {"price": "653.30", "orders": "4", "quantity": "595"},
-                  {"price": "653.25", "orders": "9", "quantity": "771"},
-                  {"price": "653.20", "orders": "6", "quantity": "2003"},
-                  {"price": "653.15", "orders": "8", "quantity": "3658"}
-                ],
-                "totalValue": "9,21,678"
-              },
-              {
-                "title": "Ask Price",
-                "tableColors": ['0xffCFDA81', '0xff98B900'],
-                "data": [
-                  {"price": "653.40", "orders": "3", "quantity": "150"},
-                  {"price": "653.45", "orders": "5", "quantity": "800"},
-                  {"price": "653.50", "orders": "6", "quantity": "1023"},
-                  {"price": "653.55", "orders": "7", "quantity": "1234"},
-                  {"price": "653.60", "orders": "10", "quantity": "2000"}
-                ],
-                "totalValue": "9,21,678"
-              }
-            ]
+            "widget": "MarketDepthTable",
+            "tableData": {
+              "data": [
+                {
+                  "data": [
+                    {"price": "653.35", "orders": "2", "quantity": "500"},
+                    {"price": "653.30", "orders": "4", "quantity": "595"},
+                    {"price": "653.25", "orders": "9", "quantity": "771"},
+                    {"price": "653.20", "orders": "6", "quantity": "2003"},
+                    {"price": "653.15", "orders": "8", "quantity": "3658"}
+                  ],
+                  "title": "Bid Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xFFFDDACD", "0xffFF7E55"]
+                },
+                {
+                  "data": [
+                    {"price": "653.40", "orders": "3", "quantity": "15"},
+                    {"price": "653.45", "orders": "5", "quantity": "8"},
+                    {"price": "653.50", "orders": "6", "quantity": "10"},
+                    {"price": "653.55", "orders": "7", "quantity": "12"},
+                    {"price": "653.60", "orders": "10", "quantity": "2"}
+                  ],
+                  "title": "Ask Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xffCFDA81", "0xff98B900"]
+                }
+              ],
+              "tableAlignment": "horizontal"
+            },
           },
+          {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "MCQQuestion",
             "title": "",
             "format": "grid",
-            "options": ["High Volume", "Low Volume"],
-            "correctResponse": ["High Volume"]
+            "widget": "MCQQuestion",
+            "options": ["Demand", "Supply"],
+            "correctResponse": ["Demand"]
           },
           {
-            "widget": "NextButtonWidget",
             "title": "Next",
-            "action": "submitResponse"
+            "action": "submitResponse",
+            "widget": "NextButtonWidget"
           }
         ],
+        "stepId": "1",
         "isActionNeeded": true,
       },
       {
-        "stepId": "2",
         "ui": [
           {
-            "widget": "AnimatedText",
             "title": "",
             "prompt": "How will market behave as per higher demand?",
+            "widget": "AnimatedText"
           },
+          {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
-            "tableAlignment": "horizontal",
-            "tableData": [
-              {
-                "title": "Bid Price",
-                "tableColors": ['0xFFFDDACD', '0xffFF7E55'],
-                "data": [
-                  {"price": "653.35", "orders": "2", "quantity": "103"},
-                  {"price": "653.30", "orders": "4", "quantity": "595"},
-                  {"price": "653.25", "orders": "9", "quantity": "771"},
-                  {"price": "653.20", "orders": "6", "quantity": "2003"},
-                  {"price": "653.15", "orders": "8", "quantity": "3658"}
-                ],
-                "totalValue": "9,21,678"
-              },
-              {
-                "title": "Ask Price",
-                "tableColors": ['0xffCFDA81', '0xff98B900'],
-                "data": [
-                  {"price": "653.40", "orders": "3", "quantity": "150"},
-                  {"price": "653.45", "orders": "5", "quantity": "800"},
-                  {"price": "653.50", "orders": "6", "quantity": "1023"},
-                  {"price": "653.55", "orders": "7", "quantity": "1234"},
-                  {"price": "653.60", "orders": "10", "quantity": "2000"}
-                ],
-                "totalValue": "9,21,678"
-              }
-            ]
+            "widget": "MarketDepthTable",
+            "tableData": {
+              "data": [
+                {
+                  "data": [
+                    {"price": "653.35", "orders": "2", "quantity": "500"},
+                    {"price": "653.30", "orders": "4", "quantity": "595"},
+                    {"price": "653.25", "orders": "9", "quantity": "771"},
+                    {"price": "653.20", "orders": "6", "quantity": "2003"},
+                    {"price": "653.15", "orders": "8", "quantity": "3658"}
+                  ],
+                  "title": "Bid Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xFFFDDACD", "0xffFF7E55"]
+                },
+                {
+                  "data": [
+                    {"price": "653.40", "orders": "3", "quantity": "15"},
+                    {"price": "653.45", "orders": "5", "quantity": "8"},
+                    {"price": "653.50", "orders": "6", "quantity": "10"},
+                    {"price": "653.55", "orders": "7", "quantity": "12"},
+                    {"price": "653.60", "orders": "10", "quantity": "2"}
+                  ],
+                  "title": "Ask Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xffCFDA81", "0xff98B900"]
+                }
+              ],
+              "tableAlignment": "horizontal"
+            },
           },
+          {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "MCQQuestion",
             "title": "",
             "format": "grid",
+            "widget": "MCQQuestion",
             "options": ["Bullish", "Bearish"],
             "correctResponse": ["Bullish"]
           },
           {
-            "widget": "NextButtonWidget",
             "title": "Next",
-            "action": "submitResponse"
+            "action": "submitResponse",
+            "widget": "NextButtonWidget"
           }
         ],
-        "isActionNeeded": true,
+        "stepId": "2",
+        "isActionNeeded": true
       },
       {
-        "stepId": "3",
         "ui": [
           {
-            "widget": "AnimatedText",
             "title": "",
             "prompt":
                 "As per the given stock price, place a limit order and add preferred quantity to analyse how ask & bid works.",
+            "widget": "AnimatedText"
           },
+          {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
-            "tableAlignment": "vertical",
-            "tableData": [
-              {
-                "title": "Bid Price",
-                "tableColors": ['0xFFFDDACD', '0xffFF7E55'],
-                "data": [
-                  {"price": "653.35", "orders": "2", "quantity": "103"},
-                  {"price": "653.30", "orders": "4", "quantity": "595"},
-                  {"price": "653.25", "orders": "9", "quantity": "771"},
-                  {"price": "653.20", "orders": "6", "quantity": "2003"},
-                  {"price": "653.15", "orders": "8", "quantity": "3658"}
-                ],
-                "totalValue": "9,21,678"
-              },
-              {
-                "title": "Ask Price",
-                "tableColors": ['0xffCFDA81', '0xff98B900'],
-                "data": [
-                  {"price": "653.35", "orders": "3", "quantity": "150"},
-                  {"price": "653.45", "orders": "5", "quantity": "800"},
-                  {"price": "653.50", "orders": "6", "quantity": "1023"},
-                  {"price": "653.55", "orders": "7", "quantity": "1234"},
-                  {"price": "653.60", "orders": "10", "quantity": "2000"}
-                ],
-                "totalValue": "9,21,678"
-              }
-            ]
+            "widget": "MarketDepthTable",
+            "tableData": {
+              "data": [
+                {
+                  "data": [
+                    {"price": "653.35", "orders": "2", "quantity": "500"},
+                    {"price": "653.30", "orders": "4", "quantity": "595"},
+                    {"price": "653.25", "orders": "9", "quantity": "771"},
+                    {"price": "653.20", "orders": "6", "quantity": "2003"},
+                    {"price": "653.15", "orders": "8", "quantity": "3658"}
+                  ],
+                  "title": "Bid Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xFFFDDACD", "0xffFF7E55"]
+                },
+                {
+                  "data": [
+                    {"price": "653.40", "orders": "3", "quantity": "15"},
+                    {"price": "653.45", "orders": "5", "quantity": "8"},
+                    {"price": "653.50", "orders": "6", "quantity": "10"},
+                    {"price": "653.55", "orders": "7", "quantity": "12"},
+                    {"price": "653.60", "orders": "10", "quantity": "2"}
+                  ],
+                  "title": "Ask Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xffCFDA81", "0xff98B900"]
+                }
+              ],
+              "tableAlignment": "horizontal"
+            },
           },
-          {"widget": "TradeSheet", "title": ""},
+          {"width": "", "height": "40", "widget": "SizedBox"},
+          {"title": "", "widget": "TradeSheet"},
           {
-            "widget": "NextButtonWidget",
-            "title": "Confirm Order",
-            "action": "confirmOrder"
+            "title": "Place Order",
+            "action": "showBottomSheet",
+            "widget": "NextButtonWidget"
           }
         ],
-        "isActionNeeded": true,
+        "stepId": "3",
+        "isActionNeeded": false
       },
       {
-        "stepId": "4",
         "ui": [
           {
-            "widget": "AnimatedText",
             "title": "",
             "prompt":
                 "As you can see the order you placed is currently an pending position which will be placed after all ask prices above are executed",
+            "widget": "AnimatedText"
           },
+          {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "MarketDepthTable",
             "title": "",
             "prompt": "",
-            "tableAlignment": "vertical",
-            "tableData": [
-              {
-                "title": "Bid Price",
-                "tableColors": ['0xFFFDDACD', '0xffFF7E55'],
-                "data": [
-                  {"price": "653.35", "orders": "2", "quantity": "103"},
-                  {"price": "653.30", "orders": "4", "quantity": "595"},
-                  {"price": "653.25", "orders": "9", "quantity": "771"},
-                  {"price": "653.20", "orders": "6", "quantity": "2003"},
-                  {"price": "653.15", "orders": "8", "quantity": "3658"}
-                ],
-                "totalValue": "9,21,678"
-              },
-              {
-                "title": "Ask Price",
-                "tableColors": ['0xffCFDA81', '0xff98B900'],
-                "data": [
-                  {"price": "653.35", "orders": "3", "quantity": "150"},
-                  {"price": "653.45", "orders": "5", "quantity": "800"},
-                  {"price": "653.50", "orders": "6", "quantity": "1023"},
-                  {"price": "653.55", "orders": "7", "quantity": "1234"},
-                  {"price": "653.60", "orders": "10", "quantity": "2000"}
-                ],
-                "totalValue": "9,21,678"
-              }
-            ]
+            "widget": "MarketDepthTable",
+            "tableData": {
+              "data": [
+                {
+                  "data": [
+                    {"price": "653.35", "orders": "2", "quantity": "500"},
+                    {"price": "653.30", "orders": "4", "quantity": "595"},
+                    {"price": "653.25", "orders": "9", "quantity": "771"},
+                    {"price": "653.20", "orders": "6", "quantity": "2003"},
+                    {"price": "653.15", "orders": "8", "quantity": "3658"}
+                  ],
+                  "title": "Bid Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xFFFDDACD", "0xffFF7E55"]
+                },
+                {
+                  "data": [
+                    {"price": "653.40", "orders": "3", "quantity": "15"},
+                    {"price": "653.45", "orders": "5", "quantity": "8"},
+                    {"price": "653.50", "orders": "6", "quantity": "10"},
+                    {"price": "653.55", "orders": "7", "quantity": "12"},
+                    {"price": "653.60", "orders": "10", "quantity": "2"}
+                  ],
+                  "title": "Ask Price",
+                  "totalValue": "9,21,678",
+                  "tableColors": ["0xffCFDA81", "0xff98B900"]
+                }
+              ],
+              "tableAlignment": "horizontal"
+            },
           },
-          {"widget": "TradeInfo", "title": "BANKNIFTY2003CE"},
-          {"widget": "NextButtonWidget", "title": "Next", "action": "moveNext"}
+          {"width": "", "height": "40", "widget": "SizedBox"},
+          {"title": "BANKNIFTY2003CE", "widget": "TradeInfo"},
+          {"title": "Next", "action": "moveNext", "widget": "NextButtonWidget"}
         ],
-        "isActionNeeded": false,
+        "stepId": "4",
+        "isActionNeeded": false
       }
-    ]
+    ],
+    "description": ""
   }
 };

@@ -1,9 +1,7 @@
 class DemandSupplyEduCornerModel {
-  late String introMd;
   late List<MarketCondition> marketCondition;
 
   DemandSupplyEduCornerModel.fromJson(dynamic data) {
-    introMd = data["intro_md"];
     marketCondition = (data["market_condition"] as List<dynamic>)
         .map((condition) => MarketCondition.fromJson(condition))
         .toList();

@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -27,6 +26,8 @@ class CustomTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).customColors;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -39,39 +40,31 @@ class CustomTable extends StatelessWidget {
           ),
           child: Text(title),
         ),
-        Table(
-          border: const TableBorder(
-            horizontalInside: BorderSide(color: Colors.black12, width: 1),
+        Container(
+          color: colors.buttonColor,
+          child: Table(
+            border: TableBorder(
+              left: BorderSide(color: colors.cardColorSecondary),
+              right: BorderSide(color: colors.cardColorSecondary),
+              bottom: BorderSide(color: colors.cardColorSecondary),
+            ),
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: const {
+              0: FlexColumnWidth(2),
+              1: FlexColumnWidth(2),
+              2: FlexColumnWidth(2),
+            },
+            children: [
+              _buildTableRow(headers, context, isHeader: true),
+              for (int i = 0; i < rows.length; i++)
+                _buildTableRow(
+                  rows[i],
+                  context,
+                  isHighlighted: _isHighlighted(rows[i], highlightedRowData),
+                ),
+            ],
           ),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          columnWidths: const {
-            0: FlexColumnWidth(2),
-            1: FlexColumnWidth(2),
-            2: FlexColumnWidth(2),
-          },
-          children: [
-            _buildTableRow(headers, context, isHeader: true),
-            for (int i = 0; i < rows.length; i++)
-              _buildTableRow(
-                rows[i],
-                context,
-                isHighlighted: _isHighlighted(rows[i], highlightedRowData),
-              ),
-          ],
         ),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       Text(footerLabel),
-        //       Text(
-        //         footerValue,
-        //         style: TextStyle(color: footerValueColor),
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }
@@ -87,27 +80,26 @@ class CustomTable extends StatelessWidget {
               color: colors.buttonColor,
               boxShadow: [
                 BoxShadow(
-                  color: colors.borderColorPrimary
-                      .withOpacity(0.5),
+                  color: colors.borderColorPrimary.withOpacity(0.5),
                   spreadRadius: 1,
                   blurRadius: 4,
-                  offset: const Offset(0, 2), // Offset (horizontal, vertical)
+                  offset: const Offset(1, 2),
                 ),
               ],
             )
           : null,
       children: cells.map((cell) {
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-          child: AutoSizeText(
-            cell,
-            maxLines: 1,
-            style: TextStyle(
-              color: isHeader ? Colors.black54 : Colors.black87,
-              fontWeight: isHeader || isHighlighted
-                  ? FontWeight.bold
-                  : FontWeight.normal,
-              fontSize: 14,
+        return Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+            child: Text(
+              cell,
+              maxLines: 1,
+              style: TextStyle(
+                color: isHeader ? Colors.black54 : Colors.black87,
+                fontWeight: isHighlighted ? FontWeight.bold : FontWeight.normal,
+                fontSize: isHeader ? 12 : 14,
+              ),
             ),
           ),
         );

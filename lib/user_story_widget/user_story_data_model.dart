@@ -1,4 +1,6 @@
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
+import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 
 class UserStoryDataModel {
   String id;
@@ -27,9 +29,13 @@ class StepData {
   String stepId;
   List<UiData> ui;
   bool isActionNeeded;
+  ExplanationV1? explanationV1;
 
   StepData(
-      {required this.stepId, required this.ui, required this.isActionNeeded});
+      {required this.stepId,
+      required this.ui,
+      required this.isActionNeeded,
+      this.explanationV1});
 
   factory StepData.fromJson(Map<String, dynamic> json) {
     return StepData(
@@ -37,7 +43,36 @@ class StepData {
         ui: (json['ui'] as List<dynamic>)
             .map((uiItem) => UiData.fromJson(uiItem))
             .toList(),
-        isActionNeeded: json["isActionNeeded"]);
+        isActionNeeded: json["isActionNeeded"],
+        explanationV1: json["explaination"] != null
+            ? ExplanationV1(
+                forCorrect: (json["explaination"]["forCorrect"]
+                        as List<dynamic>?)
+                    ?.map(
+                        (e) => ExplainerV1.fromJson(e as Map<String, dynamic>))
+                    .toList(),
+                forIncorrect: (json["explaination"]["forIncorrect"]
+                        as List<dynamic>?)
+                    ?.map(
+                        (e) => ExplainerV1.fromJson(e as Map<String, dynamic>))
+                    .toList(),
+              )
+            : ExplanationV1(
+                forCorrect: [
+                  ExplainerV1(
+                    title: "Correct",
+                    data: "You got it correct",
+                    imageUrl: "assets/btmsheet_correct.png",
+                  )
+                ],
+                forIncorrect: [
+                  ExplainerV1(
+                    title: "Incorrect",
+                    data: "You got it incorrect",
+                    imageUrl: "assets/btmsheet_incorrect.png",
+                  )
+                ],
+              ));
   }
 }
 
@@ -45,8 +80,7 @@ class UiData {
   String widget;
   String title;
   String prompt;
-  String? tableAlignment;
-  List<TableData>? tableData;
+  TableModel? tableModel;
   String? buttonsFormat;
   List<ButtonData>? buttonsData;
   String? format;
@@ -61,13 +95,13 @@ class UiData {
   List<UiData>? uiWidgets;
   TicketCouponModel? ticketCouponModel;
   String? imageUrl;
+  OptionData? optionsData;
 
   UiData(
       {required this.widget,
       required this.title,
       required this.prompt,
-      this.tableAlignment,
-      this.tableData,
+      this.tableModel,
       this.buttonsFormat,
       this.buttonsData,
       this.format,
@@ -81,18 +115,16 @@ class UiData {
       this.width,
       this.uiWidgets,
       this.ticketCouponModel,
-      this.imageUrl});
+      this.imageUrl,
+      this.optionsData});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
       widget: json['widget'] ?? '',
       title: json['title'] ?? '',
       prompt: json['prompt'] ?? '',
-      tableAlignment: json['tableAlignment'],
-      tableData: json['tableData'] != null
-          ? (json['tableData'] as List<dynamic>)
-              .map((tableItem) => TableData.fromJson(tableItem))
-              .toList()
+      tableModel: json["tableData"] != null
+          ? TableModel.fromJson(json["tableData"])
           : null,
       buttonsFormat: json['buttonsFormat'],
       buttonsData: json['buttonsData'] != null
@@ -129,7 +161,29 @@ class UiData {
           ? TicketCouponModel.fromJson(json["ticketModel"])
           : null,
       imageUrl: json["imageUrl"] ?? "",
+      optionsData: json["optionData"] != null
+          ? OptionData.fromJson(json["optionData"])
+          : null,
     );
+  }
+}
+
+class TableModel {
+  final List<TableData>? tableData;
+  final String? tableAlignment;
+  final bool? isQuantitySquared;
+
+  TableModel({this.tableData, this.tableAlignment, this.isQuantitySquared});
+
+  factory TableModel.fromJson(Map<String, dynamic> json) {
+    return TableModel(
+        tableData: json['data'] != null
+            ? (json['data'] as List<dynamic>)
+                .map((tableItem) => TableData.fromJson(tableItem))
+                .toList()
+            : null,
+        tableAlignment: json["tableAlignment"] ?? "",
+        isQuantitySquared: json["isQuantitySquared"] ?? false);
   }
 }
 
@@ -139,24 +193,22 @@ class TableData {
   List<RowData> data;
   String totalValue;
 
-  TableData({
-    required this.title,
-    required this.tableColors,
-    required this.data,
-    required this.totalValue,
-  });
+  TableData(
+      {required this.title,
+      required this.tableColors,
+      required this.data,
+      required this.totalValue});
 
   factory TableData.fromJson(Map<String, dynamic> json) {
     return TableData(
-      title: json['title'] ?? '',
-      tableColors: (json['tableColors'] as List<dynamic>)
-          .map((color) => color.toString())
-          .toList(),
-      data: (json['data'] as List<dynamic>)
-          .map((rowItem) => RowData.fromJson(rowItem))
-          .toList(),
-      totalValue: json['totalValue'],
-    );
+        title: json['title'] ?? '',
+        tableColors: (json['tableColors'] as List<dynamic>)
+            .map((color) => color.toString())
+            .toList(),
+        data: (json['data'] as List<dynamic>)
+            .map((rowItem) => RowData.fromJson(rowItem))
+            .toList(),
+        totalValue: json['totalValue']);
   }
 }
 

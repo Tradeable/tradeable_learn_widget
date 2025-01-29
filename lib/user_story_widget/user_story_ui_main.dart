@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_response.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
@@ -12,6 +14,9 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dar
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/option_chain_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/option_trade_sheet.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/order_status_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
@@ -40,6 +45,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   bool? isAnsweredCorrect;
   String status = 'Open';
   List<String> selectedResponses = [];
+  bool showBottomSheet = false;
+  RowData? staticHighlightedRowData;
+  OptionEntry? selectedOptionEntry;
+  String? quantity;
 
   @override
   void initState() {
@@ -86,46 +95,61 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     }
   }
 
-  void confirmOrder() {
-    final currentIndex = widget.model.userStory.steps
-        .indexWhere((step) => step.stepId == currentStepId);
-    if (currentIndex >= 0 &&
-        currentIndex < widget.model.userStory.steps.length - 1) {
-      setState(() {
-        currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
-      });
-
-      for (StepData step in widget.model.userStory.steps) {
-        for (UiData uiData in step.ui) {
-          if (uiData.tableData != null) {
-            for (var table in uiData.tableData!) {
-              for (var row in table.data) {
-                if (row.price == highlightedRowData?.price) {
-                  int currentQuantity = int.parse(row.quantity);
-                  Future.doWhile(() async {
-                    if (currentQuantity > 0) {
-                      await Future.delayed(const Duration(milliseconds: 20),
-                          () {
-                        setState(() {
-                          currentQuantity--;
-                          row.quantity = currentQuantity.toString();
-                        });
-                      });
-                      return true;
-                    } else {
-                      setState(() {
-                        status = 'Executed';
-                      });
-                    }
-                    return false;
-                  });
-                }
+  void confirmOrder(bool isQuantitySquared) {
+    moveToNextStep();
+    setState(() {
+      staticHighlightedRowData ??= highlightedRowData;
+    });
+    for (StepData step in widget.model.userStory.steps) {
+      for (UiData uiData in step.ui) {
+        if (uiData.tableModel != null) {
+          for (var table in uiData.tableModel!.tableData!) {
+            for (var row in table.data) {
+              if (row.price == highlightedRowData?.price &&
+                  row.orders == highlightedRowData?.orders) {
+                setState(() {
+                  row.quantity = highlightedRowData?.quantity ?? row.quantity;
+                });
+                _decreaseQuantity(row, isQuantitySquared, table);
+                break;
               }
             }
           }
         }
       }
     }
+  }
+
+  void _decreaseQuantity(RowData row, bool isQuantitySquared, TableData table) {
+    int initialQuantity = int.parse(row.quantity);
+    int minQuantity = isQuantitySquared ? (initialQuantity * 0.4).toInt() : 0;
+    Duration duration = const Duration(milliseconds: 600);
+    int step = initialQuantity ~/ 10;
+
+    Timer.periodic(duration, (timer) {
+      setState(() {
+        int currentQuantity = int.parse(row.quantity);
+
+        if (currentQuantity > minQuantity) {
+          row.quantity = (currentQuantity - step).toString();
+          if (isQuantitySquared && int.parse(row.quantity) <= minQuantity) {
+            row.quantity = minQuantity.toString();
+            status = "Partially Executed";
+            timer.cancel();
+
+            table.data.insert(
+                0, RowData(price: "654.52", quantity: "600", orders: "4"));
+            table.data.removeLast();
+
+            highlightedRowData = table.data.first;
+          }
+        } else {
+          row.quantity = minQuantity.toString();
+          status = isQuantitySquared ? "Partially Executed" : "Executed";
+          timer.cancel();
+        }
+      });
+    });
   }
 
   void showAnimation(HorizontalLineModel model) {
@@ -203,8 +227,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                             : "assets/market_depth/profile_guy.png");
                   case "MarketDepthTable":
                     return MarketDepthTableWidget(
-                      tableAlignment: uiData.tableAlignment ?? "horizontal",
-                      tableData: uiData.tableData ?? [],
+                      tableAlignment:
+                          uiData.tableModel?.tableAlignment ?? "horizontal",
+                      tableData: uiData.tableModel?.tableData ?? [],
                       title: uiData.title,
                       highlightedRowData: highlightedRowData,
                     );
@@ -213,25 +238,6 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       buttonsFormat: uiData.buttonsFormat ?? "horizontal",
                       buttonsData: uiData.buttonsData ?? [],
                       onAction: moveToNextStep,
-                    );
-                  case "TradeSheet":
-                    return TradeSheet(
-                      tableRowDataMap: getTableRowDataAsMap(
-                        widget.model.userStory.steps
-                            .firstWhere(
-                              (step) => step.stepId == currentStepId,
-                            )
-                            .ui
-                            .firstWhere(
-                              (ui) => ui.tableData != null,
-                            )
-                            .tableData!,
-                      ),
-                      onRowDataSelected: (RowData data) {
-                        setState(() {
-                          highlightedRowData = data;
-                        });
-                      },
                     );
                   case "MCQQuestion":
                     return MCQQuestionWidget(
@@ -276,8 +282,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "TradeInfo":
                     return TradeInfo(
                         title: uiData.title,
-                        limitPrice: highlightedRowData?.price ?? '',
-                        quantity: highlightedRowData?.quantity ?? '',
+                        limitPrice: staticHighlightedRowData?.price ?? '',
+                        quantity: staticHighlightedRowData?.quantity ?? '',
                         status: status);
                   case "ImageWidget":
                     return Image.network(uiData.imageUrl!,
@@ -328,6 +334,33 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         });
                       },
                     );
+                  case "OptionChain":
+                    return OptionsDataWidget(
+                      data: uiData.optionsData!.options,
+                      onRowSelected: (entry, quan) {
+                        setState(() {
+                          selectedOptionEntry = entry;
+                          quantity = quan;
+                        });
+                        moveToNextStep();
+                      },
+                      selectedOptionEntry: selectedOptionEntry,
+                    );
+                  case "OptionTradeSheet":
+                    return OptionTradeSheet(
+                        limitPrice:
+                            selectedOptionEntry!.premium.toStringAsFixed(2),
+                        quantity: quantity.toString());
+
+                  case "OrderStatusWidget":
+                    return OrderStatusWidget(
+                        limitPrice:
+                            selectedOptionEntry!.premium.toStringAsFixed(2),
+                        quantity: quantity.toString(),
+                        model: step.ui
+                            .firstWhere((widget) =>
+                                widget.widget == "HorizontalLineChart")
+                            .chart!);
                   default:
                     return const SizedBox.shrink();
                 }
@@ -353,7 +386,39 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     widget.onNextClick();
                     break;
                   case "confirmOrder":
-                    confirmOrder();
+                    confirmOrder(false);
+                    break;
+                  case "showBottomSheet":
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          final step = widget.model.userStory.steps.firstWhere(
+                            (step) => step.stepId == currentStepId,
+                          );
+
+                          final uiWithTableModel = step.ui.firstWhere(
+                            (ui) => ui.tableModel != null,
+                          );
+
+                          final tableModel = uiWithTableModel.tableModel!;
+
+                          return TradeSheet(
+                            tableRowDataMap: {
+                              0: tableModel.tableData!.first.data
+                            },
+                            onRowDataSelected: (RowData data) {
+                              setState(() {
+                                highlightedRowData = data;
+                              });
+                            },
+                            moveNext: () {
+                              confirmOrder(
+                                  tableModel.isQuantitySquared ?? false);
+                            },
+                            isQuantitySquared:
+                                tableModel.isQuantitySquared ?? false,
+                          );
+                        });
                     break;
                   case "submitResponse":
                     showModalBottomSheet(
@@ -361,7 +426,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         context: context,
                         builder: (context) => BottomSheetWidget(
                             isCorrect: isAnsweredCorrect ?? false,
-                            model: widget.model.explanationV1,
+                            model: step.explanationV1,
                             onNextClick: () {
                               moveToNextStep();
                             }));
@@ -382,13 +447,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     );
   }
 
-  Map<int, List<RowData>> getTableRowDataAsMap(List<TableData> tableDataList) {
-    Map<int, List<RowData>> tableRowDataMap = {};
-
-    for (int tableIndex = 0; tableIndex < tableDataList.length; tableIndex++) {
-      tableRowDataMap[tableIndex] = tableDataList[tableIndex].data;
-    }
-
-    return tableRowDataMap;
+  List<RowData> getFirstTableRowData(List<TableData> tableDataList) {
+    return tableDataList.isNotEmpty ? tableDataList.first.data : [];
   }
 }
