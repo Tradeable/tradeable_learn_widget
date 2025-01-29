@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_response.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
@@ -13,6 +14,9 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dar
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/option_chain_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/option_trade_sheet.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/order_status_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
@@ -43,6 +47,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   List<String> selectedResponses = [];
   bool showBottomSheet = false;
   RowData? staticHighlightedRowData;
+  OptionEntry? selectedOptionEntry;
+  String? quantity;
 
   @override
   void initState() {
@@ -132,7 +138,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
             timer.cancel();
 
             table.data.insert(
-                0, RowData(price: "652.52", quantity: "600", orders: "4"));
+                0, RowData(price: "654.52", quantity: "600", orders: "4"));
             table.data.removeLast();
 
             highlightedRowData = table.data.first;
@@ -328,6 +334,33 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         });
                       },
                     );
+                  case "OptionChain":
+                    return OptionsDataWidget(
+                      data: uiData.optionsData!.options,
+                      onRowSelected: (entry, quan) {
+                        setState(() {
+                          selectedOptionEntry = entry;
+                          quantity = quan;
+                        });
+                        moveToNextStep();
+                      },
+                      selectedOptionEntry: selectedOptionEntry,
+                    );
+                  case "OptionTradeSheet":
+                    return OptionTradeSheet(
+                        limitPrice:
+                            selectedOptionEntry!.premium.toStringAsFixed(2),
+                        quantity: quantity.toString());
+
+                  case "OrderStatusWidget":
+                    return OrderStatusWidget(
+                        limitPrice:
+                            selectedOptionEntry!.premium.toStringAsFixed(2),
+                        quantity: quantity.toString(),
+                        model: step.ui
+                            .firstWhere((widget) =>
+                                widget.widget == "HorizontalLineChart")
+                            .chart!);
                   default:
                     return const SizedBox.shrink();
                 }

@@ -1,4 +1,5 @@
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
 import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 
 class UserStoryDataModel {
@@ -94,6 +95,7 @@ class UiData {
   List<UiData>? uiWidgets;
   TicketCouponModel? ticketCouponModel;
   String? imageUrl;
+  OptionData? optionsData;
 
   UiData(
       {required this.widget,
@@ -113,7 +115,8 @@ class UiData {
       this.width,
       this.uiWidgets,
       this.ticketCouponModel,
-      this.imageUrl});
+      this.imageUrl,
+      this.optionsData});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
@@ -158,6 +161,9 @@ class UiData {
           ? TicketCouponModel.fromJson(json["ticketModel"])
           : null,
       imageUrl: json["imageUrl"] ?? "",
+      optionsData: json["optionData"] != null
+          ? OptionData.fromJson(json["optionData"])
+          : null,
     );
   }
 }

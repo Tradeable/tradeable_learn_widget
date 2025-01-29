@@ -21,6 +21,7 @@ import 'package:example/data_model/mcq_static_model.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/options_typeform.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
 import 'package:example/data_model/ticket_user_story.dart';
@@ -242,9 +243,16 @@ class MyHomePage extends StatelessWidget {
                   NavigationButton(
                       text: "Market Depth",
                       destination: ScaffoldWithAppBar(
-                          title: "Market Depth",
+                          title: "Market Depth 2",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(marketDepth1),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Option Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Option Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(optionsTypeForm),
                               onNextClick: () {}))),
                 ],
               ),
