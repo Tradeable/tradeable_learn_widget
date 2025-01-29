@@ -186,14 +186,12 @@ class TableData {
   List<String> tableColors;
   List<RowData> data;
   String totalValue;
-  bool isQuantitySquared;
 
   TableData(
       {required this.title,
       required this.tableColors,
       required this.data,
-      required this.totalValue,
-      required this.isQuantitySquared});
+      required this.totalValue});
 
   factory TableData.fromJson(Map<String, dynamic> json) {
     return TableData(
@@ -204,8 +202,7 @@ class TableData {
         data: (json['data'] as List<dynamic>)
             .map((rowItem) => RowData.fromJson(rowItem))
             .toList(),
-        totalValue: json['totalValue'],
-        isQuantitySquared: json["isQuantitySquared"] ?? false);
+        totalValue: json['totalValue']);
   }
 }
 

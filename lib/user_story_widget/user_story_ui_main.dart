@@ -42,6 +42,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   String status = 'Open';
   List<String> selectedResponses = [];
   bool showBottomSheet = false;
+  RowData? staticHighlightedRowData;
 
   @override
   void initState() {
@@ -88,8 +89,11 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     }
   }
 
-  void confirmOrder() {
+  void confirmOrder(bool isQuantitySquared) {
     moveToNextStep();
+    setState(() {
+      staticHighlightedRowData ??= highlightedRowData;
+    });
     for (StepData step in widget.model.userStory.steps) {
       for (UiData uiData in step.ui) {
         if (uiData.tableModel != null) {
@@ -100,7 +104,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                 setState(() {
                   row.quantity = highlightedRowData?.quantity ?? row.quantity;
                 });
-                _decreaseQuantity(row);
+                _decreaseQuantity(row, isQuantitySquared, table);
                 break;
               }
             }
@@ -110,25 +114,35 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     }
   }
 
-  void _decreaseQuantity(RowData row) {
+  void _decreaseQuantity(RowData row, bool isQuantitySquared, TableData table) {
     int initialQuantity = int.parse(row.quantity);
+    int minQuantity = isQuantitySquared ? (initialQuantity * 0.4).toInt() : 0;
     Duration duration = const Duration(milliseconds: 600);
     int step = initialQuantity ~/ 10;
 
     Timer.periodic(duration, (timer) {
       setState(() {
-        if (int.parse(row.quantity) > 0) {
-          row.quantity = (int.parse(row.quantity) - step).toString();
+        int currentQuantity = int.parse(row.quantity);
+
+        if (currentQuantity > minQuantity) {
+          row.quantity = (currentQuantity - step).toString();
+          if (isQuantitySquared && int.parse(row.quantity) <= minQuantity) {
+            row.quantity = minQuantity.toString();
+            status = "Partially Executed";
+            timer.cancel();
+
+            table.data.insert(
+                0, RowData(price: "652.52", quantity: "600", orders: "4"));
+            table.data.removeLast();
+
+            highlightedRowData = table.data.first;
+          }
+        } else {
+          row.quantity = minQuantity.toString();
+          status = isQuantitySquared ? "Partially Executed" : "Executed";
+          timer.cancel();
         }
       });
-
-      if (int.parse(row.quantity) <= 0) {
-        row.quantity = '0';
-        timer.cancel();
-        setState(() {
-          status = "Executed";
-        });
-      }
     });
   }
 
@@ -262,8 +276,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "TradeInfo":
                     return TradeInfo(
                         title: uiData.title,
-                        limitPrice: highlightedRowData?.price ?? '',
-                        quantity: highlightedRowData?.quantity ?? '',
+                        limitPrice: staticHighlightedRowData?.price ?? '',
+                        quantity: staticHighlightedRowData?.quantity ?? '',
                         status: status);
                   case "ImageWidget":
                     return Image.network(uiData.imageUrl!,
@@ -339,7 +353,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     widget.onNextClick();
                     break;
                   case "confirmOrder":
-                    confirmOrder();
+                    confirmOrder(false);
                     break;
                   case "showBottomSheet":
                     showModalBottomSheet(
@@ -364,7 +378,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                 highlightedRowData = data;
                               });
                             },
-                            moveNext: confirmOrder,
+                            moveNext: () {
+                              confirmOrder(
+                                  tableModel.isQuantitySquared ?? false);
+                            },
                             isQuantitySquared:
                                 tableModel.isQuantitySquared ?? false,
                           );
