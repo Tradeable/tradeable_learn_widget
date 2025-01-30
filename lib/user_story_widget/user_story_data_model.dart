@@ -1,5 +1,6 @@
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/trend_line_model.dart';
 import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 
 class UserStoryDataModel {
@@ -96,6 +97,7 @@ class UiData {
   TicketCouponModel? ticketCouponModel;
   String? imageUrl;
   OptionData? optionsData;
+  TrendLineModel? trendLineModelV1;
 
   UiData(
       {required this.widget,
@@ -116,7 +118,8 @@ class UiData {
       this.uiWidgets,
       this.ticketCouponModel,
       this.imageUrl,
-      this.optionsData});
+      this.optionsData,
+      this.trendLineModelV1});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
@@ -164,6 +167,8 @@ class UiData {
       optionsData: json["optionData"] != null
           ? OptionData.fromJson(json["optionData"])
           : null,
+      trendLineModelV1:
+          json["trendlineChart"] != null ? TrendLineModel.fromJson(json["trendlineChart"]) : null,
     );
   }
 }

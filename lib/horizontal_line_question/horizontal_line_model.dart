@@ -26,6 +26,7 @@ class HorizontalLineModel {
   late String timeframe;
   HorizontalLineQuestionState state = HorizontalLineQuestionState.loadUI;
   ExplanationV1? explanationV1;
+  int? candleSpeed;
 
   HorizontalLineModel.fromJson(dynamic data) {
     type = data['type'];
@@ -39,6 +40,7 @@ class HorizontalLineModel {
     showChips = data.containsKey("showChips") ? data["showChips"] : false;
     ticker = data.containsKey("ticker") ? data["ticker"] : "";
     timeframe = data.containsKey("timeframe") ? data["timeframe"] : "";
+    candleSpeed = data.containsKey("candleSpeed") ? data["candleSpeed"] : 50;
     yMax = candles.fold<double>(0, (previousValue, element) {
       if (previousValue < element.high) {
         return element.high;

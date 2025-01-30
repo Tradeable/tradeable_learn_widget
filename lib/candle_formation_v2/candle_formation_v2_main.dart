@@ -24,6 +24,10 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
   late Animation<Offset> _wickAnimation;
   late Animation<Offset> _tailAnimation;
 
+  late PageController _wickController;
+  late PageController _bodyController;
+  late PageController _tailController;
+
   @override
   void initState() {
     model = widget.model;
@@ -50,6 +54,19 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
       begin: const Offset(0, 1),
       end: const Offset(0, 0),
     ).animate(_animationController);
+
+    _wickController = PageController(
+      initialPage: model.wickOptions.indexOf(model.selectedWick),
+      viewportFraction: 0.3,
+    );
+    _bodyController = PageController(
+      initialPage: model.bodyOptions.indexOf(model.selectedBody),
+      viewportFraction: 0.3,
+    );
+    _tailController = PageController(
+      initialPage: model.tailOptions.indexOf(model.selectedTail),
+      viewportFraction: 0.3,
+    );
     super.initState();
   }
 
@@ -79,6 +96,19 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
     });
   }
 
+  void scrollToCorrectAnswers() {
+    final wickIndex = model.wickOptions.indexOf(model.correctOptions[0]);
+    final bodyIndex = model.bodyOptions.indexOf(model.correctOptions[1]);
+    final tailIndex = model.tailOptions.indexOf(model.correctOptions[2]);
+
+    _wickController.animateToPage(wickIndex,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+    _bodyController.animateToPage(bodyIndex,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+    _tailController.animateToPage(tailIndex,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
@@ -93,8 +123,20 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(model.question, style: textStyles.mediumBold),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child:
+                            Text(model.question, style: textStyles.mediumBold),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            scrollToCorrectAnswers();
+                          },
+                          icon: const Icon(Icons.info_outline))
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Column(
@@ -162,16 +204,19 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
       List<String> options,
       ValueChanged<String> onSelected) {
     final colors = Theme.of(context).customColors;
-    final initialPage = options.indexOf(selectedOption);
-    final pageController = PageController(
-      initialPage: initialPage,
-      viewportFraction: 0.3,
-    );
+    PageController controller;
+    if (type == 'wick') {
+      controller = _wickController;
+    } else if (type == 'body') {
+      controller = _bodyController;
+    } else {
+      controller = _tailController;
+    }
 
     return SizedBox(
       height: containerHeight,
       child: PageView.builder(
-        controller: pageController,
+        controller: controller,
         itemCount: options.length,
         onPageChanged: (index) => onSelected(options[index]),
         itemBuilder: (context, index) {

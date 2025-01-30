@@ -101,7 +101,8 @@ class _TradeableChart extends State<TradeableChart>
             dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
             volume: e.vol.round()))
         .toList()) {
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future.delayed(
+          Duration(milliseconds: widget.model.candleSpeed ?? 50));
       setState(() {
         widget.model.uiCandles.add(candle);
       });

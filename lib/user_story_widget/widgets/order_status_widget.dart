@@ -33,7 +33,6 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
     final textStyles = Theme.of(context).customTextStyles;
-    print(widget.model.candles.last.close);
     return Container(
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: colors.borderColorSecondary)),
@@ -53,7 +52,7 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildRow("Limit Price: ", widget.limitPrice, context),
+                  _buildRow("Market Price: ", widget.limitPrice, context),
                   const SizedBox(height: 6),
                   _buildRow("Quantity: ", widget.quantity, context),
                 ],
@@ -120,8 +119,8 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
         });
       }
 
-      // Update the UI every 50ms with new profit/loss values
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future.delayed(
+          Duration(milliseconds: widget.model.candleSpeed ?? 50));
     }
   }
 }
