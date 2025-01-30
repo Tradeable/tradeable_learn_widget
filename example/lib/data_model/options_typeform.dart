@@ -12,7 +12,7 @@ const optionsTypeForm = {
           {
             "title": "",
             "prompt":
-                "Select the correct strike price from the given options to execute this order",
+                "As you've learned when to take an options trade, let's now look at how to place the order. Select the correct strike price from the available options to execute the trade.",
             "widget": "AnimatedText",
             "imageUrl": "assets/axis_logo.png",
           },
@@ -25,18 +25,18 @@ const optionsTypeForm = {
               "options": {
                 "call": {
                   "entries": [
-                    {"premium": 194.50, "value": 167.70, "strike": 23050.00},
-                    {"premium": 1924.50, "value": 167.70, "strike": 23150.00},
-                    {"premium": 1914.50, "value": 167.70, "strike": 23250.00},
-                    {"premium": 1914.50, "value": 167.70, "strike": 23350.00}
+                    {"premium": 231.50, "value": 235.70, "strike": 23050.00},
+                    {"premium": 232.75, "value": 240.10, "strike": 23150.00},
+                    {"premium": 234.25, "value": 243.90, "strike": 23250.00},
+                    {"premium": 238.50, "value": 244.75, "strike": 23350.00}
                   ]
                 },
                 "put": {
                   "entries": [
-                    {"premium": 929.95, "value": -63.49, "strike": 23050.00},
-                    {"premium": 9129.95, "value": -63.49, "strike": 23150.00},
-                    {"premium": 919.95, "value": -63.49, "strike": 23250.00},
-                    {"premium": 949.95, "value": -63.49, "strike": 23350.00}
+                    {"premium": 230.95, "value": 231.49, "strike": 23050.00},
+                    {"premium": 233.10, "value": 239.20, "strike": 23150.00},
+                    {"premium": 237.75, "value": 242.99, "strike": 23250.00},
+                    {"premium": 241.95, "value": 244.50, "strike": 23350.00}
                   ]
                 }
               }
@@ -58,7 +58,7 @@ const optionsTypeForm = {
           {
             "title": "",
             "prompt":
-                "Select the correct strike price from the given options to execute this order",
+                "As you can see below, your market order has been executed immediately with the desired quantity.",
             "widget": "AnimatedText",
             "imageUrl": "assets/axis_logo.png",
           },
@@ -71,18 +71,18 @@ const optionsTypeForm = {
               "options": {
                 "call": {
                   "entries": [
-                    {"premium": 194.50, "value": 167.70, "strike": 23050.00},
-                    {"premium": 1924.50, "value": 167.70, "strike": 23150.00},
-                    {"premium": 1914.50, "value": 167.70, "strike": 23250.00},
-                    {"premium": 1914.50, "value": 167.70, "strike": 23350.00}
+                    {"premium": 231.50, "value": 235.70, "strike": 23050.00},
+                    {"premium": 232.75, "value": 240.10, "strike": 23150.00},
+                    {"premium": 234.25, "value": 243.90, "strike": 23250.00},
+                    {"premium": 238.50, "value": 244.75, "strike": 23350.00}
                   ]
                 },
                 "put": {
                   "entries": [
-                    {"premium": 929.95, "value": -63.49, "strike": 23050.00},
-                    {"premium": 9129.95, "value": -63.49, "strike": 23150.00},
-                    {"premium": 919.95, "value": -63.49, "strike": 23250.00},
-                    {"premium": 949.95, "value": -63.49, "strike": 23350.00}
+                    {"premium": 230.95, "value": 231.49, "strike": 23050.00},
+                    {"premium": 233.10, "value": 239.20, "strike": 23150.00},
+                    {"premium": 237.75, "value": 242.99, "strike": 23250.00},
+                    {"premium": 241.95, "value": 244.50, "strike": 23350.00}
                   ]
                 }
               }
@@ -104,7 +104,7 @@ const optionsTypeForm = {
           {
             "title": "",
             "prompt":
-                "Select the correct strike price from the given options to execute this order",
+                "Since the market has been bullish, your call option position is profitable. You can see how the price movement on the chart directly impacts your position P&L",
             "widget": "AnimatedText",
             "imageUrl": "assets/axis_logo.png",
           },
@@ -134,226 +134,326 @@ const optionsTypeForm = {
               "selectedCandleIds": null,
               "bucket": "w8",
               "showChips": true,
+              "candleSpeed": 200,
               "candles": [
                 {
-                  "_id": "6267f8bf83b67deb1498e289",
+                  "_id": "6267f82983b67deb148c323c",
                   "num": 1,
-                  "ticker": "VBL",
-                  "time": 1623901796000,
-                  "open": 780,
-                  "high": 794.2,
-                  "low": 780,
-                  "close": 791,
-                  "vol": 19.35000000000002
+                  "ticker": "ITC",
+                  "time": 1634897400000,
+                  "open": 236.6,
+                  "high": 236.6,
+                  "low": 236.6,
+                  "close": 236.6,
+                  "vol": 10
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e2d4",
+                  "_id": "6267f82983b67deb148c3240",
                   "num": 2,
-                  "ticker": "VBL",
-                  "time": 1623988196000,
-                  "open": 793.15,
-                  "high": 800,
-                  "low": 783.05,
-                  "close": 796,
-                  "vol": 11.75
+                  "ticker": "ITC",
+                  "time": 1634901900000,
+                  "open": 236.6,
+                  "high": 236.6,
+                  "low": 236.6,
+                  "close": 236.6,
+                  "vol": 10
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e31f",
+                  "_id": "6267f82983b67deb148c3241",
                   "num": 3,
-                  "ticker": "VBL",
-                  "time": 1624247396000,
-                  "open": 793.95,
-                  "high": 797.9,
-                  "low": 785,
-                  "close": 787,
-                  "vol": 11.20000000000005
+                  "ticker": "ITC",
+                  "time": 1635132900000,
+                  "open": 234.85,
+                  "high": 235.35,
+                  "low": 232,
+                  "close": 234.2,
+                  "vol": 10.75
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e36a",
+                  "_id": "6267f82983b67deb148c3245",
                   "num": 4,
-                  "ticker": "VBL",
-                  "time": 1624333794000,
-                  "open": 788.3,
-                  "high": 793.65,
-                  "low": 776,
-                  "close": 780,
-                  "vol": 13.90000000000009
+                  "ticker": "ITC",
+                  "time": 1635134400000,
+                  "open": 234.15,
+                  "high": 236.05,
+                  "low": 230.5,
+                  "close": 234.8,
+                  "vol": 10.04999999999998
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e3b5",
+                  "_id": "6267f82983b67deb148c3251",
                   "num": 5,
-                  "ticker": "VBL",
-                  "time": 1624420192000,
-                  "open": 771.05,
-                  "high": 774,
-                  "low": 751.85,
-                  "close": 755,
-                  "vol": 11.94999999999993
+                  "ticker": "ITC",
+                  "time": 1635138000000,
+                  "open": 234.8,
+                  "high": 236.65,
+                  "low": 234.6,
+                  "close": 235.5,
+                  "vol": 11.19999999999999
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e400",
+                  "_id": "6267f82983b67deb148c325d",
                   "num": 6,
-                  "ticker": "VBL",
-                  "time": 1624506597000,
-                  "open": 759.95,
-                  "high": 759.95,
-                  "low": 719.25,
-                  "close": 721.5,
-                  "vol": 12.95000000000005
+                  "ticker": "ITC",
+                  "time": 1635141600000,
+                  "open": 235.5,
+                  "high": 236,
+                  "low": 233.9,
+                  "close": 234.35,
+                  "vol": 10.30000000000001
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e44b",
+                  "_id": "6267f82983b67deb148c3269",
                   "num": 7,
-                  "ticker": "VBL",
-                  "time": 1624592998000,
-                  "open": 725.05,
-                  "high": 731.95,
-                  "low": 714,
-                  "close": 715,
-                  "vol": 10.04999999999995
+                  "ticker": "ITC",
+                  "time": 1635145200000,
+                  "open": 234.15,
+                  "high": 234.65,
+                  "low": 233.5,
+                  "close": 234,
+                  "vol": 10.15000000000001
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e496",
+                  "_id": "6267f82983b67deb148c3275",
                   "num": 8,
-                  "ticker": "VBL",
-                  "time": 1624852199000,
-                  "open": 719,
-                  "high": 734.95,
-                  "low": 718.3,
-                  "close": 730,
-                  "vol": 16.75
+                  "ticker": "ITC",
+                  "time": 1635148800000,
+                  "open": 234,
+                  "high": 234.75,
+                  "low": 233.3,
+                  "close": 233.5,
+                  "vol": 10.05000000000001
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e4e1",
+                  "_id": "6267f82983b67deb148c3281",
                   "num": 9,
-                  "ticker": "VBL",
-                  "time": 1624938598000,
-                  "open": 733.45,
-                  "high": 736.5,
-                  "low": 722.5,
-                  "close": 727,
-                  "vol": 12.25
+                  "ticker": "ITC",
+                  "time": 1635152400000,
+                  "open": 233.5,
+                  "high": 234.35,
+                  "low": 232.5,
+                  "close": 233,
+                  "vol": 10.05000000000001
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e52c",
+                  "_id": "6267f82983b67deb148c328d",
                   "num": 10,
-                  "ticker": "VBL",
-                  "time": 1625024999000,
-                  "open": 728.95,
-                  "high": 734.35,
-                  "low": 723,
-                  "close": 729.65,
-                  "vol": 12.90000000000009
+                  "ticker": "ITC",
+                  "time": 1635156000000,
+                  "open": 233.55,
+                  "high": 233.55,
+                  "low": 233.4,
+                  "close": 233.4,
+                  "vol": 10.15000000000001
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e577",
+                  "_id": "6267f82983b67deb148c3293",
                   "num": 11,
-                  "ticker": "VBL",
-                  "time": 1625110800000,
-                  "open": 730,
-                  "high": 734.95,
-                  "low": 721.2,
-                  "close": 723.75,
+                  "ticker": "ITC",
+                  "time": 1635161100000,
+                  "open": 233.4,
+                  "high": 233.4,
+                  "low": 233.4,
+                  "close": 233.4,
                   "vol": 10
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e5c5",
+                  "_id": "6267f82983b67deb148c3294",
                   "num": 12,
-                  "ticker": "VBL",
-                  "time": 1625196900000,
-                  "open": 725,
-                  "high": 725.85,
-                  "low": 713,
-                  "close": 719.15,
+                  "ticker": "ITC",
+                  "time": 1635219300000,
+                  "open": 234,
+                  "high": 236.45,
+                  "low": 233.95,
+                  "close": 236.15,
+                  "vol": 10.09999999999999
+                },
+                {
+                  "_id": "6267f82983b67deb148c3299",
+                  "num": 13,
+                  "ticker": "ITC",
+                  "time": 1635220800000,
+                  "open": 236.15,
+                  "high": 237.3,
+                  "low": 234.7,
+                  "close": 235.55,
+                  "vol": 10.34999999999999
+                },
+                {
+                  "_id": "6267f82983b67deb148c32a5",
+                  "num": 14,
+                  "ticker": "ITC",
+                  "time": 1635224400000,
+                  "open": 235.7,
+                  "high": 235.9,
+                  "low": 233.6,
+                  "close": 234.25,
+                  "vol": 10.10000000000002
+                },
+                {
+                  "_id": "6267f82983b67deb148c32b1",
+                  "num": 15,
+                  "ticker": "ITC",
+                  "time": 1635228000000,
+                  "open": 234.4,
+                  "high": 234.8,
+                  "low": 234.6,
+                  "close": 234.55,
+                  "vol": 10.40000000000001
+                },
+                {
+                  "_id": "6267f82983b67deb148c32bd",
+                  "num": 16,
+                  "ticker": "ITC",
+                  "time": 1635231600000,
+                  "open": 236.7,
+                  "high": 236.9,
+                  "low": 235.6,
+                  "close": 235.25,
+                  "vol": 10.25
+                },
+                {
+                  "_id": "6267f82983b67deb148c32c9",
+                  "num": 17,
+                  "ticker": "ITC",
+                  "time": 1635235200000,
+                  "open": 235,
+                  "high": 236.45,
+                  "low": 234.95,
+                  "close": 236.15,
+                  "vol": 10.14999999999998
+                },
+                {
+                  "_id": "6267f82983b67deb148c32d5",
+                  "num": 18,
+                  "ticker": "ITC",
+                  "time": 1635238800000,
+                  "open": 236.2,
+                  "high": 238.9,
+                  "low": 237,
+                  "close": 238.9,
+                  "vol": 10.15000000000001
+                },
+                {
+                  "_id": "6267f82983b67deb148c32e1",
+                  "num": 19,
+                  "ticker": "ITC",
+                  "time": 1635242400000,
+                  "open": 238.85,
+                  "high": 238.85,
+                  "low": 236.7,
+                  "close": 236.7,
+                  "vol": 12.15000000000001
+                },
+                {
+                  "_id": "6267f82983b67deb148c32e6",
+                  "num": 20,
+                  "ticker": "ITC",
+                  "time": 1635247500000,
+                  "open": 236.7,
+                  "high": 236.7,
+                  "low": 236.7,
+                  "close": 236.7,
                   "vol": 10
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e615",
-                  "num": 13,
-                  "ticker": "VBL",
-                  "time": 1625456100000,
-                  "open": 719.5,
-                  "high": 731,
-                  "low": 709.1,
-                  "close": 713.15,
-                  "vol": 15.5
+                  "_id": "6267f82983b67deb148c32e7",
+                  "num": 21,
+                  "ticker": "ITC",
+                  "time": 1635305700000,
+                  "open": 240,
+                  "high": 240.35,
+                  "low": 237.3,
+                  "close": 237.85,
+                  "vol": 10.25
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e666",
-                  "num": 14,
-                  "ticker": "VBL",
-                  "time": 1625542500000,
-                  "open": 717.8,
-                  "high": 734,
-                  "low": 715.7,
-                  "close": 723.5,
-                  "vol": 12.09999999999991
+                  "_id": "6267f82983b67deb148c32eb",
+                  "num": 22,
+                  "ticker": "ITC",
+                  "time": 1635307200000,
+                  "open": 237.9,
+                  "high": 240.25,
+                  "low": 237.1,
+                  "close": 238.55,
+                  "vol": 10.20000000000002
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e6b7",
-                  "num": 15,
-                  "ticker": "VBL",
-                  "time": 1625628900000,
-                  "open": 722.9,
-                  "high": 752.8,
-                  "low": 721,
-                  "close": 745.8,
-                  "vol": 12.20000000000005
+                  "_id": "6267f82983b67deb148c32f7",
+                  "num": 23,
+                  "ticker": "ITC",
+                  "time": 1635310800000,
+                  "open": 238.55,
+                  "high": 241.2,
+                  "low": 237.7,
+                  "close": 240.8,
+                  "vol": 10.10000000000002
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e708",
-                  "num": 16,
-                  "ticker": "VBL",
-                  "time": 1625715300000,
-                  "open": 750.85,
-                  "high": 774,
-                  "low": 743.55,
-                  "close": 769.95,
-                  "vol": 10.85000000000002
+                  "_id": "6267f82983b67deb148c3303",
+                  "num": 24,
+                  "ticker": "ITC",
+                  "time": 1635314400000,
+                  "open": 240.75,
+                  "high": 240.85,
+                  "low": 239.3,
+                  "close": 240.35,
+                  "vol": 10.84999999999999
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e759",
-                  "num": 17,
-                  "ticker": "VBL",
-                  "time": 1625801700000,
-                  "open": 765.15,
-                  "high": 775,
-                  "low": 760.3,
-                  "close": 770.05,
-                  "vol": 14.85000000000002
+                  "_id": "6267f82983b67deb148c330f",
+                  "num": 25,
+                  "ticker": "ITC",
+                  "time": 1635318000000,
+                  "open": 240.35,
+                  "high": 241,
+                  "low": 240.2,
+                  "close": 240.6,
+                  "vol": 10.04999999999998
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e7aa",
-                  "num": 18,
-                  "ticker": "VBL",
-                  "time": 1626060900000,
-                  "open": 774,
-                  "high": 782.75,
-                  "low": 770.4,
-                  "close": 781.2,
-                  "vol": 11
+                  "_id": "6267f82983b67deb148c331b",
+                  "num": 26,
+                  "ticker": "ITC",
+                  "time": 1635321600000,
+                  "open": 237.55,
+                  "high": 240.45,
+                  "low": 237.55,
+                  "close": 238.7,
+                  "vol": 12.19999999999999
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e7fb",
-                  "num": 19,
-                  "ticker": "VBL",
-                  "time": 1626147300000,
-                  "open": 785,
-                  "high": 804.6,
-                  "low": 781,
-                  "close": 787,
-                  "vol": 13
+                  "_id": "6267f82983b67deb148c3327",
+                  "num": 27,
+                  "ticker": "ITC",
+                  "time": 1635325200000,
+                  "open": 238.8,
+                  "high": 239.1,
+                  "low": 237.9,
+                  "close": 239,
+                  "vol": 10.40000000000001
                 },
                 {
-                  "_id": "6267f8bf83b67deb1498e84b",
-                  "num": 20,
-                  "ticker": "VBL",
-                  "time": 1626233700000,
-                  "open": 795,
-                  "high": 795,
-                  "low": 775,
-                  "close": 777.9,
-                  "vol": 18
+                  "_id": "6267f82983b67deb148c3333",
+                  "num": 28,
+                  "ticker": "ITC",
+                  "time": 1635328800000,
+                  "open": 238.4,
+                  "high": 238.45,
+                  "low": 238.4,
+                  "close": 238.45,
+                  "vol": 10.04999999999998
+                },
+                {
+                  "_id": "6267f82983b67deb148c3338",
+                  "num": 29,
+                  "ticker": "ITC",
+                  "time": 1635333900000,
+                  "open": 238.45,
+                  "high": 238.45,
+                  "low": 238.45,
+                  "close": 238.45,
+                  "vol": 10
                 }
               ],
               "notifyAnswered": false,
@@ -365,7 +465,9 @@ const optionsTypeForm = {
           {"widget": "OrderStatusWidget"},
           {
             "title": "Next",
-            "action": "moveToNextStep",
+            "action": "showSummaryBottomSheet",
+            "prompt":
+                "# **Summary**\n To take an options trade:\n - Buy a **call option** when there’s a **positive trendline** and the stock is at **support**.\n - Consider buying when a **bullish trend** is in place and a **breakout** is visible.\n - Look for a **positive trendline** with a **minor correction** at support, signaling a good entry point.",
             "widget": "NextButtonWidget"
           }
         ],

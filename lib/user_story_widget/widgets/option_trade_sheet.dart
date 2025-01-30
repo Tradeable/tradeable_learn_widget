@@ -26,7 +26,7 @@ class OptionTradeSheet extends StatelessWidget {
           const SizedBox(height: 10),
           Text("BANKNIFTY2500123CE", style: textStyles.mediumBold),
           const SizedBox(height: 20),
-          _buildRow("Limit Price: ", limitPrice, context),
+          _buildRow("Market Price: ", limitPrice, context),
           const SizedBox(height: 6),
           _buildRow("Quantity: ", quantity, context),
           const SizedBox(height: 6),

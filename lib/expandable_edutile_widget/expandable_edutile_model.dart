@@ -1,10 +1,12 @@
 class ExpandableEduTileModel {
   late String shortInfo;
   late List<TileData> tiles;
+  late String videoId;
 
   ExpandableEduTileModel.fromJson(dynamic data) {
     shortInfo = data["shortInfo"];
     tiles = (data["tiles"] as List).map((e) => TileData.fromJson(e)).toList();
+    videoId = data["videoId"] ?? "";
   }
 }
 

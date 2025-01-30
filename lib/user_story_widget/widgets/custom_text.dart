@@ -24,7 +24,7 @@ class AnimatedTextWidget extends StatelessWidget {
           Image.asset(
             logo,
             package: 'tradeable_learn_widget/lib',
-            height: 60,
+            height: 40,
           ),
           const SizedBox(width: 20),
           Expanded(

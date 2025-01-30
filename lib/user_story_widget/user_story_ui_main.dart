@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_response.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
+import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
@@ -21,6 +22,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_w
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/tradeable_chart.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trend_line_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_slider.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
@@ -200,6 +202,71 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
             }));
   }
 
+  void takeToCorrectOffsets(TrendLineModel model) {
+    if (model.pointLabels.isNotEmpty) {
+      for (int i = 0; i < model.pointLabels.length; i++) {
+        model.pointLabelCorrectResponse.add(UserPointLabelResponse(
+            model.pointLabels[i].tag,
+            model.pointLabels[i].start,
+            model.pointLabels[i].end,
+            Colors.green));
+
+        if (model.pointLabelResponse[i].pos >=
+                model.pointLabelCorrectResponse[i].pos - 0.5 &&
+            model.pointLabelResponse[i].pos <=
+                model.pointLabelCorrectResponse[i].pos + 0.5 &&
+            model.pointLabelResponse[i].value >=
+                model.pointLabelCorrectResponse[i].value - 10 &&
+            model.pointLabelResponse[i].value <=
+                model.pointLabelCorrectResponse[i].value + 10) {
+          setState(() {
+            model.isCorrect = true;
+          });
+        }
+      }
+    }
+    if (model.lineOffsets.isNotEmpty) {
+      for (int i = 0; i < model.lineOffsets.length; i++) {
+        List<UserLineResponse> userLineResponses = [];
+
+        userLineResponses.add(UserLineResponse(
+            i.toString(),
+            [
+              Offset(
+                  model.lineOffsets[i][0].start, model.lineOffsets[i][0].end),
+              Offset(
+                  model.lineOffsets[i][1].start, model.lineOffsets[i][1].end),
+            ],
+            const Color.fromARGB(100, 50, 100, 29)));
+
+        if (model.lineResponse[i][0].offset[0].dx >=
+                model.lineOffsets[i][0].start - 0.5 &&
+            model.lineResponse[i][0].offset[0].dx <=
+                model.lineOffsets[i][0].start + 0.5 &&
+            model.lineResponse[i][0].offset[0].dy >=
+                model.lineOffsets[i][0].end - 5 &&
+            model.lineResponse[i][0].offset[0].dy <=
+                model.lineOffsets[i][0].end + 5) {
+          if (model.lineResponse[i][0].offset[1].dy >=
+                  model.lineOffsets[i][0].start + 5 &&
+              model.lineResponse[i][0].offset[1].dy >=
+                  model.lineOffsets[i][0].start - 5) {
+            setState(() {
+              model.isCorrect = true;
+            });
+          }
+        }
+        setState(() {
+          model.lineCorrectResponse.add(userLineResponses);
+        });
+      }
+    }
+
+    Future.delayed(const Duration(seconds: 2)).then((val) {
+      moveToNextStep();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
@@ -221,10 +288,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     return AnimatedTextWidget(
                         prompt: uiData.prompt,
                         title: uiData.title,
-                        logo: uiData.imageUrl != null &&
-                                uiData.imageUrl!.isNotEmpty
-                            ? uiData.imageUrl!
-                            : "assets/market_depth/profile_guy.png");
+                        logo: "assets/axis_logo.png");
                   case "MarketDepthTable":
                     return MarketDepthTableWidget(
                       tableAlignment:
@@ -361,6 +425,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                             .firstWhere((widget) =>
                                 widget.widget == "HorizontalLineChart")
                             .chart!);
+                  case "TrendLineChart":
+                    return SizedBox(
+                        height: 400,
+                        child: TrendLineChart(model: uiData.trendLineModelV1!));
                   default:
                     return const SizedBox.shrink();
                 }
@@ -438,6 +506,34 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "moveToNextStep":
                     moveToNextStep();
                     break;
+                  case "submitTrendLineWidget":
+                    takeToCorrectOffsets(step.ui
+                        .firstWhere((a) => a.widget == "TrendLineChart")
+                        .trendLineModelV1!);
+                  case "showSummaryBottomSheet":
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Markdown(
+                                    data: step.ui.last.prompt,
+                                    shrinkWrap: true),
+                                const SizedBox(height: 10),
+                                ButtonWidget(
+                                    color: colors.primary,
+                                    btnContent: "Next",
+                                    onTap: () {
+                                      moveToNextStep();
+                                    }),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
+                          );
+                        });
                 }
               }
             },
