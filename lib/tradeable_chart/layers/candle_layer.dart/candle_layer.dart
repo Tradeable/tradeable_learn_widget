@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../chart_layer.dart';
 import 'candle.dart';
 import 'candle_setting.dart';
@@ -9,12 +8,14 @@ class CandleLayer extends ChartLayer {
   final List<Candle> candles;
   final bool areCandlesPreSelected;
   final Function(Candle)? onCandleSelect;
+  bool? shouldBlackOutCandles;
 
   CandleLayer(
       {required this.settings,
       required this.candles,
       this.onCandleSelect,
-      this.areCandlesPreSelected = false});
+      this.areCandlesPreSelected = false,
+      this.shouldBlackOutCandles = false});
 
   static draw(
       {required Canvas canvas,
@@ -32,19 +33,23 @@ class CandleLayer extends ChartLayer {
       Color candleColor;
       Color shadowColor = layer.settings.shadowColor;
       if (candle.selectedByModel) {
-        candleColor = Colors.purple;
+        candleColor = const Color(0xff278829);
       } else if (candle.isSelected) {
         if (layer.areCandlesPreSelected) {
           shadowColor = shadowColor.withOpacity(0.5);
-          candleColor = Colors.blue.withOpacity(0.5);
-        } else {
-          candleColor = Colors.blue;
-        }
-      } else {
-        if (candle.open > candle.close) {
           candleColor = Colors.red;
         } else {
-          candleColor = Colors.green;
+          candleColor = const Color(0xffF14687).withOpacity(0.5);
+        }
+      } else {
+        if (layer.areCandlesPreSelected) {
+          candleColor = Colors.grey;
+        } else {
+          if (candle.open > candle.close) {
+            candleColor = Colors.red;
+          } else {
+            candleColor = const Color(0xff278829);
+          }
         }
       }
 

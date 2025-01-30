@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/ladder_widget/dotted_border_container.dart';
 import 'package:tradeable_learn_widget/mcq_candle_question/mcq_candle_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -29,43 +28,34 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
 
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                renderQuestion(),
-                Expanded(child: renderOptionsWithScroll()),
-                // renderSubmitButton(),
-                ButtonWidget(
-                    color: (model.userResponse ?? "").isNotEmpty
-                        ? colors.primary
-                        : colors.secondary,
-                    btnContent: "Submit",
-                    onTap: () {
-                      model.state == MCQCandleQuestionState.submitResponse
-                          ? submitResponse()
-                          : () {};
-                    })
-              ],
-            ),
-          );
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            renderQuestion(),
+            Expanded(child: renderOptionsWithScroll()),
+            ButtonWidget(
+                color: (model.userResponse ?? "").isNotEmpty
+                    ? colors.primary
+                    : colors.secondary,
+                btnContent: "Submit",
+                onTap: () {
+                  model.state == MCQCandleQuestionState.submitResponse
+                      ? submitResponse()
+                      : () {};
+                })
+          ],
+        );
+      },
     );
   }
 
   Widget renderQuestion() {
+    final textStyles = Theme.of(context).customTextStyles;
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Text(
-        model.question,
-        style: const TextStyle(
-            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(model.question, style: textStyles.smallNormal),
     );
   }
 
@@ -148,9 +138,12 @@ class QuizQuestionOption extends StatelessWidget {
         width: 150,
         height: 150,
         child: selectedOption != option
-            ? DottedBorderWidget(
-                backgroundColor: Colors.transparent,
-                borderColor: colors.borderColorPrimary,
+            ? Container(
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: colors.cardColorSecondary),
+                ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(option, fit: BoxFit.fill),

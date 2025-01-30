@@ -12,18 +12,29 @@ import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
+import 'package:example/data_model/horizontal_line_model_v1.dart';
 import 'package:example/data_model/ladder_data_model.dart';
+import 'package:example/data_model/market_depth_1.dart';
+import 'package:example/data_model/market_depth_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
+import 'package:example/data_model/options_typeform.dart';
+import 'package:example/data_model/stock_high_low_user_story_model.dart';
+import 'package:example/data_model/supply_demand_educorner_model.dart';
+import 'package:example/data_model/ticket_user_story.dart';
 import 'package:example/data_model/trend_line_model.dart';
+import 'package:example/data_model/trend_line_user_story.dart';
 import 'package:example/data_model/video_educorner_model.dart';
+import 'package:example/data_model/volume_user_story.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/horizontal_line_v2/horizontal_line_question_v2.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -176,6 +187,82 @@ class MyHomePage extends StatelessWidget {
                             model: TrendLineModel.fromJson(trendLineModel),
                             onNextClick: () => {}),
                       )),
+                  NavigationButton(
+                      text: "Supply Demand Educorner",
+                      destination: ScaffoldWithAppBar(
+                        title: "Supply Demand Educorner",
+                        body: DemandSuplyEduCornerMain(
+                            model: DemandSupplyEduCornerModel.fromJson(
+                                supplyDemandModel),
+                            onNextClick: () {}),
+                      )),
+                  NavigationButton(
+                      text: "Market Depth",
+                      destination: ScaffoldWithAppBar(
+                          title: "Market Depth",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(marketDepthModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Horizontal Line V1",
+                      destination: ScaffoldWithAppBar(
+                          title: "Horizontal Line V1",
+                          body: HorizontalLineQuestionV1(
+                              model: HorizontalLineModelV1.fromJson(
+                                  horizontalLineModelV1),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Stock High Low user story",
+                      destination: ScaffoldWithAppBar(
+                          title: "Stock High Low user story",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  stockHighLowUserStoryModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Volume User story",
+                      destination: ScaffoldWithAppBar(
+                          title: "Volume User story",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(volumeUserStory),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Horizontal Line V2",
+                      destination: ScaffoldWithAppBar(
+                          title: "Horizontal Line V2",
+                          body: HorizontalLineQuestionV2(
+                              model: HorizontalLineModelV1.fromJson(
+                                  horizontalLineModelV1),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Ticket User Story",
+                      destination: ScaffoldWithAppBar(
+                          title: "Ticket User Story",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(ticketUserStory),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Market Depth",
+                      destination: ScaffoldWithAppBar(
+                          title: "Market Depth 2",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(marketDepth1),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Option Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Option Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(optionsTypeForm),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Trendline typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Trendline typeformm",
+                          body: UserStoryUIMain(
+                              model:
+                                  UserStoryModel.fromJson(trendLineUserStory),
+                              onNextClick: () {}))),
                 ],
               ),
             ),
@@ -244,8 +331,9 @@ class AtmDropdownWidgetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: ATMWidget(
+    return ScaffoldWithAppBar(
+      title: "Problem",
+      body: ATMWidget(
         model: ATMWidgetModel.fromJson(atmItmDropdownModel),
         onNextClick: () {},
       ),

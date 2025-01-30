@@ -12,7 +12,7 @@ class ContentWidget extends StatelessWidget {
     final textStyles = Theme.of(context).customTextStyles;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
       child: MarkdownBody(
         data: content,
         styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(

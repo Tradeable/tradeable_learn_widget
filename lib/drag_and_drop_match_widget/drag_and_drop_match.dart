@@ -144,7 +144,9 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
               color: answeredAllCorrectly() ? colors.primary : colors.secondary,
               btnContent: "Next",
               onTap: () {
-                widget.onNextClick();
+                if (answeredAllCorrectly()) {
+                  widget.onNextClick();
+                }
               }),
         ),
         const SizedBox(height: 10),
@@ -225,7 +227,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
         return e.capturedOption == null
             ? Container(
                 decoration: BoxDecoration(
-                    color: Colors.transparent,
+                    color: Colors.white,
                     border: Border.all(color: colors.secondary),
                     borderRadius: BorderRadius.circular(12)))
             : buildDraggableOption(e.capturedOption!);

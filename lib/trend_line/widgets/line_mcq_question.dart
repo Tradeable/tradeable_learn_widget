@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
-import 'package:tradeable_learn_widget/trend_line/widgets/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LineMCQQuestionWidget extends StatefulWidget {
@@ -31,11 +30,9 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        QuestionWidget(question: widget.question),
-        buildOptions(correctResponse: widget.correctResponse),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: buildOptions(correctResponse: widget.correctResponse),
     );
   }
 
@@ -96,17 +93,18 @@ class QuizQuestionOption extends StatelessWidget {
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: selectedOption != ""
-                ? selectedOption == option
-                    ? correctResponse == option
-                        ? colors.bullishColor
-                        : colors.bearishColor
-                    : correctResponse == option
-                        ? colors.bullishColor
-                        : Colors.transparent
-                : Colors.transparent,
-          ),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: selectedOption != ""
+                    ? selectedOption == option
+                        ? correctResponse == option
+                            ? colors.bullishColor
+                            : colors.bearishColor
+                        : correctResponse == option
+                            ? colors.bullishColor
+                            : colors.cardColorPrimary
+                    : colors.cardColorSecondary,
+              )),
           child: Center(
             child: AutoSizeText(option,
                 group: group,

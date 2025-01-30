@@ -7,8 +7,10 @@ import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
 import 'package:tradeable_learn_widget/trend_line/widgets/content_widget.dart';
 import 'package:tradeable_learn_widget/trend_line/widgets/line_graph_widget.dart';
 import 'package:tradeable_learn_widget/trend_line/widgets/line_mcq_question.dart';
-import 'package:tradeable_learn_widget/trend_line/widgets/line_question.dart';
+import 'package:tradeable_learn_widget/trend_line/widgets/question_widget.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class TrendLineWidget extends StatefulWidget {
   final TrendLineModel model;
@@ -102,12 +104,15 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   void goToNextQuestion() {
     setState(() {
+      print(currentQuestionIndex);
+      print(questions.length);
       if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         if (questions[currentQuestionIndex].type == "content") {
           widget.onNextClick();
         }
       } else {
+        print("nexgt");
         widget.onNextClick();
       }
       model.userResponse = "";
@@ -116,17 +121,16 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).customColors;
+
     Question currentQuestion = questions[currentQuestionIndex];
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            model.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          const SizedBox(height: 10),
+          QuestionWidget(question: questions[currentQuestionIndex].question),
           LineGraphWidget(
               model: model,
               constraints: constraints,
@@ -140,19 +144,19 @@ class _TrendLineState extends State<TrendLineWidget> {
                           model.candles.first.time)))
               : Container(),
           const SizedBox(height: 10),
+          const Spacer(),
           if (currentQuestion.type == "line")
-            Column(
-              children: [
-                LineQuestion(
-                  question: questions[currentQuestionIndex].question,
-                  onSubmit: () {
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+              child: ButtonWidget(
+                  color: colors.primary,
+                  btnContent: 'Submit',
+                  onTap: () {
                     takeToCorrectOffsets();
                     Future.delayed(const Duration(seconds: 2)).then((value) {
                       goToNextQuestion();
                     });
-                  },
-                ),
-              ],
+                  }),
             ),
           if (currentQuestion.type == "mcq")
             LineMCQQuestionWidget(

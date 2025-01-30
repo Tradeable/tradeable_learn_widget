@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edutile_model.dart';
+import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -29,37 +30,84 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
     final colors = Theme.of(context).customColors;
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Stack(
-        alignment: AlignmentDirectional.bottomEnd,
+      child: Column(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                model.shortInfo,
-                style: textStyles.smallNormal,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.shortInfo,
+                    style: textStyles.smallNormal,
+                  ),
+                  const SizedBox(height: 16),
+                  ListView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: model.tiles.map((tile) {
+                      return ExpandableEduTile(
+                        title: tile.title,
+                        subtitle: tile.subtitle,
+                        content: tile.content,
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 10),
+                  model.videoId.isNotEmpty
+                      ? Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                              height: 50,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: colors.primary),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Material(
+                                                child: VideoEduCorner(
+                                                    model: VideoEduCornerModel
+                                                        .fromJson({
+                                                      "video_id": model.videoId
+                                                    }),
+                                                    onNextClick: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    }),
+                                              )));
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    const Icon(Icons.play_arrow,
+                                        color: Colors.white),
+                                    Text('Watch Video',
+                                        style: textStyles.smallNormal
+                                            .copyWith(color: Colors.white)),
+                                  ],
+                                ),
+                              )),
+                        )
+                      : Container(),
+                  const SizedBox(height: 60),
+                ],
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  children: model.tiles.map((tile) {
-                    return ExpandableEduTile(
-                      title: tile.title,
-                      subtitle: tile.subtitle,
-                      content: tile.content,
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 60),
-            ],
+            ),
           ),
           SizedBox(
             height: 50,
             child: ButtonWidget(
-                color: colors.primary, btnContent: "Next", onTap: () {
-                  widget.onNextClick();
-            }),
+              color: colors.primary,
+              btnContent: "Next",
+              onTap: () {
+                widget.onNextClick();
+              },
+            ),
           ),
         ],
       ),
@@ -84,7 +132,7 @@ class ExpandableEduTile extends StatefulWidget {
 }
 
 class _ExpandableEduTileState extends State<ExpandableEduTile> {
-  bool _isExpanded = true;
+  bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {

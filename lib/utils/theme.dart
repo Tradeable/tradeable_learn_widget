@@ -60,6 +60,10 @@ class CustomColors {
   final Color sipColor;
   final Color lumpSumColor;
   final Color cardBasicBackground;
+  final Color buttonColor;
+  final Color buttonBorderColor;
+  final Color sliderColor;
+  final Color textColorSecondary;
 
   CustomColors(
       {required this.primary,
@@ -75,7 +79,11 @@ class CustomColors {
       required this.axisColor,
       required this.sipColor,
       required this.lumpSumColor,
-      required this.cardBasicBackground});
+      required this.cardBasicBackground,
+      required this.buttonColor,
+      required this.buttonBorderColor,
+      required this.sliderColor,
+      required this.textColorSecondary});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -85,17 +93,21 @@ extension ThemeDataExtension on ThemeData {
           primary: const Color(0xff97144D),
           secondary: const Color(0xffB4B4B4),
           background: Colors.transparent,
-          borderColorPrimary: const Color(0xffED1164),
+          borderColorPrimary: const Color(0xffF14687),
           borderColorSecondary: const Color(0xffB4B4B4),
           cardColorPrimary: const Color(0xffF9EBEF),
           cardColorSecondary: const Color(0xffe2e2e2),
-          bullishColor: Colors.green,
+          bullishColor: const Color(0xff278829),
           bearishColor: Colors.red,
           selectedItemColor: const Color(0xffF9B0CC),
           axisColor: Colors.black,
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,
-          cardBasicBackground: Colors.white);
+          cardBasicBackground: Colors.white,
+          buttonColor: const Color(0xffF9F9F9),
+          buttonBorderColor: const Color(0xffE2E2E2),
+          sliderColor: const Color(0xffED1164),
+          textColorSecondary: const Color(0xff6E6E6E));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -112,7 +124,11 @@ extension ThemeDataExtension on ThemeData {
           axisColor: Colors.white,
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,
-          cardBasicBackground: Colors.black);
+          cardBasicBackground: Colors.black,
+          buttonColor: Colors.white,
+          buttonBorderColor: Colors.white38,
+          sliderColor: const Color(0xffED1164),
+          textColorSecondary: Colors.white);
     }
   }
 
