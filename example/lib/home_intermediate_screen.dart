@@ -40,28 +40,28 @@ class HomeIntermediateScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => OptionStrategyContainer(
-                            spotPrice: 24662,
+                            spotPrice: 23245,
                             spotPriceDayDelta: 17.70,
                             spotPriceDayDeltaPer: 0.07,
                             onExecute: () {},
                             legs: [
                               OptionLeg(
                                 symbol: "NIFTY",
-                                strike: 24750,
+                                strike: 23250,
                                 type: PositionType.buy,
                                 optionType: OptionType.call,
-                                expiry: DateTime.parse("2024-12-19 15:30:00"),
+                                expiry: DateTime.parse("2025-02-06 15:30:00"),
                                 quantity: 25,
-                                premium: 121.8,
+                                premium: 362,
                               ),
                               OptionLeg(
                                 symbol: "NIFTY",
-                                strike: 24900,
-                                type: PositionType.sell,
-                                optionType: OptionType.call,
-                                expiry: DateTime.parse("2024-12-19 15:30:00"),
+                                strike: 23250,
+                                type: PositionType.buy,
+                                optionType: OptionType.put,
+                                expiry: DateTime.parse("2025-02-06 15:30:00"),
                                 quantity: 25,
-                                premium: 73.35,
+                                premium: 310,
                               )
                             ],
                           )));
