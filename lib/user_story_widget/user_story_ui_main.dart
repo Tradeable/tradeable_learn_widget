@@ -527,6 +527,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                     color: colors.primary,
                                     btnContent: "Next",
                                     onTap: () {
+                                      Navigator.of(context).pop();
                                       widget.onNextClick();
                                     }),
                                 const SizedBox(height: 10),
