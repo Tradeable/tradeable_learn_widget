@@ -29,6 +29,8 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_sl
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
+    as ui;
 
 class UserStoryUIMain extends StatefulWidget {
   final UserStoryModel model;
@@ -90,7 +92,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     final currentIndex = widget.model.userStory.steps
         .indexWhere((step) => step.stepId == currentStepId);
     if (currentIndex >= 0 &&
-        currentIndex < widget.model.userStory.steps.length - 1) {
+        currentIndex < widget.model.userStory.steps.length) {
       setState(() {
         currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
       });
@@ -343,7 +345,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         prompt: uiData.prompt,
                         textData: uiData.volumePriceTextData ?? [],
                         candles: uiData.candles ?? [],
-                        onSliderChanged: (sliderVal) {});
+                        onSliderChanged: (sliderVal) {
+                          addCandles(step, sliderVal, uiData);
+                        });
                   case "TradeInfo":
                     return TradeInfo(
                         title: uiData.title,
@@ -438,7 +442,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                           });
                         });
                   case "CustomSlider":
-                    return CustomSliderWidget(sliderData: uiData.sliderDataModel!);
+                    return CustomSliderWidget(
+                        sliderData: uiData.sliderDataModel!);
                   default:
                     return const SizedBox.shrink();
                 }
@@ -556,5 +561,67 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
   List<RowData> getFirstTableRowData(List<TableData> tableDataList) {
     return tableDataList.isNotEmpty ? tableDataList.first.data : [];
+  }
+
+  void addCandles(StepData step, int sliderVal, UiData uiData) {
+    setState(() {
+      setState(() {
+        List<ui.Candle> uiCandles = step.ui
+            .where((widget) => widget.widget == "HorizontalLineChart")
+            .first
+            .chart!
+            .uiCandles;
+
+        uiCandles.removeWhere((candle) {
+          int? id = candle.candleId;
+          return id >= uiData.candles!.length;
+        });
+
+        if (sliderVal == 2) {
+          double basePrice = 750;
+          for (int i = 1; i <= 7; i++) {
+            bool isGreen = i % 2 == 1;
+            double open = basePrice + (i * 5);
+            double close = isGreen ? open + (i * 5) : open - 5;
+            double high = close + 5;
+            double low = open - (i * 5);
+
+            uiCandles.add(ui.Candle(
+              candleId: (uiData.candles!.length - 1 + i),
+              open: open,
+              high: high,
+              low: low,
+              close: close,
+              dateTime: DateTime.now().add(Duration(minutes: i)),
+              volume: 80 + (i * 10),
+            ));
+          }
+        } else if (sliderVal == 0) {
+          double basePrice = 775;
+          for (int i = 1; i <= 7; i++) {
+            bool isRed = i % 2 == 1;
+            double open = basePrice - (i * 5);
+            double close = isRed ? open - (5 * i) : open + (i * 5);
+            double high = open + (2 * i);
+            double low = close;
+
+            uiCandles.add(ui.Candle(
+              candleId: (uiData.candles!.length - 1 + i),
+              open: open,
+              high: high,
+              low: low,
+              close: close,
+              dateTime: DateTime.now().add(Duration(minutes: i)),
+              volume: 80 + (i * 10), // Increased volume
+            ));
+          }
+        }
+        step.ui
+            .where((widget) => widget.widget == "HorizontalLineChart")
+            .first
+            .chart!
+            .uiCandles = uiCandles;
+      });
+    });
   }
 }

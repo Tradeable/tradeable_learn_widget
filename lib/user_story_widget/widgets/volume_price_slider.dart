@@ -24,9 +24,8 @@ class VolumePriceSlider extends StatefulWidget {
 }
 
 class _VolumePriceSliderState extends State<VolumePriceSlider> {
-  int _sliderValue = 0;
+  int _sliderValue = 1;
   late List<Candle> candleData;
-  late String modifiedPrompt;
 
   @override
   void initState() {
@@ -43,7 +42,6 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
               candle.vol,
             ))
         .toList();
-    modifiedPrompt = widget.prompt;
     manipulateCandles(0);
   }
 
@@ -67,21 +65,6 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
                         : greenMultipliers[sliderValue]),
               ))
           .toList();
-
-      // Modify the prompt dynamically based on the slider value
-      final sliderValueForPrompt = sliderValue;
-
-      // Here we modify the prompt as per your slider value
-      String newPrompt;
-      if (sliderValueForPrompt == 0) {
-        newPrompt = widget.prompt + " - Start of analysis";
-      } else if (sliderValueForPrompt == 1) {
-        newPrompt = widget.prompt + " - Moderate price action";
-      } else {
-        newPrompt = widget.prompt + " - Significant change in volume";
-      }
-
-      modifiedPrompt = newPrompt;
     });
   }
 
@@ -112,39 +95,39 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
           Row(
             children: [
               Icon(Icons.keyboard_arrow_up,
-                  color: currentText.price == "Rising"
+                  color: currentText.price.toLowerCase().contains("rising")
                       ? colors.borderColorPrimary
-                      : colors.axisColor.withOpacity(0.6),
+                      : colors.textColorSecondary,
                   size: 36),
               const SizedBox(width: 10),
               Image.asset("assets/rupee_icon.png",
                   package: 'tradeable_learn_widget/lib', height: 35),
               const SizedBox(width: 10),
               Icon(Icons.keyboard_arrow_down,
-                  color: currentText.price == "Falling"
+                  color: currentText.price.toLowerCase().contains("falling")
                       ? colors.borderColorPrimary
-                      : colors.axisColor.withOpacity(0.6),
+                      : colors.textColorSecondary,
                   size: 36),
               const Spacer(),
               Icon(Icons.arrow_upward,
-                  color: currentText.price == "Rising"
+                  color: currentText.price.toLowerCase().contains("rising")
                       ? colors.borderColorPrimary
-                      : colors.axisColor.withOpacity(0.6),
+                      : colors.textColorSecondary,
                   size: 36),
               const SizedBox(width: 10),
               Image.asset("assets/user_group.png",
                   package: 'tradeable_learn_widget/lib', height: 35),
               const SizedBox(width: 10),
               Icon(Icons.arrow_downward,
-                  color: currentText.price == "Falling"
+                  color: currentText.price.toLowerCase().contains("falling")
                       ? colors.borderColorPrimary
-                      : colors.axisColor.withOpacity(0.6),
+                      : colors.textColorSecondary,
                   size: 36),
             ],
           ),
           const SizedBox(height: 20),
           Text(widget.title, style: textStyles.mediumNormal),
-          Text(modifiedPrompt,
+          Text(widget.prompt,
               style: textStyles.smallNormal
                   .copyWith(color: colors.axisColor.withOpacity(0.7))),
           const SizedBox(height: 10),
@@ -156,7 +139,7 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
             label: currentText.volume,
             thumbColor: colors.axisColor,
             activeColor: colors.axisColor,
-            inactiveColor: colors.axisColor.withOpacity(0.3),
+            inactiveColor: colors.buttonBorderColor,
             onChanged: (value) {
               setState(() {
                 _sliderValue = value.toInt();
@@ -165,6 +148,11 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
               });
             },
           ),
+          const SizedBox(height: 10),
+          Text("Interpretation", style: textStyles.mediumNormal),
+          Text(currentText.interpretation,
+              style: textStyles.smallNormal
+                  .copyWith(color: colors.axisColor.withOpacity(0.7))),
         ],
       ),
     );
