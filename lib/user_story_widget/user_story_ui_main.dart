@@ -2,16 +2,17 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_response.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/contracts_info_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_mcq_widget.dart';
-import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_slider_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.dart';
@@ -415,7 +416,6 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         limitPrice:
                             selectedOptionEntry!.premium.toStringAsFixed(2),
                         quantity: quantity.toString());
-
                   case "OrderStatusWidget":
                     return OrderStatusWidget(
                         limitPrice:
@@ -429,6 +429,16 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     return SizedBox(
                         height: 400,
                         child: TrendLineChart(model: uiData.trendLineModelV1!));
+                  case "ContractsInfo":
+                    return ContractsInfoWidget(
+                        model: uiData.contractDetailsModel!,
+                        moveToNextStep: () {
+                          setState(() {
+                            step.isActionNeeded = false;
+                          });
+                        });
+                  case "CustomSlider":
+                    return CustomSliderWidget(sliderData: uiData.sliderDataModel!);
                   default:
                     return const SizedBox.shrink();
                 }

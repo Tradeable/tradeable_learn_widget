@@ -102,7 +102,7 @@ export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_edu
 export 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_model.dart';
 
 export 'package:tradeable_learn_widget/user_story_widget/user_story_ui_main.dart';
-export 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
+export 'package:tradeable_learn_widget/user_story_widget/models/user_story_data_model.dart';
 
 export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_model_v1.dart';
 export 'package:tradeable_learn_widget/horizontal_line_v1/horizontal_line_question_v1.dart';

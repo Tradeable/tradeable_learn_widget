@@ -64,6 +64,7 @@ class CustomColors {
   final Color buttonBorderColor;
   final Color sliderColor;
   final Color textColorSecondary;
+  final Color disabledContainer;
 
   CustomColors(
       {required this.primary,
@@ -83,7 +84,8 @@ class CustomColors {
       required this.buttonColor,
       required this.buttonBorderColor,
       required this.sliderColor,
-      required this.textColorSecondary});
+      required this.textColorSecondary,
+      required this.disabledContainer});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -107,7 +109,8 @@ extension ThemeDataExtension on ThemeData {
           buttonColor: const Color(0xffF9F9F9),
           buttonBorderColor: const Color(0xffE2E2E2),
           sliderColor: const Color(0xffED1164),
-          textColorSecondary: const Color(0xff6E6E6E));
+          textColorSecondary: const Color(0xff6E6E6E),
+          disabledContainer: const Color(0xffB3BCB9));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -128,7 +131,8 @@ extension ThemeDataExtension on ThemeData {
           buttonColor: Colors.white,
           buttonBorderColor: Colors.white38,
           sliderColor: const Color(0xffED1164),
-          textColorSecondary: Colors.white);
+          textColorSecondary: Colors.white,
+          disabledContainer: const Color(0xffB3BCB9));
     }
   }
 

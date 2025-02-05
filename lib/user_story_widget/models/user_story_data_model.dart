@@ -1,6 +1,11 @@
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/contracts_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/custom_buttons_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/custom_slider_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/models/trend_line_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/ticket_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/volume_price_text_data_model.dart';
 import 'package:tradeable_learn_widget/utils/explanation_model.dart';
 
 class UserStoryDataModel {
@@ -98,6 +103,8 @@ class UiData {
   String? imageUrl;
   OptionData? optionsData;
   TrendLineModel? trendLineModelV1;
+  ContractDetailsModel? contractDetailsModel;
+  SliderData? sliderDataModel;
 
   UiData(
       {required this.widget,
@@ -119,7 +126,9 @@ class UiData {
       this.ticketCouponModel,
       this.imageUrl,
       this.optionsData,
-      this.trendLineModelV1});
+      this.trendLineModelV1,
+      this.contractDetailsModel,
+      this.sliderDataModel});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
@@ -167,134 +176,15 @@ class UiData {
       optionsData: json["optionData"] != null
           ? OptionData.fromJson(json["optionData"])
           : null,
-      trendLineModelV1:
-          json["trendlineChart"] != null ? TrendLineModel.fromJson(json["trendlineChart"]) : null,
+      trendLineModelV1: json["trendlineChart"] != null
+          ? TrendLineModel.fromJson(json["trendlineChart"])
+          : null,
+      contractDetailsModel: json["contractsInfo"] != null
+          ? ContractDetailsModel.fromJson(json["contractsInfo"])
+          : null,
+      sliderDataModel: json["sliderData"] != null
+          ? SliderData.fromJson(json["sliderData"])
+          : null,
     );
-  }
-}
-
-class TableModel {
-  final List<TableData>? tableData;
-  final String? tableAlignment;
-  final bool? isQuantitySquared;
-
-  TableModel({this.tableData, this.tableAlignment, this.isQuantitySquared});
-
-  factory TableModel.fromJson(Map<String, dynamic> json) {
-    return TableModel(
-        tableData: json['data'] != null
-            ? (json['data'] as List<dynamic>)
-                .map((tableItem) => TableData.fromJson(tableItem))
-                .toList()
-            : null,
-        tableAlignment: json["tableAlignment"] ?? "",
-        isQuantitySquared: json["isQuantitySquared"] ?? false);
-  }
-}
-
-class TableData {
-  String title;
-  List<String> tableColors;
-  List<RowData> data;
-  String totalValue;
-
-  TableData(
-      {required this.title,
-      required this.tableColors,
-      required this.data,
-      required this.totalValue});
-
-  factory TableData.fromJson(Map<String, dynamic> json) {
-    return TableData(
-        title: json['title'] ?? '',
-        tableColors: (json['tableColors'] as List<dynamic>)
-            .map((color) => color.toString())
-            .toList(),
-        data: (json['data'] as List<dynamic>)
-            .map((rowItem) => RowData.fromJson(rowItem))
-            .toList(),
-        totalValue: json['totalValue']);
-  }
-}
-
-class RowData {
-  String price;
-  String orders;
-  String quantity;
-
-  RowData({required this.price, required this.orders, required this.quantity});
-
-  factory RowData.fromJson(Map<String, dynamic> json) {
-    return RowData(
-      price: json['price'] ?? '',
-      orders: json['orders'] ?? '',
-      quantity: json['quantity'] ?? '',
-    );
-  }
-}
-
-class ButtonData {
-  String title;
-  String action;
-
-  ButtonData({required this.title, required this.action});
-
-  factory ButtonData.fromJson(Map<String, dynamic> json) {
-    return ButtonData(
-      title: json['title'] ?? '',
-      action: json['action'] ?? '',
-    );
-  }
-}
-
-class VolumePriceTextData {
-  final String volume;
-  final String price;
-  final String interpretation;
-
-  VolumePriceTextData({
-    required this.volume,
-    required this.price,
-    required this.interpretation,
-  });
-
-  factory VolumePriceTextData.fromJson(Map<String, dynamic> json) {
-    return VolumePriceTextData(
-      volume: json['volume'],
-      price: json['price'],
-      interpretation: json['interpretation'],
-    );
-  }
-}
-
-class TicketCouponModel {
-  final String title;
-  final List<TicketInfoModel> infoModel;
-  final String color;
-
-  TicketCouponModel(
-      {required this.title, required this.infoModel, required this.color});
-
-  factory TicketCouponModel.fromJson(Map<String, dynamic> json) {
-    return TicketCouponModel(
-      title: json["title"],
-      infoModel: (json['infoModel'] as List<dynamic>)
-          .map((rowItem) => TicketInfoModel.fromJson(rowItem))
-          .toList(),
-      color: json["color"] ?? "",
-    );
-  }
-}
-
-class TicketInfoModel {
-  final String title;
-  String? amount;
-  String? subtext;
-
-  TicketInfoModel({required this.title, this.amount, this.subtext});
-
-  factory TicketInfoModel.fromJson(Map<String, dynamic> json) {
-    return TicketInfoModel(
-        title: json["title"], amount: json["amount"], subtext: json["subtext"]);
   }
 }

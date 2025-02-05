@@ -1,8 +1,14 @@
 const multipleSelectMCQ = {
-  "level": "u1_c1_l6",
-  "options": ["220 & 180", "200 & 20", "210 & 110", "240 & 160"],
+  "level": "expiry",
+  "options": [
+    "Near expiry, markets can become more volatile due to a surge in trading activity",
+    "Expiry trading often comes with time pressure to close or roll over positions, which can lead to impulsive decisions or poor risk management",
+    "The value of options erodes due to time decay. Traders need to be right not just about the direction of the market, but also the timing, making it harder to profit"
+  ],
   "imageUrl": "",
-  "question":
-      "If a stock is trading at Rs.200 with 10% Circuit what would be the upper and low circuit.",
-  "correctResponse": ["220 & 180", "210 & 110"]
+  "question": "Why is expiry trading risky?\nSelect all the correct options.",
+  "correctResponse": [
+    "Near expiry, markets can become more volatile due to a surge in trading activity",
+    "Expiry trading often comes with time pressure to close or roll over positions, which can lead to impulsive decisions or poor risk management",
+  ]
 };

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class OptionData {
   final Options options;
 
@@ -13,10 +11,6 @@ class OptionData {
     return OptionData(
       options: Options.fromJson(json['options']),
     );
-  }
-
-  static OptionData parse(String jsonString) {
-    return OptionData.fromJson(json.decode(jsonString));
   }
 }
 

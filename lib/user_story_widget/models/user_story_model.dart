@@ -1,4 +1,4 @@
-import 'user_story_data_model.dart';
+import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 enum CurrentStepState { mcqQuestion, takingTrade, executingTrade, completed }
 

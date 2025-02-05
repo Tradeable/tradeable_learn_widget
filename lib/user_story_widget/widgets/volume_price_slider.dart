@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/volume_price_text_data_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_chart.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 

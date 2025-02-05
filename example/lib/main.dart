@@ -7,9 +7,12 @@ import 'package:example/data_model/candle_formation_v2.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/content_preview_model.dart';
+import 'package:example/data_model/contract_price_slider_model.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
+import 'package:example/data_model/expiry_derivate_monthly.dart';
+import 'package:example/data_model/expiry_derivative_weekly.dart';
 import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/horizontal_line_model_v1.dart';
@@ -34,7 +37,7 @@ import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/horizontal_line_v2/horizontal_line_question_v2.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
-import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -262,6 +265,30 @@ class MyHomePage extends StatelessWidget {
                           body: UserStoryUIMain(
                               model:
                                   UserStoryModel.fromJson(trendLineUserStory),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Expiry Derivatives (Weekly)",
+                      destination: ScaffoldWithAppBar(
+                          title: "Expiry Derivatives",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  expiryDerivativeWeekly),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Expiry Derivatives (Monthly)",
+                      destination: ScaffoldWithAppBar(
+                          title: "Expiry Derivatives",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  expiryDerivativeMonthly),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Contract Derivatives",
+                      destination: ScaffoldWithAppBar(
+                          title: "Contract Derivatives",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  contractPriceSliderModel),
                               onNextClick: () {}))),
                 ],
               ),
