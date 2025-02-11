@@ -67,7 +67,9 @@ class _ContractDetailsView extends State<ContractDetailsView> {
     if (widget.detail != oldWidget.detail) {
       _detail = widget.detail;
       if (_detail.shouldAnimate ?? false) {
-        if (widget.detail.shouldAnimate != oldWidget.detail.shouldAnimate) {
+        if (widget.detail.shouldAnimate != oldWidget.detail.shouldAnimate ||
+            widget.detail.isPartiallyAnimated !=
+                oldWidget.detail.isPartiallyAnimated) {
           startAnimation();
         }
       } else {
@@ -100,22 +102,52 @@ class _ContractDetailsView extends State<ContractDetailsView> {
     });
 
     int totalDays = _endDate.difference(_startDate).inDays;
+    int animationSpeedFactor = widget.tableIndex == 0 ? 1 : 2;
     int loopLimit = (_detail.isPartiallyAnimated ?? false)
         ? (totalDays / 2).ceil()
         : totalDays;
+    int adjustedLoopLimit =
+        widget.tableIndex == 1 ? (loopLimit / 2).ceil() : loopLimit;
 
     int counter = 0;
     do {
       await Future.delayed(Duration(
-          milliseconds:
-              _detail.timeFrame.toLowerCase().contains("month") ? 50 : 500));
+          milliseconds: _detail.timeFrame.toLowerCase().contains("month")
+              ? 100 * animationSpeedFactor
+              : 200 * animationSpeedFactor));
+
       setState(() {
         _currentDate = _currentDate!.add(const Duration(days: 1));
       });
-      counter++;
-    } while (counter < loopLimit);
 
-    if (!(_detail.isPartiallyAnimated ?? false) && _currentDate == _endDate) {
+      counter++;
+    } while (counter < adjustedLoopLimit);
+
+    if (widget.tableIndex == 0) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (widget.tableIndex == 1) {
+          startAnimation();
+        }
+      });
+    }
+
+    if (widget.tableIndex == 1 && _detail.isPartiallyAnimated == true) {
+      counter = adjustedLoopLimit;
+      do {
+        await Future.delayed(Duration(
+            milliseconds: _detail.timeFrame.toLowerCase().contains("month")
+                ? 100 * animationSpeedFactor
+                : 200 * animationSpeedFactor));
+
+        setState(() {
+          _currentDate = _currentDate!.add(const Duration(days: 1));
+        });
+
+        counter++;
+      } while (counter < totalDays);
+    }
+
+    if (_currentDate == _endDate) {
       widget.moveToNextStep();
     }
   }

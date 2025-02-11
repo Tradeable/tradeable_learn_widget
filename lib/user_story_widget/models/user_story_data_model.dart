@@ -2,6 +2,7 @@ import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/contracts_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/custom_buttons_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/custom_slider_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/greeks_explainer_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/ticket_model.dart';
@@ -105,6 +106,7 @@ class UiData {
   TrendLineModel? trendLineModelV1;
   ContractDetailsModel? contractDetailsModel;
   SliderData? sliderDataModel;
+  GreeksExplainerModel? greeksExplainerModel;
 
   UiData(
       {required this.widget,
@@ -128,63 +130,68 @@ class UiData {
       this.optionsData,
       this.trendLineModelV1,
       this.contractDetailsModel,
-      this.sliderDataModel});
+      this.sliderDataModel,
+      this.greeksExplainerModel});
 
   factory UiData.fromJson(Map<String, dynamic> json) {
     return UiData(
-      widget: json['widget'] ?? '',
-      title: json['title'] ?? '',
-      prompt: json['prompt'] ?? '',
-      tableModel: json["tableData"] != null
-          ? TableModel.fromJson(json["tableData"])
-          : null,
-      buttonsFormat: json['buttonsFormat'],
-      buttonsData: json['buttonsData'] != null
-          ? (json['buttonsData'] as List<dynamic>)
-              .map((buttonItem) => ButtonData.fromJson(buttonItem))
-              .toList()
-          : null,
-      format: json['format'],
-      options:
-          json['options'] != null ? List<String>.from(json['options']) : null,
-      correctResponse: json['correctResponse'] != null
-          ? List<String>.from(json['correctResponse'])
-          : null,
-      action: json['action'] ?? '',
-      chart: json["chart"] != null
-          ? HorizontalLineModel.fromJson(json["chart"])
-          : null,
-      candles: json["candles"] != null
-          ? ((json["candles"]) as List).map((x) => Candle.fromJson(x)).toList()
-          : [],
-      volumePriceTextData: json["textData"] != null
-          ? (json['textData'] as List<dynamic>)
-              .map((buttonItem) => VolumePriceTextData.fromJson(buttonItem))
-              .toList()
-          : null,
-      height: json['height'] ?? '',
-      width: json['width'] ?? '',
-      uiWidgets: json['ui'] != null
-          ? (json['ui'] as List<dynamic>)
-              .map((uiItem) => UiData.fromJson(uiItem))
-              .toList()
-          : null,
-      ticketCouponModel: json["ticketModel"] != null
-          ? TicketCouponModel.fromJson(json["ticketModel"])
-          : null,
-      imageUrl: json["imageUrl"] ?? "",
-      optionsData: json["optionData"] != null
-          ? OptionData.fromJson(json["optionData"])
-          : null,
-      trendLineModelV1: json["trendlineChart"] != null
-          ? TrendLineModel.fromJson(json["trendlineChart"])
-          : null,
-      contractDetailsModel: json["contractsInfo"] != null
-          ? ContractDetailsModel.fromJson(json["contractsInfo"])
-          : null,
-      sliderDataModel: json["sliderData"] != null
-          ? SliderData.fromJson(json["sliderData"])
-          : null,
-    );
+        widget: json['widget'] ?? '',
+        title: json['title'] ?? '',
+        prompt: json['prompt'] ?? '',
+        tableModel: json["tableData"] != null
+            ? TableModel.fromJson(json["tableData"])
+            : null,
+        buttonsFormat: json['buttonsFormat'],
+        buttonsData: json['buttonsData'] != null
+            ? (json['buttonsData'] as List<dynamic>)
+                .map((buttonItem) => ButtonData.fromJson(buttonItem))
+                .toList()
+            : null,
+        format: json['format'],
+        options:
+            json['options'] != null ? List<String>.from(json['options']) : null,
+        correctResponse: json['correctResponse'] != null
+            ? List<String>.from(json['correctResponse'])
+            : null,
+        action: json['action'] ?? '',
+        chart: json["chart"] != null
+            ? HorizontalLineModel.fromJson(json["chart"])
+            : null,
+        candles: json["candles"] != null
+            ? ((json["candles"]) as List)
+                .map((x) => Candle.fromJson(x))
+                .toList()
+            : [],
+        volumePriceTextData: json["textData"] != null
+            ? (json['textData'] as List<dynamic>)
+                .map((buttonItem) => VolumePriceTextData.fromJson(buttonItem))
+                .toList()
+            : null,
+        height: json['height'] ?? '',
+        width: json['width'] ?? '',
+        uiWidgets: json['ui'] != null
+            ? (json['ui'] as List<dynamic>)
+                .map((uiItem) => UiData.fromJson(uiItem))
+                .toList()
+            : null,
+        ticketCouponModel: json["ticketModel"] != null
+            ? TicketCouponModel.fromJson(json["ticketModel"])
+            : null,
+        imageUrl: json["imageUrl"] ?? "",
+        optionsData: json["optionData"] != null
+            ? OptionData.fromJson(json["optionData"])
+            : null,
+        trendLineModelV1: json["trendlineChart"] != null
+            ? TrendLineModel.fromJson(json["trendlineChart"])
+            : null,
+        contractDetailsModel: json["contractsInfo"] != null
+            ? ContractDetailsModel.fromJson(json["contractsInfo"])
+            : null,
+        sliderDataModel: json["sliderData"] != null
+            ? SliderData.fromJson(json["sliderData"])
+            : null,
+        greeksExplainerModel: json["greeksExplainerModel"] != null
+            ? GreeksExplainerModel.fromJson(json["greeksExplainerModel"])
+            : null);
   }
 }

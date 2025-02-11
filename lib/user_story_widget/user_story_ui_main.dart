@@ -7,12 +7,14 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/ticket_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/contracts_info_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_slider_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/greeks_explainer_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.dart';
@@ -54,6 +56,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   RowData? staticHighlightedRowData;
   OptionEntry? selectedOptionEntry;
   String? quantity;
+  UiData? selectedTicket;
 
   @override
   void initState() {
@@ -365,6 +368,11 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       ui: uiData.uiWidgets ?? [],
                       onOptionSelected: (selectedOption) {
                         setState(() {
+                          if (selectedOption.widget == "CouponWidget") {
+                            selectedTicket = selectedOption;
+                          }
+                        });
+                        setState(() {
                           selectedResponses = [selectedOption.prompt];
                           isAnsweredCorrect = Set.from(selectedResponses)
                                   .difference(
@@ -374,9 +382,23 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                   (uiData.correctResponse ?? []).length;
                         });
                       },
+                      selectedItem: selectedTicket,
                     );
                   case "CouponWidget":
-                    return TicketCouponWidget(model: uiData.ticketCouponModel!);
+                    if (selectedTicket != null) {
+                      selectedTicket?.ticketCouponModel = TicketCouponModel(
+                        title: selectedTicket!.ticketCouponModel!.title,
+                        color: selectedTicket!.ticketCouponModel!.color,
+                        infoModel: List.from(
+                            uiData.ticketCouponModel!.infoModel), // Deep copy
+                      );
+                    }
+
+                    return TicketCouponWidget(
+                      model: selectedTicket?.ticketCouponModel ??
+                          uiData.ticketCouponModel!,
+                    );
+
                   case "SizedBox":
                     return SizedBox(
                         height: double.parse(uiData.height ?? "0"),
@@ -444,6 +466,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "CustomSlider":
                     return CustomSliderWidget(
                         sliderData: uiData.sliderDataModel!);
+                  case "GreeksExplainerWidget":
+                    return GreeksExplainerWidget(
+                        model: uiData.greeksExplainerModel!);
                   default:
                     return const SizedBox.shrink();
                 }

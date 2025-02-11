@@ -14,6 +14,7 @@ import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/expiry_derivate_monthly.dart';
 import 'package:example/data_model/expiry_derivative_weekly.dart';
 import 'package:example/data_model/formula_placeholder_model.dart';
+import 'package:example/data_model/greeks_typeform.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/horizontal_line_model_v1.dart';
 import 'package:example/data_model/ladder_data_model.dart';
@@ -289,6 +290,13 @@ class MyHomePage extends StatelessWidget {
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(
                                   contractPriceSliderModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Greeks typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Greeks typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(greeksTypeform),
                               onNextClick: () {}))),
                 ],
               ),

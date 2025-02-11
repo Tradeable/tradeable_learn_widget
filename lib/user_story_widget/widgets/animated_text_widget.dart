@@ -16,6 +16,7 @@ class AnimatedTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
@@ -32,9 +33,27 @@ class AnimatedTextWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   border: Border.all(color: colors.borderColorSecondary),
                   borderRadius: BorderRadius.circular(10)),
-              child: Markdown(
-                data: prompt,
-                shrinkWrap: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  title.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 14, top: 10),
+                          child: Text(title,
+                              style: textStyles.smallNormal
+                                  .copyWith(color: colors.textColorSecondary)),
+                        )
+                      : const SizedBox(height: 10),
+                  title.isNotEmpty
+                      ? const SizedBox(height: 10)
+                      : const SizedBox.shrink(),
+                  Markdown(
+                    data: prompt,
+                    shrinkWrap: true,
+                    padding:
+                        const EdgeInsets.only(left: 14, bottom: 10, right: 14),
+                  ),
+                ],
               ),
             ),
           ),
