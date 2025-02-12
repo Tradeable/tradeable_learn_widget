@@ -121,37 +121,28 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget renderSubmitBtn() {
+    final colors = Theme.of(context).customColors;
+
     switch (model.state) {
       case RRQuestionState.loadUI:
-        return Container(
-            height: 40,
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all(
-                color: Colors.green,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: MaterialButton(
-                onPressed: () {
-                  showAnimation();
-                },
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  child: Center(
-                    child: Text("Submit",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.normal)),
-                  ),
-                ),
-              ),
-            ));
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          child: ButtonWidget(
+              color: colors.primary,
+              btnContent: "Submit",
+              onTap: () {
+                showModalBottomSheet(
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => BottomSheetWidget(
+                        isCorrect: model.isCorrect,
+                        model: model.explanationV1,
+                        onNextClick: () {
+                          showAnimation();
+                        }));
+              }),
+        );
       case RRQuestionState.submitResponse:
-        final colors = Theme.of(context).customColors;
-
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
@@ -336,10 +327,12 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   void addRRValidText() {
-    if ((model.rrLayer.value - model.rrLayer.target).abs() /
-            (model.rrLayer.value - model.rrLayer.stoploss).abs() <
-        2) {
-      model.resultText = "- Risk to Reward should be 2 or more";
-    }
+    setState(() {
+      if ((model.rrLayer.value - model.rrLayer.target).abs() /
+          (model.rrLayer.value - model.rrLayer.stoploss).abs() <
+          2) {
+        model.resultText = "- Risk to Reward should be 2 or more";
+      }
+    });
   }
 }
