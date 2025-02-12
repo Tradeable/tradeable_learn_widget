@@ -7,7 +7,7 @@ const greeksTypeform = {
     "steps": [
       {
         "stepId": "1",
-        "isActionNeeded": false,
+        "isActionNeeded": true,
         "ui": [
           {
             "title": "CALL OPTION",
@@ -19,7 +19,7 @@ const greeksTypeform = {
           {
             "widget": "GreeksExplainerWidget",
             "greeksExplainerModel": {
-              "currentStrikePrice": "20,100",
+              "currentStrikePrice": "19,900",
               "strikePrices": [
                 {"title": "ITM", "value": "19,900"},
                 {"title": "ITM", "value": "20,000"},
@@ -44,7 +44,7 @@ const greeksTypeform = {
       },
       {
         "stepId": "2",
-        "isActionNeeded": false,
+        "isActionNeeded": true,
         "ui": [
           {
             "title": "CALL OPTION",
@@ -54,6 +54,25 @@ const greeksTypeform = {
             "imageUrl": "assets/axis_logo.png",
           },
           {"width": "", "height": "40", "widget": "SizedBox"},
+          {
+            "widget": "GreeksExplainerWidget",
+            "greeksExplainerModel": {
+              "currentStrikePrice": "20,100",
+              "strikePrices": [
+                {"title": "ITM", "value": "19,900"},
+                {"title": "ITM", "value": "20,000"},
+                {"title": "ATM", "value": "20,100"},
+                {"title": "OTM", "value": "20,200"},
+                {"title": "OTM", "value": "20,300"},
+              ],
+              "isCallOption": false,
+              "isOptionToggleVisible": true,
+              "showSliderLabels": true,
+              "showAnimation": true,
+              "sliderLabels": ["-1", "-0.75", "-0.5", "-0.25", "0"],
+              "premiumValues": ["60", "61", "62", "63", "64"],
+            }
+          },
           {
             "title": "Next",
             "action": "moveToNextStep",
