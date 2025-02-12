@@ -131,15 +131,7 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
               color: colors.primary,
               btnContent: "Submit",
               onTap: () {
-                showModalBottomSheet(
-                    isDismissible: false,
-                    context: context,
-                    builder: (context) => BottomSheetWidget(
-                        isCorrect: model.isCorrect,
-                        model: model.explanationV1,
-                        onNextClick: () {
-                          showAnimation();
-                        }));
+                showAnimation();
               }),
         );
       case RRQuestionState.submitResponse:
@@ -169,7 +161,6 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
     });
     _loadCandlesTillEnd();
     addRRValidText();
-    widget.onNextClick();
   }
 
   Widget helperText() {
