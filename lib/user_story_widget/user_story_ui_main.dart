@@ -468,7 +468,13 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         sliderData: uiData.sliderDataModel!);
                   case "GreeksExplainerWidget":
                     return GreeksExplainerWidget(
-                        model: uiData.greeksExplainerModel!);
+                      model: uiData.greeksExplainerModel!,
+                      moveToNextStep: () {
+                        setState(() {
+                          step.isActionNeeded = false;
+                        });
+                      },
+                    );
                   default:
                     return const SizedBox.shrink();
                 }
