@@ -37,7 +37,7 @@ class Recommendation {
 
   factory Recommendation.fromJson(Map<String, dynamic> json) {
     return Recommendation(
-      levelId: json['level_id'],
+      levelId: json['level_id'] ?? 291,
       title: json['title'],
       description: json['description'],
       imageUrl: json['image_url'],
