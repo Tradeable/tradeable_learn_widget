@@ -25,6 +25,7 @@ class PayoffGraphWidget extends StatefulWidget {
 class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
   @override
   void initState() {
+    //print(widget.helper.expirationPnLSegments.length);
     super.initState();
   }
 
@@ -103,29 +104,30 @@ class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
                         drawHorizontalLine: false, drawVerticalLine: true),
                     lineTouchData: LineTouchData(
                       handleBuiltInTouches: true,
-                      getTouchedSpotIndicator:
-                          (LineChartBarData barData, List<int> spotIndexes) {
-                        return spotIndexes.map((spotIndex) {
-                          return TouchedSpotIndicatorData(
-                            const FlLine(color: Colors.blue, strokeWidth: 2),
-                            FlDotData(
-                              getDotPainter: (spot, percent, barData, index) {
-                                return FlDotCirclePainter(
-                                  radius: 4,
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                  strokeColor: Colors.blue,
-                                );
-                              },
-                            ),
-                          );
-                        }).toList();
-                      },
+                      // getTouchedSpotIndicator:
+                      //     (LineChartBarData barData, List<int> spotIndexes) {
+                      //   return spotIndexes.map((spotIndex) {
+                      //     return TouchedSpotIndicatorData(
+                      //       const FlLine(color: Colors.blue, strokeWidth: 2),
+                      //       FlDotData(
+                      //         getDotPainter: (spot, percent, barData, index) {
+                      //           return FlDotCirclePainter(
+                      //             radius: 4,
+                      //             color: Colors.white,
+                      //             strokeWidth: 2,
+                      //             strokeColor: Colors.blue,
+                      //           );
+                      //         },
+                      //       ),
+                      //     );
+                      //   }).toList();
+                      // },
                       touchTooltipData: LineTouchTooltipData(
                         getTooltipItems: (touchedSpots) {
                           return touchedSpots.map((barSpot) {
                             final flSpot = barSpot;
-                            if (barSpot.barIndex == 0) {
+                            if (barSpot.barIndex <
+                                widget.helper.expirationPnLSegments.length) {
                               return LineTooltipItem(
                                 flSpot.y > 0
                                     ? "Project profit : "
@@ -161,22 +163,44 @@ class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
                       ),
                     ),
                     lineBarsData: [
-                      LineChartBarData(
-                          barWidth: 1,
-                          color: Colors.black,
-                          dotData: const FlDotData(show: false),
-                          spots: widget.helper.expirationPnLvalues,
-                          belowBarData: BarAreaData(
-                            show: true,
-                            color: Colors.green.withOpacity(0.2),
-                            cutOffY: 0,
-                            applyCutOffY: true,
-                          ),
-                          aboveBarData: BarAreaData(
-                              show: true,
-                              color: Colors.red.withOpacity(0.2),
-                              cutOffY: 0,
-                              applyCutOffY: true)),
+                      // LineChartBarData(
+                      //     barWidth: 1,
+                      //     color: Colors.black,
+                      //     dotData: const FlDotData(show: false),
+                      //     spots: widget.helper.expirationPnLvalues,
+                      //     belowBarData: BarAreaData(
+                      //       show: true,
+                      //       color: Colors.green.withOpacity(0.2),
+                      //       cutOffY: 0,
+                      //       applyCutOffY: true,
+                      //     ),
+                      //     aboveBarData: BarAreaData(
+                      //         show: true,
+                      //         color: Colors.red.withOpacity(0.2),
+                      //         cutOffY: 0,
+                      //         applyCutOffY: true)),
+                      ...widget.helper.expirationPnLSegments.map(
+                        (e) {
+                          return LineChartBarData(
+                              barWidth: 2,
+                              color: e.first.y < 0
+                                  ? Theme.of(context).customColors.bearishColor
+                                  : Theme.of(context).customColors.bullishColor,
+                              dotData: const FlDotData(show: false),
+                              spots: e,
+                              belowBarData: BarAreaData(
+                                show: true,
+                                color: Colors.green.withOpacity(0.2),
+                                cutOffY: 0,
+                                applyCutOffY: true,
+                              ),
+                              aboveBarData: BarAreaData(
+                                  show: true,
+                                  color: Colors.red.withOpacity(0.2),
+                                  cutOffY: 0,
+                                  applyCutOffY: true));
+                        },
+                      ),
                       LineChartBarData(
                         barWidth: 1,
                         color: Colors.blue,
