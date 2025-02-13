@@ -23,24 +23,24 @@ class Recommendations {
 }
 
 class Recommendation {
-  final int levelId;
-  final String title;
+  final int? levelId;
+  final String? title;
   final String? description;
-  final String imageUrl;
+  final String? imageUrl;
 
   Recommendation({
-    required this.levelId,
-    required this.title,
+    this.levelId,
+    this.title,
     this.description,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   factory Recommendation.fromJson(Map<String, dynamic> json) {
     return Recommendation(
       levelId: json['level_id'] ?? 291,
-      title: json['title'],
-      description: json['description'],
-      imageUrl: json['image_url'],
+      title: json['title'] ?? "Title",
+      description: json['description'] ?? "Description",
+      imageUrl: json['image_url'] ?? "",
     );
   }
 
