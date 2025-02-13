@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_educorner_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 

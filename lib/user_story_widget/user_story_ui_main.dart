@@ -2,16 +2,19 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/reel_range_response.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/user_story_data_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/ticket_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/contracts_info_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_mcq_widget.dart';
-import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_text.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_slider_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/greeks_explainer_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.dart';
@@ -28,6 +31,8 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_sl
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
+    as ui;
 
 class UserStoryUIMain extends StatefulWidget {
   final UserStoryModel model;
@@ -51,6 +56,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   RowData? staticHighlightedRowData;
   OptionEntry? selectedOptionEntry;
   String? quantity;
+  UiData? selectedTicket;
 
   @override
   void initState() {
@@ -89,7 +95,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     final currentIndex = widget.model.userStory.steps
         .indexWhere((step) => step.stepId == currentStepId);
     if (currentIndex >= 0 &&
-        currentIndex < widget.model.userStory.steps.length - 1) {
+        currentIndex < widget.model.userStory.steps.length) {
       setState(() {
         currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
       });
@@ -342,7 +348,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         prompt: uiData.prompt,
                         textData: uiData.volumePriceTextData ?? [],
                         candles: uiData.candles ?? [],
-                        onSliderChanged: (sliderVal) {});
+                        onSliderChanged: (sliderVal) {
+                          addCandles(step, sliderVal, uiData);
+                        });
                   case "TradeInfo":
                     return TradeInfo(
                         title: uiData.title,
@@ -360,6 +368,11 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       ui: uiData.uiWidgets ?? [],
                       onOptionSelected: (selectedOption) {
                         setState(() {
+                          if (selectedOption.widget == "CouponWidget") {
+                            selectedTicket = selectedOption;
+                          }
+                        });
+                        setState(() {
                           selectedResponses = [selectedOption.prompt];
                           isAnsweredCorrect = Set.from(selectedResponses)
                                   .difference(
@@ -369,9 +382,23 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                   (uiData.correctResponse ?? []).length;
                         });
                       },
+                      selectedItem: selectedTicket,
                     );
                   case "CouponWidget":
-                    return TicketCouponWidget(model: uiData.ticketCouponModel!);
+                    if (selectedTicket != null) {
+                      selectedTicket?.ticketCouponModel = TicketCouponModel(
+                        title: selectedTicket!.ticketCouponModel!.title,
+                        color: selectedTicket!.ticketCouponModel!.color,
+                        infoModel: List.from(
+                            uiData.ticketCouponModel!.infoModel), // Deep copy
+                      );
+                    }
+
+                    return TicketCouponWidget(
+                      model: selectedTicket?.ticketCouponModel ??
+                          uiData.ticketCouponModel!,
+                    );
+
                   case "SizedBox":
                     return SizedBox(
                         height: double.parse(uiData.height ?? "0"),
@@ -415,7 +442,6 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         limitPrice:
                             selectedOptionEntry!.premium.toStringAsFixed(2),
                         quantity: quantity.toString());
-
                   case "OrderStatusWidget":
                     return OrderStatusWidget(
                         limitPrice:
@@ -429,6 +455,20 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     return SizedBox(
                         height: 400,
                         child: TrendLineChart(model: uiData.trendLineModelV1!));
+                  case "ContractsInfo":
+                    return ContractsInfoWidget(
+                        model: uiData.contractDetailsModel!,
+                        moveToNextStep: () {
+                          setState(() {
+                            step.isActionNeeded = false;
+                          });
+                        });
+                  case "CustomSlider":
+                    return CustomSliderWidget(
+                        sliderData: uiData.sliderDataModel!);
+                  case "GreeksExplainerWidget":
+                    return GreeksExplainerWidget(
+                        model: uiData.greeksExplainerModel!);
                   default:
                     return const SizedBox.shrink();
                 }
@@ -546,5 +586,67 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
   List<RowData> getFirstTableRowData(List<TableData> tableDataList) {
     return tableDataList.isNotEmpty ? tableDataList.first.data : [];
+  }
+
+  void addCandles(StepData step, int sliderVal, UiData uiData) {
+    setState(() {
+      setState(() {
+        List<ui.Candle> uiCandles = step.ui
+            .where((widget) => widget.widget == "HorizontalLineChart")
+            .first
+            .chart!
+            .uiCandles;
+
+        uiCandles.removeWhere((candle) {
+          int? id = candle.candleId;
+          return id >= uiData.candles!.length;
+        });
+
+        if (sliderVal == 2) {
+          double basePrice = 750;
+          for (int i = 1; i <= 7; i++) {
+            bool isGreen = i % 2 == 1;
+            double open = basePrice + (i * 5);
+            double close = isGreen ? open + (i * 5) : open - 5;
+            double high = close + 5;
+            double low = open - (i * 5);
+
+            uiCandles.add(ui.Candle(
+              candleId: (uiData.candles!.length - 1 + i),
+              open: open,
+              high: high,
+              low: low,
+              close: close,
+              dateTime: DateTime.now().add(Duration(minutes: i)),
+              volume: 80 + (i * 10),
+            ));
+          }
+        } else if (sliderVal == 0) {
+          double basePrice = 775;
+          for (int i = 1; i <= 7; i++) {
+            bool isRed = i % 2 == 1;
+            double open = basePrice - (i * 5);
+            double close = isRed ? open - (5 * i) : open + (i * 5);
+            double high = open + (2 * i);
+            double low = close;
+
+            uiCandles.add(ui.Candle(
+              candleId: (uiData.candles!.length - 1 + i),
+              open: open,
+              high: high,
+              low: low,
+              close: close,
+              dateTime: DateTime.now().add(Duration(minutes: i)),
+              volume: 80 + (i * 10), // Increased volume
+            ));
+          }
+        }
+        step.ui
+            .where((widget) => widget.widget == "HorizontalLineChart")
+            .first
+            .chart!
+            .uiCandles = uiCandles;
+      });
+    });
   }
 }

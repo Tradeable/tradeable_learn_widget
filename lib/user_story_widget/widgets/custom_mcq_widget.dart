@@ -9,14 +9,15 @@ class CustomMCQWidget extends StatefulWidget {
   final String question;
   final List<UiData> ui;
   final Function(UiData) onOptionSelected;
+  final UiData? selectedItem;
 
-  const CustomMCQWidget({
-    super.key,
-    required this.format,
-    required this.question,
-    required this.ui,
-    required this.onOptionSelected,
-  });
+  const CustomMCQWidget(
+      {super.key,
+      required this.format,
+      required this.question,
+      required this.ui,
+      required this.onOptionSelected,
+      this.selectedItem});
 
   @override
   State<CustomMCQWidget> createState() => _CustomMCQWidgetState();

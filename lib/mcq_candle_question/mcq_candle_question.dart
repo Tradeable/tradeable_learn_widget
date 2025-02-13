@@ -35,16 +35,19 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
           children: [
             renderQuestion(),
             Expanded(child: renderOptionsWithScroll()),
-            ButtonWidget(
-                color: (model.userResponse ?? "").isNotEmpty
-                    ? colors.primary
-                    : colors.secondary,
-                btnContent: "Submit",
-                onTap: () {
-                  model.state == MCQCandleQuestionState.submitResponse
-                      ? submitResponse()
-                      : () {};
-                })
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+              child: ButtonWidget(
+                  color: (model.userResponse ?? "").isNotEmpty
+                      ? colors.primary
+                      : colors.secondary,
+                  btnContent: "Submit",
+                  onTap: () {
+                    model.state == MCQCandleQuestionState.submitResponse
+                        ? submitResponse()
+                        : () {};
+                  }),
+            )
           ],
         );
       },

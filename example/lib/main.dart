@@ -1,18 +1,29 @@
 import 'package:example/axis_levels_screen.dart';
 import 'package:example/data_model/atm_itm_dropdown_model.dart';
+import 'package:example/data_model/banana_widget_model.dart';
 import 'package:example/data_model/bucket_containerv1_model.dart';
 import 'package:example/data_model/calender_question_model.dart';
 import 'package:example/data_model/candle_body_select_model.dart';
+import 'package:example/data_model/candle_formation_model.dart';
 import 'package:example/data_model/candle_formation_v2.dart';
 import 'package:example/data_model/candle_part_match_model.dart';
 import 'package:example/data_model/candle_select_question_model.dart';
+import 'package:example/data_model/column_match.dart';
 import 'package:example/data_model/content_preview_model.dart';
+import 'package:example/data_model/contract_price_slider_model.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
+import 'package:example/data_model/expiry_derivate_monthly.dart';
+import 'package:example/data_model/expiry_derivative_weekly.dart';
 import 'package:example/data_model/formula_placeholder_model.dart';
+import 'package:example/data_model/greeks_typeform.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/horizontal_line_model_v1.dart';
+import 'package:example/data_model/image_mcq.dart';
+import 'package:example/data_model/image_mcq_model.dart';
+import 'package:example/data_model/index_page_model.dart';
+import 'package:example/data_model/info_reel_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
 import 'package:example/data_model/market_depth_1.dart';
 import 'package:example/data_model/market_depth_model.dart';
@@ -22,6 +33,10 @@ import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/options_typeform.dart';
+import 'package:example/data_model/price_decrease_model.dart';
+import 'package:example/data_model/range_grid_slider.dart';
+import 'package:example/data_model/rr_model.dart';
+import 'package:example/data_model/scenario_intro.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
 import 'package:example/data_model/ticket_user_story.dart';
@@ -29,12 +44,15 @@ import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/trend_line_user_story.dart';
 import 'package:example/data_model/video_educorner_model.dart';
 import 'package:example/data_model/volume_user_story.dart';
+import 'package:example/data_model/webpage_model.dart';
 import 'package:example/home_intermediate_screen.dart';
 import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/buy_sell_widget/buy_sell.dart';
+import 'package:tradeable_learn_widget/candle_formation/candle_formation_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_v2/horizontal_line_question_v2.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
-import 'package:tradeable_learn_widget/user_story_widget/user_story_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -263,6 +281,134 @@ class MyHomePage extends StatelessWidget {
                               model:
                                   UserStoryModel.fromJson(trendLineUserStory),
                               onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Expiry Derivatives (Weekly)",
+                      destination: ScaffoldWithAppBar(
+                          title: "Expiry Derivatives",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  expiryDerivativeWeekly),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Expiry Derivatives (Monthly)",
+                      destination: ScaffoldWithAppBar(
+                          title: "Expiry Derivatives",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  expiryDerivativeMonthly),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Contract Derivatives",
+                      destination: ScaffoldWithAppBar(
+                          title: "Contract Derivatives",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(
+                                  contractPriceSliderModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Greeks typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Greeks typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(greeksTypeform),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Banana widget",
+                      destination: ScaffoldWithAppBar(
+                          title: "Banana widget",
+                          body: BananaWidget(
+                              model: BananaModel.fromJson(bananaWidgetModel),
+                              onNextClick: () {}))),
+                  const NavigationButton(
+                      text: "Buy Sell Widget",
+                      destination: ScaffoldWithAppBar(
+                          title: "Buy Sell Widget", body: BuySellV1())),
+                  NavigationButton(
+                      text: "Candle Formation",
+                      destination: ScaffoldWithAppBar(
+                          title: "Candle Formation",
+                          body: CandleFormation(
+                              model: CandleFormationModel.fromJson(
+                                  candleFormationModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Column Match Widget",
+                      destination: ScaffoldWithAppBar(
+                          title: "Column Match Widget",
+                          body: ColumnMatch(
+                              model: ColumnModel.fromJson(columnMatchDataModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Scenario Intro",
+                      destination: ScaffoldWithAppBar(
+                          title: "Scenario Intro",
+                          body: ScenarioIntroWidget(
+                              model:
+                                  OptionIntroModel.fromJson(scenarioIntroModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Price Decreased",
+                      destination: ScaffoldWithAppBar(
+                          title: "Price Decreased",
+                          body: PriceDecreased(
+                              model: PriceDecreaseModel.fromJson(
+                                  priceDecreaseModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Image MCQ",
+                      destination: ScaffoldWithAppBar(
+                          title: "Image MCQ",
+                          body: ImageMcq(
+                              model: ImageMCQModel.fromJson(imageMCQ),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Index Page",
+                      destination: ScaffoldWithAppBar(
+                          title: "Index Page",
+                          body: IndexPage(
+                              model: IndexPageModel.fromJson(indexPageModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Info Reel",
+                      destination: ScaffoldWithAppBar(
+                          title: "Info Reel",
+                          body: InfoReel(
+                              model: InfoReelModel.fromJson(infoReelModel),
+                              onNextClick: () {}))),
+                  // NavigationButton(
+                  //     text: "LS11",
+                  //     destination: ScaffoldWithAppBar(
+                  //         title: "LS11",
+                  //         body: LS11(
+                  //             model: LS11Model.fromJson(infoReelModel),
+                  //             onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Range Grid Slider",
+                      destination: ScaffoldWithAppBar(
+                          title: "Range Grid Slider",
+                          body: RatingWidget(
+                              model: RangeGridSliderModel.fromJson(
+                                  rangeGridSlider),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Reading Option Chain",
+                      destination: ScaffoldWithAppBar(
+                          title: "Reading Option Chain",
+                          body: ReadingOptionChain(onNextClick: () {}))),
+                  NavigationButton(
+                      text: "RR Widget",
+                      destination: ScaffoldWithAppBar(
+                          title: "RR Widget",
+                          body: RRQuestion(
+                              model: RRModel.fromJson(rrModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Web Info Reel",
+                      destination: ScaffoldWithAppBar(
+                          title: "Web Info Reel",
+                          body: WebInfoReel(
+                              model: WebpageModel.fromJson(webPageModel),
+                              onNextClick: () {})))
                 ],
               ),
             ),

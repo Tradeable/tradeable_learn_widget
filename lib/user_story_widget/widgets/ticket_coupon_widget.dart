@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/models/ticket_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class TicketCouponWidget extends StatelessWidget {
