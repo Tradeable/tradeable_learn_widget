@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
@@ -46,7 +45,6 @@ class _MCQQuestionState extends State<MCQQuestion> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           renderQuestion(),
-          const SizedBox(height: 20),
           SizedBox(
             height: constraints.maxHeight * 0.5,
             child: renderChart(),
@@ -116,9 +114,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
     final textStyles = Theme.of(context).customTextStyles;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: AutoSizeText(model.question,
-          maxLines: 2, style: textStyles.mediumNormal),
+      padding: const EdgeInsets.only(left: 14, right: 14, bottom: 10),
+      child: Text(model.question, maxLines: 2, style: textStyles.mediumNormal),
     );
   }
 
