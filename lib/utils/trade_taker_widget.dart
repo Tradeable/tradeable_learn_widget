@@ -196,6 +196,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
     final colors = Theme.of(context).customColors;
 
     return Container(
+      color: colors.cardBasicBackground,
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Column(
