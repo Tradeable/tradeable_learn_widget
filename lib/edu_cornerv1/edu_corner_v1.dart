@@ -21,6 +21,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
   final PageController controller = PageController(initialPage: 0);
   double videoBtnHeight = 50;
   int currentPage = 0;
+  bool showBanner = true;
 
   @override
   void initState() {
@@ -31,51 +32,140 @@ class _EduCornerV1State extends State<EduCornerV1> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
 
     return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      return Stack(
         children: [
-          const SizedBox(height: 10),
-          renderTitle(model.title),
-          const SizedBox(height: 30),
-          SizedBox(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight * 0.75,
-            child: renderEduCornerCards(model.cards),
-          ),
-          Center(
-            child: SmoothPageIndicator(
-              controller: controller,
-              count: model.cards.length,
-              effect: CustomizableEffect(
-                  dotDecoration: DotDecoration(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              renderTitle(model.title),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight * 0.75,
+                child: renderEduCornerCards(model.cards),
+              ),
+              Center(
+                child: SmoothPageIndicator(
+                  controller: controller,
+                  count: model.cards.length,
+                  effect: CustomizableEffect(
+                    dotDecoration: DotDecoration(
                       width: 7,
                       height: 7,
                       color: colors.secondary,
-                      borderRadius: BorderRadius.circular(20)),
-                  activeDotDecoration: DotDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    activeDotDecoration: DotDecoration(
                       width: 16,
                       height: 7,
                       color: colors.borderColorPrimary,
-                      borderRadius: BorderRadius.circular(14))),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                child: ButtonWidget(
+                  color: currentPage == model.cards.length - 1
+                      ? colors.primary
+                      : colors.secondary,
+                  btnContent: "Next",
+                  onTap: () {
+                    if (currentPage == model.cards.length - 1) {
+                      showModalBottomSheet(
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: colors.cardBasicBackground,
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(12),
+                                    topRight: Radius.circular(12),
+                                  ),
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0, vertical: 12),
+                                        child: Image.asset(
+                                          "assets/educorner_image.png",
+                                          package: 'tradeable_learn_widget/lib',
+                                          height: 120,
+                                          fit: BoxFit.fitHeight,
+                                        ),
+                                      ),
+                                      Text('Ready?',
+                                          style: textStyles.largeBold),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Now lets text what we have learned with some fun widgets!',
+                                        style: textStyles.smallNormal,
+                                      ),
+                                      const SizedBox(height: 20),
+                                      ButtonWidget(
+                                        color: colors.primary,
+                                        btnContent: "Next",
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                          widget.onNextClick();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 10,
+            left: 10,
+            right: 10,
+            child: Visibility(
+              visible: showBanner,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                decoration: BoxDecoration(
+                  color: const Color(0xff404040),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Let’s start with an education corner!",
+                        style: textStyles.smallNormal
+                            .copyWith(color: Colors.white)),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showBanner = false;
+                        });
+                      },
+                      child: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
-              color: currentPage == model.cards.length - 1
-                  ? colors.primary
-                  : colors.secondary,
-              btnContent: "Next",
-              onTap: () {
-                if (currentPage == model.cards.length - 1) {
-                  widget.onNextClick();
-                }
-              },
-            ),
-          )
         ],
       );
     });
