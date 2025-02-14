@@ -215,6 +215,55 @@ const rrTypeForm = {
                   "ticker": "ACC"
                 }
               ],
+              "tradeTypeModel": [
+                {
+                  "tradeType": "intraday",
+                  "isLocked": false,
+                  "executionTypes": [
+                    {
+                      "executionType": "regular",
+                      "isLocked": false,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": false}
+                      ]
+                    },
+                    {
+                      "executionType": "amo",
+                      "isLocked": true,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    },
+                    {
+                      "executionType": "cover",
+                      "isLocked": true,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    },
+                    {
+                      "executionType": "iceberg",
+                      "isLocked": true,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tradeType": "delivery",
+                  "isLocked": true,
+                  "executionTypes": []
+                }
+              ],
               "endTime": 1590546600000,
               "options": null,
               "question":
@@ -245,7 +294,7 @@ const rrTypeForm = {
           {
             "title": "Question",
             "prompt":
-            "**Analyse** the given chart, and **set up** risk and reward on the order screen.",
+                "**Analyse** the given chart, and **set up** risk and reward on the order screen.",
             "widget": "AnimatedText",
             "imageUrl": "assets/axis_logo.png",
           },
@@ -451,7 +500,7 @@ const rrTypeForm = {
               "endTime": 1590546600000,
               "options": null,
               "question":
-              "Adjust your target and stop loss to maximize your profits",
+                  "Adjust your target and stop loss to maximize your profits",
               "startTime": 1588213800000,
               "timeframe": "Daily",
               "rangeResponse": null,
@@ -466,12 +515,8 @@ const rrTypeForm = {
             }
           },
           {"width": "", "height": "20", "widget": "SizedBox"},
-          {"widget":"TradeFormWidget"},
-          {
-            "title": "Next",
-            "action": "moveNext",
-            "widget": "NextButtonWidget"
-          },
+          {"widget": "TradeFormWidget"},
+          {"title": "Next", "action": "moveNext", "widget": "NextButtonWidget"},
         ]
       }
     ]

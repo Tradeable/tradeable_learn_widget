@@ -703,6 +703,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     final step = widget.model.userStory.steps
         .firstWhere((step) => step.stepId == currentStepId);
     final chart = step.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+    setState(() {
+      chart.rrLayer.target = double.parse(tradeFormModel?.target ?? "0.0");
+      chart.rrLayer.stoploss = double.parse(tradeFormModel?.stopLoss ?? "0.0");
+    });
 
     List<ui.Candle> allCandles = chart.candles
         .map((e) => ui.Candle(
