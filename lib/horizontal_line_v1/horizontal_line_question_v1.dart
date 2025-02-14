@@ -144,7 +144,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
     final textStyles = Theme.of(context).customTextStyles;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(model.question, style: textStyles.smallNormal),
+      child: Text(model.question, style: textStyles.mediumNormal),
     );
   }
 

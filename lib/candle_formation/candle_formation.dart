@@ -28,6 +28,8 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
 
   @override
   Widget build(BuildContext context) {
+    final textStyles = Theme.of(context).customTextStyles;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Column(
@@ -50,11 +52,8 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
                     margin: const EdgeInsets.only(left: 10, right: 10),
                     child: Align(
                         alignment: Alignment.bottomLeft,
-                        child: Text(
-                          model.question,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        )),
+                        child: Text(model.question,
+                            style: textStyles.mediumNormal)),
                   ),
                   SizedBox(
                       height: constraints.maxHeight / 4,

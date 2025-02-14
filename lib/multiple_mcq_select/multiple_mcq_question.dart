@@ -59,7 +59,7 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(model.question,
-            textAlign: TextAlign.start, style: textStyles.smallNormal));
+            textAlign: TextAlign.start, style: textStyles.mediumNormal));
   }
 
   Widget renderOptions() {

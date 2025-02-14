@@ -85,7 +85,7 @@ class _ATMWidgetState extends State<ATMWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(
         model.question,
-        style: Theme.of(context).customTextStyles.smallNormal,
+        style: Theme.of(context).customTextStyles.mediumNormal,
       ),
     );
   }

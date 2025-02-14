@@ -138,7 +138,7 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
       padding: const EdgeInsets.all(8),
       child: Text(
         model.question,
-        style: Theme.of(context).customTextStyles.smallNormal,
+        style: Theme.of(context).customTextStyles.mediumNormal,
       ),
     );
   }

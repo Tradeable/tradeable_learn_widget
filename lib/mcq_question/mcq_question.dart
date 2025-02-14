@@ -118,7 +118,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: AutoSizeText(model.question,
-          maxLines: 2, style: textStyles.smallNormal),
+          maxLines: 2, style: textStyles.mediumNormal),
     );
   }
 
