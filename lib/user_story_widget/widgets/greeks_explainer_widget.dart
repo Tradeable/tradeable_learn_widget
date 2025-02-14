@@ -4,25 +4,46 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class GreeksExplainerWidget extends StatefulWidget {
   final GreeksExplainerModel model;
+  final VoidCallback moveToNextStep;
 
-  const GreeksExplainerWidget({super.key, required this.model});
+  const GreeksExplainerWidget(
+      {super.key, required this.model, required this.moveToNextStep});
 
   @override
   State<StatefulWidget> createState() => _GreeksExplainerWidget();
 }
 
 class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late double sliderValue;
   int initialIndex = 0;
+  double minVal = 0;
+  double maxVal = 0;
 
   @override
   void initState() {
-    initialIndex = widget.model.strikePrices.indexWhere(
-        (strikePrice) => strikePrice.value == widget.model.currentStrikePrice);
-    sliderValue = initialIndex.toDouble();
+    setInitialIndex();
     showCarAnimation();
     super.initState();
+  }
+
+  void setInitialIndex() {
+    setState(() {
+      initialIndex = widget.model.strikePrices.indexWhere((strikePrice) =>
+          strikePrice.value == widget.model.currentStrikePrice);
+      sliderValue = initialIndex.toDouble();
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant GreeksExplainerWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.model != oldWidget.model) {
+      if (sliderValue < widget.model.strikePrices.length - 1) {
+        setInitialIndex();
+        showCarAnimation();
+      }
+    }
   }
 
   void showCarAnimation() {
@@ -132,7 +153,7 @@ class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
           ),
           const SizedBox(height: 40),
           SizedBox(
-            height: 250,
+            height: 260,
             child: Stack(
               children: [
                 Positioned(
@@ -147,7 +168,7 @@ class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
                               widget.model.strikePrices.length) *
                           sliderValue -
                       10),
-                  bottom: 110,
+                  bottom: 120,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -188,8 +209,70 @@ class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
                   ),
                 ),
                 Positioned(
+                  left: ((MediaQuery.of(context).size.width /
+                              widget.model.strikePrices.length) *
+                          sliderValue -
+                      10),
+                  bottom: 0,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 2,
+                            height: 10,
+                            color: colors.axisColor,
+                          ),
+                          Container(
+                            width: 60,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: colors.axisColor),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (sliderValue > 0) {
+                                        sliderValue--;
+                                      }
+                                    });
+                                    if (sliderValue == widget.model.stopValue) {
+                                      widget.moveToNextStep();
+                                    }
+                                  },
+                                  child: Icon(Icons.arrow_back_ios,
+                                      color: colors.buttonColor, size: 20),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (sliderValue !=
+                                          widget.model.stopValue) {
+                                        if (sliderValue <
+                                            widget.model.strikePrices.length) {
+                                          sliderValue++;
+                                        }
+                                      }
+                                    });
+                                    if (sliderValue == widget.model.stopValue) {
+                                      widget.moveToNextStep();
+                                    }
+                                  },
+                                  child: Icon(Icons.arrow_forward_ios,
+                                      color: colors.buttonColor, size: 20),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      )),
+                ),
+                Positioned(
                   left: 0,
-                  bottom: 90,
+                  bottom: 100,
                   right: 0,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -202,7 +285,7 @@ class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
                 Positioned(
                   left: 0,
                   right: 0,
-                  bottom: 30,
+                  bottom: 40,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(
@@ -236,7 +319,7 @@ class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
                 Positioned(
                   left: 0,
                   right: 0,
-                  bottom: 70,
+                  bottom: 80,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
                     child: Row(

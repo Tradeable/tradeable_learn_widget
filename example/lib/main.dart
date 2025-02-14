@@ -21,7 +21,6 @@ import 'package:example/data_model/greeks_typeform.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/horizontal_line_model_v1.dart';
 import 'package:example/data_model/image_mcq.dart';
-import 'package:example/data_model/image_mcq_model.dart';
 import 'package:example/data_model/index_page_model.dart';
 import 'package:example/data_model/info_reel_model.dart';
 import 'package:example/data_model/ladder_data_model.dart';
@@ -36,6 +35,7 @@ import 'package:example/data_model/options_typeform.dart';
 import 'package:example/data_model/price_decrease_model.dart';
 import 'package:example/data_model/range_grid_slider.dart';
 import 'package:example/data_model/rr_model.dart';
+import 'package:example/data_model/rr_typeform.dart';
 import 'package:example/data_model/scenario_intro.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
@@ -408,6 +408,13 @@ class MyHomePage extends StatelessWidget {
                           title: "Web Info Reel",
                           body: WebInfoReel(
                               model: WebpageModel.fromJson(webPageModel),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "RR Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "RR Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(rrTypeForm),
                               onNextClick: () {})))
                 ],
               ),

@@ -206,5 +206,13 @@ const rrModel = {
     {"max": 1282.8, "min": 1169.496359743037}
   ],
   "correctResponse": null,
-  "selectedCandleIds": null
+  "selectedCandleIds": null,
+  "responses": {
+    "targetHitS1": 'Yay!! You hit the target',
+    "stoplossHitS1": 'Oops!! Stop loss was hit',
+    "targetHitS2": 'Yay!! You hit the target',
+    "stoplossHitS2": 'Oops!! Stop loss was hit',
+    "infoText": 'Risk to Reward should be 2 or more',
+    "ambitiousTarget": 'Target was too ambitious',
+  }
 };

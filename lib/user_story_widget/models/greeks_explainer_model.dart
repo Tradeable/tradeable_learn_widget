@@ -7,6 +7,7 @@ class GreeksExplainerModel {
   final List<String>? premiumValues;
   final bool? showAnimation;
   final bool? showSliderLabels;
+  final int stopValue;
 
   GreeksExplainerModel(
       {required this.currentStrikePrice,
@@ -16,7 +17,8 @@ class GreeksExplainerModel {
       this.sliderLabels,
       this.premiumValues,
       this.showAnimation,
-      this.showSliderLabels});
+      this.showSliderLabels,
+      required this.stopValue});
 
   factory GreeksExplainerModel.fromJson(Map<String, dynamic> json) {
     return GreeksExplainerModel(
@@ -31,7 +33,8 @@ class GreeksExplainerModel {
         premiumValues:
             (json['premiumValues'] as List?)?.map((e) => e as String).toList(),
         showAnimation: json["showAnimation"] ?? false,
-        showSliderLabels: json["showSliderLabels"] ?? false);
+        showSliderLabels: json["showSliderLabels"] ?? false,
+        stopValue: json["stopValue"] ?? 0);
   }
 }
 

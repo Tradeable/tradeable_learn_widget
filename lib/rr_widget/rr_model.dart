@@ -28,6 +28,8 @@ class RRModel {
   late String ticker;
   late String timeframe;
   ExplanationV1? explanationV1;
+  late bool? loadCandlesTillEnd;
+  late RRResponses? rrResponses;
 
   RRModel.fromJson(dynamic data) {
     question = data['question'];
@@ -94,6 +96,10 @@ class RRModel {
               imageUrl: "assets/btmsheet_incorrect.png",
             )
           ]);
+    loadCandlesTillEnd = data["loadCandlesTillEnd"] ?? false;
+    rrResponses = data["responses"] != null
+        ? RRResponses.fromJson(data["responses"])
+        : null;
   }
 
   bool isTradeLong() {
@@ -106,5 +112,33 @@ class RRModel {
       }
     }
     return lastCandleClose < candles.last.close;
+  }
+}
+
+class RRResponses {
+  late String? targetHitS1;
+  late String? stoplossHitS1;
+  late String? targetHitS2;
+  late String? stoplossHitS2;
+  late String? infoText;
+  late String? ambitiousTarget;
+
+  RRResponses(
+      {this.targetHitS1,
+      this.stoplossHitS1,
+      this.targetHitS2,
+      this.stoplossHitS2,
+      this.infoText,
+      this.ambitiousTarget});
+
+  factory RRResponses.fromJson(Map<String, dynamic> json) {
+    return RRResponses(
+      targetHitS1: json['targetHitS1'] ?? "",
+      stoplossHitS1: json['stoplossHitS1'] ?? "",
+      targetHitS2: json['targetHitS2'] ?? "",
+      stoplossHitS2: json['stoplossHitS2'] ?? "",
+      infoText: json['infoText'] ?? "",
+      ambitiousTarget: json['ambitiousTarget'] ?? "",
+    );
   }
 }
