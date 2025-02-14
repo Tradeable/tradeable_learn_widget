@@ -74,7 +74,7 @@ class _ImageMcqState extends State<ImageMcq> {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Text(model.question,
-          textAlign: TextAlign.center, style: textStyles.largeBold),
+          textAlign: TextAlign.center, style: textStyles.mediumNormal),
     );
   }
 

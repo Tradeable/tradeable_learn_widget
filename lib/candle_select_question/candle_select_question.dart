@@ -149,7 +149,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(model.question, style: textStyles.smallNormal),
+      child: Text(model.question, style: textStyles.mediumNormal),
     );
   }
 

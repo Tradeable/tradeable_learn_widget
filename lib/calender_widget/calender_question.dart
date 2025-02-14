@@ -38,7 +38,7 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(model.question,
-                textAlign: TextAlign.center, style: textStyles.mediumBold),
+                textAlign: TextAlign.center, style: textStyles.mediumNormal),
             const SizedBox(height: 20),
             HeatMap(
               showColorTip: false,
