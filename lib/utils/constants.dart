@@ -1,3 +1,3 @@
 enum QuestionStyleType { plain, withPrefix, withBorder }
 
-const currentStyle = QuestionStyleType.withBorder;
+const currentStyle = QuestionStyleType.withPrefix;
