@@ -25,6 +25,32 @@ class ExplanationV1 {
           ];
     }
   }
+
+  ExplanationV1 getRRExplanation(bool isAnsCorrect, String resultText) {
+    if (isAnsCorrect) {
+      return ExplanationV1(
+        forCorrect: [
+          ExplainerV1(
+            title: "Correct",
+            data: resultText.isEmpty ? "You got it correct" : resultText,
+            imageUrl: "assets/btmsheet_correct.png",
+          ),
+        ],
+        forIncorrect: [],
+      );
+    } else {
+      return ExplanationV1(
+        forCorrect: [],
+        forIncorrect: [
+          ExplainerV1(
+            title: "Incorrect",
+            data: resultText.isEmpty ? "You got it incorrect" : resultText,
+            imageUrl: "assets/btmsheet_incorrect.png",
+          ),
+        ],
+      );
+    }
+  }
 }
 
 class ExplainerV1 {

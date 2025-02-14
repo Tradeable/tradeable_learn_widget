@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/rr_widget/rr_model.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 enum TradeType { intraday, delivery }
 
@@ -48,9 +51,37 @@ class ExecutionTypeModel {
   ExecutionTypeModel({required this.executionType, required this.isLocked});
 }
 
+class TradeFormModel {
+  String target;
+  String stopLoss;
+  int quantity;
+  bool isNse;
+  bool isSell;
+  TradeType tradeType;
+  String? avgPrice;
+  String? ltp;
+
+  TradeFormModel(
+      {required this.target,
+      required this.stopLoss,
+      required this.quantity,
+      required this.isNse,
+      required this.isSell,
+      required this.tradeType,
+      this.avgPrice,
+      this.ltp});
+}
+
 class TradeTakerWidget extends StatefulWidget {
+  final RRModel model;
   final List<TradeTypeModel> tradeTypes;
-  const TradeTakerWidget({super.key, required this.tradeTypes});
+  final Function(TradeFormModel) tradeForm;
+
+  const TradeTakerWidget(
+      {super.key,
+      required this.tradeTypes,
+      required this.model,
+      required this.tradeForm});
 
   @override
   State<TradeTakerWidget> createState() => _TradeTakerWidgetState();
@@ -69,9 +100,11 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
 
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _stopLossController = TextEditingController();
+  final TextEditingController _targetController = TextEditingController();
   double quantity = 1;
 
-  String selectedOrderType = 'Market';
+  String selectedOrderType = 'SL/TG';
   String selectedValidity = 'Day';
 
   @override
@@ -98,59 +131,89 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
 
     _quantityController.text = '1';
     _priceController.text = 'At Market';
+    _targetController.text = widget.model.rrLayer.target.toStringAsFixed(2);
+    _stopLossController.text = widget.model.rrLayer.stoploss.toStringAsFixed(2);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        topBar(),
-        TabBar(
-          padding: const EdgeInsets.all(1),
-          controller: _innerTabController,
-          labelPadding: const EdgeInsets.symmetric(vertical: 10),
-          indicatorColor: const Color(0xFFE41E26),
-          labelColor: const Color(0xFFE41E26),
-          unselectedLabelColor: Colors.grey,
-          tabs: [
-            ...widget.tradeTypes[_outerTabController.index].executionTypes
-                .map((element) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+    final colors = Theme.of(context).customColors;
+
+    return Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(element.executionType.name),
-                  element.isLocked ? const Icon(Icons.lock) : Container()
+                  topBar(),
+                  TabBar(
+                    padding: const EdgeInsets.all(1),
+                    controller: _innerTabController,
+                    labelPadding: const EdgeInsets.symmetric(vertical: 10),
+                    indicatorColor: colors.sliderColor,
+                    labelColor: colors.sliderColor,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      ...widget
+                          .tradeTypes[_outerTabController.index].executionTypes
+                          .map((element) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(element.executionType.name),
+                            const SizedBox(width: 4),
+                            element.isLocked
+                                ? const Icon(Icons.lock, size: 16)
+                                : Container()
+                          ],
+                        );
+                      })
+                    ],
+                  ),
+                  form()
                 ],
-              );
-            })
-          ],
-        ),
-        form()
-      ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            child: ButtonWidget(
+                color: colors.primary,
+                btnContent: "Confirm",
+                onTap: () {
+                  setState(() {
+                    TradeFormModel tradeFormModel = TradeFormModel(
+                        target: _targetController.text,
+                        stopLoss: _stopLossController.text,
+                        quantity: quantity.toInt(),
+                        isNse: isNSE,
+                        isSell: isSell,
+                        tradeType: TradeType.intraday);
+                    widget.tradeForm(tradeFormModel);
+                  });
+                  Navigator.of(context).pop();
+                }),
+          )
+        ],
+      ),
     );
   }
 
   Widget topBar() {
+    final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Strike',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-          ),
-          Text(
-            instrument,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text('Strike', style: textStyles.smallNormal),
+          Text('BANKNIFTY2500123CE', style: textStyles.mediumBold),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,12 +229,12 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
               controller: _outerTabController,
               dividerHeight: 0,
               indicator: BoxDecoration(
-                  color: const Color(0xFFE41E26),
+                  color: colors.sliderColor,
                   borderRadius: const BorderRadius.all(Radius.circular(4)),
-                  border: Border.all(color: const Color(0xFFE41E26))),
+                  border: Border.all(color: colors.sliderColor)),
               labelPadding: const EdgeInsets.symmetric(vertical: 8),
               labelColor: Colors.white,
-              unselectedLabelColor: const Color(0xFFE41E26),
+              unselectedLabelColor: colors.sliderColor,
               tabs: [
                 ...widget.tradeTypes.map((element) {
                   return Center(
@@ -179,7 +242,10 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(element.tradeType.name),
-                        element.isLocked ? const Icon(Icons.lock) : Container()
+                        const SizedBox(width: 4),
+                        element.isLocked
+                            ? const Icon(Icons.lock, size: 20)
+                            : Container()
                       ],
                     ),
                   );
@@ -199,15 +265,16 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget form() {
+    final textStyles = Theme.of(context).customTextStyles;
+
+    final colors = Theme.of(context).customColors;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text("Order Type"),
-          const SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -215,25 +282,18 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                 _buildOrderTypeTab('Market'),
                 _buildOrderTypeTab('Limit'),
                 _buildOrderTypeTab('SL/TG'),
-                _buildOrderTypeTab('SL Limit'),
+                // _buildOrderTypeTab('SL Limit'),
               ],
             ),
           ),
-          const SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Quantity to trade',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
+              Text('Quantity to trade', style: textStyles.smallNormal),
               SizedBox(
-                width: 80,
+                width: 120,
                 child: TextField(
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
@@ -244,7 +304,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                   ),
                   onChanged: (value) {
                     final newValue = int.tryParse(value);
-                    if (newValue != null && newValue >= 1 && newValue <= 10) {
+                    if (newValue != null && newValue >= 1 && newValue <= 100) {
                       setState(() => quantity = newValue.toDouble());
                     }
                   },
@@ -257,7 +317,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
             min: 1,
             max: 100,
             divisions: 99,
-            activeColor: const Color(0xFFE41E26),
+            activeColor: colors.axisColor,
             onChanged: (value) {
               setState(() {
                 quantity = value;
@@ -265,54 +325,21 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
               });
             },
           ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Market Price',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: 180,
-                child: TextField(
-                  controller: _priceController,
-                  enabled: selectedOrderType != 'Market',
-                  decoration: const InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
+          getTextFields(selectedOrderType),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Validity',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
+              Text('Validity', style: textStyles.smallNormal),
               Row(
                 children: [
                   _buildValidityOption('Day'),
                   const SizedBox(width: 8),
                   _buildValidityOption('IOC'),
-                  // const SizedBox(width: 8),
-                  // _buildValidityOption('Mis'),
+                  const SizedBox(width: 8),
+                  _buildValidityOption('Minutes'),
                 ],
               )
             ],
@@ -323,6 +350,9 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget _buildOrderTypeTab(String text) {
+    final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
+
     final isSelected = selectedOrderType == text;
     return GestureDetector(
       onTap: () => setState(() => selectedOrderType = text),
@@ -330,42 +360,40 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE41E26) : Colors.grey[200],
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black87,
-            fontSize: 13,
-          ),
-        ),
+            color: isSelected ? colors.sliderColor : colors.buttonColor,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: colors.buttonBorderColor)),
+        child: Text(text,
+            style: textStyles.smallNormal.copyWith(
+              color: isSelected ? Colors.white : Colors.black87,
+            )),
       ),
     );
   }
 
   Widget _buildValidityOption(String text) {
+    final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
+
     final isSelected = selectedValidity == text;
     return GestureDetector(
       onTap: () => setState(() => selectedValidity = text),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE41E26) : Colors.grey[200],
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black87,
-            fontSize: 13,
-          ),
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+              color: isSelected ? colors.sliderColor : colors.buttonColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: colors.borderColorSecondary)),
+          child: Text(text,
+              style: textStyles.smallNormal.copyWith(
+                  color:
+                      isSelected ? Colors.white : colors.textColorSecondary))),
     );
   }
 
   Widget marketToggle() {
+    final colors = Theme.of(context).customColors;
+
     return Row(
       children: [
         Radio(
@@ -374,7 +402,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
           onChanged: (value) {
             setState(() => isNSE = value as bool);
           },
-          activeColor: const Color(0xFFE41E26),
+          activeColor: colors.sliderColor,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         const Text('NSE'),
@@ -384,7 +412,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
           onChanged: (value) {
             setState(() => isNSE = value as bool);
           },
-          activeColor: const Color(0xFFE41E26),
+          activeColor: colors.sliderColor,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         const Text('BSE'),
@@ -393,15 +421,16 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget buySellToggle() {
+    final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
+
     return Row(
       children: [
-        Text(
-          'BUY',
-          style: TextStyle(
-            color: !isSell ? const Color(0xFFE41E26) : Colors.grey,
-            fontWeight: !isSell ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
+        Text('BUY',
+            style: textStyles.smallBold.copyWith(
+              color: !isSell ? colors.axisColor : colors.textColorSecondary,
+              fontWeight: !isSell ? FontWeight.bold : FontWeight.normal,
+            )),
         const SizedBox(width: 8),
         Container(
             width: 50,
@@ -411,8 +440,10 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
               borderRadius: BorderRadius.circular(12),
             ),
             child: Switch(
-                inactiveThumbColor: Colors.white,
                 value: isSell,
+                activeTrackColor: colors.sliderColor,
+                inactiveThumbColor: colors.cardBasicBackground,
+                inactiveTrackColor: colors.bullishColor,
                 onChanged: (value) {
                   setState(() {
                     isSell = value;
@@ -440,14 +471,79 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
             // ),
             ),
         const SizedBox(width: 8),
-        Text(
-          'SELL',
-          style: TextStyle(
-            color: isSell ? const Color(0xFFE41E26) : Colors.grey,
-            fontWeight: isSell ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
+        Text('SELL',
+            style: textStyles.smallBold.copyWith(
+                color: isSell ? colors.axisColor : colors.textColorSecondary,
+                fontWeight: isSell ? FontWeight.bold : FontWeight.normal)),
       ],
     );
+  }
+
+  Widget getTextFields(String selectedOrderType) {
+    if (selectedOrderType == 'SL/TG') {
+      return Column(
+        children: [
+          Row(
+            children: [
+              const Text("Target"),
+              const Spacer(),
+              Container(
+                width: 260,
+                padding: const EdgeInsets.only(left: 80),
+                child: TextField(
+                  controller: _targetController,
+                  decoration: const InputDecoration(
+                    labelText: 'Target',
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              const Text("Stop loss"),
+              const Spacer(),
+              Container(
+                width: 260,
+                padding: const EdgeInsets.only(left: 80),
+                child: TextField(
+                  controller: _stopLossController,
+                  decoration: const InputDecoration(
+                    labelText: 'Stop Loss',
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          const Text("Market"),
+          const Spacer(),
+          Container(
+            width: 260,
+            padding: const EdgeInsets.only(left: 80),
+            child: TextField(
+              controller: _priceController,
+              enabled: selectedOrderType != 'Market',
+              decoration: const InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

@@ -48,12 +48,14 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        renderQuestion(),
+        const SizedBox(height: 10),
         SizedBox(
           height: constraints.maxHeight * 0.5,
           child: renderChart(),
         ),
         SizedBox(
-          height: constraints.maxHeight * 0.5,
+          height: constraints.maxHeight * 0.4,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             model.candles.isNotEmpty
@@ -64,8 +66,6 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
                         DateTime.fromMillisecondsSinceEpoch(
                             model.candles.first.time)))
                 : Container(),
-            renderQuestion(),
-            helperText(),
             const Spacer(),
             renderSubmitBtn()
           ]),
@@ -114,9 +114,8 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
     final textStyles = Theme.of(context).customTextStyles;
 
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Text(model.question,
-          style: textStyles.mediumBold, textAlign: TextAlign.center),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(model.question, style: textStyles.mediumNormal),
     );
   }
 
@@ -146,7 +145,9 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
                     context: context,
                     builder: (context) => BottomSheetWidget(
                         isCorrect: model.isCorrect,
-                        model: model.explanationV1,
+                        model: model.explanationV1?.getRRExplanation(
+                                model.isCorrect, model.resultText) ??
+                            model.explanationV1,
                         onNextClick: () {
                           widget.onNextClick();
                         }));
@@ -275,15 +276,17 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
                 limitHit = true;
                 model.isCorrect = true;
                 model.resultText = model.resultText.isEmpty
-                    ? "- Yay!! You hit the target"
-                    : "${model.resultText}\n- Yay!! You hit the target";
+                    ? model.rrResponses?.targetHitS1 ??
+                        "Yay!! You hit the target"
+                    : "${model.resultText}\n${model.rrResponses?.targetHitS1 ?? "Yay!!You hit the target"}";
               });
             } else if (candle.close < model.rrLayer.stoploss) {
               setState(() {
                 limitHit = true;
                 model.resultText = model.resultText.isEmpty
-                    ? "- Oops!! Stop loss was hit"
-                    : "${model.resultText}\n- Oops!! Stop loss was hit";
+                    ? model.rrResponses?.stoplossHitS1 ??
+                        "Oops!! Stop loss was hit"
+                    : "${model.resultText}\n${model.rrResponses?.stoplossHitS1 ?? "Oops!! Stop loss was hit"}";
               });
             }
           } else {
@@ -292,15 +295,17 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
                 limitHit = true;
                 model.isCorrect = true;
                 model.resultText = model.resultText.isEmpty
-                    ? "- Yay!! You hit the target"
-                    : "${model.resultText}\n- Yay!! You hit the target";
+                    ? model.rrResponses?.targetHitS2 ??
+                        "Yay!! You hit the target"
+                    : "${model.resultText}\n${model.rrResponses?.targetHitS2 ?? "Yay!!You hit the target"}";
               });
             } else if (candle.close > model.rrLayer.stoploss) {
               setState(() {
                 limitHit = true;
                 model.resultText = model.resultText.isEmpty
-                    ? "- Oops!! Stop loss was hit"
-                    : "${model.resultText}\n- Oops!! Stop loss was hit";
+                    ? model.rrResponses?.stoplossHitS2 ??
+                        "Oops!! Stop loss was hit"
+                    : "${model.resultText}\n${model.rrResponses?.stoplossHitS2 ?? "Oops!! Stop loss was hit"}";
               });
             }
           }
@@ -312,17 +317,18 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
     }
     if (!limitHit) {
       model.resultText = model.resultText.isEmpty
-          ? "- Target was to ambitious"
-          : "${model.resultText}\n- Target was to ambitious";
+          ? model.rrResponses?.ambitiousTarget ?? "- Target was to ambitious"
+          : "${model.resultText}\n${model.rrResponses?.ambitiousTarget ?? "- Target was to ambitious"}";
     }
   }
 
   void addRRValidText() {
     setState(() {
       if ((model.rrLayer.value - model.rrLayer.target).abs() /
-          (model.rrLayer.value - model.rrLayer.stoploss).abs() <
+              (model.rrLayer.value - model.rrLayer.stoploss).abs() <
           2) {
-        model.resultText = "- Risk to Reward should be 2 or more";
+        model.resultText = model.rrResponses?.infoText ??
+            "- Risk to Reward should be 2 or more";
       }
     });
   }

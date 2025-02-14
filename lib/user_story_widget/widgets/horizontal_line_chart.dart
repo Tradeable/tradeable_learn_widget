@@ -10,21 +10,21 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
 
-class TradeableChart extends StatefulWidget {
+class HorizontalLineChart extends StatefulWidget {
   final HorizontalLineModel model;
 
-  const TradeableChart({super.key, required this.model});
+  const HorizontalLineChart({super.key, required this.model});
 
   @override
   State<StatefulWidget> createState() => _TradeableChart();
 }
 
-class _TradeableChart extends State<TradeableChart>
+class _TradeableChart extends State<HorizontalLineChart>
     with TickerProviderStateMixin {
   bool isAnimating = false;
 
   @override
-  void didUpdateWidget(covariant TradeableChart oldWidget) {
+  void didUpdateWidget(covariant HorizontalLineChart oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.model != oldWidget.model) {
       setState(() {

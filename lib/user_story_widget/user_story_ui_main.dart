@@ -21,10 +21,13 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.d
 import 'package:tradeable_learn_widget/user_story_widget/widgets/option_chain_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/option_trade_sheet.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/order_status_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/rr_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_form_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_info.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_sheet.dart';
-import 'package:tradeable_learn_widget/user_story_widget/widgets/tradeable_chart.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/horizontal_line_chart.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_taker_form.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trend_line_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_slider.dart';
@@ -33,6 +36,7 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
+import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
 class UserStoryUIMain extends StatefulWidget {
   final UserStoryModel model;
@@ -57,6 +61,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   OptionEntry? selectedOptionEntry;
   String? quantity;
   UiData? selectedTicket;
+  TradeFormModel? tradeFormModel;
 
   @override
   void initState() {
@@ -339,7 +344,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "HorizontalLineChart":
                     return SizedBox(
                         height: 350,
-                        child: TradeableChart(model: uiData.chart!));
+                        child: HorizontalLineChart(model: uiData.chart!));
                   case "VolumeChart":
                     return VolumeBarChart(candles: uiData.candles ?? []);
                   case "VolumePriceSlider":
@@ -475,6 +480,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         });
                       },
                     );
+                  case "RRChart":
+                    return RRChart(model: uiData.rrModel!);
+                  case "TradeFormWidget":
+                    return TradeFormWidget(tradeFormModel: tradeFormModel!);
                   default:
                     return const SizedBox.shrink();
                 }
@@ -549,6 +558,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     showAnimation(step.ui
                         .firstWhere((a) => a.widget == "HorizontalLineChart")
                         .chart!);
+                    break;
                   case "moveToNextStep":
                     moveToNextStep();
                     break;
@@ -556,6 +566,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     takeToCorrectOffsets(step.ui
                         .firstWhere((a) => a.widget == "TrendLineChart")
                         .trendLineModelV1!);
+                    break;
                   case "showSummaryBottomSheet":
                     showModalBottomSheet(
                         context: context,
@@ -581,6 +592,24 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                             ),
                           );
                         });
+                    break;
+                  case "setupOrderBottomSheet":
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return TradeTakerForm(
+                            rrModel: step.ui
+                                .firstWhere((w) => w.widget == "RRChart")
+                                .rrModel!,
+                            tradeFormModel: (tf) {
+                              setState(() {
+                                tradeFormModel = tf;
+                              });
+                              loadCandlesTillEnd();
+                            },
+                          );
+                        });
+                    break;
                 }
               }
             },
@@ -596,63 +625,109 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
   void addCandles(StepData step, int sliderVal, UiData uiData) {
     setState(() {
-      setState(() {
-        List<ui.Candle> uiCandles = step.ui
-            .where((widget) => widget.widget == "HorizontalLineChart")
-            .first
-            .chart!
-            .uiCandles;
+      List<ui.Candle> uiCandles = step.ui
+          .where((widget) => widget.widget == "HorizontalLineChart")
+          .first
+          .chart!
+          .uiCandles;
 
-        uiCandles.removeWhere((candle) {
-          int? id = candle.candleId;
-          return id >= uiData.candles!.length;
-        });
-
-        if (sliderVal == 2) {
-          double basePrice = 750;
-          for (int i = 1; i <= 7; i++) {
-            bool isGreen = i % 2 == 1;
-            double open = basePrice + (i * 5);
-            double close = isGreen ? open + (i * 5) : open - 5;
-            double high = close + 5;
-            double low = open - (i * 5);
-
-            uiCandles.add(ui.Candle(
-              candleId: (uiData.candles!.length - 1 + i),
-              open: open,
-              high: high,
-              low: low,
-              close: close,
-              dateTime: DateTime.now().add(Duration(minutes: i)),
-              volume: 80 + (i * 10),
-            ));
-          }
-        } else if (sliderVal == 0) {
-          double basePrice = 775;
-          for (int i = 1; i <= 7; i++) {
-            bool isRed = i % 2 == 1;
-            double open = basePrice - (i * 5);
-            double close = isRed ? open - (5 * i) : open + (i * 5);
-            double high = open + (2 * i);
-            double low = close;
-
-            uiCandles.add(ui.Candle(
-              candleId: (uiData.candles!.length - 1 + i),
-              open: open,
-              high: high,
-              low: low,
-              close: close,
-              dateTime: DateTime.now().add(Duration(minutes: i)),
-              volume: 80 + (i * 10), // Increased volume
-            ));
-          }
-        }
-        step.ui
-            .where((widget) => widget.widget == "HorizontalLineChart")
-            .first
-            .chart!
-            .uiCandles = uiCandles;
+      uiCandles.removeWhere((candle) {
+        int? id = candle.candleId;
+        return id >= uiData.candles!.length;
       });
+
+      if (sliderVal == 2) {
+        double basePrice = 750;
+        for (int i = 1; i <= 7; i++) {
+          bool isGreen = i % 2 == 1;
+          double open = basePrice + (i * 5);
+          double close = isGreen ? open + (i * 5) : open - 5;
+          double high = close + 5;
+          double low = open - (i * 5);
+
+          uiCandles.add(ui.Candle(
+            candleId: (uiData.candles!.length - 1 + i),
+            open: open,
+            high: high,
+            low: low,
+            close: close,
+            dateTime: DateTime.now().add(Duration(minutes: i)),
+            volume: 80 + (i * 10),
+          ));
+        }
+      } else if (sliderVal == 0) {
+        double basePrice = 775;
+        for (int i = 1; i <= 7; i++) {
+          bool isRed = i % 2 == 1;
+          double open = basePrice - (i * 5);
+          double close = isRed ? open - (5 * i) : open + (i * 5);
+          double high = open + (2 * i);
+          double low = close;
+
+          uiCandles.add(ui.Candle(
+            candleId: (uiData.candles!.length - 1 + i),
+            open: open,
+            high: high,
+            low: low,
+            close: close,
+            dateTime: DateTime.now().add(Duration(minutes: i)),
+            volume: 80 + (i * 10), // Increased volume
+          ));
+        }
+      }
+      step.ui
+          .where((widget) => widget.widget == "HorizontalLineChart")
+          .first
+          .chart!
+          .uiCandles = uiCandles;
     });
+  }
+
+  void loadCandlesTillEnd() async {
+    setState(() {
+      isAnsweredCorrect = null;
+      selectedResponses.clear();
+    });
+
+    final currentIndex = widget.model.userStory.steps
+        .indexWhere((step) => step.stepId == currentStepId);
+
+    if (currentIndex >= 0 &&
+        currentIndex < widget.model.userStory.steps.length - 1) {
+      setState(() {
+        currentStepId = widget.model.userStory.steps[currentIndex + 1].stepId;
+      });
+      animatePageScroll();
+    }
+
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final chart = step.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+
+    List<ui.Candle> allCandles = chart.candles
+        .map((e) => ui.Candle(
+            candleId: e.candleNum,
+            open: e.open,
+            high: e.high,
+            low: e.low,
+            close: e.close,
+            dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+            volume: e.vol.round()))
+        .toList();
+
+    chart.uiCandles.addAll(allCandles
+        .takeWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime));
+
+    tradeFormModel!.avgPrice = (chart.uiCandles.last.close).toStringAsFixed(2);
+
+    setState(() {});
+
+    for (final candle in allCandles
+        .skipWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime)) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      setState(() {
+        tradeFormModel!.ltp = candle.close.toStringAsFixed(2);
+      });
+    }
   }
 }
