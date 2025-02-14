@@ -13,6 +13,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class CandleSelectQuestion extends StatefulWidget {
@@ -43,7 +44,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
-          renderQuestion(),
+          QuestionWidget(question: model.question),
           const SizedBox(height: 20),
           SizedBox(
             height: constraints.maxHeight * 0.5,
@@ -142,15 +143,6 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
           ),
         ], yMax: model.yMax, yMin: model.yMin);
     }
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(model.question, style: textStyles.mediumNormal),
-    );
   }
 
   Widget renderIndicator() {

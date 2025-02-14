@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:tradeable_learn_widget/calender_widget/calender_model.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -28,7 +29,6 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
     final colors = Theme.of(context).customColors;
 
     return Padding(
@@ -37,8 +37,7 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(model.question,
-                textAlign: TextAlign.center, style: textStyles.mediumNormal),
+            QuestionWidget(question: model.question),
             const SizedBox(height: 20),
             HeatMap(
               showColorTip: false,
@@ -85,7 +84,7 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
               child: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Submit",
-                onTap: (){
+                onTap: () {
                   widget.onNextClick();
                 },
               ),

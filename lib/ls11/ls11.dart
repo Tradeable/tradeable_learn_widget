@@ -132,16 +132,16 @@ class _LS11State extends State<LS11> {
   }
 
   Widget renderQuestion() {
-    return const Padding(
-        padding: EdgeInsets.all(10),
+    final textStyles = Theme.of(context).customTextStyles;
+
+    return Padding(
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             Text("Tap on the 2 candles to maximise your profit",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            SizedBox(
-              height: 4,
-            ),
-            Text(
+                style: textStyles.mediumNormal),
+            const SizedBox(height: 4),
+            const Text(
               "( PS: Your return is the difference between the entry candles and exit candles close price )",
               style: TextStyle(
                   color: Colors.red, fontStyle: FontStyle.italic, fontSize: 13),

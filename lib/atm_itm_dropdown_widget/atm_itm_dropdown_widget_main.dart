@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/atm_itm_dropdown_widget/atm_itm_dropdown_data_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ATMWidget extends StatefulWidget {
@@ -46,7 +47,7 @@ class _ATMWidgetState extends State<ATMWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        renderQuestion(),
+        QuestionWidget(question: model.question),
         const SizedBox(height: 40),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,16 +78,6 @@ class _ATMWidgetState extends State<ATMWidget> {
               }),
         ),
       ],
-    );
-  }
-
-  Widget renderQuestion() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(
-        model.question,
-        style: Theme.of(context).customTextStyles.mediumNormal,
-      ),
     );
   }
 

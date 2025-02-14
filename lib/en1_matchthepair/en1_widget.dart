@@ -38,9 +38,9 @@ class _EN1State extends State<EN1> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text("Match the pair", style: textStyles.mediumBold),
-                  ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text("Match the pair",
+                          style: textStyles.mediumNormal)),
                   const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(

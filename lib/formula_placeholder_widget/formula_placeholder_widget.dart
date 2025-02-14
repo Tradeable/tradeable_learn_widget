@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/formula_placeholder_widget/formula_placeholder_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class FormulaPlaceholderWidget extends StatefulWidget {
@@ -33,22 +34,23 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
       children: [
         Expanded(
             child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    model.title,
-                    style: textStyles.mediumBold,
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  model.title,
+                  style: textStyles.mediumBold,
                 ),
-                Text(model.situation, style: textStyles.mediumNormal),
-                const SizedBox(height: 20),
-                Column(
+              ),
+              QuestionWidget(question: model.situation),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (int i = 0; i < model.questions.length; i++)
                       Column(
@@ -131,39 +133,40 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
                             ),
                         ],
                       ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Options",
+                        style: textStyles.mediumBold,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8.0,
+                        crossAxisSpacing: 8.0,
+                        childAspectRatio: 2.5,
+                      ),
+                      itemCount: model.options.length,
+                      itemBuilder: (context, index) {
+                        return Draggable<DraggableFormulaOption>(
+                          data: model.options[index],
+                          feedback: buildDraggableItem(
+                              model.options[index].optionText),
+                          childWhenDragging: Container(),
+                          child: buildDraggableItem(
+                              model.options[index].optionText),
+                        );
+                      },
+                    ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Options",
-                    style: textStyles.mediumBold,
-                  ),
-                ),
-                const SizedBox(height: 8.0),
-                GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 8.0,
-                    crossAxisSpacing: 8.0,
-                    childAspectRatio: 2.5,
-                  ),
-                  itemCount: model.options.length,
-                  itemBuilder: (context, index) {
-                    return Draggable<DraggableFormulaOption>(
-                      data: model.options[index],
-                      feedback:
-                          buildDraggableItem(model.options[index].optionText),
-                      childWhenDragging: Container(),
-                      child:
-                          buildDraggableItem(model.options[index].optionText),
-                    );
-                  },
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         )),
         Padding(
@@ -172,7 +175,7 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
             color: model.options.isEmpty ? colors.primary : colors.secondary,
             btnContent: "Next",
             onTap: () {
-              if(model.options.isEmpty) {
+              if (model.options.isEmpty) {
                 widget.onNextClick();
               }
             },

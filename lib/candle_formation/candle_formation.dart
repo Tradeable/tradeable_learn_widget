@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:tradeable_learn_widget/candle_formation/candle_formation_model.dart';
 import 'package:tradeable_learn_widget/candle_formation/widgets/body_part_widget.dart';
 import 'package:tradeable_learn_widget/candle_formation/widgets/option_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -28,8 +29,6 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-
     return LayoutBuilder(
       builder: (context, constraints) {
         return Column(
@@ -52,8 +51,7 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
                     margin: const EdgeInsets.only(left: 10, right: 10),
                     child: Align(
                         alignment: Alignment.bottomLeft,
-                        child: Text(model.question,
-                            style: textStyles.mediumNormal)),
+                        child: QuestionWidget(question: model.question)),
                   ),
                   SizedBox(
                       height: constraints.maxHeight / 4,

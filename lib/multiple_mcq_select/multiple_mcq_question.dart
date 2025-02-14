@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/multiple_mcq_select/multiple_mcq_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MultipleMCQSelect extends StatefulWidget {
@@ -34,7 +35,7 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          renderQuestion(),
+          QuestionWidget(question: model.question),
           const Spacer(),
           renderOptions(),
           const Spacer(),
@@ -51,15 +52,6 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
         ],
       );
     });
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Text(model.question,
-            textAlign: TextAlign.start, style: textStyles.mediumNormal));
   }
 
   Widget renderOptions() {
