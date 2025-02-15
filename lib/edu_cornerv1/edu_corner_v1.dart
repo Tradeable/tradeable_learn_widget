@@ -240,41 +240,51 @@ class _EduCornerV1State extends State<EduCornerV1> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: colors.cardColorSecondary,
-                ),
-                height: 40,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_left),
-                  onPressed: () {
-                    controller.previousPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                    );
-                  },
-                ),
-              ),
+              currentPage == 0
+                  ? const SizedBox(
+                      height: 40,
+                      width: 40,
+                    )
+                  : Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colors.cardColorSecondary,
+                      ),
+                      height: 40,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_left),
+                        onPressed: () {
+                          controller.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                        },
+                      ),
+                    ),
               Text(card.textContent?.title ?? "", style: textStyles.mediumBold),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: colors.cardColorSecondary,
-                ),
-                height: 40,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_right),
-                  onPressed: () {
-                    controller.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeIn,
-                    );
-                  },
-                ),
-              ),
+              currentPage == model.cards.length - 1
+                  ? const SizedBox(
+                      height: 40,
+                      width: 40,
+                    )
+                  : Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colors.cardColorSecondary,
+                      ),
+                      height: 40,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_right),
+                        onPressed: () {
+                          controller.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                        },
+                      ),
+                    ),
             ],
           ),
           Container(

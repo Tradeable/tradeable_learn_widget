@@ -132,7 +132,7 @@ class ExpandableEduTile extends StatefulWidget {
 }
 
 class _ExpandableEduTileState extends State<ExpandableEduTile> {
-  bool _isExpanded = false;
+  bool _isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
