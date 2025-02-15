@@ -33,6 +33,21 @@ extension ExecutionTypeExtension on ExecutionType {
   }
 }
 
+enum OrderType { market, limit, sltg }
+
+extension OrderTypeExtension on OrderType {
+  String get name {
+    switch (this) {
+      case OrderType.market:
+        return 'Market';
+      case OrderType.limit:
+        return 'Limit';
+      case OrderType.sltg:
+        return 'SL/TG';
+    }
+  }
+}
+
 class TradeTypeModel {
   final TradeType tradeType;
   final bool isLocked;
@@ -42,13 +57,54 @@ class TradeTypeModel {
       {required this.tradeType,
       required this.isLocked,
       required this.executionTypes});
+
+  factory TradeTypeModel.fromJson(Map<String, dynamic> json) {
+    return TradeTypeModel(
+      tradeType: TradeType.values
+          .firstWhere((e) => e.toString() == 'TradeType.${json['tradeType']}'),
+      isLocked: json['isLocked'] as bool,
+      executionTypes: (json['executionTypes'] as List<dynamic>)
+          .map((e) => ExecutionTypeModel.fromJson(e))
+          .toList(),
+    );
+  }
 }
 
 class ExecutionTypeModel {
   final ExecutionType executionType;
   final bool isLocked;
+  final List<OrderTypeModel> orderTypes;
 
-  ExecutionTypeModel({required this.executionType, required this.isLocked});
+  ExecutionTypeModel(
+      {required this.executionType,
+      required this.isLocked,
+      required this.orderTypes});
+
+  factory ExecutionTypeModel.fromJson(Map<String, dynamic> json) {
+    return ExecutionTypeModel(
+      executionType: ExecutionType.values.firstWhere(
+          (e) => e.toString() == 'ExecutionType.${json['executionType']}'),
+      isLocked: json['isLocked'] as bool,
+      orderTypes: (json['orderTypes'] as List<dynamic>)
+          .map((e) => OrderTypeModel.fromJson(e))
+          .toList(),
+    );
+  }
+}
+
+class OrderTypeModel {
+  final OrderType orderType;
+  final bool isLocked;
+
+  OrderTypeModel({required this.orderType, required this.isLocked});
+
+  factory OrderTypeModel.fromJson(Map<String, dynamic> json) {
+    return OrderTypeModel(
+      orderType: OrderType.values
+          .firstWhere((e) => e.toString() == 'OrderType.${json['orderType']}'),
+      isLocked: json['isLocked'] as bool,
+    );
+  }
 }
 
 class TradeFormModel {
@@ -104,7 +160,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   final TextEditingController _targetController = TextEditingController();
   double quantity = 1;
 
-  String selectedOrderType = 'SL/TG';
+  OrderType selectedOrderType = OrderType.sltg;
   String selectedValidity = 'Day';
 
   @override
@@ -140,6 +196,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
     final colors = Theme.of(context).customColors;
 
     return Container(
+      color: colors.cardBasicBackground,
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Column(
@@ -279,10 +336,11 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                _buildOrderTypeTab('Market'),
-                _buildOrderTypeTab('Limit'),
-                _buildOrderTypeTab('SL/TG'),
-                // _buildOrderTypeTab('SL Limit'),
+                ...widget.tradeTypes[_outerTabController.index]
+                    .executionTypes[_innerTabController.index].orderTypes
+                    .map((orderTypeModel) {
+                  return _buildOrderTypeTab(orderTypeModel);
+                }),
               ],
             ),
           ),
@@ -326,7 +384,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
             },
           ),
           const SizedBox(height: 16),
-          getTextFields(selectedOrderType),
+          getTextFields(selectedOrderType.name),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -349,24 +407,47 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
     );
   }
 
-  Widget _buildOrderTypeTab(String text) {
+  Widget _buildOrderTypeTab(OrderTypeModel orderTypeModel) {
     final colors = Theme.of(context).customColors;
     final textStyles = Theme.of(context).customTextStyles;
 
-    final isSelected = selectedOrderType == text;
     return GestureDetector(
-      onTap: () => setState(() => selectedOrderType = text),
+      onTap: orderTypeModel.isLocked
+          ? null
+          : () => setState(() => selectedOrderType = orderTypeModel.orderType),
       child: Container(
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-            color: isSelected ? colors.sliderColor : colors.buttonColor,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: colors.buttonBorderColor)),
-        child: Text(text,
-            style: textStyles.smallNormal.copyWith(
-              color: isSelected ? Colors.white : Colors.black87,
-            )),
+          color: selectedOrderType == orderTypeModel.orderType
+              ? colors.sliderColor
+              : (orderTypeModel.isLocked
+                  ? colors.buttonColor.withOpacity(0.5)
+                  : colors.buttonColor),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: orderTypeModel.isLocked
+                  ? colors.buttonBorderColor.withOpacity(0.5)
+                  : colors.buttonBorderColor),
+        ),
+        child: Row(
+          children: [
+            Text(
+              orderTypeModel.orderType.name,
+              style: textStyles.smallNormal.copyWith(
+                color: selectedOrderType == orderTypeModel.orderType
+                    ? Colors.white
+                    : (orderTypeModel.isLocked
+                        ? colors.disabledContainer
+                        : colors.axisColor),
+              ),
+            ),
+            const SizedBox(width: 4),
+            orderTypeModel.isLocked
+                ? Icon(Icons.lock, size: 14, color: colors.disabledContainer)
+                : Container()
+          ],
+        ),
       ),
     );
   }

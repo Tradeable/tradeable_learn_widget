@@ -18,23 +18,7 @@ class _TradeTakerForm extends State<TradeTakerForm> {
   Widget build(BuildContext context) {
     return TradeTakerWidget(
       model: widget.rrModel,
-      tradeTypes: [
-        TradeTypeModel(
-            tradeType: TradeType.intraday,
-            isLocked: false,
-            executionTypes: [
-              ExecutionTypeModel(
-                  executionType: ExecutionType.regular, isLocked: false),
-              ExecutionTypeModel(
-                  executionType: ExecutionType.amo, isLocked: true),
-              ExecutionTypeModel(
-                  executionType: ExecutionType.cover, isLocked: true),
-              ExecutionTypeModel(
-                  executionType: ExecutionType.iceberg, isLocked: true)
-            ]),
-        TradeTypeModel(
-            tradeType: TradeType.delivery, isLocked: true, executionTypes: []),
-      ],
+      tradeTypes: widget.rrModel.tradeTypeModel ?? [],
       tradeForm: (tradeFormModel) {
         widget.tradeFormModel(tradeFormModel);
       },

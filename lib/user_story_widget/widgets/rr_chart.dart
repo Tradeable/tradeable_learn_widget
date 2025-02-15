@@ -38,10 +38,10 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
     if (widget.model != oldWidget.model) {
       setState(() {
+        model = widget.model;
         isAnimating = false;
       });
-      if(widget.model.loadCandlesTillEnd ?? false) {
-        print("object");
+      if (widget.model.loadCandlesTillEnd ?? false) {
         loadCandlesTillEnd();
       }
     }
@@ -175,13 +175,13 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
     if (model.atTime != 0) {
       for (ui.Candle candle in model.candles
           .map((e) => ui.Candle(
-          candleId: e.candleNum,
-          open: e.open,
-          high: e.high,
-          low: e.low,
-          close: e.close,
-          dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
-          volume: e.vol.round()))
+              candleId: e.candleNum,
+              open: e.open,
+              high: e.high,
+              low: e.low,
+              close: e.close,
+              dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+              volume: e.vol.round()))
           .toList()) {
         await Future.delayed(const Duration(milliseconds: 50));
         if (model.candles.length != model.uiCandles.length &&
@@ -193,5 +193,4 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
       }
     }
   }
-
 }
