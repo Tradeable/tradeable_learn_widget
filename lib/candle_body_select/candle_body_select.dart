@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/candle_body_select/candle_body_select_model.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -33,7 +34,7 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 10),
-        renderQuestion(theme),
+        QuestionWidget(question: model.question),
         Center(
             child:
                 renderSingleSelectQuestion(model.userResponse ?? "", colors)),
@@ -47,13 +48,6 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget renderQuestion(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(model.question, style: theme.customTextStyles.mediumNormal),
     );
   }
 

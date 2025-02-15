@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
@@ -14,6 +13,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/line_layer/line_la
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MCQQuestion extends StatefulWidget {
@@ -45,7 +45,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          renderQuestion(),
+          QuestionWidget(question: model.question),
           const SizedBox(height: 20),
           SizedBox(
             height: constraints.maxHeight * 0.5,
@@ -110,16 +110,6 @@ class _MCQQuestionState extends State<MCQQuestion> {
               shadowColor: colors.axisColor),
           candles: model.uiCandles),
     ], yMax: model.yMax, yMin: model.yMin);
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: AutoSizeText(model.question,
-          maxLines: 2, style: textStyles.mediumNormal),
-    );
   }
 
   Widget renderOptions() {

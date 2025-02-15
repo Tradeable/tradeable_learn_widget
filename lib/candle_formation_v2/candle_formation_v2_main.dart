@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/candle_formation_v2/candle_formation_v2_model.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -112,7 +113,6 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -126,10 +126,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      Expanded(
-                        child:
-                            Text(model.question, style: textStyles.mediumBold),
-                      ),
+                      Expanded(child: QuestionWidget(question: model.question)),
                       IconButton(
                           onPressed: () {
                             scrollToCorrectAnswers();

@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/fno_buy_story/price_decrease_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class PriceDecreased extends StatefulWidget {
@@ -52,11 +53,7 @@ class _PriceDecreasedState extends State<PriceDecreased> {
                         textAlign: TextAlign.left,
                       ),
                       const SizedBox(height: 80),
-                      Text(
-                        model.question,
-                        style: textStyles.mediumNormal,
-                        textAlign: TextAlign.center,
-                      ),
+                      QuestionWidget(question: model.question),
                       const SizedBox(height: 30),
                       GridView.count(
                         physics: const NeverScrollableScrollPhysics(),

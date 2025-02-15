@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/mcq_candle_question/mcq_candle_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MCQCandleQuestion extends StatefulWidget {
@@ -33,7 +34,7 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            renderQuestion(),
+            QuestionWidget(question: model.question),
             Expanded(child: renderOptionsWithScroll()),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
@@ -51,14 +52,6 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
           ],
         );
       },
-    );
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(model.question, style: textStyles.mediumNormal),
     );
   }
 

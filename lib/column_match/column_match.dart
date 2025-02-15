@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/column_match/column_data_model.dart';
 import 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ColumnMatch extends StatefulWidget {
@@ -63,10 +64,7 @@ class _ColumnMatchState extends State<ColumnMatch> {
                   padding: const EdgeInsets.only(left: 20, top: 20, bottom: 10),
                   child: Text(model.title ?? "", style: textStyles.largeBold),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Text(model.question, style: textStyles.largeBold),
-                ),
+                QuestionWidget(question: model.question),
                 const SizedBox(height: 30),
                 renderLadderContainer(),
                 const SizedBox(height: 30),

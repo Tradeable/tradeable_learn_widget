@@ -6,6 +6,7 @@ import 'package:tradeable_learn_widget/ladder_widget/ladder_container.dart';
 import 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/learn_error_border.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LadderWidgetMain extends StatefulWidget {
@@ -68,7 +69,8 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                  height: constraints.maxHeight * 0.11, child: renderHeader()),
+                  height: constraints.maxHeight * 0.11,
+                  child: QuestionWidget(question: model.question)),
               SizedBox(
                   height: constraints.maxHeight * 0.66,
                   child: renderLadderContainer(BoxConstraints(
@@ -118,7 +120,7 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                             : colors.secondary,
                         btnContent: "Next",
                         onTap: () {
-                          if(answeredAllCorrectly()) {
+                          if (answeredAllCorrectly()) {
                             widget.onNextClick();
                           }
                         }),
@@ -129,16 +131,6 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget renderHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        model.question,
-        style: Theme.of(context).customTextStyles.mediumNormal,
       ),
     );
   }

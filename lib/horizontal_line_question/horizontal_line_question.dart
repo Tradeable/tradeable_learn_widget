@@ -15,6 +15,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class HorizontalLineQuestion extends StatefulWidget {
@@ -46,7 +47,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          renderQuestion(),
+          QuestionWidget(question: model.question),
           const SizedBox(height: 20),
           SizedBox(height: constraints.maxHeight * 0.5, child: renderChart()),
           SizedBox(
@@ -113,14 +114,6 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
           ...model.correctResponseLayer
         ], yMax: model.yMax, yMin: model.yMin);
     }
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Text(model.question, style: textStyles.mediumNormal),
-    );
   }
 
   Widget renderSubmitBtn() {

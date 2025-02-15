@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class DragAndDropMatch extends StatefulWidget {
@@ -69,10 +70,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
           ),
         ),
         const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Text(model.question, style: textStyles.mediumNormal),
-        ),
+        QuestionWidget(question: model.question),
         const SizedBox(height: 10),
         renderLadderContainer(),
         Padding(

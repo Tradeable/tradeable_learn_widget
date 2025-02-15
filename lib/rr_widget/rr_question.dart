@@ -11,6 +11,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/rr_layer/rr_layer.
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
@@ -48,7 +49,7 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        renderQuestion(),
+        QuestionWidget(question: model.question),
         const SizedBox(height: 10),
         SizedBox(
           height: constraints.maxHeight * 0.5,
@@ -108,15 +109,6 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
           });
         },
     ], yMax: model.yMax, yMin: model.yMin);
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(model.question, style: textStyles.mediumNormal),
-    );
   }
 
   Widget renderSubmitBtn() {

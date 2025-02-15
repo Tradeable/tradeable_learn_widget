@@ -7,9 +7,9 @@ import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
 import 'package:tradeable_learn_widget/trend_line/widgets/content_widget.dart';
 import 'package:tradeable_learn_widget/trend_line/widgets/line_graph_widget.dart';
 import 'package:tradeable_learn_widget/trend_line/widgets/line_mcq_question.dart';
-import 'package:tradeable_learn_widget/trend_line/widgets/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class TrendLineWidget extends StatefulWidget {

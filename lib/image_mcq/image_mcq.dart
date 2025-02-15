@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/image_mcq/image_mcq_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ImageMcq extends StatefulWidget {
@@ -38,7 +39,7 @@ class _ImageMcqState extends State<ImageMcq> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    renderQuestion(),
+                    QuestionWidget(question: model.question),
                     model.imgSrc!.isNotEmpty
                         ? Image.network(
                             model.imgSrc!,
@@ -67,15 +68,6 @@ class _ImageMcqState extends State<ImageMcq> {
         ],
       );
     });
-  }
-
-  Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Text(model.question,
-          textAlign: TextAlign.center, style: textStyles.mediumNormal),
-    );
   }
 
   Widget renderOptions() {
