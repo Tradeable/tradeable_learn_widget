@@ -73,7 +73,7 @@ class CandleLayer extends ChartLayer {
               Radius.circular(layer.settings.radius)),
           Paint()
             ..style = PaintingStyle.fill
-            ..color = shadowColor);
+            ..color = candleColor);
 
       //candle body border
       canvas.drawRRect(
@@ -95,7 +95,7 @@ class CandleLayer extends ChartLayer {
               Radius.circular(layer.settings.radius)),
           Paint()
             ..style = PaintingStyle.stroke
-            ..color = shadowColor);
+            ..color = candleColor);
 
       //candle body
       canvas.drawRRect(

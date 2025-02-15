@@ -19,10 +19,12 @@ class MultipleMCQSelect extends StatefulWidget {
 
 class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
   late MultipleMCQModel model;
+  AutoSizeGroup? group;
 
   @override
   void initState() {
     model = widget.model;
+    group = AutoSizeGroup();
     super.initState();
   }
 
@@ -77,6 +79,7 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
             (e) => QuestionOptions(
                 option: e,
                 correctResponse: correctResponse ?? [],
+                group: group,
                 onTap: (option) {
                   setState(() {
                     if (model.state == MultipleMCQQuestionState.loadUI) {
