@@ -46,58 +46,56 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          QuestionWidget(question: model.question),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: model.responseRange.map((response) {
-              IconData iconData = response.isCorrect == null
-                  ? Icons.play_circle
-                  : (response.isCorrect! ? Icons.check_circle : Icons.error);
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                QuestionWidget(question: model.question),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: model.responseRange.map((response) {
+                    IconData iconData = response.isCorrect == null
+                        ? Icons.play_circle
+                        : (response.isCorrect!
+                            ? Icons.check_circle
+                            : Icons.error);
 
-              return Column(
-                children: [
-                  Icon(iconData,
-                      size: 24,
-                      color: response.isCorrect == null
-                          ? colors.borderColorPrimary
-                          : (response.isCorrect!
-                              ? colors.bullishColor
-                              : colors.bearishColor)),
-                  Text(response.title, style: const TextStyle(fontSize: 16)),
-                ],
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(height: constraints.maxHeight * 0.5, child: renderChart()),
-          SizedBox(
-              height: constraints.maxHeight * 0.2,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    return Column(
                       children: [
-                        model.candles.isNotEmpty
-                            ? ChartInfoChips(
-                                ticker: model.ticker,
-                                timeFrame: model.timeframe,
-                                date: DateFormat("dd MMM yyyy").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        model.candles.first.time)))
-                            : Container(),
-                      ]),
-                ],
-              )),
-          renderSubmitBtn(),
-        ],
-      );
-    });
+                        Icon(iconData,
+                            size: 24,
+                            color: response.isCorrect == null
+                                ? colors.borderColorPrimary
+                                : (response.isCorrect!
+                                    ? colors.bullishColor
+                                    : colors.bearishColor)),
+                        Text(response.title,
+                            style: const TextStyle(fontSize: 16)),
+                      ],
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(height: 350, child: renderChart()),
+                model.candles.isNotEmpty
+                    ? ChartInfoChips(
+                        ticker: model.ticker,
+                        timeFrame: model.timeframe,
+                        date: DateFormat("dd MMM yyyy").format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                model.candles.first.time)))
+                    : Container(),
+              ],
+            ),
+          ),
+        ),
+        renderSubmitBtn(),
+      ],
+    );
   }
 
   Widget renderChart() {
@@ -145,7 +143,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
     final colors = Theme.of(context).customColors;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       child: ButtonWidget(
           color: colors.primary,
           btnContent: "Submit",

@@ -56,6 +56,7 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
                   SizedBox(
                       height: constraints.maxHeight / 4,
                       child: buildOptions(model.state)),
+                  const Spacer(),
                   renderSubmitBtn()
                 ],
               ),
@@ -126,20 +127,28 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
     switch (model.state) {
       case CandleFormationState.loadUI:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
-              color: colors.primary,
+              color: model.selectedOptions.length < 3
+                  ? colors.secondary
+                  : colors.primary,
               btnContent: "Submit",
               onTap: () {
-                if (model.selectedOptions.length < 3) {
-                  showErrorMessage();
-                } else {
+                if (model.selectedOptions.length >= 3) {
                   submitResponse(model.selectedOptions);
                 }
               }),
         );
       case CandleFormationState.submitResponse:
-        return Container();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          child: ButtonWidget(
+              color: colors.primary,
+              btnContent: "Next",
+              onTap: () {
+                widget.onNextClick();
+              }),
+        );
     }
   }
 
@@ -167,7 +176,6 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
         });
       }
     });
-    widget.onNextClick();
   }
 
   Widget buildOptions(CandleFormationState state) {

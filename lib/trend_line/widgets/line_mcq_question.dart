@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LineMCQQuestionWidget extends StatefulWidget {
@@ -30,9 +31,26 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).customColors;
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: buildOptions(correctResponse: widget.correctResponse),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      child: Column(
+        children: [
+          buildOptions(correctResponse: widget.correctResponse),
+          const SizedBox(height: 20),
+          ButtonWidget(
+              color: widget.model.userResponse.isNotEmpty
+                  ? colors.primary
+                  : colors.secondary,
+              btnContent: 'Next',
+              onTap: () {
+                if (widget.model.userResponse.isNotEmpty) {
+                  widget.onSubmit();
+                }
+              })
+        ],
+      ),
     );
   }
 
@@ -53,7 +71,6 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
               onTap: (option) {
                 setState(() {
                   widget.model.userResponse = option;
-                  widget.onSubmit();
                 });
                 // model.state = TrendLineQuestionState.submitMCQ2;
               },

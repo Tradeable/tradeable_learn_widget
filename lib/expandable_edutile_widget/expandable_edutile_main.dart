@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edutile_model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/info_bottom_sheet.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ExpandableEduTileMain extends StatefulWidget {
@@ -17,6 +18,7 @@ class ExpandableEduTileMain extends StatefulWidget {
 
 class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
   late ExpandableEduTileModel model;
+  bool showBanner = true;
 
   @override
   void initState() {
@@ -28,89 +30,130 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
     final colors = Theme.of(context).customColors;
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        model.shortInfo,
+                        style: textStyles.smallNormal,
+                      ),
+                      const SizedBox(height: 16),
+                      ListView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        children: model.tiles.map((tile) {
+                          return ExpandableEduTile(
+                            title: tile.title,
+                            subtitle: tile.subtitle,
+                            content: tile.content,
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 10),
+                      model.videoId.isNotEmpty
+                          ? Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                  height: 50,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: colors.primary),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Material(
+                                                    child: VideoEduCorner(
+                                                        model:
+                                                            VideoEduCornerModel
+                                                                .fromJson({
+                                                          "video_id":
+                                                              model.videoId
+                                                        }),
+                                                        onNextClick: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }),
+                                                  )));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        const Icon(Icons.play_arrow,
+                                            color: Colors.white),
+                                        Text('Watch Video',
+                                            style: textStyles.smallNormal
+                                                .copyWith(color: Colors.white)),
+                                      ],
+                                    ),
+                                  )),
+                            )
+                          : Container(),
+                      const SizedBox(height: 60),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 50,
+                child: ButtonWidget(
+                  color: colors.primary,
+                  btnContent: "Next",
+                  onTap: () {
+                    showModalBottomSheet(
+                        isDismissible: false,
+                        context: context,
+                        builder: (context) => InfoBottomSheet(
+                            onNextClick: () => widget.onNextClick()));
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 10,
+          left: 10,
+          right: 10,
+          child: Visibility(
+            visible: showBanner,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xff404040),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    model.shortInfo,
-                    style: textStyles.smallNormal,
+                  Text("Let’s start with an education corner!",
+                      style:
+                          textStyles.smallNormal.copyWith(color: Colors.white)),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        showBanner = false;
+                      });
+                    },
+                    child: const Icon(Icons.close, color: Colors.white),
                   ),
-                  const SizedBox(height: 16),
-                  ListView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    children: model.tiles.map((tile) {
-                      return ExpandableEduTile(
-                        title: tile.title,
-                        subtitle: tile.subtitle,
-                        content: tile.content,
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 10),
-                  model.videoId.isNotEmpty
-                      ? Align(
-                          alignment: Alignment.bottomRight,
-                          child: Container(
-                              height: 50,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: colors.primary),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Material(
-                                                child: VideoEduCorner(
-                                                    model: VideoEduCornerModel
-                                                        .fromJson({
-                                                      "video_id": model.videoId
-                                                    }),
-                                                    onNextClick: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    }),
-                                              )));
-                                },
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    const Icon(Icons.play_arrow,
-                                        color: Colors.white),
-                                    Text('Watch Video',
-                                        style: textStyles.smallNormal
-                                            .copyWith(color: Colors.white)),
-                                  ],
-                                ),
-                              )),
-                        )
-                      : Container(),
-                  const SizedBox(height: 60),
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: 50,
-            child: ButtonWidget(
-              color: colors.primary,
-              btnContent: "Next",
-              onTap: () {
-                widget.onNextClick();
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
