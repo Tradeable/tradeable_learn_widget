@@ -27,8 +27,8 @@ class _TradeFormWidget extends State<TradeFormWidget> {
 
     String tradeStatus = "Holding";
     double? ltp = double.tryParse(model.ltp ?? "0");
-    double? targetPrice = double.tryParse(model.target ?? "0");
-    double? stopPrice = double.tryParse(model.stopLoss ?? "0");
+    double? targetPrice = double.tryParse(model.target);
+    double? stopPrice = double.tryParse(model.stopLoss);
     double? avgPrice = double.tryParse(model.avgPrice ?? "0");
 
     if (ltp != null && targetPrice != null && stopPrice != null) {
@@ -46,11 +46,16 @@ class _TradeFormWidget extends State<TradeFormWidget> {
       double profit = model.isSell ? avgPrice - ltp : ltp - avgPrice;
       int arrowCount =
           (profit.abs() ~/ (avgPrice * 0.01)).clamp(1, 3); // 1-3 arrows
+
+      bool isProfit = model.isCallTrade
+          ? profit > 0 // Call Trade: Profit when price increases
+          : profit < 0; // Put Trade: Profit when price decreases
+
       arrowIndicator = Row(
         children: List.generate(arrowCount, (index) {
           return Icon(
-            profit > 0 ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-            color: profit > 0 ? Colors.green : Colors.red,
+            isProfit ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+            color: isProfit ? Colors.green : Colors.red,
             size: 18,
           );
         }),
@@ -85,7 +90,9 @@ class _TradeFormWidget extends State<TradeFormWidget> {
               const SizedBox(width: 10),
               Text(model.tradeType.name),
               const Spacer(),
-              Text("$tradeStatus ", style: textStyles.smallNormal),
+              model.orderType == OrderType.sltg
+                  ? Text("$tradeStatus ", style: textStyles.smallNormal)
+                  : const Text("Executed"),
             ],
           ),
           const SizedBox(height: 6),

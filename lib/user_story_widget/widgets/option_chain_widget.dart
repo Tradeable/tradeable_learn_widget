@@ -8,11 +8,12 @@ class OptionsDataWidget extends StatefulWidget {
   final Function(OptionEntry?, String) onRowSelected;
   final OptionEntry? selectedOptionEntry;
 
-  const OptionsDataWidget(
-      {super.key,
-      required this.data,
-      required this.onRowSelected,
-      this.selectedOptionEntry});
+  const OptionsDataWidget({
+    super.key,
+    required this.data,
+    required this.onRowSelected,
+    this.selectedOptionEntry,
+  });
 
   @override
   State<StatefulWidget> createState() => _OptionsDataWidget();
@@ -96,12 +97,9 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
-        data.length * 2,
-        (index) {
-          final entryIndex = index ~/ 2;
-          final isValue = index.isOdd;
-          final value =
-              isValue ? data[entryIndex].value : data[entryIndex].premium;
+        data.length,
+        (entryIndex) {
+          final entry = data[entryIndex];
           final isFirstHalf = entryIndex < halfLength;
 
           Color backgroundColor = isCallColumn
@@ -110,51 +108,100 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
 
           bool isSelected = selectedRow == entryIndex;
 
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedRow = isSelected ? null : entryIndex;
-                selectedRowObject = isSelected ? null : data[entryIndex];
-              });
-            },
-            child: Container(
-              color: backgroundColor,
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  !isCallColumn
-                      ? _buildBuySellButton(isSelected, isValue, isCallColumn)
-                      : const SizedBox.shrink(),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        value.toStringAsFixed(
-                          value.toString().endsWith('.0') ? 0 : 2,
-                        ),
-                        style: textStyles.smallNormal.copyWith(
-                          color: isValue
-                              ? colors.textColorSecondary
-                              : colors.axisColor,
-                          fontSize: isValue ? 14 : 16,
-                        ),
+          return Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedRow = isSelected ? null : entryIndex;
+                    selectedRowObject = isSelected ? null : entry;
+                  });
+                },
+                child: Container(
+                  color: backgroundColor,
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      if (!widget.data.showValues) const SizedBox(height: 14),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (!isCallColumn)
+                            _buildBuySellButton(
+                                isSelected, false, isCallColumn, entry),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                entry.premium.toStringAsFixed(
+                                  entry.premium.toString().endsWith('.0')
+                                      ? 0
+                                      : 2,
+                                ),
+                                style: textStyles.smallNormal.copyWith(
+                                  color: colors.axisColor,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (isCallColumn)
+                            _buildBuySellButton(
+                                isSelected, false, isCallColumn, entry),
+                        ],
                       ),
+                      if (!widget.data.showValues) const SizedBox(height: 14),
+                    ],
+                  ),
+                ),
+              ),
+              if (widget.data.showValues)
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selectedRow = isSelected ? null : entryIndex;
+                      selectedRowObject = isSelected ? null : entry;
+                    });
+                  },
+                  child: Container(
+                    color: backgroundColor,
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (!isCallColumn)
+                          _buildBuySellButton(
+                              isSelected, true, isCallColumn, entry),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              entry.value.toStringAsFixed(
+                                entry.value.toString().endsWith('.0') ? 0 : 2,
+                              ),
+                              style: textStyles.smallNormal.copyWith(
+                                color: colors.textColorSecondary,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (isCallColumn)
+                          _buildBuySellButton(
+                              isSelected, true, isCallColumn, entry),
+                      ],
                     ),
                   ),
-                  isCallColumn
-                      ? _buildBuySellButton(isSelected, isValue, !isCallColumn)
-                      : const SizedBox.shrink(),
-                ],
-              ),
-            ),
+                ),
+            ],
           );
         },
       ),
     );
   }
 
-  Widget _buildBuySellButton(bool isSelected, bool isValue, bool isCallColumn) {
+  Widget _buildBuySellButton(
+      bool isSelected, bool isValue, bool isCallColumn, OptionEntry entry) {
     final colors = Theme.of(context).customColors;
     final textStyles = Theme.of(context).customTextStyles;
     if (!isSelected) return const SizedBox.shrink();
@@ -162,27 +209,34 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     String label = isValue ? 'SELL' : 'BUY';
     Color color = isValue ? colors.bearishColor : colors.bullishColor;
 
+    bool isButtonEnabled = isValue ? entry.isSellEnabled : entry.isBuyEnabled;
+
+    print(isCallColumn);
     return InkWell(
-      onTap: () {
-        if (selectedRowObject != null) {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) => TradeBottomSheet(
-              confirmOrder: (quantity) {
-                widget.onRowSelected(selectedRowObject, quantity);
-                setState(() {
-                  selectedRow = null;
-                });
-              },
-            ),
-          );
-        }
-      },
+      onTap: isButtonEnabled
+          ? () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => TradeBottomSheet(
+                  confirmOrder: (quantity) {
+                    setState(() {
+                      entry.isBuy = label == 'BUY';
+                      entry.isCallTrade = isCallColumn;
+                    });
+                    widget.onRowSelected(entry, quantity);
+                    setState(() {
+                      selectedRow = null;
+                    });
+                  },
+                ),
+              );
+            }
+          : null,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
-          color: color,
+          color: isButtonEnabled ? color : color.withOpacity(0.5),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(

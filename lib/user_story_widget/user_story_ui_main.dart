@@ -61,7 +61,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   OptionEntry? selectedOptionEntry;
   String? quantity;
   UiData? selectedTicket;
-  TradeFormModel? tradeFormModel;
+  List<TradeFormModel> tradeFormModel = [];
 
   @override
   void initState() {
@@ -338,6 +338,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     return Markdown(
                       data: uiData.prompt,
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       styleSheet:
                           MarkdownStyleSheet(h1Align: WrapAlignment.center),
                     );
@@ -438,7 +439,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                           selectedOptionEntry = entry;
                           quantity = quan;
                         });
-                        moveToNextStep();
+                        updateTrendFormModel();
+                        updateLtps();
                       },
                       selectedOptionEntry: selectedOptionEntry,
                     );
@@ -483,7 +485,15 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "RRChart":
                     return RRChart(model: uiData.rrModel!);
                   case "TradeFormWidget":
-                    return TradeFormWidget(tradeFormModel: tradeFormModel!);
+                    return Column(
+                      children: tradeFormModel
+                          .map((model) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: TradeFormWidget(tradeFormModel: model),
+                              ))
+                          .toList(),
+                    );
                   default:
                     return const SizedBox.shrink();
                 }
@@ -603,12 +613,18 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                 .rrModel!,
                             tradeFormModel: (tf) {
                               setState(() {
-                                tradeFormModel = tf;
+                                tradeFormModel.add(tf);
                               });
                               loadCandlesTillEnd();
                             },
                           );
                         });
+                    break;
+                  case "executeTrades":
+                    updateLtps();
+                    break;
+                  case "submitRRQuestion":
+                    submitRRQuestion();
                     break;
                 }
               }
@@ -704,8 +720,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         .firstWhere((step) => step.stepId == currentStepId);
     final chart = step.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
     setState(() {
-      chart.rrLayer.target = double.parse(tradeFormModel?.target ?? "0.0");
-      chart.rrLayer.stoploss = double.parse(tradeFormModel?.stopLoss ?? "0.0");
+      chart.rrLayer.target = double.parse(tradeFormModel.first.target);
+      chart.rrLayer.stoploss = double.parse(tradeFormModel.first.stopLoss);
     });
 
     List<ui.Candle> allCandles = chart.candles
@@ -722,7 +738,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     chart.uiCandles.addAll(allCandles
         .takeWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime));
 
-    tradeFormModel!.avgPrice = (chart.uiCandles.last.close).toStringAsFixed(2);
+    tradeFormModel.first.avgPrice =
+        (chart.uiCandles.last.close).toStringAsFixed(2);
 
     setState(() {});
 
@@ -730,8 +747,93 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         .skipWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime)) {
       await Future.delayed(const Duration(milliseconds: 100));
       setState(() {
-        tradeFormModel!.ltp = candle.close.toStringAsFixed(2);
+        tradeFormModel.first.ltp = candle.close.toStringAsFixed(2);
       });
     }
+  }
+
+  void updateTrendFormModel() async {
+    setState(() {
+      tradeFormModel.add(TradeFormModel(
+        target: "-",
+        stopLoss: "-",
+        quantity: int.parse(quantity ?? "0"),
+        isNse: true,
+        isSell: !selectedOptionEntry!.isBuy,
+        tradeType: TradeType.intraday,
+        ltp: "-",
+        avgPrice: "-",
+        orderType: OrderType.market,
+        isCallTrade: selectedOptionEntry!.isCallTrade,
+      ));
+    });
+  }
+
+  void updateLtps() async {
+    moveToNextStep();
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+
+    TrendLineModel? chart;
+
+    for (var ui in step.ui) {
+      if (ui.widget == "TrendLineChart") {
+        chart = ui.trendLineModelV1;
+        break;
+      }
+    }
+
+    if (chart != null) {
+      List<ui.Candle> allCandles = chart.candles
+          .map((e) => ui.Candle(
+                candleId: e.candleNum,
+                open: e.open,
+                high: e.high,
+                low: e.low,
+                close: e.close,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+                volume: e.vol.round(),
+              ))
+          .toList();
+
+      final candleBeforeAtTime = allCandles
+          .lastWhere((c) => c.dateTime.millisecondsSinceEpoch <= chart!.atTime);
+
+      for (var trade in tradeFormModel) {
+        trade.avgPrice = candleBeforeAtTime.close.toStringAsFixed(2);
+        trade.ltp = allCandles.last.close.toStringAsFixed(2);
+      }
+
+      setState(() {});
+
+      for (final candle in allCandles.skipWhile(
+          (c) => c.dateTime.millisecondsSinceEpoch <= chart!.atTime)) {
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        setState(() {
+          for (var trade in tradeFormModel) {
+            trade.ltp = candle.close.toStringAsFixed(2);
+          }
+        });
+      }
+    }
+  }
+
+  void submitRRQuestion() {
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final chart = step.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+    double target = chart.rrLayer.target;
+    double stoploss = chart.rrLayer.stoploss;
+    moveToNextStep();
+
+    final nextStep = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final nextChart = nextStep.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+
+    setState(() {
+      nextChart.rrLayer.target = target;
+      nextChart.rrLayer.stoploss = stoploss;
+    });
   }
 }

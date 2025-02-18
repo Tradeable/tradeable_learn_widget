@@ -116,6 +116,8 @@ class TradeFormModel {
   TradeType tradeType;
   String? avgPrice;
   String? ltp;
+  OrderType orderType;
+  bool isCallTrade;
 
   TradeFormModel(
       {required this.target,
@@ -125,7 +127,9 @@ class TradeFormModel {
       required this.isSell,
       required this.tradeType,
       this.avgPrice,
-      this.ltp});
+      this.ltp,
+      required this.orderType,
+      required this.isCallTrade});
 }
 
 class TradeTakerWidget extends StatefulWidget {
@@ -249,7 +253,9 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                         quantity: quantity.toInt(),
                         isNse: isNSE,
                         isSell: isSell,
-                        tradeType: TradeType.intraday);
+                        tradeType: TradeType.intraday,
+                        orderType: selectedOrderType,
+                        isCallTrade: true);
                     widget.tradeForm(tradeFormModel);
                   });
                   Navigator.of(context).pop();

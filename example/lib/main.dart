@@ -28,6 +28,7 @@ import 'package:example/data_model/market_depth_1.dart';
 import 'package:example/data_model/market_depth_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/moneyness_typeform.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
@@ -39,6 +40,7 @@ import 'package:example/data_model/rr_typeform.dart';
 import 'package:example/data_model/scenario_intro.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
+import 'package:example/data_model/takingOptionsTrade.dart';
 import 'package:example/data_model/ticket_user_story.dart';
 import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/trend_line_user_story.dart';
@@ -415,7 +417,22 @@ class MyHomePage extends StatelessWidget {
                           title: "RR Typeform",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(rrTypeForm),
-                              onNextClick: () {})))
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Taking Options Trade",
+                      destination: ScaffoldWithAppBar(
+                          title: "Taking Options Trade",
+                          body: UserStoryUIMain(
+                              model:
+                                  UserStoryModel.fromJson(takingOptionsTrade),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Moneyness Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Moneyness Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(moneynessTypeform),
+                              onNextClick: () {}))),
                 ],
               ),
             ),

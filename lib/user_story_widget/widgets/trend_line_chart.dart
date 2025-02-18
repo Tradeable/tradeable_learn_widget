@@ -91,34 +91,30 @@ class _TrendLineChart extends State<TrendLineChart>
   }
 
   void getCandles() async {
-    setState(() async {
-      model.uiCandles.clear();
-      for (FinCandle candle in model.candles
-          .map((e) => FinCandle(
-              candleId: e.candleNum,
-              open: e.open,
-              high: e.high,
-              low: e.low,
-              close: e.close,
-              dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
-              volume: e.vol.round()))
-          .toList()) {
-        await Future.delayed(const Duration(milliseconds: 50));
-        if (model.atTime != 0) {
-          if (candle.dateTime.millisecondsSinceEpoch <= model.atTime) {
-            setState(() {
-              model.uiCandles.add(candle);
-            });
-          } else {
-            break;
-          }
-        } else {
-          setState(() {
-            model.uiCandles.add(candle);
-          });
+    model.uiCandles.clear();
+
+    for (FinCandle candle in model.candles
+        .map((e) => FinCandle(
+        candleId: e.candleNum,
+        open: e.open,
+        high: e.high,
+        low: e.low,
+        close: e.close,
+        dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+        volume: e.vol.round()))
+        .toList()) {
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      if (model.atTime != 0) {
+        if (candle.dateTime.millisecondsSinceEpoch > model.atTime) {
+          break;
         }
       }
-    });
+
+      setState(() {
+        model.uiCandles.add(candle);
+      });
+    }
   }
 
   @override
