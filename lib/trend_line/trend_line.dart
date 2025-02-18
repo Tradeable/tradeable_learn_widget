@@ -104,15 +104,12 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   void goToNextQuestion() {
     setState(() {
-      print(currentQuestionIndex);
-      print(questions.length);
       if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         if (questions[currentQuestionIndex].type == "content") {
           widget.onNextClick();
         }
       } else {
-        print("nexgt");
         widget.onNextClick();
       }
       model.userResponse = "";

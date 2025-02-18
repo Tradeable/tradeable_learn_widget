@@ -11,6 +11,7 @@ import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/column_match.dart';
 import 'package:example/data_model/content_preview_model.dart';
 import 'package:example/data_model/contract_price_slider_model.dart';
+import 'package:example/data_model/delta_typeform.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
@@ -432,6 +433,13 @@ class MyHomePage extends StatelessWidget {
                           title: "Moneyness Typeform",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(moneynessTypeform),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Delta Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Delta Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(deltaTypeForm),
                               onNextClick: () {}))),
                 ],
               ),

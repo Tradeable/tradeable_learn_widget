@@ -211,7 +211,6 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
 
     bool isButtonEnabled = isValue ? entry.isSellEnabled : entry.isBuyEnabled;
 
-    print(isCallColumn);
     return InkWell(
       onTap: isButtonEnabled
           ? () {

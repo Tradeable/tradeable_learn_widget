@@ -31,6 +31,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_taker_for
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trend_line_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_slider.dart';
+import 'package:tradeable_learn_widget/utils/animated_number.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -62,6 +63,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   String? quantity;
   UiData? selectedTicket;
   List<TradeFormModel> tradeFormModel = [];
+  String? delta;
 
   @override
   void initState() {
@@ -281,6 +283,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
 
     final step = widget.model.userStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,
@@ -494,6 +497,15 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                               ))
                           .toList(),
                     );
+                  case "DeltaWidget":
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Delta: ", style: textStyles.largeBold),
+                        const SizedBox(width: 6),
+                        AnimatedNumber(value: delta ?? "0")
+                      ],
+                    );
                   default:
                     return const SizedBox.shrink();
                 }
@@ -625,6 +637,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     break;
                   case "submitRRQuestion":
                     submitRRQuestion();
+                    break;
+                  case "calculateDelta":
+                    calculateDeltaValue();
                     break;
                 }
               }
@@ -799,7 +814,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
       final candleBeforeAtTime = allCandles
           .lastWhere((c) => c.dateTime.millisecondsSinceEpoch <= chart!.atTime);
 
-      for (var trade in tradeFormModel) {
+      for (TradeFormModel trade in tradeFormModel) {
         trade.avgPrice = candleBeforeAtTime.close.toStringAsFixed(2);
         trade.ltp = allCandles.last.close.toStringAsFixed(2);
       }
@@ -829,11 +844,66 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
     final nextStep = widget.model.userStory.steps
         .firstWhere((step) => step.stepId == currentStepId);
-    final nextChart = nextStep.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+    final nextChart =
+        nextStep.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
 
     setState(() {
       nextChart.rrLayer.target = target;
       nextChart.rrLayer.stoploss = stoploss;
     });
+  }
+
+  void calculateDeltaValue() {
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final optionData =
+        step.ui.firstWhere((w) => w.widget == "OptionChain").optionsData!;
+    final allStrikes = [
+      ...optionData.options.call.entries.map((e) => e.strike)
+    ];
+    final atmStrike = allStrikes[allStrikes.length ~/ 2];
+
+    if (selectedOptionEntry == null) {
+      return;
+    }
+
+    double deltaValue = 0.0;
+    final isCall = selectedOptionEntry!.premium ==
+        optionData.options.call.entries
+            .firstWhere(
+              (e) => e.strike == selectedOptionEntry!.strike,
+            )
+            .premium;
+
+    if (isCall) {
+      if (selectedOptionEntry!.strike < atmStrike) {
+        deltaValue = 0.70 +
+            (0.30 * ((atmStrike - selectedOptionEntry!.strike) / atmStrike));
+        deltaValue = deltaValue.clamp(0.70, 1.00);
+      } else if (selectedOptionEntry!.strike > atmStrike) {
+        deltaValue = 0.30 *
+            (1 - ((selectedOptionEntry!.strike - atmStrike) / atmStrike));
+        deltaValue = deltaValue.clamp(0.20, 0.30);
+      } else {
+        deltaValue = 0.50;
+      }
+    } else {
+      if (selectedOptionEntry!.strike > atmStrike) {
+        deltaValue = -(0.70 +
+            (0.30 * ((selectedOptionEntry!.strike - atmStrike) / atmStrike)));
+        deltaValue = deltaValue.clamp(-1.00, -0.70);
+      } else if (selectedOptionEntry!.strike < atmStrike) {
+        deltaValue = -(0.30 *
+            (1 - ((atmStrike - selectedOptionEntry!.strike) / atmStrike)));
+        deltaValue = deltaValue.clamp(-0.30, -0.20);
+      } else {
+        deltaValue = -0.50;
+      }
+    }
+    setState(() {
+      delta = deltaValue.toStringAsFixed(2);
+    });
+
+    moveToNextStep();
   }
 }

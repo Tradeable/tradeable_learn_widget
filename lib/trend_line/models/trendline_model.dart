@@ -34,6 +34,8 @@ class TrendLineModel {
   late String ticker;
   late String timeframe;
 
+  bool loadTillEndCandle = false;
+
   TrendLineModel.fromJson(dynamic data) {
     title = data["title"];
     question1 = data["question1"];
@@ -80,6 +82,9 @@ class TrendLineModel {
     showChips = data.containsKey("showChips") ? data["showChips"] : false;
     ticker = data.containsKey("ticker") ? data["ticker"] : "";
     timeframe = data.containsKey("timeframe") ? data["timeframe"] : "";
+    loadTillEndCandle = data.containsKey("loadTillEndCandle")
+        ? data["loadTillEndCandle"]
+        : false;
   }
 }
 

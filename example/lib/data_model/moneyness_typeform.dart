@@ -358,7 +358,7 @@ const moneynessTypeform = {
             "widget": "PlainText",
             "title": "",
             "prompt":
-                "Let's take a straddle position with the help of moneyness concept.\nYou both buy a call option and a put option with the same expiration date. A straddle"
+                "Let's take a straddle position with the help of moneyness concept.\\\nYou both buy a call option and a put option with the same expiration date. A straddle"
                     "involves buying both the call and put at the same strike price (ATM)"
           },
           {
@@ -736,7 +736,7 @@ const moneynessTypeform = {
             "widget": "PlainText",
             "title": "",
             "prompt":
-                "You bought a call option at a strike price of 100/- for 10/-. You bought a put option at the same strike price of 100/- for 15/-. Total cost of the straddble = 10/-(call) + 15/-(put) = 25/-"
+                "You bought a call option at a strike price of ₹100 for ₹10.\\\nYou bought a put option at the same strike price of ₹100 for ₹15.\\\nTotal cost of the straddble = ₹10(call) + ₹15(put) = ₹25"
           },
           {
             "title": "Next",
@@ -1080,9 +1080,131 @@ const moneynessTypeform = {
                   "low": 3711.2,
                   "close": 3712.8,
                   "vol": 10.29999999999973
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b60",
+                  "num": 30,
+                  "ticker": "BRITANNIA",
+                  "time": 1629276900000,
+                  "open": 3712.8,
+                  "high": 3716.4,
+                  "low": 3711.5,
+                  "close": 3715.2,
+                  "vol": 12.45
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b61",
+                  "num": 31,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277200000,
+                  "open": 3715.2,
+                  "high": 3718.8,
+                  "low": 3714.4,
+                  "close": 3717.1,
+                  "vol": 13.25
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b62",
+                  "num": 32,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277500000,
+                  "open": 3717.1,
+                  "high": 3719.2,
+                  "low": 3715.6,
+                  "close": 3716.5,
+                  "vol": 11.80
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b63",
+                  "num": 33,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277800000,
+                  "open": 3716.5,
+                  "high": 3724.8,
+                  "low": 3716.3,
+                  "close": 3723.8,
+                  "vol": 15.35
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b64",
+                  "num": 34,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278100000,
+                  "open": 3723.8,
+                  "high": 3725.5,
+                  "low": 3721.2,
+                  "close": 3722.4,
+                  "vol": 12.90
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b65",
+                  "num": 35,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278400000,
+                  "open": 3722.4,
+                  "high": 3729.9,
+                  "low": 3722.1,
+                  "close": 3728.7,
+                  "vol": 14.55
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b66",
+                  "num": 36,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278700000,
+                  "open": 3728.7,
+                  "high": 3734.9,
+                  "low": 3727.4,
+                  "close": 3733.2,
+                  "vol": 16.75
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b67",
+                  "num": 37,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279000000,
+                  "open": 3733.2,
+                  "high": 3735.5,
+                  "low": 3731.8,
+                  "close": 3732.6,
+                  "vol": 13.20
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b68",
+                  "num": 38,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279300000,
+                  "open": 3732.6,
+                  "high": 3739.8,
+                  "low": 3732.2,
+                  "close": 3738.1,
+                  "vol": 15.95
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b69",
+                  "num": 39,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279600000,
+                  "open": 3738.1,
+                  "high": 3744.4,
+                  "low": 3737.7,
+                  "close": 3743.8,
+                  "vol": 14.85
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b70",
+                  "num": 40,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279900000,
+                  "open": 3743.8,
+                  "high": 3813.9,
+                  "low": 3743.2,
+                  "close": 3812.8,
+                  "vol": 18.60
                 }
               ],
-              "atTime":1629273900000,
+              "atTime": 1629276600000,
+              "loadTillEndCandle": true,
               "content":
                   "As there is positive trend line and current stock price is at support its is a good time to buy a call option.",
               "options": [":point_up_2:", ":point_down:"],
@@ -1445,9 +1567,131 @@ const moneynessTypeform = {
                   "low": 3711.2,
                   "close": 3712.8,
                   "vol": 10.29999999999973
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b60",
+                  "num": 30,
+                  "ticker": "BRITANNIA",
+                  "time": 1629276900000,
+                  "open": 3712.8,
+                  "high": 3716.4,
+                  "low": 3711.5,
+                  "close": 3715.2,
+                  "vol": 12.45
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b61",
+                  "num": 31,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277200000,
+                  "open": 3715.2,
+                  "high": 3718.8,
+                  "low": 3714.4,
+                  "close": 3717.1,
+                  "vol": 13.25
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b62",
+                  "num": 32,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277500000,
+                  "open": 3717.1,
+                  "high": 3719.2,
+                  "low": 3715.6,
+                  "close": 3716.5,
+                  "vol": 11.80
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b63",
+                  "num": 33,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277800000,
+                  "open": 3716.5,
+                  "high": 3724.8,
+                  "low": 3716.3,
+                  "close": 3723.8,
+                  "vol": 15.35
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b64",
+                  "num": 34,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278100000,
+                  "open": 3723.8,
+                  "high": 3725.5,
+                  "low": 3721.2,
+                  "close": 3722.4,
+                  "vol": 12.90
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b65",
+                  "num": 35,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278400000,
+                  "open": 3722.4,
+                  "high": 3729.9,
+                  "low": 3722.1,
+                  "close": 3728.7,
+                  "vol": 14.55
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b66",
+                  "num": 36,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278700000,
+                  "open": 3728.7,
+                  "high": 3734.9,
+                  "low": 3727.4,
+                  "close": 3733.2,
+                  "vol": 16.75
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b67",
+                  "num": 37,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279000000,
+                  "open": 3733.2,
+                  "high": 3735.5,
+                  "low": 3731.8,
+                  "close": 3732.6,
+                  "vol": 13.20
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b68",
+                  "num": 38,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279300000,
+                  "open": 3732.6,
+                  "high": 3739.8,
+                  "low": 3732.2,
+                  "close": 3738.1,
+                  "vol": 15.95
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b69",
+                  "num": 39,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279600000,
+                  "open": 3738.1,
+                  "high": 3744.4,
+                  "low": 3737.7,
+                  "close": 3743.8,
+                  "vol": 14.85
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b70",
+                  "num": 40,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279900000,
+                  "open": 3743.8,
+                  "high": 3813.9,
+                  "low": 3743.2,
+                  "close": 3812.8,
+                  "vol": 18.60
                 }
               ],
-              "atTime":1629273900000,
+              "atTime": 1629279900000,
+              "loadTillEndCandle": false,
               "content":
                   "As there is positive trend line and current stock price is at support its is a good time to buy a call option.",
               "options": [":point_up_2:", ":point_down:"],
@@ -1471,27 +1715,27 @@ const moneynessTypeform = {
             "widget": "PlainText",
             "title": "",
             "prompt":
-                "Call Option: The stock is now at 200/- and you have the right to buy it at 100/-"
+                "**Call Option:** The stock is now at ₹200 and you have the right to buy it at ₹100"
           },
           {
             "widget": "PlainText",
             "title": "",
-            "prompt": "So the call option is worth 200/--100/- = 100/-"
+            "prompt": "So the call option is worth ₹200-₹100 = ₹100"
           },
           {
             "widget": "PlainText",
             "title": "",
-            "prompt": "Your profit from the call: 100/--10/-(cost) = 90/-"
+            "prompt": "Your profit from the call: ₹100-₹10(cost) = ₹90"
           },
           {
             "widget": "PlainText",
             "title": "",
             "prompt":
-                "The put expires worthless, so you lose the entire 15/- you paid for it."
+                "The put expires worthless, so you lose the entire ₹15 you paid for it."
           },
           {
             "title": "Next",
-            "action": "moveToNextStep",
+            "action": "executeTrades",
             "widget": "NextButtonWidget"
           }
         ],
@@ -1831,8 +2075,131 @@ const moneynessTypeform = {
                   "low": 3711.2,
                   "close": 3712.8,
                   "vol": 10.29999999999973
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b49",
+                  "num": 30,
+                  "ticker": "BRITANNIA",
+                  "time": 1629276900000,
+                  "open": 3712.8,
+                  "high": 3715.4,
+                  "low": 3710.5,
+                  "close": 3714.2,
+                  "vol": 12.45
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b50",
+                  "num": 31,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277200000,
+                  "open": 3714.2,
+                  "high": 3714.8,
+                  "low": 3705.4,
+                  "close": 3706.1,
+                  "vol": 14.25
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b51",
+                  "num": 32,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277500000,
+                  "open": 3706.1,
+                  "high": 3709.2,
+                  "low": 3704.6,
+                  "close": 3708.5,
+                  "vol": 13.80
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b52",
+                  "num": 33,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277800000,
+                  "open": 3708.5,
+                  "high": 3708.8,
+                  "low": 3698.3,
+                  "close": 3699.8,
+                  "vol": 15.35
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b53",
+                  "num": 34,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278100000,
+                  "open": 3699.8,
+                  "high": 3704.5,
+                  "low": 3698.2,
+                  "close": 3703.4,
+                  "vol": 13.90
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b54",
+                  "num": 35,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278400000,
+                  "open": 3703.4,
+                  "high": 3703.9,
+                  "low": 3692.5,
+                  "close": 3693.7,
+                  "vol": 14.55
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b52",
+                  "num": 36,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278700000,
+                  "open": 3693.7,
+                  "high": 3698.9,
+                  "low": 3692.4,
+                  "close": 3697.2,
+                  "vol": 12.75
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b56",
+                  "num": 37,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279000000,
+                  "open": 3697.2,
+                  "high": 3697.5,
+                  "low": 3683.8,
+                  "close": 3684.6,
+                  "vol": 13.20
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b57",
+                  "num": 38,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279300000,
+                  "open": 3684.6,
+                  "high": 3689.8,
+                  "low": 3683.2,
+                  "close": 3688.1,
+                  "vol": 12.95
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b58",
+                  "num": 39,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279600000,
+                  "open": 3688.1,
+                  "high": 3688.4,
+                  "low": 3674.7,
+                  "close": 3675.8,
+                  "vol": 13.85
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b59",
+                  "num": 40,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279900000,
+                  "open": 3675.8,
+                  "high": 3676.9,
+                  "low": 3611.2,
+                  "close": 3612.8,
+                  "vol": 15.60
                 }
               ],
+              "atTime": 1629276600000,
+              "loadTillEndCandle": true,
               "content":
                   "As there is positive trend line and current stock price is at support its is a good time to buy a call option.",
               "options": [":point_up_2:", ":point_down:"],
@@ -1868,7 +2235,7 @@ const moneynessTypeform = {
             "widget": "AnimatedText",
             "title": "",
             "prompt":
-                "Let's see what happens if the market moves up by 100 points."
+                "Let's see what happens if the market moves down by 100 points."
           },
           {
             "widget": "TrendLineChart",
@@ -2195,9 +2562,130 @@ const moneynessTypeform = {
                   "low": 3711.2,
                   "close": 3712.8,
                   "vol": 10.29999999999973
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b49",
+                  "num": 30,
+                  "ticker": "BRITANNIA",
+                  "time": 1629276900000,
+                  "open": 3712.8,
+                  "high": 3715.4,
+                  "low": 3710.5,
+                  "close": 3714.2,
+                  "vol": 12.45
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b50",
+                  "num": 31,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277200000,
+                  "open": 3714.2,
+                  "high": 3714.8,
+                  "low": 3705.4,
+                  "close": 3706.1,
+                  "vol": 14.25
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b51",
+                  "num": 32,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277500000,
+                  "open": 3706.1,
+                  "high": 3709.2,
+                  "low": 3704.6,
+                  "close": 3708.5,
+                  "vol": 13.80
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b52",
+                  "num": 33,
+                  "ticker": "BRITANNIA",
+                  "time": 1629277800000,
+                  "open": 3708.5,
+                  "high": 3708.8,
+                  "low": 3698.3,
+                  "close": 3699.8,
+                  "vol": 15.35
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b53",
+                  "num": 34,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278100000,
+                  "open": 3699.8,
+                  "high": 3704.5,
+                  "low": 3698.2,
+                  "close": 3703.4,
+                  "vol": 13.90
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b54",
+                  "num": 35,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278400000,
+                  "open": 3703.4,
+                  "high": 3703.9,
+                  "low": 3692.5,
+                  "close": 3693.7,
+                  "vol": 14.55
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b52",
+                  "num": 36,
+                  "ticker": "BRITANNIA",
+                  "time": 1629278700000,
+                  "open": 3693.7,
+                  "high": 3698.9,
+                  "low": 3692.4,
+                  "close": 3697.2,
+                  "vol": 12.75
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b56",
+                  "num": 37,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279000000,
+                  "open": 3697.2,
+                  "high": 3697.5,
+                  "low": 3683.8,
+                  "close": 3684.6,
+                  "vol": 13.20
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b57",
+                  "num": 38,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279300000,
+                  "open": 3684.6,
+                  "high": 3689.8,
+                  "low": 3683.2,
+                  "close": 3688.1,
+                  "vol": 12.95
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b58",
+                  "num": 39,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279600000,
+                  "open": 3688.1,
+                  "high": 3688.4,
+                  "low": 3674.7,
+                  "close": 3675.8,
+                  "vol": 13.85
+                },
+                {
+                  "_id": "6267f77383b67deb147f5b59",
+                  "num": 40,
+                  "ticker": "BRITANNIA",
+                  "time": 1629279900000,
+                  "open": 3675.8,
+                  "high": 3676.9,
+                  "low": 3611.2,
+                  "close": 3612.8,
+                  "vol": 15.60
                 }
               ],
-              "atTime":1629273900000,
+              "atTime": 1629279900000,
               "content":
                   "As there is positive trend line and current stock price is at support its is a good time to buy a call option.",
               "options": [":point_up_2:", ":point_down:"],
@@ -2221,13 +2709,7 @@ const moneynessTypeform = {
             "widget": "PlainText",
             "title": "",
             "prompt":
-                '''Call Option: The call option is out of the money because the stock price is now lower than the strike price.
-          • The call expires worthless, so you lose the entire 210 you paid for it.
-          Put Option: The put option is now in the money. The stock is at 20, and you have the right to sell at 2100.
-          • So, the put option is worth 2 100 - 20 =
-          2100
-          • Your profit from the put: 2100 - 215
-          (cost) = 285'''
+                "**Call Option:** The call option is **out of the money** because the stock price is now lower than the strike price.\\\n• The call expires worthless, so you lose the entire 210 you paid for it.**Put Option:** The put option is now **in the money**. The stock is at ₹0, and you have the right to sell at 2100.\\\n• So, the put option is worth 2 100 - 20 =2100\\\n• Your profit from the put: 2100 - 215 (cost) = 285"
           },
           {"title": "Next", "action": "moveNext", "widget": "NextButtonWidget"}
         ],

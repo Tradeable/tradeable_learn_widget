@@ -37,6 +37,7 @@ class _TrendLineChart extends State<TrendLineChart>
     super.didUpdateWidget(oldWidget);
     if (widget.model != oldWidget.model) {
       setState(() {
+        model = widget.model;
         isAnimating = false;
       });
       getCandles();
@@ -95,19 +96,21 @@ class _TrendLineChart extends State<TrendLineChart>
 
     for (FinCandle candle in model.candles
         .map((e) => FinCandle(
-        candleId: e.candleNum,
-        open: e.open,
-        high: e.high,
-        low: e.low,
-        close: e.close,
-        dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
-        volume: e.vol.round()))
+            candleId: e.candleNum,
+            open: e.open,
+            high: e.high,
+            low: e.low,
+            close: e.close,
+            dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+            volume: e.vol.round()))
         .toList()) {
       await Future.delayed(const Duration(milliseconds: 50));
 
-      if (model.atTime != 0) {
-        if (candle.dateTime.millisecondsSinceEpoch > model.atTime) {
-          break;
+      if (!model.loadTillEndCandle) {
+        if (model.atTime != 0) {
+          if (candle.dateTime.millisecondsSinceEpoch > model.atTime) {
+            break;
+          }
         }
       }
 
