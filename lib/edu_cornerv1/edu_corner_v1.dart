@@ -112,7 +112,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
                                           style: textStyles.largeBold),
                                       const SizedBox(height: 8),
                                       Text(
-                                        'Now lets text what we have learned with some fun widgets!',
+                                        'Now lets test what we have learned with some fun examples!',
                                         style: textStyles.smallNormal,
                                       ),
                                       const SizedBox(height: 20),
