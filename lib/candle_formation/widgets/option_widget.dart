@@ -32,12 +32,12 @@ class QuizQuestionOption extends StatelessWidget {
         color: state == CandleFormationState.submitResponse
             ? (incorrectResponse!.contains(option.optionId))
                 ? selectedOptions.contains(option.optionId)
-                    ? colors.bearishColor
+                    ? colors.buttonColor
                     : colors.buttonColor
                 : !incorrectResponse!.contains(option.optionId) &&
                         !selectedOptions.contains(option.optionId)
                     ? colors.buttonColor
-                    : colors.bullishColor
+                    : colors.buttonColor
             : selectedOptions.contains(option.optionId)
                 ? colors.cardColorPrimary
                 : colors.buttonColor,
