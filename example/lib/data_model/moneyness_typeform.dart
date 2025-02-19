@@ -355,11 +355,10 @@ const moneynessTypeform = {
             }
           },
           {
-            "widget": "PlainText",
-            "title": "",
+            "widget": "PlainTextWithBorder",
+            "title": "Straddle Position Using Moneyness Concept:",
             "prompt":
-                "Let's take a straddle position with the help of moneyness concept.\\\nYou both buy a call option and a put option with the same expiration date. A straddle"
-                    "involves buying both the call and put at the same strike price (ATM)"
+                "Let's take a **straddle position** with the help of the **moneyness** concept.\\\n\\\nYou **buy both a call option and a put option** with the **same expiration date**\\\n\\\nA **straddle** involves buying both the call and put at the same strike price **(ATM - At The Money)**."
           },
           {
             "widget": "NextButtonWidget",
@@ -454,8 +453,6 @@ const moneynessTypeform = {
               }
             }
           },
-          {"width": "", "height": "40", "widget": "SizedBox"},
-          {"title": "", "widget": "TradeSheet"},
           {
             "title": "Next",
             "action": "moveToNextStep",
@@ -733,10 +730,10 @@ const moneynessTypeform = {
           },
           {"width": "", "height": "40", "widget": "SizedBox"},
           {
-            "widget": "PlainText",
+            "widget": "PlainTextWithBorder",
             "title": "",
             "prompt":
-                "You bought a call option at a strike price of ₹100 for ₹10.\\\nYou bought a put option at the same strike price of ₹100 for ₹15.\\\nTotal cost of the straddble = ₹10(call) + ₹15(put) = ₹25"
+                "You bought a **call option** at a strike price of ₹100 for ₹10.\\\nYou bought a **put option** at the same strike price of ₹100 for ₹15.\\\n\\\nTotal cost of the straddle = ₹10(call) + ₹15(put) = ₹25"
           },
           {
             "title": "Next",
@@ -1712,26 +1709,10 @@ const moneynessTypeform = {
             }
           },
           {
-            "widget": "PlainText",
+            "widget": "PlainTextWithBorder",
             "title": "",
             "prompt":
-                "**Call Option:** The stock is now at ₹200 and you have the right to buy it at ₹100"
-          },
-          {
-            "widget": "PlainText",
-            "title": "",
-            "prompt": "So the call option is worth ₹200-₹100 = ₹100"
-          },
-          {
-            "widget": "PlainText",
-            "title": "",
-            "prompt": "Your profit from the call: ₹100-₹10(cost) = ₹90"
-          },
-          {
-            "widget": "PlainText",
-            "title": "",
-            "prompt":
-                "The put expires worthless, so you lose the entire ₹15 you paid for it."
+                "**Call Option:** The stock is now at ₹200 and you have the right to buy it at ₹100\\\nSo the **call option** is worth ₹200-₹100 = ₹100.\\\nYour **profit** from the call: ₹100 - ₹10(cost) = ₹90\\\n\\\nThe put expires worthless, so you lose the entire ₹15 you paid for it."
           },
           {
             "title": "Next",
@@ -2706,10 +2687,10 @@ const moneynessTypeform = {
             }
           },
           {
-            "widget": "PlainText",
+            "widget": "PlainTextWithBorder",
             "title": "",
             "prompt":
-                "**Call Option:** The call option is **out of the money** because the stock price is now lower than the strike price.\\\n• The call expires worthless, so you lose the entire 210 you paid for it.**Put Option:** The put option is now **in the money**. The stock is at ₹0, and you have the right to sell at 2100.\\\n• So, the put option is worth 2 100 - 20 =2100\\\n• Your profit from the put: 2100 - 215 (cost) = 285"
+                "**Call Option:** The call option is **out of the money** because the stock price is now lower than the strike price.\\\n• The call expires worthless, so you lose the entire ₹10 you paid for it.\\\n\\\n**Put Option:** The put option is now **in the money**. The stock is at ₹0, and you have the right to sell at ₹100.\\\n• So, the put option is worth ₹100 - ₹0 = ₹100\\\n• Your profit from the put: ₹100 - ₹15 (cost) = ₹85"
           },
           {"title": "Next", "action": "moveNext", "widget": "NextButtonWidget"}
         ],

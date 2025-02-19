@@ -21,6 +21,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.d
 import 'package:tradeable_learn_widget/user_story_widget/widgets/option_chain_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/option_trade_sheet.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/order_status_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/plain_text_with_border.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/rr_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_form_widget.dart';
@@ -506,6 +507,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         AnimatedNumber(value: delta ?? "0")
                       ],
                     );
+                  case "PlainTextWithBorder":
+                    return PlainTextWithBorder(
+                        title: uiData.title, prompt: uiData.prompt);
                   default:
                     return const SizedBox.shrink();
                 }
