@@ -41,45 +41,48 @@ class _MCQQuestionState extends State<MCQQuestion> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          QuestionWidget(question: model.question),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: constraints.maxHeight * 0.5,
-            child: renderChart(),
-          ),
-          SizedBox(
-              height: constraints.maxHeight * 0.4,
-              child: Column(
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                QuestionWidget(question: model.question),
+                const SizedBox(height: 20),
+                SizedBox(height: 350, child: renderChart()),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    model.candles.isNotEmpty
-                        ? ChartInfoChips(
-                            ticker: model.ticker,
-                            timeFrame: model.timeframe,
-                            date: DateFormat("dd MMM yyyy").format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    model.candles.first.time)))
-                        : Container(),
+                    if (model.candles.isNotEmpty)
+                      ChartInfoChips(
+                        ticker: model.ticker,
+                        timeFrame: model.timeframe,
+                        date: DateFormat("dd MMM yyyy").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              model.candles.first.time),
+                        ),
+                      ),
                     const SizedBox(height: 10),
-                    renderOptions(),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ButtonWidget(
-                          color: colors.primary,
-                          btnContent: "Submit",
-                          onTap: () {
-                            showAnimation();
-                          }),
-                    )
-                  ])),
-        ],
-      );
-    });
+                    renderOptions()
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          child: ButtonWidget(
+            color: (model.userResponse ?? "").isNotEmpty
+                ? colors.primary
+                : colors.secondary,
+            btnContent: "Submit",
+            onTap: showAnimation,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget renderChart() {
@@ -152,18 +155,20 @@ class _MCQQuestionState extends State<MCQQuestion> {
   }
 
   void showAnimation() {
-    setState(() {
-      model.state = MCQState.submitResponse;
-    });
-    if (!widget.model.type.contains("STATIC")) {
-      _loadCandlesTillEnd();
-    }
-    if (model.correctResponse == model.userResponse) {
+    if((model.userResponse ?? "").isNotEmpty) {
       setState(() {
-        model.isCorrect = true;
+        model.state = MCQState.submitResponse;
       });
+      if (!widget.model.type.contains("STATIC")) {
+        _loadCandlesTillEnd();
+      }
+      if (model.correctResponse == model.userResponse) {
+        setState(() {
+          model.isCorrect = true;
+        });
+      }
+      showSheet();
     }
-    showSheet();
     //todo
     // Future.delayed(const Duration(seconds: 2)).then((value) {
     //   finish(widget.node.edges?.first.pathId ?? "finished", model.isCorrect);

@@ -43,7 +43,6 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
           QuestionWidget(question: model.question),
           const SizedBox(height: 20),
           SizedBox(
@@ -51,28 +50,28 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
             child: renderChart(),
           ),
           const SizedBox(height: 10),
-          SizedBox(
-              height: constraints.maxHeight * 0.3,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        model.candles.isNotEmpty
-                            ? ChartInfoChips(
-                                ticker: model.ticker,
-                                timeFrame: model.timeframe,
-                                date: DateFormat("dd MMM yyyy").format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        model.candles.first.time)))
-                            : Container(),
-                        renderIndicator(),
-                        const Spacer(),
-                        renderSubmitBtn(),
-                      ]),
-                ],
-              )),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (model.candles.isNotEmpty)
+                  ChartInfoChips(
+                    ticker: model.ticker,
+                    timeFrame: model.timeframe,
+                    date: DateFormat("dd MMM yyyy").format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            model.candles.first.time)),
+                  ),
+                renderIndicator(),
+                const Spacer(),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                  child: renderSubmitBtn(),
+                ),
+              ],
+            ),
+          ),
         ],
       );
     });
@@ -183,43 +182,31 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
 
     switch (model.state) {
       case CandleSelectState.loadUI:
-        // return Container(
-        //     height: 40,
-        //     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        //     decoration: BoxDecoration(
-        //       borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //       border: Border.all(
-        //         color: Colors.green,
-        //       ),
-        //     ),
-        //     child: ClipRRect(
-        //       borderRadius: const BorderRadius.all(Radius.circular(10)),
-        //       child: MaterialButton(
-        //         onPressed: () {
-        //           showAnimation();
-        //         },
-        //         child: const Padding(
-        //           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        //           child: Center(
-        //             child: Text("Submit",
-        //                 style: TextStyle(
-        //                     color: Colors.white,
-        //                     fontWeight: FontWeight.normal)),
-        //           ),
-        //         ),
-        //       ),
-        //     ));
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: ButtonWidget(
-              color: colors.primary,
-              btnContent: "Submit",
-              onTap: () {
+        return ButtonWidget(
+            color: model.selectedCandles.isNotEmpty
+                ? colors.primary
+                : colors.secondary,
+            btnContent: "Submit",
+            onTap: () {
+              if (model.selectedCandles.isNotEmpty) {
                 showAnimation();
-              }),
-        );
+              }
+            });
       case CandleSelectState.submitResponse:
-        return Container();
+        return ButtonWidget(
+            color: colors.primary,
+            btnContent: "Next",
+            onTap: () {
+              showModalBottomSheet(
+                  isDismissible: false,
+                  context: context,
+                  builder: (context) => BottomSheetWidget(
+                      isCorrect: model.isCorrect,
+                      model: model.explanationV1,
+                      onNextClick: () {
+                        widget.onNextClick();
+                      }));
+            });
     }
   }
 

@@ -42,12 +42,16 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
           renderOptions(),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
             child: ButtonWidget(
-              color: colors.primary,
+              color: model.userResponse.isNotEmpty
+                  ? colors.primary
+                  : colors.secondary,
               btnContent: "Submit",
               onTap: () {
-                showAnimation();
+                if(model.userResponse.isNotEmpty) {
+                  showAnimation();
+                }
               },
             ),
           ),

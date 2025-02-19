@@ -104,15 +104,9 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   void goToNextQuestion() {
     setState(() {
-      print(currentQuestionIndex);
-      print(questions.length);
       if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
-        if (questions[currentQuestionIndex].type == "content") {
-          widget.onNextClick();
-        }
       } else {
-        print("nexgt");
         widget.onNextClick();
       }
       model.userResponse = "";
@@ -125,60 +119,63 @@ class _TrendLineState extends State<TrendLineWidget> {
 
     Question currentQuestion = questions[currentQuestionIndex];
 
-    return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          QuestionWidget(question: questions[currentQuestionIndex].question),
-          LineGraphWidget(
-              model: model,
-              constraints: constraints,
-              question: questions[currentQuestionIndex].question),
-          model.candles.isNotEmpty
-              ? ChartInfoChips(
-                  ticker: model.ticker,
-                  timeFrame: model.timeframe,
-                  date: DateFormat("dd MMM yyyy").format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          model.candles.first.time)))
-              : Container(),
-          const SizedBox(height: 10),
-          const Spacer(),
-          if (currentQuestion.type == "line")
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
-              child: ButtonWidget(
-                  color: colors.primary,
-                  btnContent: 'Submit',
-                  onTap: () {
-                    takeToCorrectOffsets();
-                    Future.delayed(const Duration(seconds: 2)).then((value) {
-                      goToNextQuestion();
-                    });
-                  }),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                QuestionWidget(
+                    question: questions[currentQuestionIndex].question),
+                LineGraphWidget(
+                    model: model,
+                    question: questions[currentQuestionIndex].question),
+                model.candles.isNotEmpty
+                    ? ChartInfoChips(
+                        ticker: model.ticker,
+                        timeFrame: model.timeframe,
+                        date: DateFormat("dd MMM yyyy").format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                model.candles.first.time)))
+                    : Container(),
+              ],
             ),
-          if (currentQuestion.type == "mcq")
-            LineMCQQuestionWidget(
-              question: questions[currentQuestionIndex].question,
-              model: model,
-              options: questions[currentQuestionIndex].options!,
-              correctResponse: questions[currentQuestionIndex].correctResponse!,
-              onSubmit: () {
-                if (currentQuestionIndex + 1 < questions.length - 1 &&
-                    questions[currentQuestionIndex + 1].type == "mcq") {
-                  loadCandlesTillEnd();
-                }
-                Future.delayed(const Duration(seconds: 2)).then((value) {
+          ),
+        ),
+        if (currentQuestion.type == "line")
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            child: ButtonWidget(
+                color: colors.primary,
+                btnContent: 'Submit',
+                onTap: () {
+                  takeToCorrectOffsets();
                   goToNextQuestion();
-                });
-              },
-            ),
-          if (currentQuestion.type == "content")
-            ContentWidget(content: questions[currentQuestionIndex].question)
-        ],
-      );
-    });
+                }),
+          ),
+        if (currentQuestion.type == "mcq")
+          LineMCQQuestionWidget(
+            question: questions[currentQuestionIndex].question,
+            model: model,
+            options: questions[currentQuestionIndex].options!,
+            correctResponse: questions[currentQuestionIndex].correctResponse!,
+            onSubmit: () {
+              if (currentQuestionIndex + 1 < questions.length - 1 &&
+                  questions[currentQuestionIndex + 1].type == "mcq") {
+                loadCandlesTillEnd();
+              }
+              goToNextQuestion();
+            },
+          ),
+        if (currentQuestion.type == "content")
+          ContentWidget(
+            content: questions[currentQuestionIndex].question,
+            moveNext: () => widget.onNextClick(),
+          )
+      ],
+    );
   }
 
   void takeToCorrectOffsets() {

@@ -28,31 +28,30 @@ class _TextImagePreviewWidget extends State<MarkdownPreviewWidget> {
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
     final colors = Theme.of(context).customColors;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Expanded(
-          child: Markdown(
-            shrinkWrap: true,
-            styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                .copyWith(
-                    textAlign: WrapAlignment.start,
-                    h1Padding: const EdgeInsets.only(top: 25, bottom: 15),
-                    h3Padding: const EdgeInsets.only(top: 25, bottom: 15),
-                    pPadding: const EdgeInsets.symmetric(vertical: 15),
-                    h3: textStyles.largeBold.copyWith(fontSize: 28),
-                    strong: textStyles.mediumBold,
-                    p: textStyles.mediumNormal),
-            data: model.content,
-          ),
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Expanded(
+        child: Markdown(
+          shrinkWrap: true,
+          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              textAlign: WrapAlignment.start,
+              h1Padding: const EdgeInsets.only(top: 25, bottom: 15),
+              h3Padding: const EdgeInsets.only(top: 25, bottom: 15),
+              pPadding: const EdgeInsets.symmetric(vertical: 15),
+              h3: textStyles.largeBold.copyWith(fontSize: 28),
+              strong: textStyles.mediumBold,
+              p: textStyles.mediumNormal),
+          data: model.content,
         ),
-        ButtonWidget(
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+        child: ButtonWidget(
             color: colors.primary,
             btnContent: "Next",
             onTap: () {
               widget.onNextClick();
-            })
-      ]),
-    );
+            }),
+      )
+    ]);
   }
 }
