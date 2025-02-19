@@ -147,7 +147,6 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
                 }
               }),
         ),
-        const SizedBox(height: 10),
       ],
     );
   }

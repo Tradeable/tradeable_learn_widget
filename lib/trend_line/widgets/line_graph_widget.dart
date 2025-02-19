@@ -4,20 +4,15 @@ import 'package:tradeable_learn_widget/fin_chart/layers/point_label.dart';
 import 'package:tradeable_learn_widget/fin_chart/layers/trend_line.dart';
 import 'package:tradeable_learn_widget/fin_chart/settings/axis_settings/x_axis_settings.dart';
 import 'package:tradeable_learn_widget/fin_chart/settings/axis_settings/y_axis_settings.dart';
-import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_setting.dart';
 import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LineGraphWidget extends StatelessWidget {
   final TrendLineModel model;
   final String question;
-  final BoxConstraints constraints;
 
   const LineGraphWidget(
-      {super.key,
-      required this.model,
-      required this.constraints,
-      required this.question});
+      {super.key, required this.model, required this.question});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +26,7 @@ class LineGraphWidget extends StatelessWidget {
               ? Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   margin: const EdgeInsets.symmetric(vertical: 20),
-                  height: constraints.maxHeight * 0.45,
+                  height: 350,
                   child: FinChart(
                       yAxisSettings: YAxisSettings(
                           axisTextStyle: textStyles.smallNormal

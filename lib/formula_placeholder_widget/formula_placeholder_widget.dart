@@ -37,7 +37,6 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -121,7 +120,7 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
                               )
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
                           if (i < model.questions.length - 1)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -134,14 +133,8 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
                         ],
                       ),
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Options",
-                        style: textStyles.mediumBold,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
+                    Text("Options", style: textStyles.mediumBold),
+                    const SizedBox(height: 10),
                     GridView.builder(
                       shrinkWrap: true,
                       gridDelegate:
@@ -170,7 +163,7 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
           ),
         )),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
             color: model.options.isEmpty ? colors.primary : colors.secondary,
             btnContent: "Next",

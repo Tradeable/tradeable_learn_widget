@@ -2,6 +2,7 @@ import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/banana_widget/banana_model.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class BananaWidget extends StatefulWidget {
@@ -36,64 +37,88 @@ class _BananaWidgetState extends State<BananaWidget> {
   @override
   Widget build(BuildContext context) {
     final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
 
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: ListView(
-        children: [
-          Column(
-            children: <Widget>[
-              MarkdownBody(
-                data: model.content1,
-                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                    .copyWith(
-                        h3: textStyles.largeBold.copyWith(fontSize: 28),
-                        strong: textStyles.mediumBold,
-                        p: textStyles.mediumNormal),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  Column(
+                    children: <Widget>[
+                      MarkdownBody(
+                        data: model.content1,
+                        styleSheet: MarkdownStyleSheet.fromTheme(
+                                Theme.of(context))
+                            .copyWith(
+                                h3: textStyles.largeBold.copyWith(fontSize: 28),
+                                strong: textStyles.mediumBold,
+                                p: textStyles.mediumNormal),
+                      ),
+                      const SizedBox(height: 20),
+                      model.isSliderToBeShown
+                          ? Slider(
+                              value: sliderValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  initialIndex =
+                                      (value ~/ (100 / labels.length))
+                                          .clamp(0, labels.length - 1);
+                                  sliderValue = value;
+                                });
+                              },
+                              min: 0.0,
+                              max: 100.0,
+                              divisions: 4,
+                              label: labels[initialIndex],
+                            )
+                          : Container(),
+                      MarkdownBody(
+                        data: model.content2,
+                        styleSheet: MarkdownStyleSheet.fromTheme(
+                                Theme.of(context))
+                            .copyWith(
+                                h3: textStyles.largeBold.copyWith(fontSize: 28),
+                                strong: textStyles.mediumBold,
+                                p: textStyles.mediumNormal),
+                      ),
+                      BananaInfographic(
+                        infographic: model.infographic,
+                        helperText: model.helperText,
+                      ),
+                      const SizedBox(height: 20),
+                      MarkdownBody(
+                        data: model.content3,
+                        styleSheet: MarkdownStyleSheet.fromTheme(
+                                Theme.of(context))
+                            .copyWith(
+                                h3: textStyles.largeBold.copyWith(fontSize: 28),
+                                strong: textStyles.mediumBold,
+                                p: textStyles.mediumNormal),
+                      ),
+                      const SizedBox(height: 30)
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              model.isSliderToBeShown
-                  ? Slider(
-                      value: sliderValue,
-                      onChanged: (value) {
-                        setState(() {
-                          initialIndex = (value ~/ (100 / labels.length))
-                              .clamp(0, labels.length - 1);
-                          sliderValue = value;
-                        });
-                      },
-                      min: 0.0,
-                      max: 100.0,
-                      divisions: 4,
-                      label: labels[initialIndex],
-                    )
-                  : Container(),
-              MarkdownBody(
-                data: model.content2,
-                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                    .copyWith(
-                        h3: textStyles.largeBold.copyWith(fontSize: 28),
-                        strong: textStyles.mediumBold,
-                        p: textStyles.mediumNormal),
-              ),
-              BananaInfographic(
-                infographic: model.infographic,
-                helperText: model.helperText,
-              ),
-              const SizedBox(height: 20),
-              MarkdownBody(
-                data: model.content3,
-                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
-                    .copyWith(
-                        h3: textStyles.largeBold.copyWith(fontSize: 28),
-                        strong: textStyles.mediumBold,
-                        p: textStyles.mediumNormal),
-              ),
-              const SizedBox(height: 30)
-            ],
+            ),
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          child: ButtonWidget(
+              color: colors.primary,
+              btnContent: 'Next',
+              onTap: () {
+                widget.onNextClick();
+              }),
+        )
+      ],
     );
   }
 }
