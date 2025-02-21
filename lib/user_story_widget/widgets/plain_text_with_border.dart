@@ -38,6 +38,9 @@ class PlainTextWithBorder extends StatelessWidget {
                 data: prompt,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
+                styleSheet: MarkdownStyleSheet(
+                    h1Align: WrapAlignment.center,
+                    p: textStyles.smallNormal.copyWith(fontSize: 16)),
                 padding: const EdgeInsets.only(left: 14, bottom: 10, right: 14),
               ),
             ],

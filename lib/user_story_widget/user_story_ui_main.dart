@@ -343,8 +343,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       data: uiData.prompt,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      styleSheet:
-                          MarkdownStyleSheet(h1Align: WrapAlignment.center),
+                      styleSheet: MarkdownStyleSheet(
+                          h1Align: WrapAlignment.center,
+                          p: textStyles.smallNormal.copyWith(fontSize: 16)),
                     );
                   case "HorizontalLineChart":
                     return SizedBox(
