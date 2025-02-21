@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_model.dart';
-import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_bottom_sheet.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_taker_form.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
 class OptionsDataWidget extends StatefulWidget {
-  final Options data;
+  final OptionData data;
   final Function(OptionEntry?, String) onRowSelected;
   final OptionEntry? selectedOptionEntry;
 
@@ -54,17 +55,17 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
             children: [
               Expanded(
                 child: _buildDataColumn(
-                    data: widget.data.call.entries, isCallColumn: true),
+                    data: widget.data.options.call.entries, isCallColumn: true),
               ),
               Expanded(
                 child: _buildStrikeColumn(
-                  entries: widget.data.call.entries,
+                  entries: widget.data.options.call.entries,
                   backgroundColor: colors.buttonColor,
                 ),
               ),
               Expanded(
                 child: _buildDataColumn(
-                    data: widget.data.put.entries, isCallColumn: false),
+                    data: widget.data.options.put.entries, isCallColumn: false),
               ),
             ],
           ),
@@ -123,7 +124,8 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                   alignment: Alignment.center,
                   child: Column(
                     children: [
-                      if (!widget.data.showValues) const SizedBox(height: 14),
+                      if (!widget.data.options.showValues)
+                        const SizedBox(height: 14),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -150,12 +152,13 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                                 isSelected, false, isCallColumn, entry),
                         ],
                       ),
-                      if (!widget.data.showValues) const SizedBox(height: 14),
+                      if (!widget.data.options.showValues)
+                        const SizedBox(height: 14),
                     ],
                   ),
                 ),
               ),
-              if (widget.data.showValues)
+              if (widget.data.options.showValues)
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -214,21 +217,41 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     return InkWell(
       onTap: isButtonEnabled
           ? () {
+              // TradeBottomSheet(
+              //   confirmOrder: (quantity) {
+              //     setState(() {
+              //       entry.isBuy = label == 'BUY';
+              //       entry.isCallTrade = isCallColumn;
+              //     });
+              //     widget.onRowSelected(entry, quantity);
+              //     setState(() {
+              //       selectedRow = null;
+              //     });
+              //   },
+              // ),
               showModalBottomSheet(
-                context: context,
-                builder: (context) => TradeBottomSheet(
-                  confirmOrder: (quantity) {
-                    setState(() {
-                      entry.isBuy = label == 'BUY';
-                      entry.isCallTrade = isCallColumn;
-                    });
-                    widget.onRowSelected(entry, quantity);
-                    setState(() {
-                      selectedRow = null;
-                    });
-                  },
-                ),
-              );
+                  context: context,
+                  builder: (context) => TradeTakerForm(
+                      model: TradeFormModel(
+                          target: "0",
+                          stopLoss: "0",
+                          quantity: 0,
+                          isNse: true,
+                          isSell: false,
+                          tradeType: TradeType.intraday,
+                          orderType: OrderType.market,
+                          isCallTrade: entry.isCallTrade = isCallColumn),
+                      tradeFormModel: (tf) {
+                        setState(() {
+                          entry.isBuy = label == 'BUY';
+                          entry.isCallTrade = isCallColumn;
+                        });
+                        widget.onRowSelected(entry, tf.quantity.toString());
+                        setState(() {
+                          selectedRow = null;
+                        });
+                      },
+                      tradeTypeModel: widget.data.tradeTypeModel ?? []));
             }
           : null,
       child: Container(

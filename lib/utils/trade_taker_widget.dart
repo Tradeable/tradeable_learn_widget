@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/rr_widget/rr_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -133,7 +132,7 @@ class TradeFormModel {
 }
 
 class TradeTakerWidget extends StatefulWidget {
-  final RRModel model;
+  final TradeFormModel model;
   final List<TradeTypeModel> tradeTypes;
   final Function(TradeFormModel) tradeForm;
 
@@ -151,8 +150,6 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
     with TickerProviderStateMixin {
   String instrument = "BANKNIFTY250123CE";
   bool isNSE = true;
-  double nseValue = 0;
-  double bseValue = 0;
   bool isSell = true;
 
   late final TabController _outerTabController;
@@ -164,12 +161,15 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   final TextEditingController _targetController = TextEditingController();
   double quantity = 1;
 
-  OrderType selectedOrderType = OrderType.sltg;
+  OrderType selectedOrderType = OrderType.market;
   String selectedValidity = 'Day';
 
   @override
   void initState() {
     super.initState();
+    isSell = widget.model.isSell;
+    isNSE = widget.model.isNse;
+    selectedOrderType = widget.model.orderType;
     _outerTabController =
         TabController(length: widget.tradeTypes.length, vsync: this)
           ..addListener(() {
@@ -191,8 +191,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
 
     _quantityController.text = '1';
     _priceController.text = 'At Market';
-    _targetController.text = widget.model.rrLayer.target.toStringAsFixed(2);
-    _stopLossController.text = widget.model.rrLayer.stoploss.toStringAsFixed(2);
+    _targetController.text = widget.model.target;
+    _stopLossController.text = widget.model.stopLoss;
   }
 
   @override

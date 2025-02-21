@@ -1,7 +1,10 @@
+import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
+
 class OptionData {
   final Options options;
+  late List<TradeTypeModel>? tradeTypeModel;
 
-  OptionData({required this.options});
+  OptionData({required this.options, this.tradeTypeModel});
 
   Map<String, dynamic> toJson() => {
         'options': options.toJson(),
@@ -9,8 +12,12 @@ class OptionData {
 
   factory OptionData.fromJson(Map<String, dynamic> json) {
     return OptionData(
-      options: Options.fromJson(json['options']),
-    );
+        options: Options.fromJson(json['options']),
+        tradeTypeModel: json["tradeTypeModel"] != null
+            ? (json["tradeTypeModel"] as List<dynamic>?)
+                ?.map((e) => TradeTypeModel.fromJson(e))
+                .toList()
+            : []);
   }
 }
 

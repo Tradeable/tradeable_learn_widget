@@ -43,6 +43,7 @@ import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
 import 'package:example/data_model/takingOptionsTrade.dart';
 import 'package:example/data_model/ticket_user_story.dart';
+import 'package:example/data_model/tr2.dart';
 import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/trend_line_user_story.dart';
 import 'package:example/data_model/video_educorner_model.dart';
@@ -440,6 +441,14 @@ class MyHomePage extends StatelessWidget {
                           title: "Delta Typeform",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(deltaTypeForm),
+                              onNextClick: () {}))),
+
+                  NavigationButton(
+                      text: "TR1",
+                      destination: ScaffoldWithAppBar(
+                          title: "TR1",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(tr2),
                               onNextClick: () {}))),
                 ],
               ),

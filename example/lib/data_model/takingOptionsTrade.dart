@@ -88,7 +88,56 @@ const takingOptionsTrade = {
                   ]
                 },
                 "showValues": false
-              }
+              },
+              "tradeTypeModel": [
+                {
+                  "tradeType": "intraday",
+                  "isLocked": false,
+                  "executionTypes": [
+                    {
+                      "executionType": "regular",
+                      "isLocked": false,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": false},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    },
+                    {
+                      "executionType": "amo",
+                      "isLocked": true,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    },
+                    {
+                      "executionType": "cover",
+                      "isLocked": true,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    },
+                    {
+                      "executionType": "iceberg",
+                      "isLocked": true,
+                      "orderTypes": [
+                        {"orderType": "market", "isLocked": true},
+                        {"orderType": "limit", "isLocked": true},
+                        {"orderType": "sltg", "isLocked": true}
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tradeType": "delivery",
+                  "isLocked": true,
+                  "executionTypes": []
+                }
+              ],
             }
           },
           {"width": "", "height": "40", "widget": "SizedBox"},

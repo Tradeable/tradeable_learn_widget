@@ -437,7 +437,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     );
                   case "OptionChain":
                     return OptionsDataWidget(
-                      data: uiData.optionsData!.options,
+                      data: uiData.optionsData!,
                       onRowSelected: (entry, quan) {
                         setState(() {
                           selectedOptionEntry = entry;
@@ -623,16 +623,28 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {
+                          final rrModel = step.ui
+                              .firstWhere((w) => w.widget == "RRChart")
+                              .rrModel!;
                           return TradeTakerForm(
-                            rrModel: step.ui
-                                .firstWhere((w) => w.widget == "RRChart")
-                                .rrModel!,
+                            model: TradeFormModel(
+                                target:
+                                    rrModel.rrLayer.target.toStringAsFixed(2),
+                                stopLoss:
+                                    rrModel.rrLayer.stoploss.toStringAsFixed(2),
+                                quantity: 0,
+                                isNse: true,
+                                isSell: false,
+                                tradeType: TradeType.intraday,
+                                orderType: OrderType.market,
+                                isCallTrade: true),
                             tradeFormModel: (tf) {
                               setState(() {
                                 tradeFormModel.add(tf);
                               });
                               loadCandlesTillEnd();
                             },
+                            tradeTypeModel: rrModel.tradeTypeModel ?? [],
                           );
                         });
                     break;
