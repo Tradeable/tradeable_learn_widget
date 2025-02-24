@@ -652,26 +652,6 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 }
 
-class TrapezoidPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()..color = Colors.blue; // Change color as needed
-
-    Path path = Path()
-      ..moveTo(0, size.height)
-      ..lineTo(size.width * 0.25, 0)
-      ..lineTo(size.width * 0.75, 0)
-      ..lineTo(size.width, size.height)
-      ..close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
-
 class CustomPopup extends StatelessWidget {
   final String title;
   final String content;
