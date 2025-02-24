@@ -86,11 +86,11 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     if (_scrollController.position.maxScrollExtent > 0) {
       _scrollController
           .animateTo(200,
-              duration: const Duration(milliseconds: 1000),
+              duration: const Duration(milliseconds: 0),
               curve: Curves.easeInOut)
           .then((_) {
         _scrollController.animateTo(0,
-            duration: const Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 0),
             curve: Curves.easeInOut);
       });
     }
@@ -811,6 +811,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         avgPrice: "-",
         orderType: OrderType.market,
         isCallTrade: selectedOptionEntry!.isCallTrade,
+        isDeltaBeingCalculated: true
       ));
     });
   }

@@ -117,6 +117,7 @@ class TradeFormModel {
   String? ltp;
   OrderType orderType;
   bool isCallTrade;
+  bool? isDeltaBeingCalculated;
 
   TradeFormModel(
       {required this.target,
@@ -128,7 +129,8 @@ class TradeFormModel {
       this.avgPrice,
       this.ltp,
       required this.orderType,
-      required this.isCallTrade});
+      required this.isCallTrade,
+      this.isDeltaBeingCalculated});
 }
 
 class TradeTakerWidget extends StatefulWidget {
@@ -279,7 +281,10 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => CustomPopup(),
+                builder: (context) => const CustomPopup(
+                    title: 'Title',
+                    content:
+                        'This is a simulated trade with hypothetical values, not reflective of real market conditions. These figures hold no relevance to actual trades or your real-world trading decisions.'),
               );
             },
             child: Container(
@@ -331,12 +336,6 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                     ),
                   );
                 })
-                // Center(
-                //   child: Text("INTRADAY"),
-                // ),
-                // Center(
-                //   child: Text("DELIVERY"),
-                // )
               ],
             ),
           ),
@@ -654,7 +653,10 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
 }
 
 class CustomPopup extends StatelessWidget {
-  const CustomPopup({super.key});
+  final String title;
+  final String content;
+
+  const CustomPopup({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -666,18 +668,18 @@ class CustomPopup extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 Text(
-                  'Popup Title',
+                  title,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: textStyles.mediumBold,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                  content,
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -693,7 +695,7 @@ class CustomPopup extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                     color: colors.primary,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(10),
                         bottomLeft: Radius.circular(10))),
                 child: Center(

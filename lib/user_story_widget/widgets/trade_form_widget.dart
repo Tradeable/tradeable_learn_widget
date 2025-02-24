@@ -46,6 +46,9 @@ class _TradeFormWidget extends State<TradeFormWidget> {
       double profit = model.isSell ? avgPrice - ltp : ltp - avgPrice;
       int arrowCount = (profit.abs() ~/ (avgPrice * 0.01)).clamp(1, 3);
 
+      if(model.isDeltaBeingCalculated ?? false) {
+        arrowCount++;
+      }
       bool isProfit = model.isCallTrade ? profit > 0 : profit < 0;
 
       arrowIndicator = Row(
