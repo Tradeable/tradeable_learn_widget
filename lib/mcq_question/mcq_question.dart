@@ -13,6 +13,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/line_layer/line_la
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -51,6 +52,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
                 QuestionWidget(question: model.question),
                 const SizedBox(height: 20),
                 SizedBox(height: 350, child: renderChart()),
+                const ChartSimulationWidget(),
+                const SizedBox(height: 10),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

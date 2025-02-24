@@ -36,6 +36,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_sl
 import 'package:tradeable_learn_widget/utils/animated_number.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
@@ -349,9 +350,14 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                           p: textStyles.smallNormal.copyWith(fontSize: 16)),
                     );
                   case "HorizontalLineChart":
-                    return SizedBox(
-                        height: 350,
-                        child: HorizontalLineChart(model: uiData.chart!));
+                    return Column(
+                      children: [
+                        SizedBox(
+                            height: 350,
+                            child: HorizontalLineChart(model: uiData.chart!)),
+                        const ChartSimulationWidget()
+                      ],
+                    );
                   case "VolumeChart":
                     return VolumeBarChart(candles: uiData.candles ?? []);
                   case "VolumePriceSlider":
@@ -478,9 +484,14 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                 widget.widget == "HorizontalLineChart")
                             .chart!);
                   case "TrendLineChart":
-                    return SizedBox(
-                        height: 400,
-                        child: TrendLineChart(model: uiData.trendLineModelV1!));
+                    return Column(
+                      children: [
+                        SizedBox(
+                            height: 400,
+                            child: TrendLineChart(model: uiData.trendLineModelV1!)),
+                        const ChartSimulationWidget()
+                      ],
+                    );
                   case "ContractsInfo":
                     return ContractsInfoWidget(
                         model: uiData.contractDetailsModel!,
@@ -502,7 +513,12 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       },
                     );
                   case "RRChart":
-                    return RRChart(model: uiData.rrModel!);
+                    return Column(
+                      children: [
+                        RRChart(model: uiData.rrModel!),
+                        const ChartSimulationWidget()
+                      ],
+                    );
                   case "TradeFormWidget":
                     return Column(
                       children: tradeFormModel

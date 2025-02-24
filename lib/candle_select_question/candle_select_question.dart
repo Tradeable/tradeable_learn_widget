@@ -13,6 +13,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -49,6 +50,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
             height: constraints.maxHeight * 0.5,
             child: renderChart(),
           ),
+          const ChartSimulationWidget(),
           const SizedBox(height: 10),
           Expanded(
             child: Column(

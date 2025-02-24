@@ -15,6 +15,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/range_layer/range_
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -81,6 +82,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
                 ),
                 const SizedBox(height: 10),
                 SizedBox(height: 350, child: renderChart()),
+                const ChartSimulationWidget(),
+                const SizedBox(height: 10),
                 model.candles.isNotEmpty
                     ? ChartInfoChips(
                         ticker: model.ticker,

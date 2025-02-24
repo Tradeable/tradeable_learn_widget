@@ -5,6 +5,7 @@ import 'package:tradeable_learn_widget/fin_chart/layers/trend_line.dart';
 import 'package:tradeable_learn_widget/fin_chart/settings/axis_settings/x_axis_settings.dart';
 import 'package:tradeable_learn_widget/fin_chart/settings/axis_settings/y_axis_settings.dart';
 import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class LineGraphWidget extends StatelessWidget {
@@ -91,6 +92,8 @@ class LineGraphWidget extends StatelessWidget {
                       candleData: model.uiCandles),
                 )
               : Container(),
+          const ChartSimulationWidget(),
+          const SizedBox(height: 20),
         ],
       ),
     );
