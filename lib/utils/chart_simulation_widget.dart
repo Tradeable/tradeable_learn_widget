@@ -16,7 +16,7 @@ class _ChartSimulationWidgetState extends State<ChartSimulationWidget> {
     showDialog(
       context: context,
       builder: (context) => const CustomPopup(
-          title: "Simulation",
+          title: "This is not real chart",
           content:
               'These are simulated charts with hypothetical data, not based on real market conditions. They do not represent actual market trends or future performance.'),
     );

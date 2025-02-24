@@ -282,7 +282,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
               showDialog(
                 context: context,
                 builder: (context) => const CustomPopup(
-                    title: 'Title',
+                    title: 'This is not a real order',
                     content:
                         'This is a simulated trade with hypothetical values, not reflective of real market conditions. These figures hold no relevance to actual trades or your real-world trading decisions.'),
               );
@@ -651,6 +651,26 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
     }
   }
 }
+
+class TrapezoidPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = Colors.blue; // Change color as needed
+
+    Path path = Path()
+      ..moveTo(0, size.height)
+      ..lineTo(size.width * 0.25, 0)
+      ..lineTo(size.width * 0.75, 0)
+      ..lineTo(size.width, size.height)
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
 
 class CustomPopup extends StatelessWidget {
   final String title;

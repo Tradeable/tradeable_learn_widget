@@ -128,7 +128,6 @@ class _TrendLineChart extends State<TrendLineChart>
     return model.uiCandles.isNotEmpty
         ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            margin: const EdgeInsets.symmetric(vertical: 20),
             height: 350,
             child: FinChart(
                 yAxisSettings: YAxisSettings(
