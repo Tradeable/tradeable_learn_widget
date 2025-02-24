@@ -275,6 +275,24 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => CustomPopup(),
+              );
+            },
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: colors.supportItemColor),
+                margin: const EdgeInsets.only(bottom: 14),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                child: Text("This chart is a simulation",
+                    style: textStyles.smallNormal
+                        .copyWith(color: colors.cardBasicBackground))),
+          ),
           Text('Strike', style: textStyles.smallNormal),
           Text('BANKNIFTY2500123CE', style: textStyles.mediumBold),
           const SizedBox(height: 16),
@@ -632,5 +650,61 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
         ],
       );
     }
+  }
+}
+
+class CustomPopup extends StatelessWidget {
+  const CustomPopup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text(
+                  'Popup Title',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10))),
+                child: Center(
+                    child: Text('Go Back',
+                        style: textStyles.mediumBold
+                            .copyWith(color: Colors.white))),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

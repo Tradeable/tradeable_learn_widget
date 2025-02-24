@@ -44,12 +44,9 @@ class _TradeFormWidget extends State<TradeFormWidget> {
     Widget arrowIndicator = Container();
     if (ltp != null && avgPrice != null) {
       double profit = model.isSell ? avgPrice - ltp : ltp - avgPrice;
-      int arrowCount =
-          (profit.abs() ~/ (avgPrice * 0.01)).clamp(1, 3); // 1-3 arrows
+      int arrowCount = (profit.abs() ~/ (avgPrice * 0.01)).clamp(1, 3);
 
-      bool isProfit = model.isCallTrade
-          ? profit > 0 // Call Trade: Profit when price increases
-          : profit < 0; // Put Trade: Profit when price decreases
+      bool isProfit = model.isCallTrade ? profit > 0 : profit < 0;
 
       arrowIndicator = Row(
         children: List.generate(arrowCount, (index) {

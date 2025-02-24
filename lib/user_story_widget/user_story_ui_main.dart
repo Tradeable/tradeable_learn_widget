@@ -14,6 +14,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_slider_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/delta_option_chain.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/greeks_explainer_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
@@ -449,6 +450,19 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       },
                       selectedOptionEntry: selectedOptionEntry,
                     );
+                  case "DeltaOptionChainWidget":
+                    return DeltaOptionChainWidget(
+                      data: uiData.optionsData!,
+                      onRowSelected: (entry, quan) {
+                        setState(() {
+                          selectedOptionEntry = entry;
+                          quantity = quan;
+                        });
+                        updateTrendFormModel();
+                        updateLtps();
+                      },
+                      selectedOptionEntry: selectedOptionEntry,
+                    );
                   case "OptionTradeSheet":
                     return OptionTradeSheet(
                         limitPrice:
@@ -771,7 +785,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         .takeWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime));
 
     tradeFormModel.first.avgPrice =
-        (chart.uiCandles.last.close).toStringAsFixed(2);
+        (chart.uiCandles.first.close).toStringAsFixed(2);
 
     setState(() {});
 
@@ -828,11 +842,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
               ))
           .toList();
 
-      final candleBeforeAtTime = allCandles
-          .lastWhere((c) => c.dateTime.millisecondsSinceEpoch <= chart!.atTime);
-
       for (TradeFormModel trade in tradeFormModel) {
-        trade.avgPrice = candleBeforeAtTime.close.toStringAsFixed(2);
+        trade.avgPrice = allCandles.first.close.toStringAsFixed(2);
         trade.ltp = allCandles.last.close.toStringAsFixed(2);
       }
 
@@ -873,8 +884,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   void calculateDeltaValue() {
     final step = widget.model.userStory.steps
         .firstWhere((step) => step.stepId == currentStepId);
-    final optionData =
-        step.ui.firstWhere((w) => w.widget == "OptionChain").optionsData!;
+    final optionData = step.ui
+        .firstWhere((w) => w.widget == "DeltaOptionChainWidget")
+        .optionsData!;
     final allStrikes = [
       ...optionData.options.call.entries.map((e) => e.strike)
     ];
@@ -921,6 +933,6 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
       delta = deltaValue.toStringAsFixed(2);
     });
 
-    moveToNextStep();
+    updateLtps();
   }
 }

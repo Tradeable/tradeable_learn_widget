@@ -745,7 +745,7 @@ const deltaTypeForm = {
           {
             "title": "",
             "prompt": "",
-            "widget": "OptionChain",
+            "widget": "DeltaOptionChainWidget",
             "optionData": {
               "options": {
                 "call": {
@@ -762,6 +762,13 @@ const deltaTypeForm = {
                       "value": 240.10,
                       "strike": 23150.00,
                       "isBuyEnabled": true,
+                      "isSellEnabled": false
+                    },
+                    {
+                      "premium": 233.75,
+                      "value": 240.10,
+                      "strike": 23200.00,
+                      "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
@@ -783,28 +790,35 @@ const deltaTypeForm = {
                 "put": {
                   "entries": [
                     {
-                      "premium": 230.95,
+                      "premium": 0.90,
                       "value": 231.49,
                       "strike": 23050.00,
                       "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
-                      "premium": 233.10,
+                      "premium": 0.85,
                       "value": 239.20,
                       "strike": 23150.00,
                       "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
-                      "premium": 237.75,
+                      "premium": 0.70,
+                      "value": 240.10,
+                      "strike": 23200.00,
+                      "isBuyEnabled": false,
+                      "isSellEnabled": false
+                    },
+                    {
+                      "premium": 0.28,
                       "value": 242.99,
                       "strike": 23250.00,
                       "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
-                      "premium": 241.95,
+                      "premium": 0.21,
                       "value": 244.50,
                       "strike": 23350.00,
                       "isBuyEnabled": false,
@@ -879,7 +893,7 @@ const deltaTypeForm = {
           {
             "title": "",
             "prompt": "",
-            "widget": "OptionChain",
+            "widget": "DeltaOptionChainWidget",
             "optionData": {
               "options": {
                 "call": {
@@ -896,6 +910,13 @@ const deltaTypeForm = {
                       "value": 240.10,
                       "strike": 23150.00,
                       "isBuyEnabled": true,
+                      "isSellEnabled": false
+                    },
+                    {
+                      "premium": 233.75,
+                      "value": 240.10,
+                      "strike": 23200.00,
+                      "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
@@ -917,28 +938,35 @@ const deltaTypeForm = {
                 "put": {
                   "entries": [
                     {
-                      "premium": 230.95,
+                      "premium": 0.90,
                       "value": 231.49,
                       "strike": 23050.00,
                       "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
-                      "premium": 233.10,
+                      "premium": 0.85,
                       "value": 239.20,
                       "strike": 23150.00,
                       "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
-                      "premium": 237.75,
+                      "premium": 0.70,
+                      "value": 240.10,
+                      "strike": 23200.00,
+                      "isBuyEnabled": false,
+                      "isSellEnabled": false
+                    },
+                    {
+                      "premium": 0.28,
                       "value": 242.99,
                       "strike": 23250.00,
                       "isBuyEnabled": false,
                       "isSellEnabled": false
                     },
                     {
-                      "premium": 241.95,
+                      "premium": 0.21,
                       "value": 244.50,
                       "strike": 23350.00,
                       "isBuyEnabled": false,
