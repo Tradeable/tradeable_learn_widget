@@ -46,32 +46,21 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        QuestionWidget(question: model.question),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: constraints.maxHeight * 0.5,
-          child: renderChart(),
-        ),
-        SizedBox(
-          height: constraints.maxHeight * 0.4,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            model.candles.isNotEmpty
-                ? ChartInfoChips(
-                    ticker: model.ticker,
-                    timeFrame: model.timeframe,
-                    date: DateFormat("dd MMM yyyy").format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            model.candles.first.time)))
-                : Container(),
-            const Spacer(),
-            renderSubmitBtn()
-          ]),
-        )
-      ]);
-    });
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      QuestionWidget(question: model.question),
+      const SizedBox(height: 10),
+      SizedBox(height: 350, child: renderChart()),
+      model.candles.isNotEmpty
+          ? ChartInfoChips(
+              ticker: model.ticker,
+              timeFrame: model.timeframe,
+              date: DateFormat("dd MMM yyyy").format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                      model.candles.first.time)))
+          : Container(),
+      const Spacer(),
+      renderSubmitBtn()
+    ]);
   }
 
   Widget renderChart() {

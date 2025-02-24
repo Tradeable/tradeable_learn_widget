@@ -40,9 +40,11 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
                 renderSingleSelectQuestion(model.userResponse ?? "", colors)),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
-            color: colors.primary,
+            color: (model.userResponse ?? "").isEmpty
+                ? colors.secondary
+                : colors.primary,
             btnContent: "Submit",
             onTap: submitResponse,
           ),
@@ -110,11 +112,7 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
   }
 
   void submitResponse() {
-    if ((model.userResponse ?? "").isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Tap on the candle to proceed"),
-      ));
-    } else {
+    if ((model.userResponse ?? "").isNotEmpty) {
       setState(() {
         model.state = CandleBodySelectState.submitResponse;
       });
