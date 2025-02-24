@@ -94,7 +94,6 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     final colors = Theme.of(context).customColors;
     final textStyles = Theme.of(context).customTextStyles;
     int halfLength = data.length ~/ 2;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
@@ -102,6 +101,8 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
         (entryIndex) {
           final entry = data[entryIndex];
           final isFirstHalf = entryIndex < halfLength;
+
+          final isMiddleItem = entryIndex == halfLength;
 
           Color backgroundColor = isCallColumn
               ? (isFirstHalf ? const Color(0xffEFDCE4) : colors.buttonColor)
@@ -119,7 +120,20 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                   });
                 },
                 child: Container(
-                  color: backgroundColor,
+                  decoration: BoxDecoration(
+                      color: backgroundColor,
+                      border: isMiddleItem
+                          ? Border(
+                              top:
+                                  BorderSide(color: colors.axisColor, width: 1),
+                              bottom:
+                                  BorderSide(color: colors.axisColor, width: 1),
+                              left: isCallColumn
+                                  ? BorderSide(
+                                      color: colors.axisColor, width: 1)
+                                  : BorderSide.none,
+                            )
+                          : null),
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   alignment: Alignment.center,
                   child: Column(
@@ -276,6 +290,7 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     required Color backgroundColor,
   }) {
     final textStyles = Theme.of(context).customTextStyles;
+    final colors = Theme.of(context).customColors;
 
     return Container(
       color: backgroundColor,
@@ -291,6 +306,14 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 18),
+              decoration: index == entries.length ~/ 2
+                  ? BoxDecoration(
+                      border: Border(
+                        top: BorderSide(color: colors.axisColor, width: 1),
+                        bottom: BorderSide(color: colors.axisColor, width: 1),
+                      ),
+                    )
+                  : null,
               alignment: Alignment.center,
               child: Text(
                 entries[index].strike.toStringAsFixed(2),
