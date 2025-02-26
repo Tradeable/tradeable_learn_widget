@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tradeable_learn_widget/rr_widget/rr_model.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_form_widget.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
+import 'package:tradeable_learn_widget/utils/settings_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/chart.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_layer.dart';
@@ -9,11 +13,20 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/
 import 'package:tradeable_learn_widget/tradeable_chart/layers/rr_layer/rr_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
+import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
 class RRChart extends StatefulWidget {
   final RRModel model;
+  final VoidCallback enableNext;
+  final List<TradeFormModel>? tradeFormModel;
+  final VoidCallback scrollToBottom;
 
-  const RRChart({super.key, required this.model});
+  const RRChart(
+      {super.key,
+      required this.model,
+      required this.enableNext,
+      this.tradeFormModel,
+      required this.scrollToBottom});
 
   @override
   State<StatefulWidget> createState() => _RRChart();
@@ -23,6 +36,9 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
   late RRModel model;
   late AnimationController controller;
   bool isAnimating = false;
+  bool showLottieAnimation = false;
+  bool showPnl = false;
+  bool isProfitable = false;
 
   @override
   void initState() {
@@ -40,10 +56,14 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
         model = widget.model;
         isAnimating = false;
       });
-      if (widget.model.loadCandlesTillEnd ?? false) {
-        loadCandlesTillEnd();
+      if (widget.model.settings != null) {
+        modifyUi();
       } else {
-        _loadCandlesTillAt();
+        if (widget.model.loadCandlesTillEnd ?? false) {
+          loadCandlesTillEnd();
+        } else {
+          _loadCandlesTillAt();
+        }
       }
     }
   }
@@ -58,28 +78,53 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
 
-    return SizedBox(
-      height: 350,
-      child: Chart(layers: [
-        AxisLayer(
-            settings: AxisSettings(
-                axisColor: colors.axisColor,
-                yAxistextColor: colors.axisColor,
-                yFreq: 10)),
-        CandleLayer(
-            settings: ChartCandleSettings(
-                bodyThickness: 10,
-                adaptiveBodyThickness: false,
-                shadowColor: colors.axisColor),
-            candles: model.uiCandles),
-        model.rrLayer
-          ..onUpdate = (p0, p1, p2, p3, p4) {
-            setState(() {
-              model.rrLayer = RRLayer(
-                  value: p0, target: p1, stoploss: p2, startAt: p3, endAt: p4);
-            });
-          },
-      ], yMax: model.yMax, yMin: model.yMin),
+    return Column(
+      children: [
+        SizedBox(
+          height: 350,
+          child: Chart(layers: [
+            AxisLayer(
+                settings: AxisSettings(
+                    axisColor: colors.axisColor,
+                    yAxistextColor: colors.axisColor,
+                    yFreq: 10)),
+            CandleLayer(
+                settings: ChartCandleSettings(
+                    bodyThickness: 10,
+                    adaptiveBodyThickness: false,
+                    shadowColor: colors.axisColor),
+                candles: model.uiCandles),
+            model.rrLayer
+              ..onUpdate = (p0, p1, p2, p3, p4) {
+                setState(() {
+                  model.rrLayer = RRLayer(
+                      value: p0,
+                      target: p1,
+                      stoploss: p2,
+                      startAt: p3,
+                      endAt: p4);
+                });
+              },
+          ], yMax: model.yMax, yMin: model.yMin),
+        ),
+        const ChartSimulationWidget(),
+        if (showLottieAnimation)
+          Lottie.asset(
+              package: 'tradeable_learn_widget/lib',
+              isProfitable
+                  ? "assets/lottie/profit_animation_large.json"
+                  : "assets/lottie/loss_animation_large.json",
+              height: 200,
+              fit: BoxFit.fitHeight),
+        if (showPnl)
+          Column(
+              children: widget.tradeFormModel!
+                  .map((model) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: TradeFormWidget(tradeFormModel: model),
+                      ))
+                  .toList())
+      ],
     );
   }
 
@@ -180,6 +225,84 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
           });
         }
       }
+    }
+  }
+
+  Future<void> loadAllCandles({int? speed}) async {
+    for (ui.Candle candle in model.candles
+        .map((e) => ui.Candle(
+            candleId: e.candleNum,
+            open: e.open,
+            high: e.high,
+            low: e.low,
+            close: e.close,
+            dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+            volume: e.vol.round()))
+        .toList()) {
+      await Future.delayed(Duration(milliseconds: speed ?? 50));
+      if (model.candles.length != model.uiCandles.length) {
+        setState(() {
+          model.uiCandles.add(candle);
+        });
+      }
+    }
+  }
+
+  void modifyUi() {
+    SettingsModel settingsModel = widget.model.settings!;
+
+    if (settingsModel.showPnlAnimation ?? false) {
+      setState(() {
+        widget.model.uiCandles.clear();
+      });
+
+      loadAllCandles(speed: settingsModel.candleSpeed).then((_) {
+        if (settingsModel.showPnlAnimation ?? false) {
+          widget.scrollToBottom();
+          setState(() {
+            showLottieAnimation = true;
+          });
+          calculateProfitLoss();
+          Future.delayed(const Duration(seconds: 3), () {
+            setState(() {
+              if (settingsModel.showPnlInfo ?? false) {
+                showPnl = true;
+                showLottieAnimation = false;
+              } else {
+                showLottieAnimation = true;
+              }
+            });
+
+            widget.enableNext();
+          });
+        }
+      });
+    } else if (settingsModel.showPnlInfo ?? false) {
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          showPnl = true;
+        });
+
+        widget.enableNext();
+      });
+    } else {
+      widget.enableNext();
+    }
+  }
+
+  void calculateProfitLoss() {
+    if (widget.tradeFormModel != null) {
+      double profit = widget.tradeFormModel!.first.isSell
+          ? double.parse(widget.tradeFormModel!.first.avgPrice ?? "0") -
+              double.parse(widget.tradeFormModel!.first.ltp ?? "0")
+          : double.parse(widget.tradeFormModel!.first.ltp ?? "0") -
+              double.parse(widget.tradeFormModel!.first.avgPrice ?? "0");
+
+      bool isProfit =
+          widget.tradeFormModel!.first.isCallTrade ? profit > 0 : profit < 0;
+      setState(() {
+        isProfitable = isProfit;
+      });
     }
   }
 }

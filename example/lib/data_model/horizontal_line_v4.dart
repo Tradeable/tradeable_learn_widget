@@ -1,4 +1,4 @@
-const rrTypeForm = {
+const rrTypeForm2 = {
   "userStory": {
     "id": "",
     "name": "",
@@ -530,7 +530,7 @@ const rrTypeForm = {
       },
       {
         "stepId": "3",
-        "isActionNeeded": false,
+        "isActionNeeded": true,
         "ui": [
           {
             "title": "Question",
@@ -738,6 +738,11 @@ const rrTypeForm = {
                   "ticker": "ACC"
                 }
               ],
+              "settings": {
+                "showPnlAnimation": true,
+                "candleSpeed": 100,
+                "showPnlInfo": true
+              },
               "endTime": 1590546600000,
               "options": null,
               "question":
@@ -755,8 +760,6 @@ const rrTypeForm = {
               "selectedCandleIds": null
             }
           },
-          {"width": "", "height": "20", "widget": "SizedBox"},
-          {"widget": "TradeFormWidget"},
           {"title": "Next", "action": "moveNext", "widget": "NextButtonWidget"},
         ]
       }

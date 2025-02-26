@@ -57,7 +57,7 @@ class ChartInfoChips extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         buildContainer("Script", ticker),
-        buildContainer("Time Frame", timeFrame),
+        buildContainer("Time Frame", timeFrame[0].toUpperCase() + timeFrame.substring(1)),
         buildContainer("Date", date),
       ],
     );

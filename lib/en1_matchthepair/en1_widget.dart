@@ -27,7 +27,6 @@ class _EN1State extends State<EN1> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -38,10 +37,7 @@ class _EN1State extends State<EN1> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: QuestionWidget(question: "Match the pair"),
-                  ),
+                  const QuestionWidget(question: "Match the pair"),
                   const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -274,13 +270,11 @@ class RightColumnItemWidget extends StatelessWidget {
     if (item.item.imgSrc.contains("https")) {
       return InkWell(
         onTap: onTap,
-        splashFactory: NoSplash.splashFactory,
-        highlightColor: Colors.transparent,
         child: Center(
           child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               decoration: BoxDecoration(
-                color: const HSLColor.fromAHSL(1, 230, 0.1, 0.2).toColor(),
+                color: colors.cardBasicBackground,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
@@ -297,6 +291,7 @@ class RightColumnItemWidget extends StatelessWidget {
                   item.item.imgSrc,
                   width: 100,
                   height: 100,
+                  fit: BoxFit.cover,
                 ),
               )),
         ),
