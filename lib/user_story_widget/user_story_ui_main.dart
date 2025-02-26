@@ -523,9 +523,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       tradeFormModel: tradeFormModel,
                       scrollToBottom: () {
                         setState(() {
-                          _scrollController.animateTo(
-                              _scrollController.position.maxScrollExtent,
-                              duration: const Duration(milliseconds: 0),
+                          _scrollController.animateTo(200,
+                              duration: const Duration(milliseconds: 1),
                               curve: Curves.easeInOut);
                         });
                       },

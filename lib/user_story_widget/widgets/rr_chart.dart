@@ -258,10 +258,10 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
 
       loadAllCandles(speed: settingsModel.candleSpeed).then((_) {
         if (settingsModel.showPnlAnimation ?? false) {
-          widget.scrollToBottom();
           setState(() {
             showLottieAnimation = true;
           });
+          widget.scrollToBottom();
           calculateProfitLoss();
           Future.delayed(const Duration(seconds: 3), () {
             setState(() {
