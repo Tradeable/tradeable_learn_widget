@@ -19,12 +19,14 @@ class RRChart extends StatefulWidget {
   final RRModel model;
   final VoidCallback enableNext;
   final List<TradeFormModel>? tradeFormModel;
+  final VoidCallback scrollToBottom;
 
   const RRChart(
       {super.key,
       required this.model,
       required this.enableNext,
-      this.tradeFormModel});
+      this.tradeFormModel,
+      required this.scrollToBottom});
 
   @override
   State<StatefulWidget> createState() => _RRChart();
@@ -255,22 +257,25 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
       });
 
       loadAllCandles(speed: settingsModel.candleSpeed).then((_) {
-        setState(() {
-          showLottieAnimation = true;
-        });
-        calculateProfitLoss();
-        Future.delayed(const Duration(seconds: 3), () {
+        if (settingsModel.showPnlAnimation ?? false) {
+          widget.scrollToBottom();
           setState(() {
-            if (settingsModel.showPnlInfo ?? false) {
-              showPnl = true;
-              showLottieAnimation = false;
-            } else {
-              showLottieAnimation = true;
-            }
+            showLottieAnimation = true;
           });
+          calculateProfitLoss();
+          Future.delayed(const Duration(seconds: 3), () {
+            setState(() {
+              if (settingsModel.showPnlInfo ?? false) {
+                showPnl = true;
+                showLottieAnimation = false;
+              } else {
+                showLottieAnimation = true;
+              }
+            });
 
-          widget.enableNext();
-        });
+            widget.enableNext();
+          });
+        }
       });
     } else if (settingsModel.showPnlInfo ?? false) {
       Future.delayed(const Duration(seconds: 3), () {

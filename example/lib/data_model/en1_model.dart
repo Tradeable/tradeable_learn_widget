@@ -1,13 +1,25 @@
 const en1DataModel = {
-  "leftColumn": ["Buyers Active", "Sellers Active"],
+  "_id": "64798dd4175c3c593c008204",
+  "qqid": 3039,
+  "type": "EN1",
+  "level": "IHSS1",
+  "leftColumn": ["Hammer", "Shooting Star", "Hanging Man"],
   "rightColumn": [
     {
-      "imgSrc": "https://db7ux0oq7lxvd.cloudfront.net/EN1_101/05.jpg",
-      "tags": ["Sellers Active", "Bullish NRC", "Narrow Body"]
+      "tags": ["Hanging Man"],
+      "imgSrc": "https://db7ux0oq7lxvd.cloudfront.net/educorner/hanging_man.png"
     },
     {
-      "imgSrc": "https://db7ux0oq7lxvd.cloudfront.net/EN1_101/04.jpg",
-      "tags": ["Buyers Active", "Bearish", "Long Body"]
+      "tags": ["Shooting Star"],
+      "imgSrc":
+          "https://db7ux0oq7lxvd.cloudfront.net/educorner/shooting_star.png"
+    },
+    {
+      "tags": ["Hammer"],
+      "imgSrc":
+          "https://db7ux0oq7lxvd.cloudfront.net/educorner/Frame 2134282097.png"
     }
-  ]
+  ],
+  "isReadyForProd": true,
+  "notifyAnswered": false
 };

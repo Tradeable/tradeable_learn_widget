@@ -521,6 +521,14 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                         });
                       },
                       tradeFormModel: tradeFormModel,
+                      scrollToBottom: () {
+                        setState(() {
+                          _scrollController.animateTo(
+                              _scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 0),
+                              curve: Curves.easeInOut);
+                        });
+                      },
                     );
                   case "TradeFormWidget":
                     return Column(
