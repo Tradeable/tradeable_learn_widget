@@ -11,6 +11,7 @@ import 'package:example/data_model/candle_select_question_model.dart';
 import 'package:example/data_model/column_match.dart';
 import 'package:example/data_model/content_preview_model.dart';
 import 'package:example/data_model/contract_price_slider_model.dart';
+import 'package:example/data_model/delta_typeform.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
@@ -28,6 +29,7 @@ import 'package:example/data_model/market_depth_1.dart';
 import 'package:example/data_model/market_depth_model.dart';
 import 'package:example/data_model/mcq_candle_image_model.dart';
 import 'package:example/data_model/mcq_static_model.dart';
+import 'package:example/data_model/moneyness_typeform.dart';
 import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
@@ -39,7 +41,9 @@ import 'package:example/data_model/rr_typeform.dart';
 import 'package:example/data_model/scenario_intro.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
+import 'package:example/data_model/takingOptionsTrade.dart';
 import 'package:example/data_model/ticket_user_story.dart';
+import 'package:example/data_model/tr2.dart';
 import 'package:example/data_model/trend_line_model.dart';
 import 'package:example/data_model/trend_line_user_story.dart';
 import 'package:example/data_model/video_educorner_model.dart';
@@ -415,7 +419,37 @@ class MyHomePage extends StatelessWidget {
                           title: "RR Typeform",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(rrTypeForm),
-                              onNextClick: () {})))
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Taking Options Trade",
+                      destination: ScaffoldWithAppBar(
+                          title: "Taking Options Trade",
+                          body: UserStoryUIMain(
+                              model:
+                                  UserStoryModel.fromJson(takingOptionsTrade),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Moneyness Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Moneyness Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(moneynessTypeform),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Delta Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "Delta Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(deltaTypeForm),
+                              onNextClick: () {}))),
+
+                  NavigationButton(
+                      text: "TR1",
+                      destination: ScaffoldWithAppBar(
+                          title: "TR1",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(tr2),
+                              onNextClick: () {}))),
                 ],
               ),
             ),

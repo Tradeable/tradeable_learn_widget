@@ -6,7 +6,6 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_la
 import 'package:tradeable_learn_widget/tradeable_chart/layers/axis_layer/axis_setting.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle_setting.dart';
-import 'package:tradeable_learn_widget/tradeable_chart/layers/line_layer/line_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/rr_layer/rr_layer.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -72,18 +71,6 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
               axisColor: colors.axisColor,
               yAxistextColor: colors.axisColor,
               yFreq: 10)),
-      LineLayer(
-        id: "main",
-        value: model.helperHorizontalLineValue,
-        color: const Color(0xffF9B0CC),
-        textColor: colors.axisColor,
-        onUpdate: (p0) {
-          setState(() {
-            model.helperHorizontalLineValue = p0;
-          });
-        },
-        lineColor: colors.primary,
-      ),
       CandleLayer(
           settings: ChartCandleSettings(
               bodyThickness: 10,

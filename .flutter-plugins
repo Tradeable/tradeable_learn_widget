@@ -5,3 +5,6 @@ flutter_inappwebview_ios=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/flutter_
 flutter_inappwebview_macos=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/flutter_inappwebview_macos-1.1.2/
 flutter_inappwebview_web=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/flutter_inappwebview_web-1.1.2/
 flutter_inappwebview_windows=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/flutter_inappwebview_windows-0.6.0/
+webview_flutter=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/webview_flutter-4.10.0/
+webview_flutter_android=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/webview_flutter_android-4.3.2/
+webview_flutter_wkwebview=/Users/deepakgrandhi/.pub-cache/hosted/pub.dev/webview_flutter_wkwebview-3.18.0/

@@ -246,6 +246,10 @@ class _EduCornerV1State extends State<EduCornerV1> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14),
+            margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: colors.borderColorSecondary)),
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: AutoSizeText(card.textContent?.content ?? "",

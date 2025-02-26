@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/rr_widget/rr_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -116,6 +115,9 @@ class TradeFormModel {
   TradeType tradeType;
   String? avgPrice;
   String? ltp;
+  OrderType orderType;
+  bool isCallTrade;
+  bool? isDeltaBeingCalculated;
 
   TradeFormModel(
       {required this.target,
@@ -125,11 +127,14 @@ class TradeFormModel {
       required this.isSell,
       required this.tradeType,
       this.avgPrice,
-      this.ltp});
+      this.ltp,
+      required this.orderType,
+      required this.isCallTrade,
+      this.isDeltaBeingCalculated});
 }
 
 class TradeTakerWidget extends StatefulWidget {
-  final RRModel model;
+  final TradeFormModel model;
   final List<TradeTypeModel> tradeTypes;
   final Function(TradeFormModel) tradeForm;
 
@@ -147,8 +152,6 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
     with TickerProviderStateMixin {
   String instrument = "BANKNIFTY250123CE";
   bool isNSE = true;
-  double nseValue = 0;
-  double bseValue = 0;
   bool isSell = true;
 
   late final TabController _outerTabController;
@@ -160,12 +163,15 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   final TextEditingController _targetController = TextEditingController();
   double quantity = 1;
 
-  OrderType selectedOrderType = OrderType.sltg;
+  OrderType selectedOrderType = OrderType.market;
   String selectedValidity = 'Day';
 
   @override
   void initState() {
     super.initState();
+    isSell = widget.model.isSell;
+    isNSE = widget.model.isNse;
+    selectedOrderType = widget.model.orderType;
     _outerTabController =
         TabController(length: widget.tradeTypes.length, vsync: this)
           ..addListener(() {
@@ -187,8 +193,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
 
     _quantityController.text = '1';
     _priceController.text = 'At Market';
-    _targetController.text = widget.model.rrLayer.target.toStringAsFixed(2);
-    _stopLossController.text = widget.model.rrLayer.stoploss.toStringAsFixed(2);
+    _targetController.text = widget.model.target;
+    _stopLossController.text = widget.model.stopLoss;
   }
 
   @override
@@ -249,7 +255,9 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                         quantity: quantity.toInt(),
                         isNse: isNSE,
                         isSell: isSell,
-                        tradeType: TradeType.intraday);
+                        tradeType: TradeType.intraday,
+                        orderType: selectedOrderType,
+                        isCallTrade: true);
                     widget.tradeForm(tradeFormModel);
                   });
                   Navigator.of(context).pop();
@@ -269,6 +277,27 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const CustomPopup(
+                    title: 'This is not a real order',
+                    content:
+                        'This is a simulated trade with hypothetical values, not reflective of real market conditions. These figures hold no relevance to actual trades or your real-world trading decisions.'),
+              );
+            },
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: colors.supportItemColor),
+                margin: const EdgeInsets.only(bottom: 14),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                child: Text("This chart is a simulation",
+                    style: textStyles.smallNormal
+                        .copyWith(color: colors.cardBasicBackground))),
+          ),
           Text('Strike', style: textStyles.smallNormal),
           Text('BANKNIFTY2500123CE', style: textStyles.mediumBold),
           const SizedBox(height: 16),
@@ -307,12 +336,6 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                     ),
                   );
                 })
-                // Center(
-                //   child: Text("INTRADAY"),
-                // ),
-                // Center(
-                //   child: Text("DELIVERY"),
-                // )
               ],
             ),
           ),
@@ -626,5 +649,64 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
         ],
       );
     }
+  }
+}
+
+class CustomPopup extends StatelessWidget {
+  final String title;
+  final String content;
+
+  const CustomPopup({super.key, required this.title, required this.content});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: textStyles.mediumBold,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  content,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10))),
+                child: Center(
+                    child: Text('Go Back',
+                        style: textStyles.mediumBold
+                            .copyWith(color: Colors.white))),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

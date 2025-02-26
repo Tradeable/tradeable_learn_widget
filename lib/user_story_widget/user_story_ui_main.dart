@@ -14,6 +14,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_buttons.
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_mcq_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_slider_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/delta_option_chain.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/greeks_explainer_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/market_depth_user_table.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget.dart';
@@ -21,6 +22,7 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/mcq_widget_v1.d
 import 'package:tradeable_learn_widget/user_story_widget/widgets/option_chain_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/option_trade_sheet.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/order_status_widget.dart';
+import 'package:tradeable_learn_widget/user_story_widget/widgets/plain_text_with_border.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/rr_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/ticket_coupon_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_form_widget.dart';
@@ -31,8 +33,10 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_taker_for
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trend_line_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_chart.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/volume_price_slider.dart';
+import 'package:tradeable_learn_widget/utils/animated_number.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
@@ -61,7 +65,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   OptionEntry? selectedOptionEntry;
   String? quantity;
   UiData? selectedTicket;
-  TradeFormModel? tradeFormModel;
+  List<TradeFormModel> tradeFormModel = [];
+  String? delta;
 
   @override
   void initState() {
@@ -82,11 +87,11 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     if (_scrollController.position.maxScrollExtent > 0) {
       _scrollController
           .animateTo(200,
-              duration: const Duration(milliseconds: 1000),
+              duration: const Duration(milliseconds: 0),
               curve: Curves.easeInOut)
           .then((_) {
         _scrollController.animateTo(0,
-            duration: const Duration(milliseconds: 1000),
+            duration: const Duration(milliseconds: 0),
             curve: Curves.easeInOut);
       });
     }
@@ -281,6 +286,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).customColors;
+    final textStyles = Theme.of(context).customTextStyles;
 
     final step = widget.model.userStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,
@@ -338,13 +344,20 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     return Markdown(
                       data: uiData.prompt,
                       shrinkWrap: true,
-                      styleSheet:
-                          MarkdownStyleSheet(h1Align: WrapAlignment.center),
+                      physics: const NeverScrollableScrollPhysics(),
+                      styleSheet: MarkdownStyleSheet(
+                          h1Align: WrapAlignment.center,
+                          p: textStyles.smallNormal.copyWith(fontSize: 16)),
                     );
                   case "HorizontalLineChart":
-                    return SizedBox(
-                        height: 350,
-                        child: HorizontalLineChart(model: uiData.chart!));
+                    return Column(
+                      children: [
+                        SizedBox(
+                            height: 350,
+                            child: HorizontalLineChart(model: uiData.chart!)),
+                        const ChartSimulationWidget()
+                      ],
+                    );
                   case "VolumeChart":
                     return VolumeBarChart(candles: uiData.candles ?? []);
                   case "VolumePriceSlider":
@@ -432,13 +445,27 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     );
                   case "OptionChain":
                     return OptionsDataWidget(
-                      data: uiData.optionsData!.options,
+                      data: uiData.optionsData!,
                       onRowSelected: (entry, quan) {
                         setState(() {
                           selectedOptionEntry = entry;
                           quantity = quan;
                         });
-                        moveToNextStep();
+                        updateTrendFormModel();
+                        updateLtps();
+                      },
+                      selectedOptionEntry: selectedOptionEntry,
+                    );
+                  case "DeltaOptionChainWidget":
+                    return DeltaOptionChainWidget(
+                      data: uiData.optionsData!,
+                      onRowSelected: (entry, quan) {
+                        setState(() {
+                          selectedOptionEntry = entry;
+                          quantity = quan;
+                        });
+                        updateTrendFormModel();
+                        updateLtps();
                       },
                       selectedOptionEntry: selectedOptionEntry,
                     );
@@ -457,9 +484,14 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                 widget.widget == "HorizontalLineChart")
                             .chart!);
                   case "TrendLineChart":
-                    return SizedBox(
-                        height: 400,
-                        child: TrendLineChart(model: uiData.trendLineModelV1!));
+                    return Column(
+                      children: [
+                        SizedBox(
+                            height: 400,
+                            child: TrendLineChart(model: uiData.trendLineModelV1!)),
+                        const ChartSimulationWidget()
+                      ],
+                    );
                   case "ContractsInfo":
                     return ContractsInfoWidget(
                         model: uiData.contractDetailsModel!,
@@ -481,9 +513,34 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       },
                     );
                   case "RRChart":
-                    return RRChart(model: uiData.rrModel!);
+                    return Column(
+                      children: [
+                        RRChart(model: uiData.rrModel!),
+                        const ChartSimulationWidget()
+                      ],
+                    );
                   case "TradeFormWidget":
-                    return TradeFormWidget(tradeFormModel: tradeFormModel!);
+                    return Column(
+                      children: tradeFormModel
+                          .map((model) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: TradeFormWidget(tradeFormModel: model),
+                              ))
+                          .toList(),
+                    );
+                  case "DeltaWidget":
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Delta: ", style: textStyles.largeBold),
+                        const SizedBox(width: 6),
+                        AnimatedNumber(value: delta ?? "0")
+                      ],
+                    );
+                  case "PlainTextWithBorder":
+                    return PlainTextWithBorder(
+                        title: uiData.title, prompt: uiData.prompt);
                   default:
                     return const SizedBox.shrink();
                 }
@@ -597,18 +654,39 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                     showModalBottomSheet(
                         context: context,
                         builder: (context) {
+                          final rrModel = step.ui
+                              .firstWhere((w) => w.widget == "RRChart")
+                              .rrModel!;
                           return TradeTakerForm(
-                            rrModel: step.ui
-                                .firstWhere((w) => w.widget == "RRChart")
-                                .rrModel!,
+                            model: TradeFormModel(
+                                target:
+                                    rrModel.rrLayer.target.toStringAsFixed(2),
+                                stopLoss:
+                                    rrModel.rrLayer.stoploss.toStringAsFixed(2),
+                                quantity: 0,
+                                isNse: true,
+                                isSell: false,
+                                tradeType: TradeType.intraday,
+                                orderType: OrderType.market,
+                                isCallTrade: true),
                             tradeFormModel: (tf) {
                               setState(() {
-                                tradeFormModel = tf;
+                                tradeFormModel.add(tf);
                               });
                               loadCandlesTillEnd();
                             },
+                            tradeTypeModel: rrModel.tradeTypeModel ?? [],
                           );
                         });
+                    break;
+                  case "executeTrades":
+                    updateLtps();
+                    break;
+                  case "submitRRQuestion":
+                    submitRRQuestion();
+                    break;
+                  case "calculateDelta":
+                    calculateDeltaValue();
                     break;
                 }
               }
@@ -704,8 +782,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         .firstWhere((step) => step.stepId == currentStepId);
     final chart = step.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
     setState(() {
-      chart.rrLayer.target = double.parse(tradeFormModel?.target ?? "0.0");
-      chart.rrLayer.stoploss = double.parse(tradeFormModel?.stopLoss ?? "0.0");
+      chart.rrLayer.target = double.parse(tradeFormModel.first.target);
+      chart.rrLayer.stoploss = double.parse(tradeFormModel.first.stopLoss);
     });
 
     List<ui.Candle> allCandles = chart.candles
@@ -722,7 +800,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     chart.uiCandles.addAll(allCandles
         .takeWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime));
 
-    tradeFormModel!.avgPrice = (chart.uiCandles.last.close).toStringAsFixed(2);
+    tradeFormModel.first.avgPrice =
+        (chart.uiCandles.first.close).toStringAsFixed(2);
 
     setState(() {});
 
@@ -730,8 +809,147 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
         .skipWhile((c) => c.dateTime.millisecondsSinceEpoch <= chart.atTime)) {
       await Future.delayed(const Duration(milliseconds: 100));
       setState(() {
-        tradeFormModel!.ltp = candle.close.toStringAsFixed(2);
+        tradeFormModel.first.ltp = candle.close.toStringAsFixed(2);
       });
     }
+  }
+
+  void updateTrendFormModel() async {
+    setState(() {
+      tradeFormModel.add(TradeFormModel(
+        target: "-",
+        stopLoss: "-",
+        quantity: int.parse(quantity ?? "0"),
+        isNse: true,
+        isSell: !selectedOptionEntry!.isBuy,
+        tradeType: TradeType.intraday,
+        ltp: "-",
+        avgPrice: "-",
+        orderType: OrderType.market,
+        isCallTrade: selectedOptionEntry!.isCallTrade,
+        isDeltaBeingCalculated: true
+      ));
+    });
+  }
+
+  void updateLtps() async {
+    moveToNextStep();
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+
+    TrendLineModel? chart;
+
+    for (var ui in step.ui) {
+      if (ui.widget == "TrendLineChart") {
+        chart = ui.trendLineModelV1;
+        break;
+      }
+    }
+
+    if (chart != null) {
+      List<ui.Candle> allCandles = chart.candles
+          .map((e) => ui.Candle(
+                candleId: e.candleNum,
+                open: e.open,
+                high: e.high,
+                low: e.low,
+                close: e.close,
+                dateTime: DateTime.fromMillisecondsSinceEpoch(e.time),
+                volume: e.vol.round(),
+              ))
+          .toList();
+
+      for (TradeFormModel trade in tradeFormModel) {
+        trade.avgPrice = allCandles.first.close.toStringAsFixed(2);
+        trade.ltp = allCandles.last.close.toStringAsFixed(2);
+      }
+
+      setState(() {});
+
+      for (final candle in allCandles.skipWhile(
+          (c) => c.dateTime.millisecondsSinceEpoch <= chart!.atTime)) {
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        setState(() {
+          for (var trade in tradeFormModel) {
+            trade.ltp = candle.close.toStringAsFixed(2);
+          }
+        });
+      }
+    }
+  }
+
+  void submitRRQuestion() {
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final chart = step.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+    double target = chart.rrLayer.target;
+    double stoploss = chart.rrLayer.stoploss;
+    moveToNextStep();
+
+    final nextStep = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final nextChart =
+        nextStep.ui.firstWhere((w) => w.widget == "RRChart").rrModel!;
+
+    setState(() {
+      nextChart.rrLayer.target = target;
+      nextChart.rrLayer.stoploss = stoploss;
+    });
+  }
+
+  void calculateDeltaValue() {
+    final step = widget.model.userStory.steps
+        .firstWhere((step) => step.stepId == currentStepId);
+    final optionData = step.ui
+        .firstWhere((w) => w.widget == "DeltaOptionChainWidget")
+        .optionsData!;
+    final allStrikes = [
+      ...optionData.options.call.entries.map((e) => e.strike)
+    ];
+    final atmStrike = allStrikes[allStrikes.length ~/ 2];
+
+    if (selectedOptionEntry == null) {
+      return;
+    }
+
+    double deltaValue = 0.0;
+    final isCall = selectedOptionEntry!.premium ==
+        optionData.options.call.entries
+            .firstWhere(
+              (e) => e.strike == selectedOptionEntry!.strike,
+            )
+            .premium;
+
+    if (isCall) {
+      if (selectedOptionEntry!.strike < atmStrike) {
+        deltaValue = 0.70 +
+            (0.30 * ((atmStrike - selectedOptionEntry!.strike) / atmStrike));
+        deltaValue = deltaValue.clamp(0.70, 1.00);
+      } else if (selectedOptionEntry!.strike > atmStrike) {
+        deltaValue = 0.30 *
+            (1 - ((selectedOptionEntry!.strike - atmStrike) / atmStrike));
+        deltaValue = deltaValue.clamp(0.20, 0.30);
+      } else {
+        deltaValue = 0.50;
+      }
+    } else {
+      if (selectedOptionEntry!.strike > atmStrike) {
+        deltaValue = -(0.70 +
+            (0.30 * ((selectedOptionEntry!.strike - atmStrike) / atmStrike)));
+        deltaValue = deltaValue.clamp(-1.00, -0.70);
+      } else if (selectedOptionEntry!.strike < atmStrike) {
+        deltaValue = -(0.30 *
+            (1 - ((atmStrike - selectedOptionEntry!.strike) / atmStrike)));
+        deltaValue = deltaValue.clamp(-0.30, -0.20);
+      } else {
+        deltaValue = -0.50;
+      }
+    }
+    setState(() {
+      delta = deltaValue.toStringAsFixed(2);
+    });
+
+    updateLtps();
   }
 }

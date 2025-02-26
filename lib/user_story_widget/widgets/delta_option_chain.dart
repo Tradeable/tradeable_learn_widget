@@ -4,12 +4,12 @@ import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_taker_for
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
-class OptionsDataWidget extends StatefulWidget {
+class DeltaOptionChainWidget extends StatefulWidget {
   final OptionData data;
   final Function(OptionEntry?, String) onRowSelected;
   final OptionEntry? selectedOptionEntry;
 
-  const OptionsDataWidget({
+  const DeltaOptionChainWidget({
     super.key,
     required this.data,
     required this.onRowSelected,
@@ -17,10 +17,10 @@ class OptionsDataWidget extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _OptionsDataWidget();
+  State<StatefulWidget> createState() => _DeltaOptionChainWidget();
 }
 
-class _OptionsDataWidget extends State<OptionsDataWidget> {
+class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
   int? selectedRow;
   OptionEntry? selectedRowObject;
 
@@ -32,21 +32,13 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
+          _buildTopLabel("Greeks Option Chain"),
+          const SizedBox(height: 40),
           Row(
             children: [
-              const Spacer(),
-              _buildTopLabel('CALL'),
-              const Spacer(flex: 2),
-              _buildTopLabel('PUT'),
-              const Spacer(),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(child: _buildHeader('Premium')),
+              Expanded(child: _buildHeader('Delta')),
+              Expanded(child: _buildHeader('Call Premium')),
               Expanded(child: _buildHeader('Strike')),
-              Expanded(child: _buildHeader('Premium')),
             ],
           ),
           const SizedBox(height: 8),
@@ -58,14 +50,14 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                     data: widget.data.options.call.entries, isCallColumn: true),
               ),
               Expanded(
+                child: _buildDataColumn(
+                    data: widget.data.options.put.entries, isCallColumn: false),
+              ),
+              Expanded(
                 child: _buildStrikeColumn(
                   entries: widget.data.options.call.entries,
                   backgroundColor: colors.buttonColor,
                 ),
-              ),
-              Expanded(
-                child: _buildDataColumn(
-                    data: widget.data.options.put.entries, isCallColumn: false),
               ),
             ],
           ),
@@ -94,21 +86,16 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     final colors = Theme.of(context).customColors;
     final textStyles = Theme.of(context).customTextStyles;
     int halfLength = data.length ~/ 2;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(
         data.length,
         (entryIndex) {
           final entry = data[entryIndex];
-          final isFirstHalf = entryIndex < halfLength;
-
           final isMiddleItem = entryIndex == halfLength;
-
-          Color backgroundColor = isCallColumn
-              ? (isFirstHalf ? const Color(0xffEFDCE4) : colors.buttonColor)
-              : (isFirstHalf ? colors.buttonColor : const Color(0xffEFDCE4));
-
-          bool isSelected = selectedRow == entryIndex;
+          final backgroundColor = colors.buttonColor;
+          final isSelected = selectedRow == entryIndex;
 
           return Column(
             children: [
@@ -120,22 +107,21 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                   });
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: backgroundColor,
-                      border: isMiddleItem
-                          ? Border(
-                              top:
-                                  BorderSide(color: colors.axisColor, width: 1),
-                              bottom:
-                                  BorderSide(color: colors.axisColor, width: 1),
-                              left: isCallColumn
-                                  ? BorderSide(
-                                      color: colors.axisColor, width: 1)
-                                  : BorderSide.none,
-                            )
-                          : null),
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   alignment: Alignment.center,
+                  decoration: isMiddleItem
+                      ? BoxDecoration(
+                          color: backgroundColor,
+                          border: Border(
+                            top: BorderSide(color: colors.axisColor, width: 1),
+                            bottom:
+                                BorderSide(color: colors.axisColor, width: 1),
+                            left: isCallColumn
+                                ? BorderSide(color: colors.axisColor, width: 1)
+                                : BorderSide.none,
+                          ),
+                        )
+                      : null,
                   child: Column(
                     children: [
                       if (!widget.data.options.showValues)
@@ -143,9 +129,6 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (!isCallColumn)
-                            _buildBuySellButton(
-                                isSelected, false, isCallColumn, entry),
                           Expanded(
                             child: Center(
                               child: Text(
@@ -184,6 +167,20 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                     color: backgroundColor,
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     alignment: Alignment.center,
+                    decoration: isMiddleItem
+                        ? BoxDecoration(
+                            border: Border(
+                              top:
+                                  BorderSide(color: colors.axisColor, width: 1),
+                              bottom:
+                                  BorderSide(color: colors.axisColor, width: 1),
+                              left: isCallColumn
+                                  ? BorderSide(
+                                      color: colors.axisColor, width: 1)
+                                  : BorderSide.none,
+                            ),
+                          )
+                        : null,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -231,18 +228,6 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     return InkWell(
       onTap: isButtonEnabled
           ? () {
-              // TradeBottomSheet(
-              //   confirmOrder: (quantity) {
-              //     setState(() {
-              //       entry.isBuy = label == 'BUY';
-              //       entry.isCallTrade = isCallColumn;
-              //     });
-              //     widget.onRowSelected(entry, quantity);
-              //     setState(() {
-              //       selectedRow = null;
-              //     });
-              //   },
-              // ),
               showModalBottomSheet(
                   context: context,
                   builder: (context) => TradeTakerForm(
@@ -306,15 +291,16 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
             },
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 18),
+              alignment: Alignment.center,
               decoration: index == entries.length ~/ 2
                   ? BoxDecoration(
                       border: Border(
                         top: BorderSide(color: colors.axisColor, width: 1),
                         bottom: BorderSide(color: colors.axisColor, width: 1),
+                        right: BorderSide(color: colors.axisColor, width: 1),
                       ),
                     )
                   : null,
-              alignment: Alignment.center,
               child: Text(
                 entries[index].strike.toStringAsFixed(2),
                 style: textStyles.smallNormal.copyWith(fontSize: 16),

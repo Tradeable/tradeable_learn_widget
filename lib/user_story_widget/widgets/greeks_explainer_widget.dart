@@ -200,10 +200,35 @@ class _GreeksExplainerWidget extends State<GreeksExplainerWidget>
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Image.asset(
-                        "assets/fc1.png",
-                        package: 'tradeable_learn_widget/lib',
-                        height: 30,
+                      GestureDetector(
+                        onHorizontalDragEnd: (details) {
+                          double dx = details.velocity.pixelsPerSecond.dx;
+
+                          if (dx < 0) {
+                            setState(() {
+                              if (sliderValue > 0) {
+                                sliderValue--;
+                              }
+                            });
+                          } else if (dx > 0) {
+                            setState(() {
+                              if (sliderValue != widget.model.stopValue) {
+                                if (sliderValue < widget.model.strikePrices.length) {
+                                  sliderValue++;
+                                }
+                              }
+                            });
+                          }
+
+                          if (sliderValue == widget.model.stopValue) {
+                            widget.moveToNextStep();
+                          }
+                        },
+                        child: Image.asset(
+                          "assets/fc1.png",
+                          package: 'tradeable_learn_widget/lib',
+                          height: 30,
+                        ),
                       ),
                     ],
                   ),

@@ -14,10 +14,16 @@ class TradeBottomSheet extends StatefulWidget {
 
 class _TradeBottomSheet extends State<TradeBottomSheet> {
   final TextEditingController controller = TextEditingController();
-  double sliderValue = 0;
+  double sliderValue = 1;
   double sliderMaxValue = 500;
   String selectedOrderType = 'Market';
   String selectedValidity = 'Day';
+
+  @override
+  void initState() {
+    controller.text = "1";
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +84,7 @@ class _TradeBottomSheet extends State<TradeBottomSheet> {
                   const SizedBox(height: 10),
                   Slider(
                     value: sliderValue.clamp(0, sliderMaxValue),
-                    min: 0,
+                    min: 1,
                     max: sliderMaxValue,
                     thumbColor: colors.axisColor,
                     activeColor: colors.axisColor,
