@@ -674,13 +674,13 @@ class CustomPopup extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.left,
                   style: textStyles.mediumBold,
                 ),
                 const SizedBox(height: 10),
                 Text(
                   content,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.left,
                 ),
               ],
             ),

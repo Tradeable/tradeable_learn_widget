@@ -52,7 +52,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
               Center(
                 child: SmoothPageIndicator(
                   controller: controller,
-                  count: model.cards.length,
+                  count: model.cards.length >= 6 ? 6 : model.cards.length,
                   effect: CustomizableEffect(
                     dotDecoration: DotDecoration(
                       width: 7,
@@ -197,63 +197,79 @@ class _EduCornerV1State extends State<EduCornerV1> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              currentPage == 0
-                  ? const SizedBox(
-                      height: 40,
-                      width: 40,
-                    )
-                  : Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colors.cardColorSecondary,
+              Flexible(
+                flex: 2,
+                child: currentPage == 0
+                    ? const SizedBox(
+                        height: 60,
+                        width: 60,
+                      )
+                    : Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colors.cardColorSecondary,
+                        ),
+                        height: 40,
+                        width: 40,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_left),
+                          onPressed: () {
+                            controller.previousPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeIn,
+                            );
+                          },
+                        ),
                       ),
-                      height: 40,
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_left),
-                        onPressed: () {
-                          controller.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          );
-                        },
+              ),
+              Flexible(
+                  flex: 8,
+                  child: Center(
+                    child: Text(card.textContent?.title ?? "",
+                        style: textStyles.mediumBold),
+                  )),
+              Flexible(
+                flex: 2,
+                child: currentPage == model.cards.length - 1
+                    ? const SizedBox(
+                        height: 60,
+                        width: 60,
+                      )
+                    : Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colors.cardColorSecondary,
+                        ),
+                        height: 40,
+                        width: 40,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_right),
+                          onPressed: () {
+                            controller.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeIn,
+                            );
+                          },
+                        ),
                       ),
-                    ),
-              Text(card.textContent?.title ?? "", style: textStyles.mediumBold),
-              currentPage == model.cards.length - 1
-                  ? const SizedBox(
-                      height: 40,
-                      width: 40,
-                    )
-                  : Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colors.cardColorSecondary,
-                      ),
-                      height: 40,
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_right),
-                        onPressed: () {
-                          controller.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          );
-                        },
-                      ),
-                    ),
+              )
             ],
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: colors.borderColorSecondary)),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: AutoSizeText(card.textContent?.content ?? "",
-                  minFontSize: 12, maxLines: 5),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: colors.borderColorSecondary)),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: AutoSizeText(card.textContent?.content ?? "",
+                    minFontSize: 12, maxLines: 5),
+              ),
             ),
           )
         ],
