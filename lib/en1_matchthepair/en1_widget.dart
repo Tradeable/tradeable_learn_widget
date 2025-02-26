@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/en1_matchthepair/en1_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class EN1 extends StatefulWidget {
@@ -37,10 +38,10 @@ class _EN1State extends State<EN1> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text("Match the pair",
-                          style: textStyles.mediumNormal)),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    child: QuestionWidget(question: "Match the pair"),
+                  ),
                   const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(
