@@ -95,8 +95,6 @@ extension OptionOrdering on Option {
         return 1;
       case Option.tail:
         return 2;
-      default:
-        throw Exception("Unknown option");
     }
   }
 }

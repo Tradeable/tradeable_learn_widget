@@ -113,8 +113,6 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
                       case DraggableOptionState.dragging:
                       case DraggableOptionState.snapped:
                         return Container();
-                      default:
-                        return Container();
                     }
                   }).toList(),
                 ),

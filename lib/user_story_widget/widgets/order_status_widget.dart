@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
-import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
-    as ui;
 
 class OrderStatusWidget extends StatefulWidget {
   final String limitPrice;

@@ -32,29 +32,29 @@ class QuizQuestionOption extends StatelessWidget {
         color: state == CandleFormationState.submitResponse
             ? (incorrectResponse!.contains(option.optionId))
                 ? selectedOptions.contains(option.optionId)
-                    ? Colors.red
-                    : colors.cardColorSecondary
+                    ? colors.buttonColor
+                    : colors.buttonColor
                 : !incorrectResponse!.contains(option.optionId) &&
                         !selectedOptions.contains(option.optionId)
-                    ? colors.cardColorSecondary
-                    : Colors.green
+                    ? colors.buttonColor
+                    : colors.buttonColor
             : selectedOptions.contains(option.optionId)
-                ? Colors.orange
-                : colors.cardColorSecondary,
+                ? colors.cardColorPrimary
+                : colors.buttonColor,
         shape: RoundedRectangleBorder(
             side: BorderSide(
               color: state == CandleFormationState.submitResponse
                   ? (incorrectResponse!.contains(option.optionId))
                       ? selectedOptions.contains(option.optionId)
-                          ? Colors.red
+                          ? colors.bearishColor
                           : colors.borderColorPrimary
                       : !incorrectResponse!.contains(option.optionId) &&
                               !selectedOptions.contains(option.optionId)
                           ? colors.borderColorPrimary
-                          : Colors.green
+                          : colors.bullishColor
                   : selectedOptions.contains(option.optionId)
-                      ? Colors.orange
-                      : colors.borderColorPrimary,
+                      ? colors.borderColorPrimary
+                      : colors.borderColorSecondary,
             ),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         child: Center(
