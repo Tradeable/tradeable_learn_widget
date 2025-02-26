@@ -273,13 +273,11 @@ class RightColumnItemWidget extends StatelessWidget {
     if (item.item.imgSrc.contains("https")) {
       return InkWell(
         onTap: onTap,
-        splashFactory: NoSplash.splashFactory,
-        highlightColor: Colors.transparent,
         child: Center(
           child: Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               decoration: BoxDecoration(
-                color: const HSLColor.fromAHSL(1, 230, 0.1, 0.2).toColor(),
+                color: colors.cardBasicBackground,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(

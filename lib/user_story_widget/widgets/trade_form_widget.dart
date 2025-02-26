@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
@@ -44,22 +45,15 @@ class _TradeFormWidget extends State<TradeFormWidget> {
     Widget arrowIndicator = Container();
     if (ltp != null && avgPrice != null) {
       double profit = model.isSell ? avgPrice - ltp : ltp - avgPrice;
-      int arrowCount = (profit.abs() ~/ (avgPrice * 0.01)).clamp(1, 3);
 
-      if(model.isDeltaBeingCalculated ?? false) {
-        arrowCount++;
-      }
       bool isProfit = model.isCallTrade ? profit > 0 : profit < 0;
 
-      arrowIndicator = Row(
-        children: List.generate(arrowCount, (index) {
-          return Icon(
-            isProfit ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-            color: isProfit ? Colors.green : Colors.red,
-            size: 18,
-          );
-        }),
-      );
+      arrowIndicator = Lottie.asset(
+          package: 'tradeable_learn_widget/lib',
+          isProfit
+              ? "assets/lottie/profit_animation.json"
+              : "assets/lottie/loss_animation.json",
+          height: 40, fit: BoxFit.fitHeight);
     }
 
     return Container(

@@ -21,6 +21,7 @@ import 'package:example/data_model/formula_placeholder_model.dart';
 import 'package:example/data_model/greeks_typeform.dart';
 import 'package:example/data_model/horizontal_line_model.dart';
 import 'package:example/data_model/horizontal_line_model_v1.dart';
+import 'package:example/data_model/horizontal_line_v4.dart';
 import 'package:example/data_model/image_mcq.dart';
 import 'package:example/data_model/index_page_model.dart';
 import 'package:example/data_model/info_reel_model.dart';
@@ -442,13 +443,19 @@ class MyHomePage extends StatelessWidget {
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(deltaTypeForm),
                               onNextClick: () {}))),
-
                   NavigationButton(
                       text: "TR1",
                       destination: ScaffoldWithAppBar(
                           title: "TR1",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(tr2),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "RR new Typeform",
+                      destination: ScaffoldWithAppBar(
+                          title: "RR new Typeform",
+                          body: UserStoryUIMain(
+                              model: UserStoryModel.fromJson(rrTypeForm2),
                               onNextClick: () {}))),
                 ],
               ),

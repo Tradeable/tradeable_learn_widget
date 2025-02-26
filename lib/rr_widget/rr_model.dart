@@ -5,6 +5,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/chart_layer.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/rr_layer/rr_layer.dart';
 import 'package:tradeable_learn_widget/candle_select_question/candle_select_model.dart';
 import 'package:tradeable_learn_widget/utils/explanation_model.dart';
+import 'package:tradeable_learn_widget/utils/settings_model.dart';
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
 enum RRQuestionState { loadUI, submitResponse }
@@ -32,6 +33,8 @@ class RRModel {
   late bool? loadCandlesTillEnd;
   late RRResponses? rrResponses;
   late List<TradeTypeModel>? tradeTypeModel;
+  late bool? showPnlAnimation;
+  late SettingsModel? settings;
 
   RRModel.fromJson(dynamic data) {
     question = data['question'];
@@ -107,6 +110,10 @@ class RRModel {
             ?.map((e) => TradeTypeModel.fromJson(e))
             .toList()
         : [];
+    showPnlAnimation = data["showPnlAnimation"] ?? false;
+    settings = data["settings"] != null
+        ? SettingsModel.fromJson(data["settings"])
+        : null;
   }
 
   bool isTradeLong() {

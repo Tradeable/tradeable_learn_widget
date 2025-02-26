@@ -91,8 +91,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
               curve: Curves.easeInOut)
           .then((_) {
         _scrollController.animateTo(0,
-            duration: const Duration(milliseconds: 0),
-            curve: Curves.easeInOut);
+            duration: const Duration(milliseconds: 0), curve: Curves.easeInOut);
       });
     }
   }
@@ -488,7 +487,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       children: [
                         SizedBox(
                             height: 400,
-                            child: TrendLineChart(model: uiData.trendLineModelV1!)),
+                            child: TrendLineChart(
+                                model: uiData.trendLineModelV1!)),
                         const ChartSimulationWidget()
                       ],
                     );
@@ -513,11 +513,14 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       },
                     );
                   case "RRChart":
-                    return Column(
-                      children: [
-                        RRChart(model: uiData.rrModel!),
-                        const ChartSimulationWidget()
-                      ],
+                    return RRChart(
+                      model: uiData.rrModel!,
+                      enableNext: () {
+                        setState(() {
+                          step.isActionNeeded = false;
+                        });
+                      },
+                      tradeFormModel: tradeFormModel,
                     );
                   case "TradeFormWidget":
                     return Column(
@@ -657,6 +660,22 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                           final rrModel = step.ui
                               .firstWhere((w) => w.widget == "RRChart")
                               .rrModel!;
+                          OrderType getUnlockedOrderType() {
+                            for (var tradeType
+                                in rrModel.tradeTypeModel ?? []) {
+                              for (var executionType
+                                  in tradeType.executionTypes) {
+                                for (var orderType
+                                    in executionType.orderTypes) {
+                                  if (!orderType.isLocked) {
+                                    return orderType.orderType;
+                                  }
+                                }
+                              }
+                            }
+                            return OrderType.market;
+                          }
+
                           return TradeTakerForm(
                             model: TradeFormModel(
                                 target:
@@ -667,7 +686,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                 isNse: true,
                                 isSell: false,
                                 tradeType: TradeType.intraday,
-                                orderType: OrderType.market,
+                                orderType: getUnlockedOrderType(),
                                 isCallTrade: true),
                             tradeFormModel: (tf) {
                               setState(() {
@@ -817,18 +836,17 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
   void updateTrendFormModel() async {
     setState(() {
       tradeFormModel.add(TradeFormModel(
-        target: "-",
-        stopLoss: "-",
-        quantity: int.parse(quantity ?? "0"),
-        isNse: true,
-        isSell: !selectedOptionEntry!.isBuy,
-        tradeType: TradeType.intraday,
-        ltp: "-",
-        avgPrice: "-",
-        orderType: OrderType.market,
-        isCallTrade: selectedOptionEntry!.isCallTrade,
-        isDeltaBeingCalculated: true
-      ));
+          target: "-",
+          stopLoss: "-",
+          quantity: int.parse(quantity ?? "0"),
+          isNse: true,
+          isSell: !selectedOptionEntry!.isBuy,
+          tradeType: TradeType.intraday,
+          ltp: "-",
+          avgPrice: "-",
+          orderType: OrderType.market,
+          isCallTrade: selectedOptionEntry!.isCallTrade,
+          isDeltaBeingCalculated: true));
     });
   }
 
