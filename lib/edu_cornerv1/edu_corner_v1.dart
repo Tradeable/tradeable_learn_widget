@@ -201,7 +201,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
                 flex: 2,
                 child: currentPage == 0
                     ? const SizedBox(
-                        height: 60,
+                        height: 40,
                         width: 60,
                       )
                     : Container(
@@ -233,7 +233,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
                 flex: 2,
                 child: currentPage == model.cards.length - 1
                     ? const SizedBox(
-                        height: 60,
+                        height: 40,
                         width: 60,
                       )
                     : Container(
@@ -257,19 +257,17 @@ class _EduCornerV1State extends State<EduCornerV1> {
               )
             ],
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: colors.borderColorSecondary)),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: AutoSizeText(card.textContent?.content ?? "",
-                    minFontSize: 12, maxLines: 5),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: colors.borderColorSecondary)),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: AutoSizeText(card.textContent?.content ?? "",
+                  minFontSize: 12, maxLines: 5),
             ),
           )
         ],
