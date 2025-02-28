@@ -107,6 +107,7 @@ class OrderTypeModel {
 }
 
 class TradeFormModel {
+  String? ticker;
   String target;
   String stopLoss;
   int quantity;
@@ -118,9 +119,11 @@ class TradeFormModel {
   OrderType orderType;
   bool isCallTrade;
   bool? isDeltaBeingCalculated;
+  bool? areValuesVisible;
 
   TradeFormModel(
-      {required this.target,
+      {this.ticker,
+      required this.target,
       required this.stopLoss,
       required this.quantity,
       required this.isNse,
@@ -130,7 +133,8 @@ class TradeFormModel {
       this.ltp,
       required this.orderType,
       required this.isCallTrade,
-      this.isDeltaBeingCalculated});
+      this.isDeltaBeingCalculated,
+      this.areValuesVisible});
 }
 
 class TradeTakerWidget extends StatefulWidget {
@@ -150,7 +154,7 @@ class TradeTakerWidget extends StatefulWidget {
 
 class _TradeTakerWidgetState extends State<TradeTakerWidget>
     with TickerProviderStateMixin {
-  String instrument = "BANKNIFTY250123CE";
+  String instrument = "";
   bool isNSE = true;
   bool isSell = true;
 
@@ -169,6 +173,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   @override
   void initState() {
     super.initState();
+    instrument = widget.model.ticker ?? "BANKNIFTY250123CE";
     isSell = widget.model.isSell;
     isNSE = widget.model.isNse;
     selectedOrderType = widget.model.orderType;
@@ -250,6 +255,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                 onTap: () {
                   setState(() {
                     TradeFormModel tradeFormModel = TradeFormModel(
+                        ticker: instrument,
                         target: _targetController.text,
                         stopLoss: _stopLossController.text,
                         quantity: quantity.toInt(),
@@ -299,7 +305,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
                         .copyWith(color: colors.cardBasicBackground))),
           ),
           Text('Strike', style: textStyles.smallNormal),
-          Text('BANKNIFTY2500123CE', style: textStyles.mediumBold),
+          Text(instrument, style: textStyles.mediumBold),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -406,6 +412,13 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
               });
             },
           ),
+          widget.model.areValuesVisible ?? false
+              ? Align(
+                  alignment: Alignment.topRight,
+                  child: Text(
+                      (quantity * double.parse(widget.model.avgPrice ?? "0"))
+                          .toStringAsFixed(2)))
+              : const SizedBox.shrink(),
           const SizedBox(height: 16),
           getTextFields(selectedOrderType.name),
           const SizedBox(height: 16),

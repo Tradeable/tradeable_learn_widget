@@ -53,7 +53,8 @@ class _TradeFormWidget extends State<TradeFormWidget> {
           isProfit
               ? "assets/lottie/profit_animation.json"
               : "assets/lottie/loss_animation.json",
-          height: 40, fit: BoxFit.fitHeight);
+          height: 40,
+          fit: BoxFit.fitHeight);
     }
 
     return Container(
@@ -92,7 +93,8 @@ class _TradeFormWidget extends State<TradeFormWidget> {
           const SizedBox(height: 6),
           Row(
             children: [
-              Text("BANKNIFTY2500123CE", style: textStyles.mediumNormal),
+              Text(model.ticker ?? "BANKNIFTY250123CE",
+                  style: textStyles.mediumNormal),
               const Spacer(),
               arrowIndicator
             ],

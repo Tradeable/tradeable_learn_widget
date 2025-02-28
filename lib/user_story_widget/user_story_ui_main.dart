@@ -87,11 +87,11 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     if (_scrollController.position.maxScrollExtent > 0) {
       _scrollController
           .animateTo(200,
-              duration: const Duration(milliseconds: 0),
+              duration: const Duration(milliseconds: 1),
               curve: Curves.easeInOut)
           .then((_) {
         _scrollController.animateTo(0,
-            duration: const Duration(milliseconds: 0), curve: Curves.easeInOut);
+            duration: const Duration(milliseconds: 1), curve: Curves.easeInOut);
       });
     }
   }
@@ -445,12 +445,12 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "OptionChain":
                     return OptionsDataWidget(
                       data: uiData.optionsData!,
-                      onRowSelected: (entry, quan) {
+                      onRowSelected: (entry, tf) {
                         setState(() {
                           selectedOptionEntry = entry;
-                          quantity = quan;
+                          quantity = tf.quantity.toString();
                         });
-                        updateTrendFormModel();
+                        updateTrendFormModel(tf);
                         updateLtps();
                       },
                       selectedOptionEntry: selectedOptionEntry,
@@ -458,12 +458,12 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                   case "DeltaOptionChainWidget":
                     return DeltaOptionChainWidget(
                       data: uiData.optionsData!,
-                      onRowSelected: (entry, quan) {
+                      onRowSelected: (entry, tf) {
                         setState(() {
                           selectedOptionEntry = entry;
-                          quantity = quan;
+                          quantity = tf.quantity.toString();
                         });
-                        updateTrendFormModel();
+                        updateTrendFormModel(tf);
                         updateLtps();
                       },
                       selectedOptionEntry: selectedOptionEntry,
@@ -523,9 +523,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                       tradeFormModel: tradeFormModel,
                       scrollToBottom: () {
                         setState(() {
-                          _scrollController.animateTo(
-                              _scrollController.position.maxScrollExtent,
-                              duration: const Duration(milliseconds: 0),
+                          _scrollController.animateTo(200,
+                              duration: const Duration(milliseconds: 1),
                               curve: Curves.easeInOut);
                         });
                       },
@@ -841,9 +840,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
     }
   }
 
-  void updateTrendFormModel() async {
+  void updateTrendFormModel(TradeFormModel model) async {
     setState(() {
       tradeFormModel.add(TradeFormModel(
+          ticker: model.ticker,
           target: "-",
           stopLoss: "-",
           quantity: int.parse(quantity ?? "0"),

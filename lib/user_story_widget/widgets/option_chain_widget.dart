@@ -6,7 +6,7 @@ import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
 class OptionsDataWidget extends StatefulWidget {
   final OptionData data;
-  final Function(OptionEntry?, String) onRowSelected;
+  final Function(OptionEntry?, TradeFormModel) onRowSelected;
   final OptionEntry? selectedOptionEntry;
 
   const OptionsDataWidget({
@@ -231,22 +231,13 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     return InkWell(
       onTap: isButtonEnabled
           ? () {
-              // TradeBottomSheet(
-              //   confirmOrder: (quantity) {
-              //     setState(() {
-              //       entry.isBuy = label == 'BUY';
-              //       entry.isCallTrade = isCallColumn;
-              //     });
-              //     widget.onRowSelected(entry, quantity);
-              //     setState(() {
-              //       selectedRow = null;
-              //     });
-              //   },
-              // ),
               showModalBottomSheet(
                   context: context,
                   builder: (context) => TradeTakerForm(
                       model: TradeFormModel(
+                          ticker:
+                              "NIFTY${entry.strike.toStringAsFixed(0)}${isCallColumn ? "CE" : "PE"}",
+                          avgPrice: entry.premium.toStringAsFixed(2),
                           target: "0",
                           stopLoss: "0",
                           quantity: 0,
@@ -254,13 +245,14 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
                           isSell: false,
                           tradeType: TradeType.intraday,
                           orderType: OrderType.market,
-                          isCallTrade: entry.isCallTrade = isCallColumn),
+                          isCallTrade: entry.isCallTrade = isCallColumn,
+                          areValuesVisible: widget.data.options.showValues),
                       tradeFormModel: (tf) {
                         setState(() {
                           entry.isBuy = label == 'BUY';
                           entry.isCallTrade = isCallColumn;
                         });
-                        widget.onRowSelected(entry, tf.quantity.toString());
+                        widget.onRowSelected(entry, tf);
                         setState(() {
                           selectedRow = null;
                         });
