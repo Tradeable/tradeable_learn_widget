@@ -6,7 +6,7 @@ import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
 
 class DeltaOptionChainWidget extends StatefulWidget {
   final OptionData data;
-  final Function(OptionEntry?, String) onRowSelected;
+  final Function(OptionEntry?, TradeFormModel) onRowSelected;
   final OptionEntry? selectedOptionEntry;
 
   const DeltaOptionChainWidget({
@@ -245,7 +245,7 @@ class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
                           entry.isBuy = label == 'BUY';
                           entry.isCallTrade = isCallColumn;
                         });
-                        widget.onRowSelected(entry, tf.quantity.toString());
+                        widget.onRowSelected(entry, tf);
                         setState(() {
                           selectedRow = null;
                         });
