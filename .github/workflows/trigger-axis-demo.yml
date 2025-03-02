@@ -1,0 +1,19 @@
+name: Trigger Axis Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-worker:
+    name: Trigger Worker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.WORKFLOW_DISPATCH_TOKEN }}
+          repository: tradeable/tradeable_flutter_sdk
+          event-type: trigger-axis-build
