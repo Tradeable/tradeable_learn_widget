@@ -23,6 +23,10 @@ dependencies:
   carousel_slider_plus: ^7.0.2
   lottie: ^3.3.1
   webview_flutter: ^4.10.0
+  fin_chart:
+    git:
+      url: https://github.com/adityagohad/fin_chart.git
+      ref: package_update
 
 dev_dependencies:
   flutter_test:
