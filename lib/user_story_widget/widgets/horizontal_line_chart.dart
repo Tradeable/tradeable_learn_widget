@@ -111,7 +111,7 @@ class _TradeableChart extends State<HorizontalLineChart>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Chart(layers: [
       AxisLayer(

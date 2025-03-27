@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class PlainTextWithBorder extends StatelessWidget {
   final String title;
@@ -11,8 +12,8 @@ class PlainTextWithBorder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Expanded(

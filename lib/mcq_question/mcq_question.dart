@@ -16,6 +16,7 @@ import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class MCQQuestion extends StatefulWidget {
   final MCQModel model;
@@ -40,7 +41,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -89,7 +90,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
   }
 
   Widget renderChart() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Chart(layers: [
       AxisLayer(

@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CandleBodySelect extends StatefulWidget {
   final CandlePartSelectModel model;
@@ -27,8 +28,7 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +170,7 @@ class CandleBodyPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final isSelected = currentSelected == type;
 
     return InkWell(

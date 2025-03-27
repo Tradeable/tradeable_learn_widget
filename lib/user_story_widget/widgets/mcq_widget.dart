@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class MCQQuestionWidget extends StatefulWidget {
   final String title;
@@ -34,7 +35,7 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -78,8 +79,8 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
   }
 
   Widget optionWidget(String option, BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     final isSelected = selectedOptions.contains(option);
 
     return InkWell(

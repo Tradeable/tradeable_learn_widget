@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class Option {
@@ -57,9 +58,10 @@ class _OptionContainerState extends State<OptionContainer>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.customColors;
-    final textStyles = theme.customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     if (!isAnimating) {
       controller = AnimationController(
           duration: const Duration(milliseconds: 600), vsync: this)

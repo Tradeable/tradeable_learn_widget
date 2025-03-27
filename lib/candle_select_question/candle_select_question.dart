@@ -16,6 +16,7 @@ import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CandleSelectQuestion extends StatefulWidget {
   final CandleSelectModel model;
@@ -80,7 +81,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   Widget renderChart() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleSelectState.loadUI:
@@ -180,7 +181,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   Widget renderSubmitBtn() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleSelectState.loadUI:

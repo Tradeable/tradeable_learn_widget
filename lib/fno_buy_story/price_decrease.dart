@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/fno_buy_story/price_decrease_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class PriceDecreased extends StatefulWidget {
   final PriceDecreaseModel model;
@@ -28,8 +29,8 @@ class _PriceDecreasedState extends State<PriceDecreased> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Column(
       children: [
         Expanded(

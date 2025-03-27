@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/mutual_funds/mf_calculator_widget/mf_calc
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class MfCalculatorMain extends StatefulWidget {
   final MfCalculatorModel model;
@@ -29,7 +30,7 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
   }
 
   void _calculateGraphData() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     double liquidRatio = 0.40;
     double growthRatio = 0.35;
@@ -54,7 +55,7 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -76,7 +77,7 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
   }
 
   Widget buildContents() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Expanded(
       child: SingleChildScrollView(
@@ -114,7 +115,7 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
   }
 
   Widget _buildQuestionText() {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Text(widget.model.question, style: textStyles.mediumNormal),
@@ -122,7 +123,7 @@ class _MfCalculatorMain extends State<MfCalculatorMain> {
   }
 
   Widget _buildChart() {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return SfCartesianChart(
       plotAreaBorderWidth: 0,

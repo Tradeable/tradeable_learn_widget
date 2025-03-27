@@ -4,6 +4,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tradeable_learn_widget/banana_widget/banana_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class BananaWidget extends StatefulWidget {
   final BananaModel model;
@@ -36,8 +37,8 @@ class _BananaWidgetState extends State<BananaWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [

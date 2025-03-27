@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/range_grid_widget/trapeziod_stamp_painter.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class StampContainer extends StatelessWidget {
   final int index;
@@ -16,7 +17,7 @@ class StampContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [

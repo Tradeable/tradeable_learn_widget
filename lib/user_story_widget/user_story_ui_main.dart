@@ -284,8 +284,8 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     final step = widget.model.userStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,

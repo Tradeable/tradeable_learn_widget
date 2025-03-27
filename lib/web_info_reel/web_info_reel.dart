@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/web_info_reel/webpage_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 // // Import for Android features.
 // ignore: depend_on_referenced_packages
@@ -52,7 +53,7 @@ class _WebInfoReelState extends State<WebInfoReel> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Stack(
       fit: StackFit.passthrough,

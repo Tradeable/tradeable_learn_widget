@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/custom_buttons_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class MultipleButtonsWidget extends StatelessWidget {
   final String buttonsFormat;
@@ -32,8 +33,8 @@ class MultipleButtonsWidget extends StatelessWidget {
   }
 
   Widget buttonWidget(ButtonData button, BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return InkWell(
       onTap: onAction,

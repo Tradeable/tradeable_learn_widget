@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/demand_supply_educorner/demand_supply_edu
 import 'package:tradeable_learn_widget/user_story_widget/widgets/animated_text_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class DemandSuplyEduCornerMain extends StatefulWidget {
   final DemandSupplyEduCornerModel model;
@@ -38,7 +39,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,8 +138,8 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
       {required String title,
       required String infoTitle,
       required String infoContent}) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Row(
       children: [
@@ -224,7 +225,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
   }
 
   Widget infoWidget(String heading, String content) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Column(
       children: [
         Text(

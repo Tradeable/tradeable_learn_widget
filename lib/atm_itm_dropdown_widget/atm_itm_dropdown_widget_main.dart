@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/atm_itm_dropdown_widget/atm_itm_dropdown_data_model.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
@@ -41,7 +42,7 @@ class _ATMWidgetState extends State<ATMWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,8 +83,8 @@ class _ATMWidgetState extends State<ATMWidget> {
   }
 
   Widget textContent(String title, String value, bool isToBeAnswered) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final double containerWidth = MediaQuery.of(context).size.width * 0.4;
 
     return Padding(

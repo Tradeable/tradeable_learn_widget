@@ -6,6 +6,7 @@ import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/animate
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:dart_eval/dart_eval.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class ChartUserStoryMain extends StatefulWidget {
   final ChartUserStoryModel model;
@@ -212,7 +213,7 @@ class _ChartUserStoryMainState extends State<ChartUserStoryMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [

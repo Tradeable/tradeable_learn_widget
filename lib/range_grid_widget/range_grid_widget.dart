@@ -5,6 +5,7 @@ import 'package:tradeable_learn_widget/range_grid_widget/range_grid_model.dart';
 import 'package:tradeable_learn_widget/range_grid_widget/stamp_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class RatingWidget extends StatefulWidget {
   final RangeGridSliderModel model;
@@ -37,8 +38,8 @@ class _RangeGridSliderWidgetState extends State<RatingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(

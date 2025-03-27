@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/user_story_widget/models/option_chain_mod
 import 'package:tradeable_learn_widget/user_story_widget/widgets/trade_taker_form.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class DeltaOptionChainWidget extends StatefulWidget {
   final OptionData data;
@@ -26,7 +27,7 @@ class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -67,12 +68,12 @@ class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
   }
 
   Widget _buildTopLabel(String text) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Text(text, style: textStyles.mediumNormal);
   }
 
   Widget _buildHeader(String text) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       alignment: Alignment.center,
       child: Text(text, style: textStyles.smallNormal),
@@ -83,8 +84,8 @@ class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
     required List<OptionEntry> data,
     required bool isCallColumn,
   }) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     int halfLength = data.length ~/ 2;
 
     return Column(
@@ -216,8 +217,8 @@ class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
 
   Widget _buildBuySellButton(
       bool isSelected, bool isValue, bool isCallColumn, OptionEntry entry) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     if (!isSelected) return const SizedBox.shrink();
 
     String label = isValue ? 'SELL' : 'BUY';
@@ -274,8 +275,8 @@ class _DeltaOptionChainWidget extends State<DeltaOptionChainWidget> {
     required List<OptionEntry> entries,
     required Color backgroundColor,
   }) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
       color: backgroundColor,

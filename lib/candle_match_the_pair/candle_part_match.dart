@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/candle_match_the_pair/match_the_pair_model.dart';
 import 'package:tradeable_learn_widget/candle_match_the_pair/widgets/match_painter.dart';
 import 'package:tradeable_learn_widget/candle_match_the_pair/widgets/option_container_widget.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
@@ -36,8 +37,9 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colors = theme.customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 enum TradeType { intraday, delivery }
 
@@ -204,7 +205,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
       color: colors.cardBasicBackground,
@@ -275,8 +276,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget topBar() {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -351,9 +352,9 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget form() {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -444,8 +445,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget _buildOrderTypeTab(OrderTypeModel orderTypeModel) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return GestureDetector(
       onTap: orderTypeModel.isLocked
@@ -489,8 +490,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget _buildValidityOption(String text) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     final isSelected = selectedValidity == text;
     return GestureDetector(
@@ -509,7 +510,7 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget marketToggle() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Row(
       children: [
@@ -538,8 +539,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
   }
 
   Widget buySellToggle() {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       children: [
@@ -673,8 +674,8 @@ class CustomPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

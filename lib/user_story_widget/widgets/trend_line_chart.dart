@@ -122,8 +122,8 @@ class _TrendLineChart extends State<TrendLineChart>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return model.uiCandles.isNotEmpty
         ? Container(

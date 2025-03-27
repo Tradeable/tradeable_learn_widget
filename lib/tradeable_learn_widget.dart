@@ -146,3 +146,5 @@ export 'package:tradeable_learn_widget/rr_widget/rr_model.dart';
 
 export 'package:tradeable_learn_widget/web_info_reel/web_info_reel.dart';
 export 'package:tradeable_learn_widget/web_info_reel/webpage_model.dart';
+
+export 'package:tradeable_learn_widget/tlw.dart';

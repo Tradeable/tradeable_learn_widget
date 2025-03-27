@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CustomTable extends StatelessWidget {
   final String title;
@@ -26,7 +27,7 @@ class CustomTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -71,7 +72,7 @@ class CustomTable extends StatelessWidget {
 
   TableRow _buildTableRow(List<String> cells, BuildContext context,
       {bool isHeader = false, bool isHighlighted = false}) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return TableRow(
       decoration: isHighlighted

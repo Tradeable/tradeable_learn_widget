@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:tradeable_learn_widget/index_page/index_page_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class IndexPage extends StatefulWidget {
   final IndexPageModel model;
@@ -25,8 +26,8 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Stack(
       fit: StackFit.passthrough,

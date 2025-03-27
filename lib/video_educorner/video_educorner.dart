@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/video_educorner/video_educorner_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class VideoEduCorner extends StatefulWidget {
   final VideoEduCornerModel model;
@@ -62,7 +63,8 @@ class _VideoEduCorner extends State<VideoEduCorner> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [

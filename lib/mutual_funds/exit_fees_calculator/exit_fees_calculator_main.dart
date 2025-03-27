@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/mutual_funds/exit_fees_calculator/exit_fe
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:dart_eval/dart_eval.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class ExitFeesCalculatorMain extends StatefulWidget {
   final ExitFeeCalculatorModel model;
@@ -105,8 +106,8 @@ class _ExitFeesCalculatorWidget extends State<ExitFeesCalculatorMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

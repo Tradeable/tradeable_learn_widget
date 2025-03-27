@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class LadderContainer extends StatelessWidget {
   final List<LadderCell> phrases;
@@ -16,7 +17,7 @@ class LadderContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     // double phraseHeight = constraints.maxHeight / (phrases.length + 1);
     double phraseWidth = constraints.maxWidth * 1.2;
@@ -100,8 +101,8 @@ class PhraseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return phrase.model.isQuestion
         ? buildDragTarget(phrase)

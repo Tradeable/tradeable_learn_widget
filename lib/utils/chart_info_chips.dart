@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class ChartInfoChips extends StatelessWidget {
   final String ticker;
@@ -15,7 +16,7 @@ class ChartInfoChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     BoxDecoration containerDecoration = BoxDecoration(
         borderRadius: BorderRadius.circular(12),

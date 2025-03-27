@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class AnimatedNumber extends StatefulWidget {
@@ -71,7 +72,8 @@ class _AnimatedNumberState extends State<AnimatedNumber>
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return AnimatedBuilder(
       animation: _animation,

@@ -6,6 +6,7 @@ import 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class DragAndDropMatch extends StatefulWidget {
   final LadderModel model;
@@ -56,8 +57,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,8 +164,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget renderLadderUnit(LadderUnit ladderUnit) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -211,7 +212,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget buildDragTarget(LadderCell e) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -307,7 +308,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   void showError(bool isSnappedCorrectly) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     setState(() {
       showErrorBorder = true;
@@ -320,7 +321,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget renderOption(DraggableOption option) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color optionBgColor = colors.selectedItemColor;
     switch (option.state) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/horizontal_line_question/horizontal_line_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class OrderStatusWidget extends StatefulWidget {
   final String limitPrice;
@@ -29,8 +30,8 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: colors.borderColorSecondary)),
@@ -74,8 +75,8 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
 
   Widget _buildRow(String label, String value, BuildContext context,
       {Color? color}) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       children: [

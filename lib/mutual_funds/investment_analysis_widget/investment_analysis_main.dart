@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/i
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'investment_analysis_model.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class InvestmentAnalysisMain extends StatefulWidget {
   final InvestmentAnalysisModel model;
@@ -61,8 +62,8 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Column(
       children: [
@@ -112,7 +113,7 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
   Widget _buildChart(BuildContext context) {
     double barWidth =
         MediaQuery.of(context).size.width / model.chartData.length * 0.6;
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -169,7 +170,7 @@ class _InvestmentAnalysisMainState extends State<InvestmentAnalysisMain> {
   }
 
   Color _getColor(String icon) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return icon == 'SIP'
         ? colors.sipColor

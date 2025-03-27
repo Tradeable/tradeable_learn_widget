@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/en1_matchthepair/en1_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class EN1 extends StatefulWidget {
   final EN1Model model;
@@ -26,7 +27,7 @@ class _EN1State extends State<EN1> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -193,7 +194,7 @@ class LeftColumnItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color shadowColor = colors.borderColorSecondary;
     Color itemColor = colors.cardColorSecondary;
@@ -250,7 +251,7 @@ class RightColumnItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color shadowColor = colors.borderColorSecondary;
     switch (item.state) {

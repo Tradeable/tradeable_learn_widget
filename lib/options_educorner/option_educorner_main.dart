@@ -8,6 +8,7 @@ import 'package:tradeable_learn_widget/options_educorner/widgets/play_button.dar
 import 'package:tradeable_learn_widget/options_educorner/widgets/scene_widget.dart';
 import 'package:tradeable_learn_widget/options_educorner/widgets/toggle_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class OptionEduCorner extends StatefulWidget {
   final OptionsEduCornerModel model;
@@ -131,8 +132,8 @@ class _OptionEduCornerState extends State<OptionEduCorner>
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return OptionsEduCorner(
       title: model.educornerType,
@@ -298,7 +299,7 @@ class _OptionEduCornerState extends State<OptionEduCorner>
   }
 
   List<Widget> buildFixedCounterContainers(String number) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     String numberStr = number.toString().padLeft(number.toString().length, '0');
     return numberStr.split('').map((digit) {

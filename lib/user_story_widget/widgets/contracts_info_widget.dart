@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/contracts_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class ContractsInfoWidget extends StatelessWidget {
   final ContractDetailsModel model;
@@ -12,8 +13,8 @@ class ContractsInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -154,8 +155,8 @@ class _ContractDetailsView extends State<ContractDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
@@ -290,7 +291,7 @@ class _ContractDetailsView extends State<ContractDetailsView> {
   }
 
   Color getTextColor(bool isDisabled) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return isDisabled ? colors.disabledContainer : colors.axisColor;
   }
 

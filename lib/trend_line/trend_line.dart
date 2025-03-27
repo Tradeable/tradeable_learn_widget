@@ -11,6 +11,7 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class TrendLineWidget extends StatefulWidget {
   final TrendLineModel model;
@@ -115,7 +116,7 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Question currentQuestion = questions[currentQuestionIndex];
 

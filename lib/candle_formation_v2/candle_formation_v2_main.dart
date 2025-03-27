@@ -6,6 +6,7 @@ import 'package:tradeable_learn_widget/candle_formation_v2/candle_formation_v2_m
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CandleFormationV2Main extends StatefulWidget {
   final CandleFormationV2Model model;
@@ -112,7 +113,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -200,7 +201,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
       String selectedOption,
       List<String> options,
       ValueChanged<String> onSelected) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     PageController controller;
     if (type == 'wick') {
       controller = _wickController;
@@ -246,7 +247,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
   }
 
   Widget buildResultContainer() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Center(
       child: Column(
         children: [

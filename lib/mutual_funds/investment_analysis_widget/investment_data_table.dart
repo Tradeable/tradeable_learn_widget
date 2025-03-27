@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class InvestmentDataTable extends StatelessWidget {
@@ -17,7 +18,7 @@ class InvestmentDataTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
