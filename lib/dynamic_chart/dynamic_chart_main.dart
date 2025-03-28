@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
 import 'package:fin_chart/models/tasks/add_indicator.task.dart';
@@ -37,7 +39,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
 
   @override
   void initState() {
-    recipe = widget.model.recipe;
+    recipe = Recipe.fromJson(jsonDecode(widget.model.recipeDataJson));
     if (recipe.tasks.isNotEmpty) {
       currentTask = recipe.tasks.first;
       dd();
