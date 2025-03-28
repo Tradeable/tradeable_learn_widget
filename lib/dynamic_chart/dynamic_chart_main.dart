@@ -90,6 +90,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       currentTask = recipe.tasks[taskPointer];
       onTaskRun();
     }
+    if(taskPointer==recipe.tasks.length) {
+      widget.onNextClick();
+    }
   }
 
   @override
@@ -111,6 +114,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 child: child,
               ),
               child: Container(
+                height: constraints.maxHeight * 0.15,
                 key: ValueKey(promptText),
                 margin: const EdgeInsets.all(10),
                 padding: const EdgeInsets.all(10),
@@ -128,7 +132,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 ),
               ),
             ),
-            Expanded(
+            SizedBox(
+              height: constraints.maxHeight * 0.7,
               child: Chart.from(
                 key: _chartKey,
                 recipe: recipe,
@@ -136,7 +141,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
               ),
             ),
             if (currentTask.actionType == ActionType.interupt)
-              Padding(
+              Container(
+                height: constraints.maxHeight * 0.1,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                 child: SizedBox(
