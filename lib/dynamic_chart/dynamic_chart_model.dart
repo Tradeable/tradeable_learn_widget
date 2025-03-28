@@ -1,7 +1,9 @@
+import 'package:fin_chart/models/recipe.dart';
+
 class DynamicChartModel {
-  late String recipeDataJson;
+  late Recipe recipe;
 
   DynamicChartModel.fromJson(dynamic data) {
-    recipeDataJson = data["recipeDataJson"];
+    recipe = Recipe.fromJson(data["recipe"]);
   }
 }

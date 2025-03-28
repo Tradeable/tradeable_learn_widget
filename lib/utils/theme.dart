@@ -131,7 +131,7 @@ extension ThemeDataExtension on ThemeData {
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.black,
-          buttonColor: Colors.white,
+          buttonColor: const Color(0xff303030),
           buttonBorderColor: Colors.white38,
           sliderColor: const Color(0xffED1164),
           textColorSecondary: Colors.white,

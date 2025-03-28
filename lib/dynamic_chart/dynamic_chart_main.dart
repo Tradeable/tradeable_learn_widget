@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
 import 'package:fin_chart/models/tasks/add_indicator.task.dart';
 import 'package:fin_chart/models/tasks/add_layer.task.dart';
@@ -38,7 +37,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
 
   @override
   void initState() {
-    recipe = Recipe.fromJson(jsonDecode(widget.model.recipeDataJson));
+    recipe = widget.model.recipe;
     if (recipe.tasks.isNotEmpty) {
       currentTask = recipe.tasks.first;
       dd();
@@ -94,45 +93,60 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
-    return Column(
-      children: [
-        Flexible(
-          flex: 1,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(10),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: colors.borderColorSecondary,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Column(
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              transitionBuilder: (child, animation) => SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+              child: Container(
+                key: ValueKey(promptText),
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: colors.buttonColor,
+                  border: Border.all(color: colors.cardColorSecondary),
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                ),
+                child: AutoSizeText(
+                  promptText,
+                  minFontSize: 10,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
-            child: Text(promptText),
-          ),
-        ),
-        Flexible(
-            flex: 8,
-            child: Chart.from(
+            Expanded(
+              child: Chart.from(
                 key: _chartKey,
                 recipe: recipe,
-                // yAxisSettings: const YAxisSettings(yAxisPos: YAxisPos.right),
-                // xAxisSettings: const XAxisSettings(xAxisPos: XAxisPos.bottom),
-                // candles: const [],
-                onInteraction: (p0, p1) {})),
-        Flexible(
-            flex: 1,
-            child: currentTask.actionType == ActionType.interupt
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 16),
-                    child: ButtonWidget(
-                        color: colors.primary,
-                        btnContent: (currentTask as WaitTask).btnText,
-                        onTap: () {
-                          onTaskFinish();
-                        }),
-                  )
-                : Container())
-      ],
+                onInteraction: (p0, p1) {},
+              ),
+            ),
+            if (currentTask.actionType == ActionType.interupt)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ButtonWidget(
+                    color: colors.primary,
+                    btnContent: (currentTask as WaitTask).btnText,
+                    onTap: () => onTaskFinish(),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
