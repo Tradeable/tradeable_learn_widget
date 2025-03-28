@@ -59,28 +59,35 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addData:
         AddDataTask task = currentTask as AddDataTask;
         _chartKey.currentState
-            ?.addData(recipe.data.sublist(task.fromPoint, task.tillPoint));
+            ?.addDataWithAnimation(
+                recipe.data.sublist(task.fromPoint, task.tillPoint),
+                const Duration(milliseconds: 50))
+            .then((value) {
+          if (value) {
+            onTaskFinish();
+          }
+        });
         break;
       case TaskType.addIndicator:
         AddIndicatorTask task = currentTask as AddIndicatorTask;
         _chartKey.currentState?.addIndicator(task.indicator);
+        onTaskFinish();
         break;
       case TaskType.addLayer:
         AddLayerTask task = currentTask as AddLayerTask;
         _chartKey.currentState?.addLayerAtRegion(task.regionId, task.layer);
+        onTaskFinish();
         break;
       case TaskType.addPrompt:
         AddPromptTask task = currentTask as AddPromptTask;
         setState(() {
           promptText = task.promptText;
         });
+        onTaskFinish();
         break;
       case TaskType.waitTask:
         setState(() {});
         break;
-    }
-    if (currentTask.actionType == ActionType.empty) {
-      onTaskFinish();
     }
   }
 
@@ -90,7 +97,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       currentTask = recipe.tasks[taskPointer];
       onTaskRun();
     }
-    if(taskPointer==recipe.tasks.length) {
+    if (taskPointer == recipe.tasks.length) {
       widget.onNextClick();
     }
   }

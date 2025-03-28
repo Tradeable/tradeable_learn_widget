@@ -230,6 +230,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  fin_chart:
+    dependency: transitive
+    description:
+      path: "."
+      ref: package_update
+      resolved-ref: abc8f7b133a876b5597c2b28c765bc8d14952766
+      url: "https://github.com/adityagohad/fin_chart.git"
+    source: git
+    version: "0.0.1"
   fl_chart:
     dependency: transitive
     description:
