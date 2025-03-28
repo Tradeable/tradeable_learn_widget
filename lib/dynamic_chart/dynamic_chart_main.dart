@@ -39,7 +39,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
 
   @override
   void initState() {
-    recipe = Recipe.fromJson(jsonDecode(widget.model.recipeDataJson));
+    var a = jsonDecode(widget.model.recipeDataJson);
+    a = jsonEncode(a);
+
+    recipe = Recipe.fromJson(jsonDecode(a));
     if (recipe.tasks.isNotEmpty) {
       currentTask = recipe.tasks.first;
       dd();
