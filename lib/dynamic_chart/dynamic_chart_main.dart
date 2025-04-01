@@ -33,7 +33,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   int taskPointer = 0;
   late Task currentTask;
 
-  String promptText = "";
+  AddPromptTask? promptTask;
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addPrompt:
         AddPromptTask task = currentTask as AddPromptTask;
         setState(() {
-          promptText = task.promptText;
+          promptTask = task;
         });
         onTaskFinish();
         break;
@@ -106,36 +106,64 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   Widget build(BuildContext context) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return Column(
           children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              transitionBuilder: (child, animation) => SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(1, 0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
+            Container(
+              height: constraints.maxHeight * 0.15,
+              margin: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: colors.cardColorSecondary,
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
               ),
-              child: Container(
-                height: constraints.maxHeight * 0.15,
-                key: ValueKey(promptText),
-                margin: const EdgeInsets.all(10),
-                padding: const EdgeInsets.all(10),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: colors.buttonColor,
-                  border: Border.all(color: colors.cardColorSecondary),
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (child, animation) => SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(1, 0),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
                 ),
-                child: AutoSizeText(
-                  promptText,
-                  minFontSize: 10,
-                  maxLines: 4,
-                  overflow: TextOverflow.ellipsis,
+                child: Container(
+                  key: ValueKey(promptTask),
+                  // Ensure this changes on updates
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: colors.buttonColor,
+                    border: Border.all(color: colors.cardColorSecondary),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      promptTask != null && promptTask!.isExplanation
+                          ? Text("Instruction",
+                              style: textStyles.smallNormal
+                                  .copyWith(color: colors.textColorSecondary))
+                          : Row(
+                              children: [
+                                Text("Take Away", style: textStyles.smallBold),
+                                const SizedBox(width: 6),
+                                // Icon(Icons.volume_up,
+                                //     color: colors.borderColorPrimary)
+                              ],
+                            ),
+                      AutoSizeText(
+                        promptTask?.promptText ?? "",
+                        minFontSize: 10,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -92,7 +92,7 @@ class _MCQQuestionWidgetV1State extends State<MCQQuestionWidgetV1> {
           border: Border.all(
               color: isSelected
                   ? colors.borderColorPrimary
-                  : colors.buttonBorderColor),
+                  : colors.cardColorSecondary),
         ),
         child: Center(
           child: Markdown(

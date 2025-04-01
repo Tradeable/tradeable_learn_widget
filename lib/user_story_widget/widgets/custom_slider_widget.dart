@@ -38,7 +38,7 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
                     spreadRadius: 0.4)
               ],
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: colors.buttonBorderColor)),
+              border: Border.all(color: colors.cardColorSecondary)),
           child: Column(
             children: [
               Padding(

@@ -139,7 +139,7 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
             label: currentText.volume,
             thumbColor: colors.axisColor,
             activeColor: colors.axisColor,
-            inactiveColor: colors.buttonBorderColor,
+            inactiveColor: colors.cardColorSecondary,
             onChanged: (value) {
               setState(() {
                 _sliderValue = value.toInt();

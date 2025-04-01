@@ -464,8 +464,8 @@ class _TradeTakerWidgetState extends State<TradeTakerWidget>
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
               color: orderTypeModel.isLocked
-                  ? colors.buttonBorderColor.withOpacity(0.5)
-                  : colors.buttonBorderColor),
+                  ? colors.cardColorSecondary.withOpacity(0.5)
+                  : colors.cardColorSecondary),
         ),
         child: Row(
           children: [

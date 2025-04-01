@@ -96,7 +96,7 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
           border: Border.all(
               color: isSelected
                   ? colors.selectedItemColor
-                  : colors.buttonBorderColor),
+                  : colors.cardColorSecondary),
         ),
         child: Center(
           child: Text(

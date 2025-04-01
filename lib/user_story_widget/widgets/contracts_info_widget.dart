@@ -163,7 +163,7 @@ class _ContractDetailsView extends State<ContractDetailsView> {
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         color: colors.cardBasicBackground,
-        border: Border.all(color: colors.buttonBorderColor),
+        border: Border.all(color: colors.cardColorSecondary),
         boxShadow: [
           BoxShadow(
             color: colors.textColorSecondary,

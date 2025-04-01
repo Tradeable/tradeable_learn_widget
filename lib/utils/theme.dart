@@ -61,7 +61,6 @@ class CustomColors {
   final Color lumpSumColor;
   final Color cardBasicBackground;
   final Color buttonColor;
-  final Color buttonBorderColor;
   final Color sliderColor;
   final Color textColorSecondary;
   final Color disabledContainer;
@@ -83,7 +82,6 @@ class CustomColors {
       required this.lumpSumColor,
       required this.cardBasicBackground,
       required this.buttonColor,
-      required this.buttonBorderColor,
       required this.sliderColor,
       required this.textColorSecondary,
       required this.disabledContainer,
@@ -109,7 +107,6 @@ extension ThemeDataExtension on ThemeData {
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.white,
           buttonColor: const Color(0xffF9F9F9),
-          buttonBorderColor: const Color(0xffE2E2E2),
           sliderColor: const Color(0xffED1164),
           textColorSecondary: const Color(0xff6E6E6E),
           disabledContainer: const Color(0xffB3BCB9),
@@ -132,7 +129,6 @@ extension ThemeDataExtension on ThemeData {
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.black,
           buttonColor: const Color(0xff303030),
-          buttonBorderColor: Colors.white38,
           sliderColor: const Color(0xffED1164),
           textColorSecondary: Colors.white,
           disabledContainer: const Color(0xffB3BCB9),
