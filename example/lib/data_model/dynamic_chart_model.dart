@@ -1115,8 +1115,17 @@ const dynamicChartModel = {
         "taskType": "addPrompt",
         "actionType": "empty",
         "promptText":
-        "Mark Support in given chart with help of horizontal line.",
+            "Mark Support in given chart with help of horizontal line.",
         "isExplanation": false
+      },
+      {
+        "id": "8816e8de-8335-4357-9481-b9fead797d7b",
+        "actionType": "interupt",
+        "taskType": "addMcq",
+        "isMultiSelect": false,
+        "arrangementType": "grid1x2",
+        "options": ["jhvjhv", "jnk"],
+        "correctOptionIndices": ["0"]
       },
       {
         "id": "32414c9c-face-473e-aa48-6315ecba7787",
@@ -1143,8 +1152,7 @@ const dynamicChartModel = {
         "id": "e436a016-d246-4613-a5aa-166081818888",
         "taskType": "addPrompt",
         "actionType": "empty",
-        "promptText":
-        "Here a strong support can be seen at 3614 level.",
+        "promptText": "Here a strong support can be seen at 3614 level.",
         "isExplanation": true
       },
       {
@@ -1173,7 +1181,7 @@ const dynamicChartModel = {
         "taskType": "addPrompt",
         "actionType": "empty",
         "promptText":
-        "Mark Resistance in given chart with help of horizontal line.",
+            "Mark Resistance in given chart with help of horizontal line.",
         "isExplanation": false
       },
       {
@@ -1201,8 +1209,7 @@ const dynamicChartModel = {
         "id": "1487fddc-c076-44fa-a1a4-bdee2e57cabc",
         "taskType": "addPrompt",
         "actionType": "empty",
-        "promptText":
-        "Here a strong resistance can be seen at 6200 level.",
+        "promptText": "Here a strong resistance can be seen at 6200 level.",
         "isExplanation": true
       },
       {
@@ -1238,7 +1245,7 @@ const dynamicChartModel = {
         "taskType": "addPrompt",
         "actionType": "empty",
         "promptText":
-        "Mark the new Support in given chart with help of horizontal line.",
+            "Mark the new Support in given chart with help of horizontal line.",
         "isExplanation": false
       },
       {
@@ -1267,7 +1274,7 @@ const dynamicChartModel = {
         "taskType": "addPrompt",
         "actionType": "empty",
         "promptText":
-        "The 1551 level is now acting as new support, a classic case of role reversal where previous resistance turns into support. This creates multiple support and resistance levels, guiding key market entry and exit points.",
+            "The 1551 level is now acting as new support, a classic case of role reversal where previous resistance turns into support. This creates multiple support and resistance levels, guiding key market entry and exit points.",
         "isExplanation": true
       },
       {

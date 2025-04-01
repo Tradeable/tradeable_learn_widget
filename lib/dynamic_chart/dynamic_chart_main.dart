@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
 import 'package:fin_chart/models/tasks/add_indicator.task.dart';
 import 'package:fin_chart/models/tasks/add_layer.task.dart';
 import 'package:fin_chart/models/tasks/add_prompt.task.dart';
-import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/task_type.dart';
 import 'package:fin_chart/models/recipe.dart';
 import 'package:fin_chart/models/tasks/task.dart';
@@ -86,6 +86,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         onTaskFinish();
         break;
       case TaskType.waitTask:
+        setState(() {});
+        break;
+      case TaskType.addMcq:
         setState(() {});
         break;
     }
@@ -175,21 +178,91 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 onInteraction: (p0, p1) {},
               ),
             ),
-            if (currentTask.actionType == ActionType.interupt)
-              Container(
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 height: constraints.maxHeight * 0.1,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ButtonWidget(
-                    color: colors.primary,
-                    btnContent: (currentTask as WaitTask).btnText,
-                    onTap: () => onTaskFinish(),
+                child: userActionContainer()),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget userActionContainer() {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+    switch (currentTask.taskType) {
+      case TaskType.addData:
+      case TaskType.addIndicator:
+      case TaskType.addLayer:
+      case TaskType.addPrompt:
+        return Container();
+      case TaskType.addMcq:
+        return mcqWidget();
+      case TaskType.waitTask:
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          width: double.infinity,
+          child: ButtonWidget(
+            color: colors.primary,
+            btnContent: (currentTask as WaitTask).btnText,
+            onTap: () => onTaskFinish(),
+          ),
+        );
+    }
+  }
+
+  Widget mcqWidget() {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+    Task task = currentTask as AddMcqTask;
+    int columns, rows;
+
+    switch ((task as AddMcqTask).arrangementType) {
+      case MCQArrangementType.grid1x2:
+        columns = 1;
+        rows = 2;
+        break;
+      case MCQArrangementType.grid2x2:
+        columns = 2;
+        rows = 2;
+        break;
+      case MCQArrangementType.grid2x3:
+        columns = 2;
+        rows = 3;
+        break;
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double itemWidth =
+            (constraints.maxWidth - (10 * (columns - 1))) / columns;
+        double itemHeight = (constraints.maxHeight - (10 * (rows - 1))) / rows;
+
+        return Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: task.options.map((e) {
+            return SizedBox(
+              width: itemWidth,
+              height: itemHeight,
+              child: InkWell(
+                onTap: () => onTaskFinish(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: colors.buttonColor,
+                    border: Border.all(color: colors.cardColorSecondary),
+                  ),
+                  child: Center(
+                    child: Text(e),
                   ),
                 ),
               ),
-          ],
+            );
+          }).toList(),
         );
       },
     );
