@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
 import 'package:fin_chart/models/tasks/add_indicator.task.dart';
@@ -34,13 +35,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   late Task currentTask;
 
   AddPromptTask? promptTask;
+  bool showNextButton = false;
 
   @override
   void initState() {
-    // var a = jsonDecode(widget.model.recipe);
-    // a = jsonEncode(a);
-
-    // recipe = Recipe.fromJson(jsonDecode(a));
     recipe = widget.model.recipe;
     if (recipe.tasks.isNotEmpty) {
       currentTask = recipe.tasks.first;
@@ -101,7 +99,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       onTaskRun();
     }
     if (taskPointer == recipe.tasks.length) {
-      widget.onNextClick();
+      if (currentTask.actionType != ActionType.interupt) {
+        setState(() {
+          showNextButton = true;
+        });
+      } else {
+        widget.onNextClick();
+      }
     }
   }
 
@@ -178,10 +182,21 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 onInteraction: (p0, p1) {},
               ),
             ),
-            Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                height: constraints.maxHeight * 0.1,
-                child: userActionContainer()),
+            showNextButton
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 16),
+                    child: ButtonWidget(
+                        color: colors.primary,
+                        btnContent: "Next",
+                        onTap: () {
+                          widget.onNextClick();
+                        }),
+                  )
+                : Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    height: constraints.maxHeight * 0.1,
+                    child: userActionContainer()),
           ],
         );
       },
@@ -222,16 +237,16 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
 
     switch ((task as AddMcqTask).arrangementType) {
       case MCQArrangementType.grid1x2:
-        columns = 1;
-        rows = 2;
+        columns = 2;
+        rows = 1;
         break;
       case MCQArrangementType.grid2x2:
         columns = 2;
         rows = 2;
         break;
       case MCQArrangementType.grid2x3:
-        columns = 2;
-        rows = 3;
+        columns = 3;
+        rows = 2;
         break;
     }
 
