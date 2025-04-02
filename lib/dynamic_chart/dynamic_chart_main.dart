@@ -199,7 +199,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                         }),
                   )
                 : Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 16),
                     height: constraints.maxHeight * 0.1,
                     child: userActionContainer()),
           ],
@@ -221,14 +222,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addMcq:
         return mcqWidget();
       case TaskType.waitTask:
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          width: double.infinity,
-          child: ButtonWidget(
-            color: colors.primary,
-            btnContent: (currentTask as WaitTask).btnText,
-            onTap: () => onTaskFinish(),
-          ),
+        return ButtonWidget(
+          color: colors.primary,
+          btnContent: (currentTask as WaitTask).btnText,
+          onTap: () => onTaskFinish(),
         );
     }
   }
