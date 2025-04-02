@@ -154,10 +154,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             promptTask != null && promptTask!.isExplanation
-                                ? Text("Instruction",
-                                    style: textStyles.smallNormal.copyWith(
-                                        color: colors.textColorSecondary))
-                                : Row(
+                                ? Row(
                                     children: [
                                       Text("Take Away",
                                           style: textStyles.smallBold),
@@ -165,7 +162,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                       // Icon(Icons.volume_up,
                                       //     color: colors.borderColorPrimary)
                                     ],
-                                  ),
+                                  )
+                                : Text("Instruction",
+                                    style: textStyles.smallNormal.copyWith(
+                                        color: colors.textColorSecondary)),
                             Expanded(
                               child: AutoSizeText(promptTask?.promptText ?? "",
                                   minFontSize: 10,
@@ -201,7 +201,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 : Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 16),
-                    height: constraints.maxHeight * 0.1,
+                    height: constraints.maxHeight * 0.11,
                     child: userActionContainer()),
           ],
         );
