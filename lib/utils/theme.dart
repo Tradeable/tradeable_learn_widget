@@ -65,6 +65,9 @@ class CustomColors {
   final Color textColorSecondary;
   final Color disabledContainer;
   final Color supportItemColor;
+  final Color eduCornerV2ContainerBg1;
+  final Color eduCornerV2ContainerBg2;
+  final Color eduCornerImageBg;
 
   CustomColors(
       {required this.primary,
@@ -85,7 +88,10 @@ class CustomColors {
       required this.sliderColor,
       required this.textColorSecondary,
       required this.disabledContainer,
-      required this.supportItemColor});
+      required this.supportItemColor,
+      required this.eduCornerV2ContainerBg1,
+      required this.eduCornerV2ContainerBg2,
+      required this.eduCornerImageBg});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -110,7 +116,10 @@ extension ThemeDataExtension on ThemeData {
           sliderColor: const Color(0xffED1164),
           textColorSecondary: const Color(0xff6E6E6E),
           disabledContainer: const Color(0xffB3BCB9),
-          supportItemColor: const Color(0xff165964));
+          supportItemColor: const Color(0xff165964),
+          eduCornerV2ContainerBg1: const Color(0xffE2E2E2),
+          eduCornerV2ContainerBg2: const Color(0xff404040),
+          eduCornerImageBg: Colors.white);
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -132,7 +141,10 @@ extension ThemeDataExtension on ThemeData {
           sliderColor: const Color(0xffED1164),
           textColorSecondary: Colors.white,
           disabledContainer: const Color(0xffB3BCB9),
-          supportItemColor: const Color(0xff165964));
+          supportItemColor: const Color(0xff165964),
+          eduCornerV2ContainerBg1: const Color(0xffE2E2E2),
+          eduCornerV2ContainerBg2: const Color(0xff404040),
+          eduCornerImageBg: Colors.white);
     }
   }
 

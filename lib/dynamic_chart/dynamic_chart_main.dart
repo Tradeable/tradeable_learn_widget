@@ -89,6 +89,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addMcq:
         setState(() {});
         break;
+      case TaskType.clearTask:
+        _chartKey.currentState?.clearChart();
+        onTaskFinish();
+        break;
     }
   }
 
@@ -227,6 +231,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           btnContent: (currentTask as WaitTask).btnText,
           onTap: () => onTaskFinish(),
         );
+      case TaskType.clearTask:
+        return Container();
     }
   }
 

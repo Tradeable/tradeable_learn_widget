@@ -26,7 +26,9 @@ dependencies:
   fin_chart:
     git:
       url: https://github.com/adityagohad/fin_chart.git
-      ref: package_update
+      ref: dev
+  file_picker: ^10.0.0
+  dio: ^5.8.0+1
 
 dev_dependencies:
   flutter_test:
