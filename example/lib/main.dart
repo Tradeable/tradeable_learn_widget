@@ -41,6 +41,7 @@ import 'package:example/data_model/price_decrease_model.dart';
 import 'package:example/data_model/range_grid_slider.dart';
 import 'package:example/data_model/rr_model.dart';
 import 'package:example/data_model/rr_typeform.dart';
+import 'package:example/data_model/sample_user_flow_datamodel.dart';
 import 'package:example/data_model/scenario_intro.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
@@ -107,6 +108,14 @@ class MyHomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  NavigationButton(
+                      text: "Sample User Flow",
+                      destination: ScaffoldWithAppBar(
+                          title: "Sample User Flow",
+                          body: SampleUserflowScreen(
+                              data: SampleUserflowModel.fromJson(
+                                  sampleUserFlowDataModel),
+                              onNextClick: () {}))),
                   NavigationButton(
                       text: "EduCornerV2",
                       destination: ScaffoldWithAppBar(
