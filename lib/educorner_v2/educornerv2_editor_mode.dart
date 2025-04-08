@@ -1,11 +1,11 @@
 import 'dart:convert';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tradeable_learn_widget/utils/api.dart';
+import 'package:tradeable_learn_widget/utils/constants.dart';
+import 'package:tradeable_learn_widget/utils/s3_uploader.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/educorner_v2/educorner_v2_model.dart';
 
@@ -64,24 +64,33 @@ class _EduCornerV2EditorState extends State<EduCornerV2Editor> {
     }
   }
 
+  final S3Uploader _uploader = S3Uploader(
+    accessKey: accessKey,
+    secretKey: secretKey,
+    sessionToken: sessionToken,
+    bucketName: bucket,
+    dirName: 'white_label_tradeable/images',
+    region: region,
+  );
+
   Future<void> _pickImage() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+      );
 
-    if (result != null) {
-      File file = File(result.files.single.path!);
+      if (result != null && result.files.single.path != null) {
+        File imageFile = File(result.files.single.path!);
 
-      String? uploadedImageUrl = await Api().uploadImageToS3(file);
+        final url = await _uploader.uploadImage(imageFile: imageFile);
 
-      if (uploadedImageUrl != null) {
         setState(() {
-          model.items[currentPage].imageUrl = uploadedImageUrl;
+          model.items[currentPage].imageUrl = url ?? "";
         });
-
-        print("Image uploaded: $uploadedImageUrl");
-      } else {
-        print("Image upload failed.");
       }
+    } catch (e) {
+      print(e);
     }
   }
 
