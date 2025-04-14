@@ -14,7 +14,6 @@ import 'package:example/data_model/contract_price_slider_model.dart';
 import 'package:example/data_model/delta_typeform.dart';
 import 'package:example/data_model/dynamic_chart_model.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
-import 'package:example/data_model/educorner_v2_model.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
 import 'package:example/data_model/expiry_derivate_monthly.dart';
@@ -120,9 +119,9 @@ class MyHomePage extends StatelessWidget {
                       text: "EduCornerV2",
                       destination: ScaffoldWithAppBar(
                           title: "EduCornerV2",
-                          body: EduCornerV2Container(
-                              model: EducornerV2Model.fromJson(
-                                  eduCornerV2Model)))),
+                          body: EduCornerV2Main(
+                              model: EduCornerModel.fromJson(educornerV1Model),
+                              onNextClick: () {}))),
                   const NavigationButton(
                     text: "Ladder Widget",
                     destination: LadderWidgetPage(),

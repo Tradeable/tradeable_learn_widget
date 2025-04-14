@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:tradeable_learn_widget/utils/api.dart';
 import 'package:tradeable_learn_widget/utils/constants.dart';
 import 'package:tradeable_learn_widget/utils/s3_uploader.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -64,15 +65,6 @@ class _EduCornerV2EditorState extends State<EduCornerV2Editor> {
     }
   }
 
-  final S3Uploader _uploader = S3Uploader(
-    accessKey: accessKey,
-    secretKey: secretKey,
-    sessionToken: sessionToken,
-    bucketName: bucket,
-    dirName: 'white_label_tradeable/images',
-    region: region,
-  );
-
   Future<void> _pickImage() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -81,12 +73,21 @@ class _EduCornerV2EditorState extends State<EduCornerV2Editor> {
       );
 
       if (result != null && result.files.single.path != null) {
-        File imageFile = File(result.files.single.path!);
+        await Api().getAwsKeys().then((val) async {
+          File imageFile = File(result.files.single.path!);
+          final uploader = S3Uploader(
+            accessKey: val["credentials"]["access_key_id"],
+            secretKey: val["credentials"]["secret_access_key"],
+            sessionToken: val["credentials"]["session_token"],
+            bucketName: bucket,
+            dirName: 'white_label_tradeable/org_2/images',
+            region: region,
+          );
+          final url = await uploader.uploadImage(imageFile: imageFile);
 
-        final url = await _uploader.uploadImage(imageFile: imageFile);
-
-        setState(() {
-          model.items[currentPage].imageUrl = url ?? "";
+          setState(() {
+            model.items[currentPage].imageUrl = url ?? "";
+          });
         });
       }
     } catch (e) {

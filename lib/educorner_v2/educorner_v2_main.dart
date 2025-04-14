@@ -1,13 +1,14 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tradeable_learn_widget/educorner_v2/educorner_v2_model.dart';
+import 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_model.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/info_bottom_sheet.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class EduCornerV2Main extends StatefulWidget {
-  final EducornerV2Model model;
+  final EduCornerModel model;
   final VoidCallback onNextClick;
 
   const EduCornerV2Main(
@@ -20,13 +21,13 @@ class EduCornerV2Main extends StatefulWidget {
 class _EduCornerV2Main extends State<EduCornerV2Main> {
   late final PageController controller;
   int currentPage = 0;
-  List<EduCornerV2Item> items = [];
+  List<EduCornerContent> items = [];
 
   @override
   void initState() {
     super.initState();
     controller = PageController(viewportFraction: 0.8);
-    items = widget.model.items;
+    items = widget.model.cards;
   }
 
   @override
@@ -77,7 +78,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                   itemCount: items.length,
                   onPageChanged: (index) => setState(() => currentPage = index),
                   itemBuilder: (context, index) {
-                    final imageUrl = items[index].imageUrl;
+                    final imageUrl = items[index].imgUrl ?? "";
                     return renderItem(constraints, imageUrl);
                   },
                 )),
@@ -152,6 +153,8 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
   Widget renderContentSection(BoxConstraints constraints) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       height: constraints.maxHeight * 0.2,
@@ -175,8 +178,21 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
             ),
           ],
         ),
-        child: Text(items[currentPage].content,
-            maxLines: 4, overflow: TextOverflow.ellipsis),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(items[currentPage].textContent?.title ?? "",
+                maxLines: 1,
+                style: textStyles.smallNormal
+                    .copyWith(color: colors.textColorSecondary)),
+            Expanded(
+              child: AutoSizeText(items[currentPage].textContent?.content ?? "",
+                  maxFontSize: 14,
+                  minFontSize: 10,
+                  style: textStyles.smallNormal),
+            ),
+          ],
+        ),
       ),
     );
   }
