@@ -69,39 +69,53 @@ class _VideoEduCorner extends State<VideoEduCorner> {
     return Column(
       children: [
         Expanded(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              YoutubePlayer(
-                aspectRatio: 0.64,
-                controller: _controller,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: colors.eduCornerV2ContainerBg1,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: colors.eduCornerV2ContainerBg2,
+                borderRadius: BorderRadius.circular(20),
               ),
-              finishedPlaying
-                  ? Align(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        onPressed: () {
-                          if (finishedPlaying) {
-                            _controller.seekTo(Duration.zero);
-                            _controller.play();
-                          }
-                          if (isPlay) {
-                            _controller.pause();
-                          } else {
-                            _controller.play();
-                          }
-                          setState(() {
-                            isPlay = !isPlay;
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.replay,
-                          size: 50,
-                        ),
-                      ),
-                    )
-                  : Container(),
-            ],
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  YoutubePlayer(
+                    aspectRatio: 0.64,
+                    controller: _controller,
+                  ),
+                  finishedPlaying
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            onPressed: () {
+                              if (finishedPlaying) {
+                                _controller.seekTo(Duration.zero);
+                                _controller.play();
+                              }
+                              if (isPlay) {
+                                _controller.pause();
+                              } else {
+                                _controller.play();
+                              }
+                              setState(() {
+                                isPlay = !isPlay;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.replay,
+                              size: 50,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
           ),
         ),
         Padding(

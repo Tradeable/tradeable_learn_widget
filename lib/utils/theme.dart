@@ -127,7 +127,7 @@ extension ThemeDataExtension on ThemeData {
           // background: const Color(0xFF161A26),
           background: Colors.transparent,
           borderColorPrimary: const Color(0xff5E6FA5),
-          borderColorSecondary: const Color(0xffE3A85B),
+          borderColorSecondary: const Color(0xff303030),
           cardColorPrimary: const Color(0xff222838),
           cardColorSecondary: const Color(0xFF463B32),
           bullishColor: Colors.green,
@@ -142,9 +142,9 @@ extension ThemeDataExtension on ThemeData {
           textColorSecondary: Colors.white,
           disabledContainer: const Color(0xffB3BCB9),
           supportItemColor: const Color(0xff165964),
-          eduCornerV2ContainerBg1: const Color(0xffE2E2E2),
-          eduCornerV2ContainerBg2: const Color(0xff404040),
-          eduCornerImageBg: Colors.white);
+          eduCornerV2ContainerBg1: const Color(0xff313030),
+          eduCornerV2ContainerBg2: const Color(0xff1D1D1D),
+          eduCornerImageBg: const Color(0xff1D1D1D));
     }
   }
 
