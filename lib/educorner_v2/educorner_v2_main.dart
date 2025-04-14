@@ -139,7 +139,6 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
               borderRadius: BorderRadius.circular(40),
               child: Image.network(
                 imageUrl,
-                fit: BoxFit.fill,
                 errorBuilder: (_, __, ___) =>
                     const Icon(Icons.broken_image, size: 50),
               ),
