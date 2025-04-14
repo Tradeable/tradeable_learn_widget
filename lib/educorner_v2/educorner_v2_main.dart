@@ -85,7 +85,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
             const SizedBox(height: 20),
             SmoothPageIndicator(
               controller: controller,
-              count: items.length.clamp(0, 6),
+              count: items.length,
               effect: CustomizableEffect(
                 dotDecoration: DotDecoration(
                   width: 7,
@@ -139,7 +139,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
               borderRadius: BorderRadius.circular(40),
               child: Image.network(
                 imageUrl,
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 errorBuilder: (_, __, ___) =>
                     const Icon(Icons.broken_image, size: 50),
               ),
