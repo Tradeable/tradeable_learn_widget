@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
@@ -59,7 +58,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         _chartKey.currentState
             ?.addDataWithAnimation(
                 recipe.data.sublist(task.fromPoint, task.tillPoint),
-                const Duration(milliseconds: 50))
+                const Duration(milliseconds: 10))
             .then((value) {
           if (value) {
             onTaskFinish();
@@ -120,96 +119,145 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          children: [
-            promptTask != null
-                ? Container(
-                    height: constraints.maxHeight * 0.16,
-                    margin: const EdgeInsets.all(6),
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: colors.cardColorSecondary,
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 400),
-                      transitionBuilder: (child, animation) => SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(1, 0),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child,
-                      ),
-                      child: Container(
-                        key: ValueKey(promptTask),
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Define minimum heights for each section
+          final minPromptHeight = constraints.maxHeight * 0.1;
+          final minChartHeight = constraints.maxHeight * 0.6;
+          final minActionHeight = constraints.maxHeight * 0.1;
+
+          // Calculate actual heights based on content
+          double promptHeight = promptTask != null
+              ? constraints.maxHeight * 0.16
+              : minPromptHeight;
+          double actionHeight = showNextButton ||
+                  currentTask.taskType == TaskType.waitTask ||
+                  currentTask.taskType == TaskType.addMcq
+              ? constraints.maxHeight * 0.11
+              : minActionHeight;
+
+          // Chart gets the remaining space (middle section is flexible)
+          double chartHeight =
+              constraints.maxHeight - promptHeight - actionHeight;
+
+          // Ensure chart has at least its minimum height
+          if (chartHeight < minChartHeight) {
+            // If chart would be too small, reduce other sections proportionally
+            double deficit = minChartHeight - chartHeight;
+            double promptReduction =
+                deficit * (promptHeight / (promptHeight + actionHeight));
+            double actionReduction =
+                deficit * (actionHeight / (promptHeight + actionHeight));
+
+            promptHeight =
+                Math.max(minPromptHeight, promptHeight - promptReduction);
+            actionHeight =
+                Math.max(minActionHeight, actionHeight - actionReduction);
+            chartHeight = constraints.maxHeight - promptHeight - actionHeight;
+          }
+
+          return Column(
+            children: [
+              // Section 1: Prompt
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: promptHeight,
+                child: promptTask != null
+                    ? Container(
+                        margin: const EdgeInsets.all(6),
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: colors.buttonColor,
-                          border: Border.all(color: colors.cardColorSecondary),
+                          color: colors.cardColorSecondary,
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20)),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            promptTask != null && promptTask!.isExplanation
-                                ? Row(
-                                    children: [
-                                      Text("Take Away",
-                                          style: textStyles.smallBold),
-                                      const SizedBox(width: 6),
-                                      // Icon(Icons.volume_up,
-                                      //     color: colors.borderColorPrimary)
-                                    ],
-                                  )
-                                : Text("Instruction",
-                                    style: textStyles.smallNormal.copyWith(
-                                        color: colors.textColorSecondary)),
-                            Expanded(
-                              child: AutoSizeText(promptTask?.promptText ?? "",
-                                  minFontSize: 10,
-                                  maxFontSize: 14,
-                                  maxLines: 4,
-                                  overflow: TextOverflow.ellipsis),
-                            )
-                          ],
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 400),
+                          transitionBuilder: (child, animation) =>
+                              SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(1, 0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: child,
+                          ),
+                          child: Container(
+                            key: ValueKey(promptTask),
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: colors.buttonColor,
+                              border:
+                                  Border.all(color: colors.cardColorSecondary),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                promptTask != null && promptTask!.isExplanation
+                                    ? Row(
+                                        children: [
+                                          Text("Take Away",
+                                              style: textStyles.smallBold),
+                                          const SizedBox(width: 6),
+                                        ],
+                                      )
+                                    : Text("Instruction",
+                                        style: textStyles.smallNormal.copyWith(
+                                            color: colors.textColorSecondary)),
+                                Expanded(
+                                  child: Text(
+                                    promptTask?.promptText ?? "",
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                : SizedBox(height: constraints.maxHeight * 0.18),
-            SizedBox(
-              height: constraints.maxHeight * 0.7,
-              child: Chart.from(
-                key: _chartKey,
-                recipe: recipe,
-                onInteraction: (p0, p1) {},
+                      )
+                    : const SizedBox.shrink(),
               ),
-            ),
-            showNextButton
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 16),
-                    child: ButtonWidget(
-                        color: colors.primary,
-                        btnContent: "Next",
-                        onTap: () {
-                          widget.onNextClick();
-                        }),
-                  )
-                : Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 16),
-                    height: constraints.maxHeight * 0.11,
-                    child: userActionContainer()),
-          ],
-        );
-      },
+
+              // Section 2: Chart (Flexible section)
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: chartHeight,
+                child: Chart.from(
+                  key: _chartKey,
+                  recipe: recipe,
+                  onInteraction: (p0, p1) {},
+                ),
+              ),
+
+              // Section 3: Action buttons
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: actionHeight,
+                child: showNextButton
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 8),
+                        child: ButtonWidget(
+                            color: colors.primary,
+                            btnContent: "Next",
+                            onTap: () {
+                              widget.onNextClick();
+                            }),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 8),
+                        child: userActionContainer(),
+                      ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -240,10 +288,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
-    Task task = currentTask as AddMcqTask;
+    Task task = currentTask;
+    if (task is! AddMcqTask) return const SizedBox.shrink();
+
+    AddMcqTask mcqTask = task;
     int columns, rows;
 
-    switch ((task as AddMcqTask).arrangementType) {
+    switch (mcqTask.arrangementType) {
       case MCQArrangementType.grid1x2:
         columns = 2;
         rows = 1;
@@ -267,7 +318,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         return Wrap(
           spacing: 10,
           runSpacing: 10,
-          children: task.options.map((e) {
+          children: mcqTask.options.map((e) {
             return SizedBox(
               width: itemWidth,
               height: itemHeight,
@@ -289,5 +340,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         );
       },
     );
+  }
+}
+
+// This is needed for the Math.max function used above
+class Math {
+  static double max(double a, double b) {
+    return a > b ? a : b;
   }
 }
