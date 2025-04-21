@@ -267,7 +267,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: f515069f31f00c411760e34e8e0781442fb09c21
+      resolved-ref: c2b61237e49c3dd175f11fed35848d0fb0878435
       url: "https://github.com/adityagohad/fin_chart.git"
     source: git
     version: "0.0.1"
