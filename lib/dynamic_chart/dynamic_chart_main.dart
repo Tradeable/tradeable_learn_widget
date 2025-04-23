@@ -120,143 +120,68 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return SafeArea(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          // Define minimum heights for each section
-          final minPromptHeight = constraints.maxHeight * 0.1;
-          final minChartHeight = constraints.maxHeight * 0.6;
-          final minActionHeight = constraints.maxHeight * 0.1;
-
-          // Calculate actual heights based on content
-          double promptHeight = promptTask != null
-              ? constraints.maxHeight * 0.16
-              : minPromptHeight;
-          double actionHeight = showNextButton ||
-                  currentTask.taskType == TaskType.waitTask ||
-                  currentTask.taskType == TaskType.addMcq
-              ? constraints.maxHeight * 0.11
-              : minActionHeight;
-
-          // Chart gets the remaining space (middle section is flexible)
-          double chartHeight =
-              constraints.maxHeight - promptHeight - actionHeight;
-
-          // Ensure chart has at least its minimum height
-          if (chartHeight < minChartHeight) {
-            // If chart would be too small, reduce other sections proportionally
-            double deficit = minChartHeight - chartHeight;
-            double promptReduction =
-                deficit * (promptHeight / (promptHeight + actionHeight));
-            double actionReduction =
-                deficit * (actionHeight / (promptHeight + actionHeight));
-
-            promptHeight =
-                Math.max(minPromptHeight, promptHeight - promptReduction);
-            actionHeight =
-                Math.max(minActionHeight, actionHeight - actionReduction);
-            chartHeight = constraints.maxHeight - promptHeight - actionHeight;
-          }
-
-          return Column(
-            children: [
-              // Section 1: Prompt
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: promptHeight,
-                child: promptTask != null
-                    ? Container(
-                        margin: const EdgeInsets.all(6),
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colors.cardColorSecondary,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 400),
-                          transitionBuilder: (child, animation) =>
-                              SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(1, 0),
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: child,
-                          ),
-                          child: Container(
-                            key: ValueKey(promptTask),
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: colors.buttonColor,
-                              border:
-                                  Border.all(color: colors.cardColorSecondary),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                promptTask != null && promptTask!.isExplanation
-                                    ? Row(
-                                        children: [
-                                          Text("Take Away",
-                                              style: textStyles.smallBold),
-                                          const SizedBox(width: 6),
-                                        ],
-                                      )
-                                    : Text("Instruction",
-                                        style: textStyles.smallNormal.copyWith(
-                                            color: colors.textColorSecondary)),
-                                Expanded(
-                                  child: Text(
-                                    promptTask?.promptText ?? "",
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (promptTask == null)
+            Container()
+          else
+            Container(
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: colors.cardColorSecondary,
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
               ),
-
-              // Section 2: Chart (Flexible section)
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: chartHeight,
-                child: Chart.from(
-                  key: _chartKey,
-                  recipe: recipe,
-                  onInteraction: (p0, p1) {},
-                ),
-              ),
-
-              // Section 3: Action buttons
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: actionHeight,
-                child: showNextButton
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 8),
-                        child: ButtonWidget(
-                            color: colors.primary,
-                            btnContent: "Next",
-                            onTap: () {
-                              widget.onNextClick();
-                            }),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 8),
-                        child: userActionContainer(),
+              child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  transitionBuilder: (child, animation) => SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(1, 0),
+                          end: Offset.zero,
+                        ).animate(animation),
+                        child: child,
                       ),
-              ),
-            ],
-          );
-        },
+                  child: Container(
+                      key: ValueKey(promptTask),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: colors.buttonColor,
+                        border: Border.all(color: colors.cardColorSecondary),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          promptTask != null && promptTask!.isExplanation
+                              ? Row(
+                                  children: [
+                                    Text("Take Away",
+                                        style: textStyles.smallBold),
+                                    const SizedBox(width: 6),
+                                  ],
+                                )
+                              : Text("Instruction",
+                                  style: textStyles.smallNormal.copyWith(
+                                      color: colors.textColorSecondary)),
+                          const SizedBox(height: 4),
+                          Text(
+                            promptTask?.promptText ?? "",
+                            style: textStyles.smallNormal,
+                          ),
+                        ],
+                      ))),
+            ),
+          Expanded(
+              child: Chart.from(
+                  key: _chartKey, recipe: recipe, onInteraction: (p0, p1) {})),
+          Container(
+              padding: const EdgeInsets.all(20), child: userActionContainer()),
+        ],
       ),
     );
   }
@@ -309,43 +234,33 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         break;
     }
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        double itemWidth =
-            (constraints.maxWidth - (10 * (columns - 1))) / columns;
-        double itemHeight = (constraints.maxHeight - (10 * (rows - 1))) / rows;
-
-        return Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: mcqTask.options.map((e) {
-            return SizedBox(
-              width: itemWidth,
-              height: itemHeight,
-              child: InkWell(
-                onTap: () => onTaskFinish(),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: colors.buttonColor,
-                    border: Border.all(color: colors.cardColorSecondary),
-                  ),
-                  child: Center(
-                    child: Text(e),
-                  ),
+    return GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: columns,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 5,
+        ),
+        itemCount: mcqTask.options.length,
+        itemBuilder: (context, index) {
+          return SizedBox(
+            height: 80,
+            child: InkWell(
+              onTap: () => onTaskFinish(),
+              child: Container(
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: colors.buttonColor,
+                  border: Border.all(color: colors.cardColorSecondary),
+                ),
+                child: Center(
+                  child: Text(mcqTask.options[index]),
                 ),
               ),
-            );
-          }).toList(),
-        );
-      },
-    );
-  }
-}
-
-// This is needed for the Math.max function used above
-class Math {
-  static double max(double a, double b) {
-    return a > b ? a : b;
+            ),
+          );
+        });
   }
 }
