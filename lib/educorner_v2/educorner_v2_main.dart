@@ -208,12 +208,13 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
         btnContent: "Next",
         onTap: () {
           if (currentPage == items.length - 1) {
-            showModalBottomSheet(
-              isDismissible: false,
-              context: context,
-              builder: (context) =>
-                  InfoBottomSheet(onNextClick: widget.onNextClick),
-            );
+            widget.onNextClick();
+            // showModalBottomSheet(
+            //   isDismissible: false,
+            //   context: context,
+            //   builder: (context) =>
+            //       InfoBottomSheet(onNextClick: widget.onNextClick),
+            // );
           } else {
             controller.nextPage(
                 duration: const Duration(milliseconds: 300),
