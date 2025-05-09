@@ -106,6 +106,15 @@ class _SampleUserflowScreenState extends State<SampleUserflowScreen> {
         _chartKey.currentState?.clearChart();
         onTaskFinish();
         break;
+      case TaskType.addOptionChain:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.chooseCorrectOptionChainValue:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.highlightCorrectOptionChainValue:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -331,6 +340,15 @@ class _SampleUserflowScreenState extends State<SampleUserflowScreen> {
         );
       case TaskType.clearTask:
         return Container();
+      case TaskType.addOptionChain:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.chooseCorrectOptionChainValue:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.highlightCorrectOptionChainValue:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
