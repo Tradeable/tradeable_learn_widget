@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/mutual_funds/mutual_fund_image_mcq/image_
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class MutualFundImageMCQ extends StatefulWidget {
   final MutualFundImageMCQModel model;
@@ -25,7 +26,7 @@ class _MutualFundImageMCQState extends State<MutualFundImageMCQ> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -79,7 +80,7 @@ class _MutualFundImageMCQState extends State<MutualFundImageMCQ> {
   }
 
   Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -158,7 +159,7 @@ class QuizOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return InkWell(
       onTap: () {

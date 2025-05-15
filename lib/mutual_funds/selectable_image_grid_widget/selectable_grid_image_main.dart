@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/mutual_funds/selectable_image_grid_widget/selectable_image_grid_model.dart';
 import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
-import 'selectable_image_grid_model.dart'; // Import the model
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class SelectableImageGridWidget extends StatefulWidget {
   final SelectableImageGridModel model;
@@ -54,8 +55,8 @@ class _SelectableImageGridWidgetState extends State<SelectableImageGridWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

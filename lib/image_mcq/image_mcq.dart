@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/image_mcq/image_mcq_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class ImageMcq extends StatefulWidget {
   final ImageMCQModel model;
@@ -26,7 +27,7 @@ class _ImageMcqState extends State<ImageMcq> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -133,8 +134,8 @@ class ImageMCQOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return InkWell(
       onTap: () {
         onTap(option);

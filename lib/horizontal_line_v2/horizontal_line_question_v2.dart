@@ -16,6 +16,7 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class HorizontalLineQuestionV2 extends StatefulWidget {
   final HorizontalLineModelV1 model;
@@ -47,7 +48,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV2>
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -102,7 +103,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV2>
   }
 
   Widget renderChart() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Chart(layers: [
       AxisLayer(
@@ -144,7 +145,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV2>
   }
 
   Widget renderActionButton() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final isLastLine = currentLineIndex == model.responseRange.length;
 
     return Padding(

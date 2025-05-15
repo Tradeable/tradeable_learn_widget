@@ -18,6 +18,7 @@ import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class HorizontalLineQuestion extends StatefulWidget {
   final HorizontalLineModel model;
@@ -74,7 +75,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   Widget renderChart() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case HorizontalLineQuestionState.loadUI:
@@ -115,7 +116,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   Widget renderSubmitBtn() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
@@ -180,8 +181,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   void showSheet() {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     showModalBottomSheet(
         isDismissible: false,

@@ -6,6 +6,7 @@ import 'package:tradeable_learn_widget/candle_formation/widgets/option_widget.da
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CandleFormation extends StatefulWidget {
   final CandleFormationModel model;
@@ -122,7 +123,7 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
   }
 
   Widget renderSubmitBtn() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleFormationState.loadUI:

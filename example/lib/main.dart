@@ -12,6 +12,7 @@ import 'package:example/data_model/column_match.dart';
 import 'package:example/data_model/content_preview_model.dart';
 import 'package:example/data_model/contract_price_slider_model.dart';
 import 'package:example/data_model/delta_typeform.dart';
+import 'package:example/data_model/dynamic_chart_model.dart';
 import 'package:example/data_model/educorner_model_v1.dart';
 import 'package:example/data_model/en1_model.dart';
 import 'package:example/data_model/expandable_edutile_model.dart';
@@ -55,6 +56,8 @@ import 'package:example/tradeable_widget_demo/tradeable_widget_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/buy_sell_widget/buy_sell.dart';
 import 'package:tradeable_learn_widget/candle_formation/candle_formation_model.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_main.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_v2/horizontal_line_question_v2.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
@@ -103,6 +106,21 @@ class MyHomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // NavigationButton(
+                  //     text: "Sample User Flow",
+                  //     destination: ScaffoldWithAppBar(
+                  //         title: "Sample User Flow",
+                  //         body: SampleUserflowScreen(
+                  //             data: SampleUserflowModel.fromJson(
+                  //                 sampleUserFlowDataModel),
+                  //             onNextClick: () {}))),
+                  NavigationButton(
+                      text: "EduCornerV2",
+                      destination: ScaffoldWithAppBar(
+                          title: "EduCornerV2",
+                          body: EduCornerV2Main(
+                              model: EduCornerModel.fromJson(educornerV1Model),
+                              onNextClick: () {}))),
                   const NavigationButton(
                     text: "Ladder Widget",
                     destination: LadderWidgetPage(),
@@ -456,6 +474,14 @@ class MyHomePage extends StatelessWidget {
                           title: "RR new Typeform",
                           body: UserStoryUIMain(
                               model: UserStoryModel.fromJson(rrTypeForm2),
+                              onNextClick: () {}))),
+                  NavigationButton(
+                      text: "Dynamic Chart Widget",
+                      destination: ScaffoldWithAppBar(
+                          title: "Dynamic Chart Widget",
+                          body: DynamicChartWidget(
+                              model:
+                                  DynamicChartModel.fromJson(dynamicChartModel),
                               onNextClick: () {}))),
                 ],
               ),

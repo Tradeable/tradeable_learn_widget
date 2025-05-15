@@ -28,8 +28,8 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Stack(
       children: [
         Padding(
@@ -179,8 +179,8 @@ class _ExpandableEduTileState extends State<ExpandableEduTile> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),

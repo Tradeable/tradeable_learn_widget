@@ -71,8 +71,8 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
   @override
   Widget build(BuildContext context) {
     final currentText = widget.textData[_sliderValue];
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -139,7 +139,7 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
             label: currentText.volume,
             thumbColor: colors.axisColor,
             activeColor: colors.axisColor,
-            inactiveColor: colors.buttonBorderColor,
+            inactiveColor: colors.cardColorSecondary,
             onChanged: (value) {
               setState(() {
                 _sliderValue = value.toInt();

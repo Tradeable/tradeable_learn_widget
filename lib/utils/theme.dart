@@ -61,11 +61,13 @@ class CustomColors {
   final Color lumpSumColor;
   final Color cardBasicBackground;
   final Color buttonColor;
-  final Color buttonBorderColor;
   final Color sliderColor;
   final Color textColorSecondary;
   final Color disabledContainer;
   final Color supportItemColor;
+  final Color eduCornerV2ContainerBg1;
+  final Color eduCornerV2ContainerBg2;
+  final Color eduCornerImageBg;
 
   CustomColors(
       {required this.primary,
@@ -83,11 +85,13 @@ class CustomColors {
       required this.lumpSumColor,
       required this.cardBasicBackground,
       required this.buttonColor,
-      required this.buttonBorderColor,
       required this.sliderColor,
       required this.textColorSecondary,
       required this.disabledContainer,
-      required this.supportItemColor});
+      required this.supportItemColor,
+      required this.eduCornerV2ContainerBg1,
+      required this.eduCornerV2ContainerBg2,
+      required this.eduCornerImageBg});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -109,11 +113,13 @@ extension ThemeDataExtension on ThemeData {
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.white,
           buttonColor: const Color(0xffF9F9F9),
-          buttonBorderColor: const Color(0xffE2E2E2),
           sliderColor: const Color(0xffED1164),
           textColorSecondary: const Color(0xff6E6E6E),
           disabledContainer: const Color(0xffB3BCB9),
-          supportItemColor: const Color(0xff165964));
+          supportItemColor: const Color(0xff165964),
+          eduCornerV2ContainerBg1: const Color(0xffE2E2E2),
+          eduCornerV2ContainerBg2: const Color(0xff404040),
+          eduCornerImageBg: Colors.white);
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -121,7 +127,7 @@ extension ThemeDataExtension on ThemeData {
           // background: const Color(0xFF161A26),
           background: Colors.transparent,
           borderColorPrimary: const Color(0xff5E6FA5),
-          borderColorSecondary: const Color(0xffE3A85B),
+          borderColorSecondary: const Color(0xff303030),
           cardColorPrimary: const Color(0xff222838),
           cardColorSecondary: const Color(0xFF463B32),
           bullishColor: Colors.green,
@@ -131,12 +137,14 @@ extension ThemeDataExtension on ThemeData {
           sipColor: Colors.orangeAccent,
           lumpSumColor: Colors.blueAccent,
           cardBasicBackground: Colors.black,
-          buttonColor: Colors.white,
-          buttonBorderColor: Colors.white38,
+          buttonColor: const Color(0xff303030),
           sliderColor: const Color(0xffED1164),
           textColorSecondary: Colors.white,
           disabledContainer: const Color(0xffB3BCB9),
-          supportItemColor: const Color(0xff165964));
+          supportItemColor: const Color(0xff165964),
+          eduCornerV2ContainerBg1: const Color(0xff313030),
+          eduCornerV2ContainerBg2: const Color(0xff1D1D1D),
+          eduCornerImageBg: const Color(0xff1D1D1D));
     }
   }
 

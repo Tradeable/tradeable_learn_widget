@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_analysis_widget/investment_icon.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class InvestmentReturnsTable extends StatelessWidget {
   final List<double> avgReturns;
@@ -14,8 +15,8 @@ class InvestmentReturnsTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -73,7 +74,7 @@ class InvestmentReturnsTable extends StatelessWidget {
   }
 
   Widget _buildAvgReturnRow(String icon, BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       children: [
@@ -115,7 +116,7 @@ class InvestmentReturnsTable extends StatelessWidget {
   }
 
   Color _getColor(String icon, BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return icon == 'SIP'
         ? colors.sipColor

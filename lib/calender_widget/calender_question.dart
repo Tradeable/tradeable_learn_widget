@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/calender_widget/calender_model.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CalenderQuestion extends StatefulWidget {
   final CalenderQuestionModel model;
@@ -29,7 +30,7 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Center(
       child: Column(

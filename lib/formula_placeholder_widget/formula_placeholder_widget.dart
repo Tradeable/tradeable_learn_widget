@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/formula_placeholder_widget/formula_placeh
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class FormulaPlaceholderWidget extends StatefulWidget {
   final FormulaPlaceHolderModel model;
@@ -27,8 +28,8 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -179,8 +180,8 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
   }
 
   Widget buildDraggableItem(String text) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Material(
       child: Container(

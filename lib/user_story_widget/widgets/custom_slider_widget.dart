@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/custom_slider_model.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class CustomSliderWidget extends StatefulWidget {
   final SliderData sliderData;
@@ -20,8 +21,8 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
     SliderPoint currentPoint =
         widget.sliderData.sliderPoints[_currentIndex.toInt()];
 
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +38,7 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
                     spreadRadius: 0.4)
               ],
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: colors.buttonBorderColor)),
+              border: Border.all(color: colors.cardColorSecondary)),
           child: Column(
             children: [
               Padding(
@@ -92,8 +93,8 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
   }
 
   Widget buildDataPoints(String title, String value) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),

@@ -14,6 +14,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/rr_layer/rr_layer.
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class RRChart extends StatefulWidget {
   final RRModel model;
@@ -76,7 +77,7 @@ class _RRChart extends State<RRChart> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [

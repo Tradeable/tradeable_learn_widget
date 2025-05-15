@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/ladder_widget/bricks_widget.dart';
 import 'package:tradeable_learn_widget/ladder_widget/dotted_border_container.dart';
 import 'package:tradeable_learn_widget/ladder_widget/ladder_container.dart';
 import 'package:tradeable_learn_widget/ladder_widget/ladder_data_model.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/learn_error_border.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
@@ -59,8 +60,10 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return LearnErrorBorder(
       showErrorBody: showErrorBorder,
       child: LayoutBuilder(
@@ -153,8 +156,8 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   }
 
   Widget buildDragTarget(LadderCell cell) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -247,8 +250,8 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   }
 
   Widget renderOption(DraggableOption option) {
-    final colors = Theme.of(context).customColors;
-    final textStyles = Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       width: 60,
       height: 30,

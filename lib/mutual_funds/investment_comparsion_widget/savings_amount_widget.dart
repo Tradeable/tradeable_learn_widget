@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/mutual_funds/investment_comparsion_widget/expandable_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class SavingsAmountWidget extends StatefulWidget {
   final Function(double, DateTime?, DateTime?) onValuesChanged;
@@ -54,8 +55,8 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
   }
 
   Widget _buildSavingsContent() {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +123,7 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
   }
 
   Widget _buildDateSelectionContent() {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,8 +137,8 @@ class _SavingsAmountWidgetState extends State<SavingsAmountWidget> {
 
   Widget _buildDateColumn(
       String label, DateTime? date, VoidCallback onPressed) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
       decoration:

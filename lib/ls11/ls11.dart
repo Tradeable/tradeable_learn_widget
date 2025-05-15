@@ -11,6 +11,7 @@ import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/
 import 'package:tradeable_learn_widget/tradeable_chart/layers/line_layer/line_layer.dart';
 import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class LS11 extends StatefulWidget {
   final LS11Model model;
@@ -71,7 +72,7 @@ class _LS11State extends State<LS11> {
   }
 
   Widget renderChart() {
-    final colors = Theme.of(context).customColors;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case LS11State.loadUI:
@@ -132,7 +133,7 @@ class _LS11State extends State<LS11> {
   }
 
   Widget renderQuestion() {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
         padding: const EdgeInsets.all(10),

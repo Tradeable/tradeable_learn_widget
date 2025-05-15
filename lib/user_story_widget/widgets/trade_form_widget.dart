@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class TradeFormWidget extends StatefulWidget {
   final TradeFormModel tradeFormModel;
@@ -23,8 +24,8 @@ class _TradeFormWidget extends State<TradeFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
-    final colors = Theme.of(context).customColors;
+    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     String tradeStatus = "Holding";
     double? ltp = double.tryParse(model.ltp ?? "0");

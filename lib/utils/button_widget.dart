@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -14,7 +15,12 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    ;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    ;
 
     return InkWell(
       onTap: onTap,
@@ -28,7 +34,7 @@ class ButtonWidget extends StatelessWidget {
         child: Center(
           child: Text(btnContent,
               style: textStyles.mediumBold
-                  .copyWith(color: Colors.white, fontSize: 16)),
+                  .copyWith(fontSize: 16, color: Colors.white)),
         ),
       ),
     );

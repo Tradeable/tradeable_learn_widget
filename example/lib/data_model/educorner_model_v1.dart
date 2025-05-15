@@ -4,6 +4,28 @@ const educornerV1Model = {
     {
       "type": "imageAndText",
       "imgUrl":
+          "https://db7ux0oq7lxvd.cloudfront.net/educorner/U1.C1.L4/candlestick_charts.png",
+      "videoId": "abc123",
+      "textContent": {
+        "title": "The Future of Education",
+        "content":
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostru exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor"
+      }
+    },
+    {
+      "type": "imageAndText",
+      "imgUrl":
+          "https://static-cse.canva.com/blob/1210661/10SimplewaystoenhanceyourimageFeaturedImage1.jpg",
+      "videoId": "",
+      "textContent": {
+        "title": "The Future of Education",
+        "content":
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostru exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor"
+      }
+    },
+    {
+      "type": "imageAndText",
+      "imgUrl":
           "https://static-cse.canva.com/blob/1210661/10SimplewaystoenhanceyourimageFeaturedImage1.jpg",
       "videoId": "abc123",
       "textContent": {
@@ -24,15 +46,48 @@ const educornerV1Model = {
       }
     },
     {
-      "type": "onlyText",
+      "type": "imageAndText",
+      "imgUrl":
+          "https://static-cse.canva.com/blob/1210661/10SimplewaystoenhanceyourimageFeaturedImage1.jpg",
+      "videoId": "abc123",
+      "textContent": {
+        "title": "The Future of Education",
+        "content":
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostru exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor"
+      }
+    },
+    {
+      "type": "imageAndText",
       "imgUrl":
           "https://static-cse.canva.com/blob/1210661/10SimplewaystoenhanceyourimageFeaturedImage1.jpg",
       "videoId": "",
       "textContent": {
-        "title": "Innovative Learning Tools",
+        "title": "The Future of Education",
         "content":
-            "Explore the latest tools designed to enhance learning and education."
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostru exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor"
       }
-    }
+    },
+    {
+      "type": "imageAndText",
+      "imgUrl":
+      "https://static-cse.canva.com/blob/1210661/10SimplewaystoenhanceyourimageFeaturedImage1.jpg",
+      "videoId": "abc123",
+      "textContent": {
+        "title": "The Future of Education",
+        "content":
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostru exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor"
+      }
+    },
+    {
+      "type": "imageAndText",
+      "imgUrl":
+      "https://static-cse.canva.com/blob/1210661/10SimplewaystoenhanceyourimageFeaturedImage1.jpg",
+      "videoId": "",
+      "textContent": {
+        "title": "The Future of Education",
+        "content":
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostru exercitation ullamco laboris nisi ut aliquip exea commodo consequat. Duis aute irure dolor"
+      }
+    },
   ]
 };

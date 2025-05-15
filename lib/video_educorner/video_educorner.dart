@@ -3,6 +3,7 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/video_educorner/video_educorner_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 
 class VideoEduCorner extends StatefulWidget {
   final VideoEduCornerModel model;
@@ -62,44 +63,59 @@ class _VideoEduCorner extends State<VideoEduCorner> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
         Expanded(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              YoutubePlayer(
-                aspectRatio: 0.64,
-                controller: _controller,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: colors.eduCornerV2ContainerBg1,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: colors.eduCornerV2ContainerBg2,
+                borderRadius: BorderRadius.circular(20),
               ),
-              finishedPlaying
-                  ? Align(
-                      alignment: Alignment.center,
-                      child: IconButton(
-                        onPressed: () {
-                          if (finishedPlaying) {
-                            _controller.seekTo(Duration.zero);
-                            _controller.play();
-                          }
-                          if (isPlay) {
-                            _controller.pause();
-                          } else {
-                            _controller.play();
-                          }
-                          setState(() {
-                            isPlay = !isPlay;
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.replay,
-                          size: 50,
-                        ),
-                      ),
-                    )
-                  : Container(),
-            ],
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  YoutubePlayer(
+                    aspectRatio: 0.64,
+                    controller: _controller,
+                  ),
+                  finishedPlaying
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            onPressed: () {
+                              if (finishedPlaying) {
+                                _controller.seekTo(Duration.zero);
+                                _controller.play();
+                              }
+                              if (isPlay) {
+                                _controller.pause();
+                              } else {
+                                _controller.play();
+                              }
+                              setState(() {
+                                isPlay = !isPlay;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.replay,
+                              size: 50,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
           ),
         ),
         Padding(
