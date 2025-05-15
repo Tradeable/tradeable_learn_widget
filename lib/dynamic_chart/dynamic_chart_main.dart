@@ -12,9 +12,10 @@ import 'package:fin_chart/models/tasks/highlight_option_chain.task.dart';
 import 'package:fin_chart/models/tasks/task.dart';
 import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
-import 'package:fin_chart/option_chain/screens/preview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -136,7 +137,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.highlightCorrectOptionChainValue:
         HighlightCorrectOptionChainValueTask task =
             currentTask as HighlightCorrectOptionChainValueTask;
-        _previewScreenKey.currentState?.chooseRow(task.correctRowIndex);
+        for (int i in task.correctRowIndex) {
+          _previewScreenKey.currentState?.chooseRow(i);
+        }
         onTaskFinish();
         setState(() {});
         break;
@@ -226,38 +229,64 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             ),
 
           // Feedback button - small and ignorable as requested
-          Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10.0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.feedback_outlined,
-                  color: colors.textColorSecondary,
-                  size: 20,
-                ),
-                tooltip: "Provide feedback",
-                onPressed: _showFeedbackDialog,
-              ),
-            ),
-          ),
-          optionChainButtonVisibility
-              ? Align(
-                  alignment: Alignment.topRight,
-                  child: ElevatedButton(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              correctOptionChainTask != null
+                  ? IconButton(
+                      icon: const Icon(Icons.settings),
                       onPressed: () {
-                        setState(() {
-                          switchToOptionChain = !switchToOptionChain;
-                          controller.animateToPage(switchToOptionChain ? 1 : 0,
-                              duration: const Duration(seconds: 1),
-                              curve: Curves.easeIn);
-                        });
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => ColumnVisibilityEditor(
+                            columns: correctOptionChainTask!.columns,
+                            onVisibilityChanged: (updatedColumns) {
+                              // Update your columns here
+                              setState(() {
+                                correctOptionChainTask!.columns =
+                                    updatedColumns;
+                              });
+                            },
+                          ),
+                        );
                       },
-                      child: Text(switchToOptionChain
-                          ? "View Chart"
-                          : "View Option Chain")),
-                )
-              : Container(),
+                    )
+                  : Container(),
+              optionChainButtonVisibility
+                  ? Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              switchToOptionChain = !switchToOptionChain;
+                              controller.animateToPage(
+                                  switchToOptionChain ? 1 : 0,
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.easeIn);
+                            });
+                          },
+                          child: Text(switchToOptionChain
+                              ? "View Chart"
+                              : "View Option Chain")),
+                    )
+                  : Container(),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.feedback_outlined,
+                      color: colors.textColorSecondary,
+                      size: 20,
+                    ),
+                    tooltip: "Provide feedback",
+                    onPressed: _showFeedbackDialog,
+                  ),
+                ),
+              ),
+            ],
+          ),
           Expanded(
             child: PageView.builder(
                 controller: controller,
@@ -270,7 +299,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                         onInteraction: (p0, p1) {});
                   } else {
                     return PreviewScreen.from(
-                        key: _previewScreenKey, task: correctOptionChainTask!);
+                        key: _previewScreenKey,
+                        task: correctOptionChainTask!,
+                        isEditorMode: false);
                   }
                 }),
           ),
