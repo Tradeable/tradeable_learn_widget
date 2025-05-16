@@ -232,44 +232,43 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              correctOptionChainTask != null
-                  ? IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => ColumnVisibilityEditor(
-                            columns: correctOptionChainTask!.columns,
-                            onVisibilityChanged: (updatedColumns) {
-                              // Update your columns here
-                              setState(() {
-                                correctOptionChainTask!.columns =
-                                    updatedColumns;
-                              });
-                            },
-                          ),
-                        );
-                      },
-                    )
-                  : Container(),
-              optionChainButtonVisibility
-                  ? Align(
-                      alignment: Alignment.topRight,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              switchToOptionChain = !switchToOptionChain;
-                              controller.animateToPage(
-                                  switchToOptionChain ? 1 : 0,
-                                  duration: const Duration(seconds: 1),
-                                  curve: Curves.easeIn);
-                            });
-                          },
-                          child: Text(switchToOptionChain
-                              ? "View Chart"
-                              : "View Option Chain")),
-                    )
-                  : Container(),
+              // correctOptionChainTask != null
+              //     ? IconButton(
+              //         icon: const Icon(Icons.settings),
+              //         onPressed: () {
+              //           showModalBottomSheet(
+              //             context: context,
+              //             builder: (context) => ColumnVisibilityEditor(
+              //               columns: correctOptionChainTask!.columns,
+              //               onVisibilityChanged: (updatedColumns) {
+              //                 setState(() {
+              //                   correctOptionChainTask!.columns =
+              //                       updatedColumns;
+              //                 });
+              //               },
+              //             ),
+              //           );
+              //         },
+              //       )
+              //     : Container(),
+              // optionChainButtonVisibility
+              //     ? Align(
+              //         alignment: Alignment.topRight,
+              //         child: ElevatedButton(
+              //             onPressed: () {
+              //               setState(() {
+              //                 switchToOptionChain = !switchToOptionChain;
+              //                 controller.animateToPage(
+              //                     switchToOptionChain ? 1 : 0,
+              //                     duration: const Duration(seconds: 1),
+              //                     curve: Curves.easeIn);
+              //               });
+              //             },
+              //             child: Text(switchToOptionChain
+              //                 ? "View Chart"
+              //                 : "View Option Chain")),
+              //       )
+              //     : Container(),
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
@@ -301,6 +300,29 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                     return PreviewScreen.from(
                         key: _previewScreenKey,
                         task: correctOptionChainTask!,
+                        onViewChartClicked: () {
+                          setState(() {
+                            switchToOptionChain = !switchToOptionChain;
+                            controller.animateToPage(
+                                switchToOptionChain ? 1 : 0,
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.easeIn);
+                          });
+                        },
+                        onSettingsClicked: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) => ColumnVisibilityEditor(
+                              columns: correctOptionChainTask!.columns,
+                              onVisibilityChanged: (updatedColumns) {
+                                setState(() {
+                                  correctOptionChainTask!.columns =
+                                      updatedColumns;
+                                });
+                              },
+                            ),
+                          );
+                        },
                         isEditorMode: false);
                   }
                 }),

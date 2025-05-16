@@ -17,11 +17,6 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    ;
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    ;
-
     return InkWell(
       onTap: onTap,
       child: Container(

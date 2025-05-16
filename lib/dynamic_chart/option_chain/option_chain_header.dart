@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/option_chain/info_text_container.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
+
+class OptionChainHeader extends StatelessWidget {
+  final VoidCallback onViewChartClicked;
+  final VoidCallback onSettingsClicked;
+  final String expiry;
+
+  const OptionChainHeader(
+      {super.key,
+      required this.onViewChartClicked,
+      required this.onSettingsClicked,
+      required this.expiry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              renderChartButtonContainer(context),
+              renderTickerContainer(context),
+              renderSettingsButtonContainer(context)
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const InfoTextContainer(
+                  text: "Call", isRightAligned: true, icon: Icons.arrow_left),
+              InfoTextContainer(text: expiry, isRightAligned: false),
+              const InfoTextContainer(
+                  text: "Put", isRightAligned: false, icon: Icons.arrow_right),
+            ],
+          ),
+          const SizedBox(height: 10)
+        ],
+      ),
+    );
+  }
+
+  Widget renderChartButtonContainer(BuildContext context) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    return Expanded(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: InkWell(
+          onTap: () {
+            onViewChartClicked();
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+            decoration: BoxDecoration(
+              border:
+                  Border.all(color: colors.optionChainStrokeColor, width: 2),
+              color: colors.optionChainBgColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(Icons.add_chart,
+                color: colors.optionChainChartIconColor, size: 26),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget renderTickerContainer(BuildContext context) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16)),
+            boxShadow: [
+              BoxShadow(color: colors.optionChainStrokeColor, spreadRadius: 1.2)
+            ],
+            border: Border.all(color: colors.optionChainStrokeColor),
+            color: colors.optionChainBgColor),
+        child: const Text("Nifty 50"));
+  }
+
+  Widget renderSettingsButtonContainer(BuildContext context) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    return Expanded(
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: InkWell(
+          onTap: () {
+            onSettingsClicked();
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border:
+                    Border.all(color: colors.optionChainStrokeColor, width: 2),
+                color: colors.optionChainBgColor),
+            child: Image.asset(
+              "assets/equalizer-line.png",
+              package: 'tradeable_learn_widget/lib',
+              height: 24,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

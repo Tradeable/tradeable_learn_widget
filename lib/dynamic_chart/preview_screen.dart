@@ -1,17 +1,27 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fin_chart/models/tasks/add_option_chain.task.dart';
 import 'package:fin_chart/option_chain/models/column_config.dart';
 import 'package:fin_chart/option_chain/models/option_data.dart';
 import 'package:fin_chart/option_chain/models/preview_data.dart';
 import 'package:fin_chart/option_chain/utils/data_transformer.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/option_chain/option_chain_container.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/option_chain/option_chain_header.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class PreviewScreen extends StatefulWidget {
   final PreviewData previewData;
+  final VoidCallback onViewChartClicked;
+  final VoidCallback onSettingsClicked;
   final Function(int rowIndex, bool isCallSide)? onBuySellSelected;
 
   const PreviewScreen({
     super.key,
     required this.previewData,
+    required this.onViewChartClicked,
+    required this.onSettingsClicked,
     this.onBuySellSelected,
   });
 
@@ -21,7 +31,9 @@ class PreviewScreen extends StatefulWidget {
       List<int>? selectedRowIndex,
       List<int>? correctRowIndex,
       Function(int rowIndex, bool isCallSide)? onBuySellSelected,
-      required bool isEditorMode}) {
+      required bool isEditorMode,
+      required VoidCallback onViewChartClicked,
+      required VoidCallback onSettingsClicked}) {
     return PreviewScreen(
       key: key,
       previewData: PreviewData(
@@ -35,6 +47,8 @@ class PreviewScreen extends StatefulWidget {
           correctRowIndices: correctRowIndex ?? [],
           isEditorMode: isEditorMode),
       onBuySellSelected: onBuySellSelected,
+      onViewChartClicked: onViewChartClicked,
+      onSettingsClicked: onSettingsClicked,
     );
   }
 
@@ -46,11 +60,37 @@ class PreviewScreenState extends State<PreviewScreen> {
   List<int> _selectedRowIndex = [];
   bool _isChecked = false;
   List<int> userSelectedIndex = [];
+  final ScrollController _horizontalScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _selectedRowIndex = List.from(widget.previewData.selectedRowIndices);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToStrikePrice();
+    });
+  }
+
+  @override
+  void dispose() {
+    _horizontalScrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToStrikePrice() {
+    final strikeColumnIndex = _getStrikeColumnIndex();
+    if (strikeColumnIndex != null) {
+      final scrollPosition = strikeColumnIndex * 75.0;
+      final screenWidth = MediaQuery.of(context).size.width;
+      final centerPosition = scrollPosition - (screenWidth / 2) + 75;
+      final scrollTo = centerPosition < 0 ? 0 : centerPosition;
+
+      _horizontalScrollController.animateTo(
+        scrollTo.toDouble(),
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   void chooseRow(int rowIndex) {
@@ -78,10 +118,18 @@ class PreviewScreenState extends State<PreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(child: _buildOptionsTable()),
-      ],
+    return OptionChainContainer(
+      child: Column(
+        children: [
+          OptionChainHeader(
+            onViewChartClicked: () => widget.onViewChartClicked(),
+            onSettingsClicked: () => widget.onSettingsClicked(),
+            expiry: DateFormat('dd MMM')
+                .format(widget.previewData.expiryDate ?? DateTime.now()),
+          ),
+          Expanded(child: _buildOptionsTable()),
+        ],
+      ),
     );
   }
 
@@ -90,31 +138,82 @@ class PreviewScreenState extends State<PreviewScreen> {
       scrollDirection: Axis.vertical,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columnSpacing: 0,
-          horizontalMargin: 0,
-          columns: _buildDataColumns(),
-          rows: _buildDataRows(),
+        controller: _horizontalScrollController,
+        child: Stack(
+          children: [
+            ..._buildBackgroundColumns(),
+            DataTable(
+              columnSpacing: 0,
+              horizontalMargin: 0,
+              dividerThickness: 0.01,
+              dataRowMinHeight: 30,
+              dataRowMaxHeight: 70,
+              columns: _buildDataColumns(),
+              rows: _buildDataRows(),
+            ),
+          ],
         ),
       ),
     );
   }
 
   List<DataColumn> _buildDataColumns() {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+
     return widget.previewData.columns
         .where((column) => column.isColumnVisible)
         .map((column) => DataColumn(
               label: Container(
-                width: 100,
+                width: 75,
+                color: column.columnType == ColumnType.strike
+                    ? colors.strikePriceHeaderColor
+                    : colors.headerColumnColor,
                 alignment: Alignment.center,
-                child: Text(
+                child: AutoSizeText(
                   column.columnTitle,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
+                  style: textStyles.smallNormal,
+                  minFontSize: 10,
+                  maxFontSize: 14,
                 ),
               ),
             ))
         .toList();
+  }
+
+  List<Widget> _buildBackgroundColumns() {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+    double totalWidth = 0;
+    List<Widget> columns = [];
+    int strikeColumnIndex = -1;
+
+    final visibleColumns = widget.previewData.columns
+        .where((column) => column.isColumnVisible)
+        .toList();
+
+    for (int i = 0; i < visibleColumns.length; i++) {
+      if (visibleColumns[i].columnType == ColumnType.strike) {
+        strikeColumnIndex = i;
+        break;
+      }
+      totalWidth += 76;
+    }
+
+    if (strikeColumnIndex >= 0) {
+      columns.add(Positioned(
+        left: totalWidth,
+        top: 0,
+        bottom: 0,
+        width: 78,
+        child: Container(color: colors.strikePriceColumnColor),
+      ));
+    }
+
+    return columns;
   }
 
   List<DataRow> _buildDataRows() {
@@ -130,6 +229,9 @@ class PreviewScreenState extends State<PreviewScreen> {
 
   WidgetStateProperty<Color>? _getRowColor(
       int rowIndex, int? strikeColumnIndex) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
     final selectionMode =
         widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
     if (widget.previewData.visibility == OptionChainVisibility.both) {
@@ -137,7 +239,7 @@ class PreviewScreenState extends State<PreviewScreen> {
         if (_selectedRowIndex.contains(rowIndex)) {
           if (selectionMode == SelectionMode.entireRow) {
             return WidgetStateProperty.all(
-                Colors.blue.withAlpha((0.1 * 255).round()));
+                colors.selectedRowColor.withAlpha((0.2 * 255).round()));
           }
         }
         return null;
@@ -145,18 +247,18 @@ class PreviewScreenState extends State<PreviewScreen> {
       if (userSelectedIndex.contains(rowIndex)) {
         if (selectionMode == SelectionMode.entireRow) {
           return WidgetStateProperty.all(
-              Colors.green.withAlpha((0.1 * 255).round()));
+              colors.correctRowColor.withAlpha((0.2 * 255).round()));
         }
       } else {
         if (_selectedRowIndex.contains(rowIndex)) {
           if (selectionMode == SelectionMode.entireRow) {
             return WidgetStateProperty.all(
-                Colors.red.withAlpha((0.4 * 255).round()));
+                colors.incorrectRowColor.withAlpha((0.4 * 255).round()));
           }
         } else if (userSelectedIndex.contains(rowIndex)) {
           if (selectionMode == SelectionMode.entireRow) {
             return WidgetStateProperty.all(
-                Colors.green.withAlpha((0.4 * 255).round()));
+                colors.correctRowColor.withAlpha((0.4 * 255).round()));
           }
         }
       }
@@ -183,12 +285,15 @@ class PreviewScreenState extends State<PreviewScreen> {
       Color? cellColor;
       bool isSelectable = true;
 
+      final colors =
+          TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
       if (strikePrice != null && strikeColumnIndex != null) {
         if (currentRowStrike < strikePrice && columnIndex < strikeColumnIndex) {
-          cellColor = Colors.blue.withAlpha((0.1 * 255).round());
+          cellColor = colors.selectedRowColor.withAlpha((0.1 * 255).round());
         } else if (currentRowStrike > strikePrice &&
             columnIndex > strikeColumnIndex) {
-          cellColor = Colors.red.withAlpha((0.1 * 255).round());
+          cellColor = colors.incorrectRowColor.withAlpha((0.1 * 255).round());
         }
       }
 
@@ -206,18 +311,19 @@ class PreviewScreenState extends State<PreviewScreen> {
         }
         if (shouldHighlight) {
           if (userSelectedIndex.contains(rowIndex)) {
-            cellColor = Colors.green.withAlpha((0.1 * 255).round());
+            cellColor = colors.correctRowColor.withAlpha((0.2 * 255).round());
           } else if (_selectedRowIndex.contains(rowIndex)) {
             if (_isChecked &&
                 !widget.previewData.correctRowIndices.contains(rowIndex)) {
-              cellColor = Colors.red.withAlpha((0.4 * 255).round());
+              cellColor =
+                  colors.incorrectRowColor.withAlpha((0.2 * 255).round());
             } else {
-              cellColor = Colors.blue.withAlpha((0.4 * 255).round());
+              cellColor =
+                  colors.selectedRowColor.withAlpha((0.2 * 255).round());
             }
           }
         }
       }
-
       switch (selectionMode) {
         case SelectionMode.callOnly:
           isSelectable =
@@ -233,13 +339,23 @@ class PreviewScreenState extends State<PreviewScreen> {
       }
 
       return DataCell(
-        Container(
-          color: cellColor,
-          width: 100,
-          alignment: Alignment.center,
-          child: InkWell(
-            onTap: isSelectable ? () => _handleCellTap(rowIndex) : null,
-            child: _buildCellContent(rowIndex, data, column.columnType),
+        Center(
+          child: Container(
+            width: 74,
+            margin: const EdgeInsets.only(bottom: 2, left: 2),
+            decoration: BoxDecoration(
+              color: cellColor,
+              borderRadius: BorderRadius.circular(14),
+              border:
+                  Border.all(color: colors.optionChainStrokeColor, width: 1.8),
+            ),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: isSelectable ? () => _handleCellTap(rowIndex) : null,
+              child: Center(
+                child: _buildCellContent(rowIndex, data, column.columnType),
+              ),
+            ),
           ),
         ),
       );
@@ -249,7 +365,10 @@ class PreviewScreenState extends State<PreviewScreen> {
   Widget _buildCellContent(
       int rowIndex, OptionData data, ColumnType columnType) {
     final text = DataTransformer.getCellText(data, columnType);
-
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     if (!widget.previewData.isEditorMode &&
         widget.previewData.settings?.isBuySellVisible == true &&
         (columnType == ColumnType.callPremium ||
@@ -269,7 +388,7 @@ class PreviewScreenState extends State<PreviewScreen> {
                     decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12)),
-                    child: const Text('Buy', style: TextStyle(fontSize: 10))),
+                    child: const Text('B', style: TextStyle(fontSize: 10))),
               ),
               const SizedBox(height: 6),
               InkWell(
@@ -280,15 +399,22 @@ class PreviewScreenState extends State<PreviewScreen> {
                     decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(12)),
-                    child: const Text('Sell', style: TextStyle(fontSize: 10))),
+                    child: const Text('S', style: TextStyle(fontSize: 10))),
               ),
             ],
           ),
         ],
       );
     }
-    return Text(text,
-        overflow: TextOverflow.ellipsis, textAlign: TextAlign.center);
+    return Text(
+      text,
+      overflow: TextOverflow.ellipsis,
+      style: textStyles.mediumNormal.copyWith(
+          fontSize: 16,
+          color: columnType == ColumnType.strike
+              ? colors.textColorSecondary
+              : colors.axisColor),
+    );
   }
 
   void _handleCellTap(int rowIndex) {
