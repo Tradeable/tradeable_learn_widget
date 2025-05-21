@@ -65,6 +65,10 @@ class PreviewScreenState extends State<PreviewScreen> {
   final ScrollController _leftScrollController = ScrollController();
   final ScrollController _rightScrollController = ScrollController();
   bool _isScrolling = false;
+  List<Map<int, int>> correctBucketIndexes = [];
+  Map<int, bool> bucketSelections = {};
+  Map<int, bool> bucketCallSelections = {};
+  Map<int, bool> bucketPutSelections = {};
 
   @override
   void initState() {
@@ -102,6 +106,56 @@ class PreviewScreenState extends State<PreviewScreen> {
         });
       }
     });
+  }
+
+  void chooseBucketRows(List<Map<int, int>> bucketRows) {
+    setState(() {
+      correctBucketIndexes = bucketRows;
+      for (var bucketRow in bucketRows) {
+        final rowIndex = bucketRow.keys.first;
+        final side = bucketRow.values.first;
+
+        if (side == 0) {
+          bucketCallSelections[rowIndex] = true;
+        } else {
+          bucketPutSelections[rowIndex] = true;
+        }
+        bucketSelections[rowIndex] = true;
+      }
+      _isChecked = true;
+    });
+  }
+
+  List<int>? getCorrectRowIndex() {
+    final selectionMode =
+        widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
+    if (selectionMode == SelectionMode.bucketRow) {
+      return bucketSelections.entries
+          .where((entry) => entry.value)
+          .map((entry) => entry.key)
+          .toList();
+    }
+    return _selectedRowIndex;
+  }
+
+  List<Map<int, int>>? getBucketRows() {
+    final selectionMode =
+        widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
+    if (selectionMode == SelectionMode.bucketRow) {
+      List<Map<int, int>> bucketRows = [];
+      bucketCallSelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          bucketRows.add({rowIndex: 0});
+        }
+      });
+      bucketPutSelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          bucketRows.add({rowIndex: 1});
+        }
+      });
+      return bucketRows;
+    }
+    return null;
   }
 
   List<ColumnConfig> _getFilteredColumns({bool isLeftSide = false}) {
@@ -309,7 +363,16 @@ class PreviewScreenState extends State<PreviewScreen> {
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
-          onTap: isSelectable ? () => _handleCellTap(rowIndex) : null,
+          onTap: isSelectable
+              ? () {
+                  if (selectionMode == SelectionMode.bucketRow) {
+                    _handleBucketCellTap(
+                        rowIndex, actualColumnIndex, strikeColumnIndex);
+                  } else {
+                    _handleCellTap(rowIndex);
+                  }
+                }
+              : null,
           child: Center(
             child: _buildCellContent(rowIndex, data, column.columnType),
           ),
@@ -341,7 +404,53 @@ class PreviewScreenState extends State<PreviewScreen> {
       }
     }
 
-    if (_selectedRowIndex.contains(rowIndex) ||
+    if (selectionMode == SelectionMode.bucketRow) {
+      if (!_isChecked) {
+        if (bucketSelections.containsKey(rowIndex) &&
+            strikeColumnIndex != null) {
+          if (actualColumnIndex < strikeColumnIndex &&
+              bucketCallSelections.containsKey(rowIndex)) {
+            cellColor = colors.selectedRowColor.withAlpha((0.4 * 255).round());
+          } else if (actualColumnIndex > strikeColumnIndex &&
+              bucketPutSelections.containsKey(rowIndex)) {
+            cellColor = colors.selectedRowColor.withAlpha((0.4 * 255).round());
+          }
+        }
+      } else {
+        bool isCorrect = false;
+        for (var correct in correctBucketIndexes) {
+          if (correct.containsKey(rowIndex)) {
+            final correctSide = correct[rowIndex];
+            if (strikeColumnIndex != null) {
+              if (actualColumnIndex < strikeColumnIndex &&
+                  correctSide == 0 &&
+                  bucketCallSelections.containsKey(rowIndex)) {
+                isCorrect = true;
+              } else if (actualColumnIndex > strikeColumnIndex &&
+                  correctSide == 1 &&
+                  bucketPutSelections.containsKey(rowIndex)) {
+                isCorrect = true;
+              }
+            }
+            break;
+          }
+        }
+
+        if (strikeColumnIndex != null) {
+          if (actualColumnIndex < strikeColumnIndex &&
+              bucketCallSelections.containsKey(rowIndex)) {
+            cellColor = isCorrect
+                ? colors.correctRowColor.withAlpha((0.4 * 255).round())
+                : colors.incorrectRowColor.withAlpha((0.4 * 255).round());
+          } else if (actualColumnIndex > strikeColumnIndex &&
+              bucketPutSelections.containsKey(rowIndex)) {
+            cellColor = isCorrect
+                ? colors.correctRowColor.withAlpha((0.4 * 255).round())
+                : colors.incorrectRowColor.withAlpha((0.4 * 255).round());
+          }
+        }
+      }
+    } else if (_selectedRowIndex.contains(rowIndex) ||
         userSelectedIndex.contains(rowIndex)) {
       bool shouldHighlight = false;
       if (selectionMode == SelectionMode.callOnly) {
@@ -384,6 +493,9 @@ class PreviewScreenState extends State<PreviewScreen> {
             actualColumnIndex >= strikeColumnIndex;
       case SelectionMode.entireRow:
         return true;
+      case SelectionMode.bucketRow:
+        return strikeColumnIndex != null &&
+            actualColumnIndex != strikeColumnIndex;
     }
   }
 
@@ -407,8 +519,6 @@ class PreviewScreenState extends State<PreviewScreen> {
       _isChecked = true;
     });
   }
-
-  List<int>? getCorrectRowIndex() => _selectedRowIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -578,10 +688,76 @@ class PreviewScreenState extends State<PreviewScreen> {
     );
   }
 
-  void _handleCellTap(int rowIndex) {
+  void _handleBucketCellTap(
+      int rowIndex, int columnIndex, int? strikeColumnIndex) {
+    if (strikeColumnIndex == null) return;
+
     setState(() {
       final maxSelectedRows =
           widget.previewData.settings?.maxSelectableRows ?? 0;
+
+      if (columnIndex < strikeColumnIndex) {
+        if (bucketCallSelections.containsKey(rowIndex)) {
+          bucketCallSelections.remove(rowIndex);
+          if (!bucketPutSelections.containsKey(rowIndex)) {
+            bucketSelections.remove(rowIndex);
+          }
+        } else {
+          if (maxSelectedRows == 1) {
+            bucketCallSelections.clear();
+            bucketPutSelections.clear();
+            bucketSelections.clear();
+            bucketCallSelections[rowIndex] = true;
+            bucketSelections[rowIndex] = true;
+          } else if (maxSelectedRows > 1) {
+            if (bucketSelections.length < maxSelectedRows) {
+              bucketCallSelections[rowIndex] = true;
+              bucketSelections[rowIndex] = true;
+            }
+          } else {
+            bucketCallSelections[rowIndex] = true;
+            bucketSelections[rowIndex] = true;
+          }
+        }
+      } else if (columnIndex > strikeColumnIndex) {
+        if (bucketPutSelections.containsKey(rowIndex)) {
+          bucketPutSelections.remove(rowIndex);
+          if (!bucketCallSelections.containsKey(rowIndex)) {
+            bucketSelections.remove(rowIndex);
+          }
+        } else {
+          if (maxSelectedRows == 1) {
+            bucketCallSelections.clear();
+            bucketPutSelections.clear();
+            bucketSelections.clear();
+            bucketPutSelections[rowIndex] = true;
+            bucketSelections[rowIndex] = true;
+          } else if (maxSelectedRows > 1) {
+            if (bucketSelections.length < maxSelectedRows) {
+              bucketPutSelections[rowIndex] = true;
+              bucketSelections[rowIndex] = true;
+            }
+          } else {
+            bucketPutSelections[rowIndex] = true;
+            bucketSelections[rowIndex] = true;
+          }
+        }
+      }
+      _isChecked = false;
+    });
+  }
+
+  void _handleCellTap(int rowIndex) {
+    setState(() {
+      final selectionMode =
+          widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
+      final maxSelectedRows =
+          widget.previewData.settings?.maxSelectableRows ?? 0;
+
+      if (selectionMode == SelectionMode.bucketRow) {
+        return;
+      }
+
       if (maxSelectedRows == 1) {
         if (_selectedRowIndex.contains(rowIndex)) {
           _selectedRowIndex.remove(rowIndex);
