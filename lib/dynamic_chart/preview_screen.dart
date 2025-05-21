@@ -57,39 +57,333 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class PreviewScreenState extends State<PreviewScreen> {
+  static const double cellHeight = 55;
+  static const double cellWidth = 75;
   List<int> _selectedRowIndex = [];
   bool _isChecked = false;
   List<int> userSelectedIndex = [];
-  final ScrollController _horizontalScrollController = ScrollController();
+  final ScrollController _leftScrollController = ScrollController();
+  final ScrollController _rightScrollController = ScrollController();
+  bool _isScrolling = false;
 
   @override
   void initState() {
     super.initState();
     _selectedRowIndex = List.from(widget.previewData.selectedRowIndices);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToStrikePrice();
+      _setupScrollSync();
     });
   }
 
   @override
   void dispose() {
-    _horizontalScrollController.dispose();
+    _leftScrollController.dispose();
+    _rightScrollController.dispose();
     super.dispose();
   }
 
-  void _scrollToStrikePrice() {
-    final strikeColumnIndex = _getStrikeColumnIndex();
-    if (strikeColumnIndex != null) {
-      final scrollPosition = strikeColumnIndex * 75.0;
-      final screenWidth = MediaQuery.of(context).size.width;
-      final centerPosition = scrollPosition - (screenWidth / 2) + 75;
-      final scrollTo = centerPosition < 0 ? 0 : centerPosition;
+  void _setupScrollSync() {
+    _leftScrollController.addListener(() {
+      if (!_isScrolling && _rightScrollController.hasClients) {
+        _isScrolling = true;
+        _rightScrollController.jumpTo(_leftScrollController.offset);
+        Future.delayed(const Duration(milliseconds: 0), () {
+          _isScrolling = false;
+        });
+      }
+    });
 
-      _horizontalScrollController.animateTo(
-        scrollTo.toDouble(),
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeOut,
-      );
+    _rightScrollController.addListener(() {
+      if (!_isScrolling && _leftScrollController.hasClients) {
+        _isScrolling = true;
+        _leftScrollController.jumpTo(_rightScrollController.offset);
+        Future.delayed(const Duration(milliseconds: 0), () {
+          _isScrolling = false;
+        });
+      }
+    });
+  }
+
+  List<ColumnConfig> _getFilteredColumns({bool isLeftSide = false}) {
+    final columns = widget.previewData.columns
+        .where((column) =>
+            column.isColumnVisible && column.columnType != ColumnType.strike)
+        .toList();
+
+    switch (widget.previewData.visibility) {
+      case OptionChainVisibility.call:
+        return columns
+            .where((column) =>
+                !column.columnType.name.toLowerCase().contains("put"))
+            .toList();
+      case OptionChainVisibility.put:
+        return columns
+            .where((column) =>
+                !column.columnType.name.toLowerCase().contains("call"))
+            .toList();
+      case OptionChainVisibility.both:
+        if (isLeftSide) {
+          return columns.reversed
+              .where((column) =>
+                  column.columnType.name.toLowerCase().contains("call"))
+              .toList();
+        } else {
+          return columns
+              .where((column) =>
+                  column.columnType.name.toLowerCase().contains("put"))
+              .toList();
+        }
+    }
+  }
+
+  Widget _buildTableBasedOnVisibility() {
+    switch (widget.previewData.visibility) {
+      case OptionChainVisibility.call:
+        final columns = _getFilteredColumns();
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _buildScrollableSection(
+                columns: columns,
+                controller: _leftScrollController,
+              ),
+            ),
+            _buildStickyStrikeColumn(),
+          ],
+        );
+      case OptionChainVisibility.put:
+        final columns = _getFilteredColumns();
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildStickyStrikeColumn(),
+            Expanded(
+              child: _buildScrollableSection(
+                columns: columns,
+                controller: _rightScrollController,
+              ),
+            ),
+          ],
+        );
+      case OptionChainVisibility.both:
+        final leftColumns = _getFilteredColumns(isLeftSide: true);
+        final rightColumns = _getFilteredColumns(isLeftSide: false);
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _buildScrollableSection(
+                columns: leftColumns,
+                controller: _leftScrollController,
+              ),
+            ),
+            _buildStickyStrikeColumn(),
+            Expanded(
+              child: _buildScrollableSection(
+                columns: rightColumns,
+                controller: _rightScrollController,
+              ),
+            ),
+          ],
+        );
+    }
+  }
+
+  Widget _buildScrollableSection({
+    required List<ColumnConfig> columns,
+    required ScrollController controller,
+  }) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      controller: controller,
+      child: SizedBox(
+        width: columns.length * cellWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildScrollableHeaders(columns: columns),
+            Expanded(child: _buildScrollableRows(columns: columns)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScrollableHeaders({required List<ColumnConfig> columns}) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+
+    return SizedBox(
+      height: 56,
+      child: Row(
+        children: columns
+            .map((column) => Container(
+                  padding: const EdgeInsets.all(2),
+                  width: cellWidth,
+                  color: colors.headerColumnColor,
+                  alignment: Alignment.center,
+                  child: AutoSizeText(
+                    column.columnTitle,
+                    style: textStyles.smallNormal,
+                    minFontSize: 10,
+                    maxFontSize: 14,
+                    textAlign: TextAlign.center,
+                  ),
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _buildScrollableRows({required List<ColumnConfig> columns}) {
+    final strikeColumnIndex = _getStrikeColumnIndex();
+
+    return SizedBox(
+      height: widget.previewData.optionData.length * cellHeight,
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: widget.previewData.optionData.length,
+        itemBuilder: (context, rowIndex) {
+          final data = widget.previewData.optionData[rowIndex];
+          return SizedBox(
+            height: cellHeight,
+            child: Row(
+              children: columns.asMap().entries.map((entry) {
+                final column = entry.value;
+                final actualColumnIndex =
+                    widget.previewData.columns.indexOf(column);
+                return _buildCell(
+                  rowIndex: rowIndex,
+                  data: data,
+                  column: column,
+                  actualColumnIndex: actualColumnIndex,
+                  strikeColumnIndex: strikeColumnIndex,
+                );
+              }).toList(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildCell({
+    required int rowIndex,
+    required OptionData data,
+    required ColumnConfig column,
+    required int actualColumnIndex,
+    required int? strikeColumnIndex,
+  }) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final strikePrice = widget.previewData.strikePrice;
+    final currentRowStrike = data.strike;
+    final selectionMode =
+        widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
+
+    Color? cellColor = _getCellColor(
+      rowIndex: rowIndex,
+      actualColumnIndex: actualColumnIndex,
+      strikeColumnIndex: strikeColumnIndex,
+      strikePrice: strikePrice,
+      currentRowStrike: currentRowStrike,
+      selectionMode: selectionMode,
+    );
+
+    bool isSelectable = _isCellSelectable(
+      actualColumnIndex: actualColumnIndex,
+      strikeColumnIndex: strikeColumnIndex,
+      selectionMode: selectionMode,
+    );
+
+    return Center(
+      child: Container(
+        width: cellWidth,
+        decoration: BoxDecoration(
+          color: cellColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: colors.optionChainStrokeColor, width: 1.8),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: isSelectable ? () => _handleCellTap(rowIndex) : null,
+          child: Center(
+            child: _buildCellContent(rowIndex, data, column.columnType),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color? _getCellColor({
+    required int rowIndex,
+    required int actualColumnIndex,
+    required int? strikeColumnIndex,
+    required double? strikePrice,
+    required double currentRowStrike,
+    required SelectionMode selectionMode,
+  }) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+    Color? cellColor;
+
+    if (strikePrice != null && strikeColumnIndex != null) {
+      if (currentRowStrike < strikePrice &&
+          actualColumnIndex < strikeColumnIndex) {
+        cellColor = colors.selectedRowColor.withAlpha((0.1 * 255).round());
+      } else if (currentRowStrike > strikePrice &&
+          actualColumnIndex > strikeColumnIndex) {
+        cellColor = colors.incorrectRowColor.withAlpha((0.1 * 255).round());
+      }
+    }
+
+    if (_selectedRowIndex.contains(rowIndex) ||
+        userSelectedIndex.contains(rowIndex)) {
+      bool shouldHighlight = false;
+      if (selectionMode == SelectionMode.callOnly) {
+        shouldHighlight =
+            strikeColumnIndex != null && actualColumnIndex <= strikeColumnIndex;
+      } else if (selectionMode == SelectionMode.putOnly) {
+        shouldHighlight =
+            strikeColumnIndex != null && actualColumnIndex >= strikeColumnIndex;
+      } else {
+        shouldHighlight = true;
+      }
+      if (shouldHighlight) {
+        if (userSelectedIndex.contains(rowIndex)) {
+          cellColor = colors.correctRowColor.withAlpha((0.2 * 255).round());
+        } else if (_selectedRowIndex.contains(rowIndex)) {
+          if (_isChecked &&
+              !widget.previewData.correctRowIndices.contains(rowIndex)) {
+            cellColor = colors.incorrectRowColor.withAlpha((0.2 * 255).round());
+          } else {
+            cellColor = colors.selectedRowColor.withAlpha((0.2 * 255).round());
+          }
+        }
+      }
+    }
+
+    return cellColor;
+  }
+
+  bool _isCellSelectable({
+    required int actualColumnIndex,
+    required int? strikeColumnIndex,
+    required SelectionMode selectionMode,
+  }) {
+    switch (selectionMode) {
+      case SelectionMode.callOnly:
+        return strikeColumnIndex != null &&
+            actualColumnIndex <= strikeColumnIndex;
+      case SelectionMode.putOnly:
+        return strikeColumnIndex != null &&
+            actualColumnIndex >= strikeColumnIndex;
+      case SelectionMode.entireRow:
+        return true;
     }
   }
 
@@ -127,239 +421,106 @@ class PreviewScreenState extends State<PreviewScreen> {
             expiry: DateFormat('dd MMM')
                 .format(widget.previewData.expiryDate ?? DateTime.now()),
           ),
-          Expanded(child: _buildOptionsTable()),
+          Expanded(
+              child: SingleChildScrollView(
+                  child: SizedBox(
+                      height:
+                          widget.previewData.optionData.length * cellHeight +
+                              56,
+                      child: _buildTableBasedOnVisibility()))),
         ],
       ),
     );
   }
 
-  Widget _buildOptionsTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        controller: _horizontalScrollController,
-        child: Stack(
-          children: [
-            ..._buildBackgroundColumns(),
-            DataTable(
-              columnSpacing: 0,
-              horizontalMargin: 0,
-              dividerThickness: 0.01,
-              dataRowMinHeight: 30,
-              dataRowMaxHeight: 70,
-              columns: _buildDataColumns(),
-              rows: _buildDataRows(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  List<DataColumn> _buildDataColumns() {
+  Widget _buildStickyStrikeColumn() {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
-    return widget.previewData.columns
-        .where((column) => column.isColumnVisible)
-        .map((column) => DataColumn(
-              label: Container(
-                width: 75,
-                color: column.columnType == ColumnType.strike
-                    ? colors.strikePriceHeaderColor
-                    : colors.headerColumnColor,
-                alignment: Alignment.center,
-                child: AutoSizeText(
-                  column.columnTitle,
-                  style: textStyles.smallNormal,
-                  minFontSize: 10,
-                  maxFontSize: 14,
-                ),
-              ),
-            ))
-        .toList();
-  }
+    final strikeColumn = widget.previewData.columns.firstWhere(
+        (column) => column.columnType == ColumnType.strike,
+        orElse: () => throw Exception("Strike column not found"));
 
-  List<Widget> _buildBackgroundColumns() {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-
-    double totalWidth = 0;
-    List<Widget> columns = [];
-    int strikeColumnIndex = -1;
-
-    final visibleColumns = widget.previewData.columns
-        .where((column) => column.isColumnVisible)
-        .toList();
-
-    for (int i = 0; i < visibleColumns.length; i++) {
-      if (visibleColumns[i].columnType == ColumnType.strike) {
-        strikeColumnIndex = i;
-        break;
-      }
-      totalWidth += 76;
-    }
-
-    if (strikeColumnIndex >= 0) {
-      columns.add(Positioned(
-        left: totalWidth,
-        top: 0,
-        bottom: 0,
-        width: 78,
-        child: Container(color: colors.strikePriceColumnColor),
-      ));
-    }
-
-    return columns;
-  }
-
-  List<DataRow> _buildDataRows() {
-    final strikeColumnIndex = _getStrikeColumnIndex();
-    return widget.previewData.optionData.asMap().entries.map((entry) {
-      final rowIndex = entry.key;
-      return DataRow(
-        color: _getRowColor(rowIndex, strikeColumnIndex),
-        cells: _buildRowCells(rowIndex, entry.value, strikeColumnIndex),
-      );
-    }).toList();
-  }
-
-  WidgetStateProperty<Color>? _getRowColor(
-      int rowIndex, int? strikeColumnIndex) {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-
-    final selectionMode =
-        widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
-    if (widget.previewData.visibility == OptionChainVisibility.both) {
-      if (!_isChecked) {
-        if (_selectedRowIndex.contains(rowIndex)) {
-          if (selectionMode == SelectionMode.entireRow) {
-            return WidgetStateProperty.all(
-                colors.selectedRowColor.withAlpha((0.2 * 255).round()));
-          }
-        }
-        return null;
-      }
-      if (userSelectedIndex.contains(rowIndex)) {
-        if (selectionMode == SelectionMode.entireRow) {
-          return WidgetStateProperty.all(
-              colors.correctRowColor.withAlpha((0.2 * 255).round()));
-        }
-      } else {
-        if (_selectedRowIndex.contains(rowIndex)) {
-          if (selectionMode == SelectionMode.entireRow) {
-            return WidgetStateProperty.all(
-                colors.incorrectRowColor.withAlpha((0.4 * 255).round()));
-          }
-        } else if (userSelectedIndex.contains(rowIndex)) {
-          if (selectionMode == SelectionMode.entireRow) {
-            return WidgetStateProperty.all(
-                colors.correctRowColor.withAlpha((0.4 * 255).round()));
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  List<DataCell> _buildRowCells(
-      int rowIndex, OptionData data, int? strikeColumnIndex) {
-    final strikePrice = widget.previewData.strikePrice;
-    final currentRowStrike = data.strike;
-    final selectionMode =
-        widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
-
-    return widget.previewData.columns
-        .where((column) => column.isColumnVisible)
-        .toList()
-        .asMap()
-        .entries
-        .map((entry) {
-      final columnIndex = entry.key;
-      final column = entry.value;
-
-      Color? cellColor;
-      bool isSelectable = true;
-
-      final colors =
-          TLW().themeData?.customColors ?? Theme.of(context).customColors;
-
-      if (strikePrice != null && strikeColumnIndex != null) {
-        if (currentRowStrike < strikePrice && columnIndex < strikeColumnIndex) {
-          cellColor = colors.selectedRowColor.withAlpha((0.1 * 255).round());
-        } else if (currentRowStrike > strikePrice &&
-            columnIndex > strikeColumnIndex) {
-          cellColor = colors.incorrectRowColor.withAlpha((0.1 * 255).round());
-        }
-      }
-
-      if (_selectedRowIndex.contains(rowIndex) ||
-          userSelectedIndex.contains(rowIndex)) {
-        bool shouldHighlight = false;
-        if (selectionMode == SelectionMode.callOnly) {
-          shouldHighlight =
-              strikeColumnIndex != null && columnIndex <= strikeColumnIndex;
-        } else if (selectionMode == SelectionMode.putOnly) {
-          shouldHighlight =
-              strikeColumnIndex != null && columnIndex >= strikeColumnIndex;
-        } else {
-          shouldHighlight = true;
-        }
-        if (shouldHighlight) {
-          if (userSelectedIndex.contains(rowIndex)) {
-            cellColor = colors.correctRowColor.withAlpha((0.2 * 255).round());
-          } else if (_selectedRowIndex.contains(rowIndex)) {
-            if (_isChecked &&
-                !widget.previewData.correctRowIndices.contains(rowIndex)) {
-              cellColor =
-                  colors.incorrectRowColor.withAlpha((0.2 * 255).round());
-            } else {
-              cellColor =
-                  colors.selectedRowColor.withAlpha((0.2 * 255).round());
-            }
-          }
-        }
-      }
-      switch (selectionMode) {
-        case SelectionMode.callOnly:
-          isSelectable =
-              strikeColumnIndex != null && columnIndex <= strikeColumnIndex;
-          break;
-        case SelectionMode.putOnly:
-          isSelectable =
-              strikeColumnIndex != null && columnIndex >= strikeColumnIndex;
-          break;
-        case SelectionMode.entireRow:
-          isSelectable = true;
-          break;
-      }
-
-      return DataCell(
-        Center(
-          child: Container(
-            width: 74,
-            margin: const EdgeInsets.only(bottom: 2, left: 2),
-            decoration: BoxDecoration(
-              color: cellColor,
-              borderRadius: BorderRadius.circular(14),
-              border:
-                  Border.all(color: colors.optionChainStrokeColor, width: 1.8),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(14),
-              onTap: isSelectable ? () => _handleCellTap(rowIndex) : null,
-              child: Center(
-                child: _buildCellContent(rowIndex, data, column.columnType),
-              ),
+    return Container(
+      width: cellWidth,
+      decoration: BoxDecoration(color: colors.strikePriceColumnColor),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: 56,
+            padding: const EdgeInsets.all(2),
+            color: colors.strikePriceHeaderColor,
+            alignment: Alignment.center,
+            child: AutoSizeText(
+              strikeColumn.columnTitle,
+              style: textStyles.smallNormal,
+              minFontSize: 10,
+              maxFontSize: 14,
+              textAlign: TextAlign.center,
             ),
           ),
-        ),
-      );
-    }).toList();
+          Expanded(
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.previewData.optionData.length,
+              itemBuilder: (context, rowIndex) {
+                final data = widget.previewData.optionData[rowIndex];
+                final cellContent =
+                    _buildCellContent(rowIndex, data, ColumnType.strike);
+                final colors = TLW().themeData?.customColors ??
+                    Theme.of(context).customColors;
+
+                Color? cellColor;
+
+                if (_selectedRowIndex.contains(rowIndex) ||
+                    userSelectedIndex.contains(rowIndex)) {
+                  if (userSelectedIndex.contains(rowIndex)) {
+                    cellColor =
+                        colors.correctRowColor.withAlpha((0.2 * 255).round());
+                  } else if (_selectedRowIndex.contains(rowIndex)) {
+                    if (_isChecked &&
+                        !widget.previewData.correctRowIndices
+                            .contains(rowIndex)) {
+                      cellColor = colors.incorrectRowColor
+                          .withAlpha((0.2 * 255).round());
+                    } else {
+                      cellColor = colors.selectedRowColor
+                          .withAlpha((0.2 * 255).round());
+                    }
+                  }
+                }
+
+                return Container(
+                  height: cellHeight,
+                  alignment: Alignment.center,
+                  child: Container(
+                    width: cellWidth,
+                    margin: const EdgeInsets.only(bottom: 2, left: 2),
+                    decoration: BoxDecoration(
+                      color: cellColor,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                          color: colors.optionChainStrokeColor, width: 1.8),
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+                      onTap: () => _handleCellTap(rowIndex),
+                      child: Center(
+                        child: cellContent,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildCellContent(

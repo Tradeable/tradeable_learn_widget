@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/option_chain/info_text_container.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -28,16 +27,16 @@ class OptionChainHeader extends StatelessWidget {
               renderSettingsButtonContainer(context)
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const InfoTextContainer(
-                  text: "Call", isRightAligned: true, icon: Icons.arrow_left),
-              InfoTextContainer(text: expiry, isRightAligned: false),
-              const InfoTextContainer(
-                  text: "Put", isRightAligned: false, icon: Icons.arrow_right),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     const InfoTextContainer(
+          //         text: "Call", isRightAligned: true, icon: Icons.arrow_left),
+          //     InfoTextContainer(text: expiry, isRightAligned: false),
+          //     const InfoTextContainer(
+          //         text: "Put", isRightAligned: false, icon: Icons.arrow_right),
+          //   ],
+          // ),
           const SizedBox(height: 10)
         ],
       ),

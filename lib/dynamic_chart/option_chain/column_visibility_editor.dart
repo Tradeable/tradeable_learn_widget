@@ -30,12 +30,15 @@ class _ColumnVisibilityEditorState extends State<ColumnVisibilityEditor> {
   void _groupColumns() {
     _columnGroups.clear();
     for (ColumnConfig column in _allColumns) {
-      final typeName =
-          column.columnTitle.replaceAll('Call ', '').replaceAll('Put ', '');
-      if (!_columnGroups.containsKey(typeName)) {
-        _columnGroups[typeName] = [];
+      String groupName;
+      if (column.columnType.name.startsWith('call')) {
+        groupName = 'Call';
+      } else if (column.columnType.name.startsWith('put')) {
+        groupName = 'Put';
+      } else {
+        groupName = 'Other';
       }
-      _columnGroups[typeName]!.add(column);
+      _columnGroups.putIfAbsent(groupName, () => []).add(column);
     }
   }
 
