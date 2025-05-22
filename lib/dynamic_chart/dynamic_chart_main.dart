@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -57,9 +58,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   List<AddOptionChainTask> optionChainTasks = [];
   AddOptionChainTask? correctOptionChainTask;
 
-  int? _selectedRating;
-  final TextEditingController _feedbackController = TextEditingController();
-
   @override
   void initState() {
     recipe = widget.model.recipe;
@@ -68,12 +66,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       dd();
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _feedbackController.dispose();
-    super.dispose();
   }
 
   void dd() async {
@@ -238,6 +230,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             promptTask?.promptText ?? "",
                             style: textStyles.smallNormal,
                           ),
+                          const SizedBox(height: 10),
                           Row(
                             children: [
                               ...pages.map((page) => Padding(
@@ -283,12 +276,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                     ),
                                   )),
                               const Spacer(),
-                              IconButton(
-                                icon: Icon(Icons.feedback_outlined,
-                                    color: colors.textColorSecondary, size: 20),
-                                tooltip: "Provide feedback",
-                                onPressed: _showFeedbackDialog,
-                              ),
+                              const FeedbackWidget()
                             ],
                           ),
                         ],
@@ -421,156 +409,5 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             ),
           );
         });
-  }
-
-  // Feedback dialog to capture user's rating and comments
-  void _showFeedbackDialog() {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles =
-        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-
-    _selectedRating = null;
-    _feedbackController.clear();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            // Helper to get hint text based on rating
-            String getHintText() {
-              switch (_selectedRating) {
-                case 1:
-                  return "What made this content so unhelpful?";
-                case 2:
-                  return "What could have made this more helpful?";
-                case 3:
-                  return "What were you looking for specifically?";
-                case 4:
-                  return "What improvements would you suggest?";
-                default:
-                  return "Tell us your thoughts...";
-              }
-            }
-
-            // Helper to get rating description
-            String getRatingDescription() {
-              switch (_selectedRating) {
-                case 1:
-                  return "Absolute rubbish";
-                case 2:
-                  return "Nice but not helpful";
-                case 3:
-                  return "Helpful but not what I was looking for";
-                case 4:
-                  return "I liked it but need improvements";
-                case 5:
-                  return "More of this!";
-                default:
-                  return "Rate your experience";
-              }
-            }
-
-            return AlertDialog(
-              backgroundColor: colors.cardColorPrimary,
-              title: Text("Your Feedback", style: textStyles.smallBold),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("How would you rate this content?",
-                        style: textStyles.smallNormal),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(5, (index) {
-                        final starValue = index + 1;
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedRating = starValue;
-                            });
-                          },
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Icon(
-                              _selectedRating != null &&
-                                      _selectedRating! >= starValue
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              color: _selectedRating != null &&
-                                      _selectedRating! >= starValue
-                                  ? colors.primary
-                                  : colors.textColorSecondary,
-                              size: 28,
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: 5),
-                    Center(
-                      child: Text(
-                        getRatingDescription(),
-                        style: textStyles.smallNormal.copyWith(
-                          color: colors.textColorSecondary,
-                          //fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    if (_selectedRating != null && _selectedRating! < 5) ...[
-                      Text("Your Review", style: textStyles.smallNormal),
-                      const SizedBox(height: 8),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: colors.cardColorSecondary),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: TextField(
-                          controller: _feedbackController,
-                          maxLines: 3,
-                          style: textStyles.smallNormal,
-                          decoration: InputDecoration(
-                            hintText: getHintText(),
-                            hintStyle: textStyles.smallNormal
-                                .copyWith(color: colors.textColorSecondary),
-                            contentPadding: const EdgeInsets.all(10),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  child: Text("Cancel",
-                      style: textStyles.smallNormal
-                          .copyWith(color: colors.textColorSecondary)),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text("Submit",
-                      style: textStyles.smallNormal
-                          .copyWith(color: colors.primary)),
-                  onPressed: () {
-                    // Add logic to handle feedback submission
-                    // For now just close the dialog
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
   }
 }
