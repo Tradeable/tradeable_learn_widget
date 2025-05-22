@@ -35,6 +35,16 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   final GlobalKey<ChartState> _chartKey = GlobalKey();
   final GlobalKey<PreviewScreenState> _previewScreenKey = GlobalKey();
   late Recipe recipe;
+  final List<Map<String, dynamic>> pages = [
+    {
+      'title': 'Chart',
+      'index': 0,
+    },
+    {
+      'title': 'Option Chain',
+      'index': 1,
+    },
+  ];
 
   int taskPointer = 0;
   late Task currentTask;
@@ -228,68 +238,62 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             promptTask?.promptText ?? "",
                             style: textStyles.smallNormal,
                           ),
+                          Row(
+                            children: [
+                              ...pages.map((page) => Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          switchToOptionChain =
+                                              page['index'] == 1;
+                                          controller.animateToPage(
+                                              page['index'],
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              curve: Curves.easeIn);
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          color: (page['index'] == 0 &&
+                                                      !switchToOptionChain) ||
+                                                  (page['index'] == 1 &&
+                                                      switchToOptionChain)
+                                              ? colors.primary
+                                              : colors.cardColorPrimary,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        child: Text(
+                                          page['title'],
+                                          style:
+                                              textStyles.smallNormal.copyWith(
+                                            color: (page['index'] == 0 &&
+                                                        !switchToOptionChain) ||
+                                                    (page['index'] == 1 &&
+                                                        switchToOptionChain)
+                                                ? colors.cardColorPrimary
+                                                : colors.textColorSecondary,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                              const Spacer(),
+                              IconButton(
+                                icon: Icon(Icons.feedback_outlined,
+                                    color: colors.textColorSecondary, size: 20),
+                                tooltip: "Provide feedback",
+                                onPressed: _showFeedbackDialog,
+                              ),
+                            ],
+                          ),
                         ],
                       ))),
             ),
-
-          // Feedback button - small and ignorable as requested
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // correctOptionChainTask != null
-              //     ? IconButton(
-              //         icon: const Icon(Icons.settings),
-              //         onPressed: () {
-              //           showModalBottomSheet(
-              //             context: context,
-              //             builder: (context) => ColumnVisibilityEditor(
-              //               columns: correctOptionChainTask!.columns,
-              //               onVisibilityChanged: (updatedColumns) {
-              //                 setState(() {
-              //                   correctOptionChainTask!.columns =
-              //                       updatedColumns;
-              //                 });
-              //               },
-              //             ),
-              //           );
-              //         },
-              //       )
-              //     : Container(),
-              // optionChainButtonVisibility
-              //     ? Align(
-              //         alignment: Alignment.topRight,
-              //         child: ElevatedButton(
-              //             onPressed: () {
-              //               setState(() {
-              //                 switchToOptionChain = !switchToOptionChain;
-              //                 controller.animateToPage(
-              //                     switchToOptionChain ? 1 : 0,
-              //                     duration: const Duration(seconds: 1),
-              //                     curve: Curves.easeIn);
-              //               });
-              //             },
-              //             child: Text(switchToOptionChain
-              //                 ? "View Chart"
-              //                 : "View Option Chain")),
-              //       )
-              //     : Container(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.feedback_outlined,
-                      color: colors.textColorSecondary,
-                      size: 20,
-                    ),
-                    tooltip: "Provide feedback",
-                    onPressed: _showFeedbackDialog,
-                  ),
-                ),
-              ),
-            ],
-          ),
           Expanded(
             child: PageView.builder(
                 controller: controller,

@@ -197,13 +197,13 @@ class PreviewScreenState extends State<PreviewScreen> {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildStickyStrikeColumn(),
             Expanded(
               child: _buildScrollableSection(
                 columns: columns,
                 controller: _leftScrollController,
               ),
             ),
-            _buildStickyStrikeColumn(),
           ],
         );
       case OptionChainVisibility.put:
