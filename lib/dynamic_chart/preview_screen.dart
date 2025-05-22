@@ -91,9 +91,7 @@ class PreviewScreenState extends State<PreviewScreen> {
       if (!_isScrolling && _rightScrollController.hasClients) {
         _isScrolling = true;
         _rightScrollController.jumpTo(_leftScrollController.offset);
-        Future.delayed(const Duration(milliseconds: 0), () {
-          _isScrolling = false;
-        });
+        _isScrolling = false;
       }
     });
 
@@ -101,9 +99,7 @@ class PreviewScreenState extends State<PreviewScreen> {
       if (!_isScrolling && _leftScrollController.hasClients) {
         _isScrolling = true;
         _leftScrollController.jumpTo(_rightScrollController.offset);
-        Future.delayed(const Duration(milliseconds: 0), () {
-          _isScrolling = false;
-        });
+        _isScrolling = false;
       }
     });
   }
@@ -194,28 +190,50 @@ class PreviewScreenState extends State<PreviewScreen> {
     switch (widget.previewData.visibility) {
       case OptionChainVisibility.call:
         final columns = _getFilteredColumns();
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Stack(
           children: [
-            _buildStickyStrikeColumn(),
-            Expanded(
-              child: _buildScrollableSection(
-                columns: columns,
-                controller: _leftScrollController,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: _leftScrollController,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...columns.map(
+                      (column) => _buildColumn(column, _leftScrollController)),
+                  const SizedBox(width: cellWidth), // Placeholder for strike column
+                ],
+              ),
+            ),
+            Positioned(
+              right: 0,
+              child: Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: _buildStickyStrikeColumn(),
               ),
             ),
           ],
         );
       case OptionChainVisibility.put:
         final columns = _getFilteredColumns();
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Stack(
           children: [
-            _buildStickyStrikeColumn(),
-            Expanded(
-              child: _buildScrollableSection(
-                columns: columns,
-                controller: _rightScrollController,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              controller: _rightScrollController,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(width: cellWidth), // Placeholder for strike column
+                  ...columns.map(
+                      (column) => _buildColumn(column, _rightScrollController)),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 0,
+              child: Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: _buildStickyStrikeColumn(),
               ),
             ),
           ],
@@ -223,103 +241,127 @@ class PreviewScreenState extends State<PreviewScreen> {
       case OptionChainVisibility.both:
         final leftColumns = _getFilteredColumns(isLeftSide: true);
         final rightColumns = _getFilteredColumns(isLeftSide: false);
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _buildScrollableSection(
-                columns: leftColumns,
-                controller: _leftScrollController,
-              ),
-            ),
-            _buildStickyStrikeColumn(),
-            Expanded(
-              child: _buildScrollableSection(
-                columns: rightColumns,
-                controller: _rightScrollController,
-              ),
-            ),
-          ],
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final centerPosition = (screenWidth - cellWidth) / 2;
+
+            // Calculate minimum width needed for columns
+            final leftWidth = leftColumns.length * cellWidth;
+            final rightWidth = rightColumns.length * cellWidth;
+            final minTotalWidth = leftWidth + rightWidth + cellWidth;
+
+            // If total width is less than screen width, center the entire content
+            if (minTotalWidth <= screenWidth) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...leftColumns.map(
+                      (column) => _buildColumn(column, _leftScrollController)),
+                  _buildStickyStrikeColumn(),
+                  ...rightColumns.map(
+                      (column) => _buildColumn(column, _rightScrollController)),
+                ],
+              );
+            }
+
+            // Otherwise use the scrollable layout
+            return Stack(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: centerPosition,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        controller: _leftScrollController,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: leftColumns
+                              .map((column) =>
+                                  _buildColumn(column, _leftScrollController))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: cellWidth,
+                      child: _buildStickyStrikeColumn(),
+                    ),
+                    SizedBox(
+                      width: centerPosition,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        controller: _rightScrollController,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: rightColumns
+                              .map((column) =>
+                                  _buildColumn(column, _rightScrollController))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         );
     }
   }
 
-  Widget _buildScrollableSection({
-    required List<ColumnConfig> columns,
-    required ScrollController controller,
-  }) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      controller: controller,
-      child: SizedBox(
-        width: columns.length * cellWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildScrollableHeaders(columns: columns),
-            Expanded(child: _buildScrollableRows(columns: columns)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScrollableHeaders({required List<ColumnConfig> columns}) {
+  Widget _buildColumn(ColumnConfig column, ScrollController controller) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return SizedBox(
-      height: 56,
-      child: Row(
-        children: columns
-            .map((column) => Container(
-                  padding: const EdgeInsets.all(2),
-                  width: cellWidth,
-                  color: colors.headerColumnColor,
-                  alignment: Alignment.center,
-                  child: AutoSizeText(
-                    column.columnTitle,
-                    style: textStyles.smallNormal,
-                    minFontSize: 10,
-                    maxFontSize: 14,
-                    textAlign: TextAlign.center,
-                  ),
-                ))
-            .toList(),
-      ),
-    );
-  }
-
-  Widget _buildScrollableRows({required List<ColumnConfig> columns}) {
-    final strikeColumnIndex = _getStrikeColumnIndex();
-
-    return SizedBox(
-      height: widget.previewData.optionData.length * cellHeight,
-      child: ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.previewData.optionData.length,
-        itemBuilder: (context, rowIndex) {
-          final data = widget.previewData.optionData[rowIndex];
-          return SizedBox(
-            height: cellHeight,
-            child: Row(
-              children: columns.asMap().entries.map((entry) {
-                final column = entry.value;
+      width: cellWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 56,
+            padding: const EdgeInsets.all(2),
+            color: colors.headerColumnColor,
+            alignment: Alignment.center,
+            child: AutoSizeText(
+              column.columnTitle,
+              style: textStyles.smallNormal,
+              minFontSize: 10,
+              maxFontSize: 14,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            height: widget.previewData.optionData.length * cellHeight,
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: widget.previewData.optionData.length,
+              itemBuilder: (context, rowIndex) {
+                final data = widget.previewData.optionData[rowIndex];
                 final actualColumnIndex =
                     widget.previewData.columns.indexOf(column);
-                return _buildCell(
-                  rowIndex: rowIndex,
-                  data: data,
-                  column: column,
-                  actualColumnIndex: actualColumnIndex,
-                  strikeColumnIndex: strikeColumnIndex,
+                final strikeColumnIndex = _getStrikeColumnIndex();
+                return SizedBox(
+                  height: cellHeight,
+                  child: _buildCell(
+                    rowIndex: rowIndex,
+                    data: data,
+                    column: column,
+                    actualColumnIndex: actualColumnIndex,
+                    strikeColumnIndex: strikeColumnIndex,
+                  ),
                 );
-              }).toList(),
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
@@ -532,12 +574,13 @@ class PreviewScreenState extends State<PreviewScreen> {
                 .format(widget.previewData.expiryDate ?? DateTime.now()),
           ),
           Expanded(
-              child: SingleChildScrollView(
-                  child: SizedBox(
-                      height:
-                          widget.previewData.optionData.length * cellHeight +
-                              56,
-                      child: _buildTableBasedOnVisibility()))),
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: widget.previewData.optionData.length * cellHeight + 56,
+                child: _buildTableBasedOnVisibility(),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -572,7 +615,8 @@ class PreviewScreenState extends State<PreviewScreen> {
               textAlign: TextAlign.center,
             ),
           ),
-          Expanded(
+          SizedBox(
+            height: widget.previewData.optionData.length * cellHeight,
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -585,7 +629,6 @@ class PreviewScreenState extends State<PreviewScreen> {
                     Theme.of(context).customColors;
 
                 Color? cellColor;
-
                 if (_selectedRowIndex.contains(rowIndex) ||
                     userSelectedIndex.contains(rowIndex)) {
                   if (userSelectedIndex.contains(rowIndex)) {
@@ -619,9 +662,7 @@ class PreviewScreenState extends State<PreviewScreen> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(14),
                       onTap: () => _handleCellTap(rowIndex),
-                      child: Center(
-                        child: cellContent,
-                      ),
+                      child: Center(child: cellContent),
                     ),
                   ),
                 );

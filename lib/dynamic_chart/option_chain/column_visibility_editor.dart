@@ -17,7 +17,12 @@ class ColumnVisibilityEditor extends StatefulWidget {
 
 class _ColumnVisibilityEditorState extends State<ColumnVisibilityEditor> {
   late List<ColumnConfig> _allColumns;
-  final Map<String, List<ColumnConfig>> _columnGroups = {};
+
+  final List<String> greeks = ['Delta', 'Gamma', 'Vega', 'Theta', 'IV'];
+  final List<String> others = ['OI', 'LTP', 'Volume'];
+
+  final Map<String, List<ColumnConfig>> _greekColumns = {};
+  final Map<String, List<ColumnConfig>> _otherColumns = {};
 
   @override
   void initState() {
@@ -28,31 +33,25 @@ class _ColumnVisibilityEditorState extends State<ColumnVisibilityEditor> {
   }
 
   void _groupColumns() {
-    _columnGroups.clear();
-    for (ColumnConfig column in _allColumns) {
-      String groupName;
-      if (column.columnType.name.startsWith('call')) {
-        groupName = 'Call';
-      } else if (column.columnType.name.startsWith('put')) {
-        groupName = 'Put';
-      } else {
-        groupName = 'Other';
-      }
-      _columnGroups.putIfAbsent(groupName, () => []).add(column);
+    _greekColumns.clear();
+    _otherColumns.clear();
+
+    for (var greek in greeks) {
+      _greekColumns[greek] =
+          _allColumns.where((c) => c.columnTitle == greek).toList();
+    }
+
+    for (var other in others) {
+      _otherColumns[other] =
+          _allColumns.where((c) => c.columnTitle == other).toList();
     }
   }
 
-  void _toggleColumnVisibility(ColumnConfig column, bool isVisible) {
+  void _toggleGroupVisibility(
+      Map<String, List<ColumnConfig>> group, String groupName, bool isVisible) {
     setState(() {
-      column.isColumnVisible = isVisible;
-      widget.onVisibilityChanged(widget.columns);
-    });
-  }
-
-  void _toggleGroupVisibility(String groupName, bool isVisible) {
-    setState(() {
-      if (_columnGroups.containsKey(groupName)) {
-        for (var column in _columnGroups[groupName]!) {
+      if (group.containsKey(groupName)) {
+        for (var column in group[groupName]!) {
           column.isColumnVisible = isVisible;
         }
         widget.onVisibilityChanged(widget.columns);
@@ -60,14 +59,51 @@ class _ColumnVisibilityEditorState extends State<ColumnVisibilityEditor> {
     });
   }
 
-  bool _isGroupAllVisible(String groupName) {
-    if (!_columnGroups.containsKey(groupName)) return false;
-    return _columnGroups[groupName]!.every((c) => c.isColumnVisible);
+  bool _isGroupAllVisible(
+      Map<String, List<ColumnConfig>> group, String groupName) {
+    if (!group.containsKey(groupName)) return false;
+    return group[groupName]!.every((c) => c.isColumnVisible);
   }
 
-  bool _isGroupAllHidden(String groupName) {
-    if (!_columnGroups.containsKey(groupName)) return false;
-    return _columnGroups[groupName]!.every((c) => !c.isColumnVisible);
+  bool _isGroupAllHidden(
+      Map<String, List<ColumnConfig>> group, String groupName) {
+    if (!group.containsKey(groupName)) return false;
+    return group[groupName]!.every((c) => !c.isColumnVisible);
+  }
+
+  Widget _buildGroup(String title, Map<String, List<ColumnConfig>> group) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+          child: Text(title,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        ),
+        ...group.entries.where((e) => e.value.isNotEmpty).map((entry) {
+          final groupName = entry.key;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Text(groupName,
+                    style: const TextStyle(fontWeight: FontWeight.w500)),
+                const Spacer(),
+                Switch(
+                  value: _isGroupAllVisible(group, groupName),
+                  onChanged: (value) =>
+                      _toggleGroupVisibility(group, groupName, value),
+                  activeColor: _isGroupAllHidden(group, groupName)
+                      ? Colors.grey
+                      : Theme.of(context).colorScheme.primary,
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
+    );
   }
 
   @override
@@ -83,48 +119,10 @@ class _ColumnVisibilityEditorState extends State<ColumnVisibilityEditor> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          ..._columnGroups.entries.map((entry) {
-            final groupName = entry.key;
-            final columns = entry.value;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        groupName,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      const Spacer(),
-                      Switch(
-                        value: _isGroupAllVisible(groupName),
-                        onChanged: (value) =>
-                            _toggleGroupVisibility(groupName, value),
-                        activeColor: _isGroupAllHidden(groupName)
-                            ? Colors.grey
-                            : Theme.of(context).colorScheme.primary,
-                      ),
-                    ],
-                  ),
-                ),
-                ...columns.map((column) {
-                  return CheckboxListTile(
-                    title: Text(column.columnTitle),
-                    value: column.isColumnVisible,
-                    onChanged: (value) =>
-                        _toggleColumnVisibility(column, value ?? false),
-                    secondary: column.isColumnVisible
-                        ? const Icon(Icons.visibility, color: Colors.blue)
-                        : const Icon(Icons.visibility_off, color: Colors.grey),
-                  );
-                }),
-                const Divider(height: 1),
-              ],
-            );
-          }).toList(),
+          _buildGroup('Greeks', _greekColumns),
+          const Divider(),
+          _buildGroup('Others', _otherColumns),
+          const SizedBox(height: 20)
         ],
       ),
     );

@@ -26,7 +26,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
 
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: colors.borderColorSecondary),
         color: colors.cardColorSecondary,
       ),
