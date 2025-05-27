@@ -17,6 +17,8 @@ import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
+import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
+import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
@@ -35,28 +37,22 @@ class DynamicChartWidget extends StatefulWidget {
 class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   final GlobalKey<ChartState> _chartKey = GlobalKey();
   final GlobalKey<PreviewScreenState> _previewScreenKey = GlobalKey();
+  Map<String, GlobalKey<PreviewScreenState>> previewScreenKeys = {};
   late Recipe recipe;
-  final List<Map<String, dynamic>> pages = [
-    {
-      'title': 'Chart',
-      'index': 0,
-    },
-    {
-      'title': 'Option Chain',
-      'index': 1,
-    },
-  ];
 
   int taskPointer = 0;
   late Task currentTask;
 
   AddPromptTask? promptTask;
   bool showNextButton = false;
-  bool switchToOptionChain = false;
   PageController controller = PageController();
-  bool optionChainButtonVisibility = false;
-  List<AddOptionChainTask> optionChainTasks = [];
   AddOptionChainTask? correctOptionChainTask;
+
+  List<AddOptionChainTask> optionChainTasks = [];
+  List<ShowPayOffGraphTask> payoffGraphTasks = [];
+  List<Map<String, String>> tabs = [];
+  int currentPageIndex = 0;
+  List<OptionLeg> selectedLegs = [];
 
   @override
   void initState() {
@@ -65,6 +61,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       currentTask = recipe.tasks.first;
       dd();
     }
+    tabs.add({"type": "chart", "title": "Chart"});
+
     super.initState();
   }
 
@@ -116,24 +114,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         break;
       case TaskType.addOptionChain:
         AddOptionChainTask task = currentTask as AddOptionChainTask;
-
-        optionChainButtonVisibility = true;
         optionChainTasks.add(task);
         setState(() {});
         onTaskFinish();
         break;
       case TaskType.chooseCorrectOptionChainValue:
-        ChooseCorrectOptionValueChainTask task =
-            currentTask as ChooseCorrectOptionValueChainTask;
-        correctOptionChainTask =
-            optionChainTasks.firstWhere((e) => e.optionChainId == task.taskId);
-        controller
-            .animateToPage(1,
-                duration: const Duration(seconds: 1), curve: Curves.easeIn)
-            .then((val) {
-          onTaskFinish();
-        });
-        switchToOptionChain = true;
+        onTaskFinish();
         setState(() {});
         break;
       case TaskType.highlightCorrectOptionChainValue:
@@ -149,7 +135,86 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         onTaskFinish();
         setState(() {});
         break;
+      case TaskType.showPayOffGraph:
+        ShowPayOffGraphTask task = currentTask as ShowPayOffGraphTask;
+        payoffGraphTasks.add(task);
+        onTaskFinish();
+        break;
+      case TaskType.addTab:
+        setState(() {
+          final task = currentTask as AddTabTask;
+          previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
+
+          final tasks = recipe.tasks
+              .whereType<ChooseCorrectOptionValueChainTask>()
+              .where((t) => t.taskId == task.taskId)
+              .toList();
+
+          if (tasks.isNotEmpty) {
+            tabs.add({
+              "type": "option_chain",
+              "title": task.tabTitle,
+              "taskId": task.taskId
+            });
+          } else {
+            final payoffTasks =
+                recipe.tasks.whereType<ShowPayOffGraphTask>().toList();
+
+            if (payoffTasks.isNotEmpty) {
+              tabs.add({
+                "type": "payoff",
+                "title": task.tabTitle,
+                "taskId": task.taskId
+              });
+            }
+          }
+        });
+        onTaskFinish();
+        break;
+      case TaskType.removeTab:
+        setState(() {
+          final task = currentTask as RemoveTabTask;
+          tabs.removeWhere((tab) => tab["title"] == task.tabTitle);
+        });
+        onTaskFinish();
+        break;
+      case TaskType.moveTab:
+        MoveTabTask task = currentTask as MoveTabTask;
+        if (task.tabTaskID == "chart") {
+          navigateToPage(0).then((_) {
+            onTaskFinish();
+          });
+          return;
+        }
+        final addTabTasks = recipe.tasks.whereType<AddTabTask>().toList();
+        if (addTabTasks.isEmpty) {
+          onTaskFinish();
+          return;
+        }
+        final targetTabTask =
+            addTabTasks.firstWhere((t) => t.taskId == task.tabTaskID);
+        final targetTab = tabs.firstWhere(
+          (tab) => tab["title"] == targetTabTask.tabTitle,
+          orElse: () => tabs.first,
+        );
+        final targetTabIndex = tabs.indexOf(targetTab);
+
+        navigateToPage(targetTabIndex).then((_) {
+          onTaskFinish();
+        });
+        break;
     }
+  }
+
+  Future<void> navigateToPage(int pageIndex) async {
+    setState(() {
+      currentPageIndex = pageIndex;
+    });
+    await controller.animateToPage(
+      pageIndex,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
   }
 
   void onTaskFinish() {
@@ -166,6 +231,18 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       } else {
         widget.onNextClick();
       }
+    }
+  }
+
+  void _handleBuySellSelection(OptionLeg? optionLeg) {
+    if (optionLeg != null) {
+      setState(() {
+        selectedLegs.removeWhere((leg) =>
+            leg.strike == optionLeg.strike &&
+            leg.optionType == optionLeg.optionType);
+
+        selectedLegs.add(optionLeg);
+      });
     }
   }
 
@@ -233,49 +310,53 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              ...pages.map((page) => Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          switchToOptionChain =
-                                              page['index'] == 1;
-                                          controller.animateToPage(
-                                              page['index'],
-                                              duration: const Duration(
-                                                  milliseconds: 300),
-                                              curve: Curves.easeIn);
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          color: (page['index'] == 0 &&
-                                                      !switchToOptionChain) ||
-                                                  (page['index'] == 1 &&
-                                                      switchToOptionChain)
-                                              ? colors.primary
-                                              : colors.cardColorPrimary,
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                        ),
-                                        child: Text(
-                                          page['title'],
-                                          style:
-                                              textStyles.smallNormal.copyWith(
-                                            color: (page['index'] == 0 &&
-                                                        !switchToOptionChain) ||
-                                                    (page['index'] == 1 &&
-                                                        switchToOptionChain)
-                                                ? colors.cardColorPrimary
-                                                : colors.textColorSecondary,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )),
-                              const Spacer(),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      ...tabs.map((tab) => Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 8),
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                final tabIndex =
+                                                    tabs.indexOf(tab);
+                                                navigateToPage(tabIndex);
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 6),
+                                                decoration: BoxDecoration(
+                                                  color: currentPageIndex ==
+                                                          tabs.indexOf(tab)
+                                                      ? colors.primary
+                                                      : colors.cardColorPrimary,
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                ),
+                                                child: Text(
+                                                  tab["title"] ?? "",
+                                                  style: textStyles.smallNormal
+                                                      .copyWith(
+                                                    color: currentPageIndex ==
+                                                            tabs.indexOf(tab)
+                                                        ? colors
+                                                            .cardColorPrimary
+                                                        : colors
+                                                            .textColorSecondary,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
                               const FeedbackWidget()
                             ],
                           ),
@@ -286,40 +367,72 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             child: PageView.builder(
                 controller: controller,
                 physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, i) {
-                  if (i == 0) {
-                    return Chart.from(
-                        key: _chartKey,
-                        recipe: recipe,
-                        onInteraction: (p0, p1) {});
-                  } else {
-                    return PreviewScreen.from(
-                        key: _previewScreenKey,
-                        task: correctOptionChainTask!,
-                        onViewChartClicked: () {
-                          setState(() {
-                            switchToOptionChain = !switchToOptionChain;
-                            controller.animateToPage(
-                                switchToOptionChain ? 1 : 0,
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.easeIn);
-                          });
-                        },
-                        onSettingsClicked: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) => ColumnVisibilityEditor(
-                              columns: correctOptionChainTask!.columns,
-                              onVisibilityChanged: (updatedColumns) {
-                                setState(() {
-                                  correctOptionChainTask!.columns =
-                                      updatedColumns;
-                                });
-                              },
-                            ),
-                          );
-                        },
-                        isEditorMode: false);
+                itemBuilder: (context, index) {
+                  final tab = tabs[index];
+                  switch (tab["type"]) {
+                    case "chart":
+                      return Chart.from(
+                          key: _chartKey,
+                          recipe: recipe,
+                          onInteraction: (p0, p1) {});
+                    case "option_chain":
+                      final taskId = tab["taskId"]!;
+                      final chooseTask = recipe.tasks
+                          .whereType<ChooseCorrectOptionValueChainTask>()
+                          .firstWhere((t) => t.taskId == taskId);
+
+                      final optionChainTask = optionChainTasks.firstWhere(
+                        (t) => t.optionChainId == chooseTask.taskId,
+                        orElse: () => optionChainTasks.first,
+                      );
+
+                      return PreviewScreen.from(
+                          key: previewScreenKeys[taskId] ?? _previewScreenKey,
+                          task: optionChainTask,
+                          onViewChartClicked: () {
+                            navigateToPage(0);
+                          },
+                          onSettingsClicked: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) => ColumnVisibilityEditor(
+                                columns: optionChainTask.columns,
+                                onVisibilityChanged: (updatedColumns) {
+                                  setState(() {
+                                    optionChainTask.columns = updatedColumns;
+                                  });
+                                },
+                              ),
+                            );
+                          },
+                          onBuySellSelected: _handleBuySellSelection,
+                          isEditorMode: false);
+                    case "payoff":
+                      final taskId = tab["taskId"]!;
+                      final payoffTask = payoffGraphTasks.firstWhere(
+                        (t) => t.id == taskId,
+                        orElse: () => payoffGraphTasks.first,
+                      );
+                      return selectedLegs.isEmpty
+                          ? Center(
+                              child: Text(
+                                "Select buy/sell positions in the option chain to view payoff",
+                                style: textStyles.mediumNormal.copyWith(
+                                  color: colors.textColorSecondary,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          : OptionStrategyContainer(
+                              spotPrice: 23245,
+                              spotPriceDayDelta: payoffTask.spotPriceDayDelta,
+                              spotPriceDayDeltaPer:
+                                  payoffTask.spotPriceDayDeltaPer,
+                              onExecute: () {},
+                              legs: selectedLegs,
+                            );
+                    default:
+                      return Container();
                   }
                 }),
           ),
@@ -352,6 +465,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addOptionChain:
       case TaskType.chooseCorrectOptionChainValue:
       case TaskType.highlightCorrectOptionChainValue:
+      case TaskType.showPayOffGraph:
+      case TaskType.addTab:
+      case TaskType.removeTab:
+      case TaskType.moveTab:
         return Container();
     }
   }
@@ -364,20 +481,17 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     if (task is! AddMcqTask) return const SizedBox.shrink();
 
     AddMcqTask mcqTask = task;
-    int columns, rows;
+    int columns;
 
     switch (mcqTask.arrangementType) {
       case MCQArrangementType.grid1x2:
         columns = 2;
-        rows = 1;
         break;
       case MCQArrangementType.grid2x2:
         columns = 2;
-        rows = 2;
         break;
       case MCQArrangementType.grid2x3:
         columns = 3;
-        rows = 2;
         break;
     }
 

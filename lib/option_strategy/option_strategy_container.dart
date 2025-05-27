@@ -12,13 +12,15 @@ class OptionStrategyContainer extends StatefulWidget {
   final double spotPriceDayDelta;
   final double spotPriceDayDeltaPer;
   final Function onExecute;
-  const OptionStrategyContainer(
-      {super.key,
-      required this.legs,
-      required this.spotPrice,
-      required this.spotPriceDayDelta,
-      required this.spotPriceDayDeltaPer,
-      required this.onExecute});
+
+  const OptionStrategyContainer({
+    super.key,
+    required this.legs,
+    required this.spotPrice,
+    required this.spotPriceDayDelta,
+    required this.spotPriceDayDeltaPer,
+    required this.onExecute,
+  });
 
   @override
   State<OptionStrategyContainer> createState() =>
@@ -61,65 +63,53 @@ class _OptionStrategyContainerState extends State<OptionStrategyContainer>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Analyse Your Order",
-          style: Theme.of(context).customTextStyles.mediumBold,
+    return Column(
+      children: [
+        TabBar(
+          controller: _tabController,
+          onTap: _updateCurrentPageIndex,
+          indicatorColor: Theme.of(context).customColors.primary,
+          indicatorSize: TabBarIndicatorSize.tab,
+          tabs: const [
+            Tab(text: "Payoff Graph"),
+            Tab(text: "Payoff Table"),
+          ],
         ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.close),
-          ),
-        ],
-        bottom: TabBar(
-            controller: _tabController,
-            onTap: _updateCurrentPageIndex,
-            indicatorColor: Theme.of(context).customColors.primary,
-            indicatorSize: TabBarIndicatorSize.tab,
-            tabs: const [
-              Tab(text: "Payoff Graph"),
-              Tab(
-                text: "Payoff Table",
-              )
-            ]),
-      ),
-      body: SafeArea(
+        Expanded(
           child: PageView(
-        controller: _pageViewController,
-        onPageChanged: _handlePageViewChanged,
-        children: [
-          PayoffGraphWidget(
-            helper: helper,
-            spotPrice: widget.spotPrice,
-            spotPriceDayDelta: widget.spotPriceDayDelta,
-            spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-            optionStrategyInfoComponent: OptionStrategyInfoComponent(
-              helper: helper,
-              spotPrice: widget.spotPrice,
-              spotPriceDayDelta: widget.spotPriceDayDelta,
-              spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-              onExecute: widget.onExecute,
-            ),
-          ),
-          PayoffTableWidget(
-              helper: helper,
-              spotPrice: widget.spotPrice,
-              spotPriceDayDelta: widget.spotPriceDayDelta,
-              spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-              optionStrategyInfoComponent: OptionStrategyInfoComponent(
+            controller: _pageViewController,
+            onPageChanged: _handlePageViewChanged,
+            children: [
+              PayoffGraphWidget(
                 helper: helper,
                 spotPrice: widget.spotPrice,
                 spotPriceDayDelta: widget.spotPriceDayDelta,
                 spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-                onExecute: widget.onExecute,
-              ))
-        ],
-      )),
+                optionStrategyInfoComponent: OptionStrategyInfoComponent(
+                  helper: helper,
+                  spotPrice: widget.spotPrice,
+                  spotPriceDayDelta: widget.spotPriceDayDelta,
+                  spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                  onExecute: widget.onExecute,
+                ),
+              ),
+              PayoffTableWidget(
+                helper: helper,
+                spotPrice: widget.spotPrice,
+                spotPriceDayDelta: widget.spotPriceDayDelta,
+                spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                optionStrategyInfoComponent: OptionStrategyInfoComponent(
+                  helper: helper,
+                  spotPrice: widget.spotPrice,
+                  spotPriceDayDelta: widget.spotPriceDayDelta,
+                  spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                  onExecute: widget.onExecute,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -115,6 +115,18 @@ class _SampleUserflowScreenState extends State<SampleUserflowScreen> {
       case TaskType.highlightCorrectOptionChainValue:
         // TODO: Handle this case.
         throw UnimplementedError();
+      case TaskType.showPayOffGraph:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.addTab:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.removeTab:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.moveTab:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -347,6 +359,18 @@ class _SampleUserflowScreenState extends State<SampleUserflowScreen> {
         // TODO: Handle this case.
         throw UnimplementedError();
       case TaskType.highlightCorrectOptionChainValue:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.showPayOffGraph:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.addTab:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.removeTab:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.moveTab:
         // TODO: Handle this case.
         throw UnimplementedError();
     }

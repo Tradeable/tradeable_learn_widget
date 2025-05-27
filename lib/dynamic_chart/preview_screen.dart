@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/option_chain_container.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/option_chain_header.dart';
+import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -15,7 +16,8 @@ class PreviewScreen extends StatefulWidget {
   final PreviewData previewData;
   final VoidCallback onViewChartClicked;
   final VoidCallback onSettingsClicked;
-  final Function(int rowIndex, bool isCallSide)? onBuySellSelected;
+  final Function(OptionLeg? optionLeg)?
+      onBuySellSelected;
 
   const PreviewScreen({
     super.key,
@@ -30,7 +32,8 @@ class PreviewScreen extends StatefulWidget {
       required AddOptionChainTask task,
       List<int>? selectedRowIndex,
       List<int>? correctRowIndex,
-      Function(int rowIndex, bool isCallSide)? onBuySellSelected,
+      Function(OptionLeg? optionLeg)?
+          onBuySellSelected,
       required bool isEditorMode,
       required VoidCallback onViewChartClicked,
       required VoidCallback onSettingsClicked}) {
@@ -69,6 +72,7 @@ class PreviewScreenState extends State<PreviewScreen> {
   Map<int, bool> bucketSelections = {};
   Map<int, bool> bucketCallSelections = {};
   Map<int, bool> bucketPutSelections = {};
+  Map<int, List<bool>> buySellSelections = {};
 
   @override
   void initState() {
@@ -200,7 +204,8 @@ class PreviewScreenState extends State<PreviewScreen> {
                 children: [
                   ...columns.map(
                       (column) => _buildColumn(column, _leftScrollController)),
-                  const SizedBox(width: cellWidth), // Placeholder for strike column
+                  const SizedBox(width: cellWidth),
+                  // Placeholder for strike column
                 ],
               ),
             ),
@@ -223,7 +228,8 @@ class PreviewScreenState extends State<PreviewScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: cellWidth), // Placeholder for strike column
+                  const SizedBox(width: cellWidth),
+                  // Placeholder for strike column
                   ...columns.map(
                       (column) => _buildColumn(column, _rightScrollController)),
                 ],
@@ -685,6 +691,9 @@ class PreviewScreenState extends State<PreviewScreen> {
         widget.previewData.settings?.isBuySellVisible == true &&
         (columnType == ColumnType.callPremium ||
             columnType == ColumnType.putPremium)) {
+      final isBuySelected = buySellSelections[rowIndex]?[0] ?? false;
+      final isSellSelected = buySellSelections[rowIndex]?[1] ?? false;
+
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -693,25 +702,36 @@ class PreviewScreenState extends State<PreviewScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                onTap: () => widget.onBuySellSelected?.call(rowIndex, true),
+                onTap: () => _handleBuySellSelection(rowIndex, true),
                 child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
                     decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: const Text('B', style: TextStyle(fontSize: 10))),
+                        color: isBuySelected
+                            ? Colors.green
+                            : Colors.green.shade200,
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Text('B',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color:
+                                isBuySelected ? Colors.white : Colors.black))),
               ),
               const SizedBox(height: 6),
               InkWell(
-                onTap: () => widget.onBuySellSelected?.call(rowIndex, false),
+                onTap: () => _handleBuySellSelection(rowIndex, false),
                 child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
                     decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: const Text('S', style: TextStyle(fontSize: 10))),
+                        color:
+                            isSellSelected ? Colors.red : Colors.red.shade200,
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Text('S',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color:
+                                isSellSelected ? Colors.white : Colors.black))),
               ),
             ],
           ),
@@ -819,6 +839,61 @@ class PreviewScreenState extends State<PreviewScreen> {
         }
       }
       _isChecked = false;
+    });
+  }
+
+  void _handleBuySellSelection(int rowIndex, bool isBuy) {
+    setState(() {
+      if (!buySellSelections.containsKey(rowIndex)) {
+        buySellSelections[rowIndex] = [false, false];
+      }
+
+      final selections = buySellSelections[rowIndex]!;
+      if (isBuy) {
+        if (selections[0]) {
+          selections[0] = false;
+        } else {
+          selections[0] = true;
+          selections[1] = false;
+        }
+      } else {
+        if (selections[1]) {
+          selections[1] = false;
+        } else {
+          selections[0] = false;
+          selections[1] = true;
+        }
+      }
+
+      if (!selections[0] && !selections[1]) {
+        buySellSelections.remove(rowIndex);
+      }
+
+      if (widget.onBuySellSelected != null) {
+        final data = widget.previewData.optionData[rowIndex];
+        final strikeColumnIndex = _getStrikeColumnIndex();
+
+        final callPremiumColumn = widget.previewData.columns.firstWhere(
+          (c) => c.columnType == ColumnType.callPremium,
+          orElse: () => widget.previewData.columns.first,
+        );
+
+        final isCallSide = strikeColumnIndex != null &&
+            widget.previewData.columns.indexOf(callPremiumColumn) <
+                strikeColumnIndex;
+
+        final optionLeg = OptionLeg(
+          symbol: "NIFTY",
+          strike: data.strike,
+          type: selections[0] ? PositionType.buy : PositionType.sell,
+          optionType: isCallSide ? OptionType.call : OptionType.put,
+          expiry: widget.previewData.expiryDate ?? DateTime.now(),
+          quantity: 1,
+          premium: isCallSide ? data.callPremium : data.putPremium,
+        );
+
+        widget.onBuySellSelected!(optionLeg);
+      }
     });
   }
 
