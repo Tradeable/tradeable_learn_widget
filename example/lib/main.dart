@@ -36,6 +36,7 @@ import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/options_typeform.dart';
+import 'package:example/data_model/order_type_v1_model.dart';
 import 'package:example/data_model/price_decrease_model.dart';
 import 'package:example/data_model/range_grid_slider.dart';
 import 'package:example/data_model/rr_model.dart';
@@ -59,6 +60,8 @@ import 'package:tradeable_learn_widget/candle_formation/candle_formation_model.d
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_main.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/horizontal_line_v2/horizontal_line_question_v2.dart';
+import 'package:tradeable_learn_widget/order_type_v1/order_screen.dart';
+import 'package:tradeable_learn_widget/order_type_v1/order_type_v1.model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/user_story_model.dart';
 
@@ -114,6 +117,13 @@ class MyHomePage extends StatelessWidget {
                   //             data: SampleUserflowModel.fromJson(
                   //                 sampleUserFlowDataModel),
                   //             onNextClick: () {}))),
+                  NavigationButton(
+                      text: "OrderTypeV1",
+                      destination: ScaffoldWithAppBar(
+                          title: "OrderTypeV1",
+                          body: OrderScreen(
+                              model: OrderTypeV1.fromJson(orderTypeV1Model),
+                              onNextClick: () {}))),
                   NavigationButton(
                       text: "EduCornerV2",
                       destination: ScaffoldWithAppBar(

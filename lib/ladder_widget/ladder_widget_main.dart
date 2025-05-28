@@ -110,8 +110,6 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                             case DraggableOptionState.dragging:
                             case DraggableOptionState.snapped:
                               return Container();
-                            default:
-                              return Container();
                           }
                         }).toList(),
                       ),
@@ -156,8 +154,10 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   }
 
   Widget buildDragTarget(LadderCell cell) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -250,8 +250,10 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   }
 
   Widget renderOption(DraggableOption option) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       width: 60,
       height: 30,

@@ -4,7 +4,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_model.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
-import 'package:tradeable_learn_widget/utils/info_bottom_sheet.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class EduCornerV2Main extends StatefulWidget {
