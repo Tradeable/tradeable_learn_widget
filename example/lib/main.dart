@@ -36,6 +36,7 @@ import 'package:example/data_model/multiple_mcq_select_model.dart';
 import 'package:example/data_model/options_educorner_model.dart';
 import 'package:example/data_model/options_scenario_model.dart';
 import 'package:example/data_model/options_typeform.dart';
+import 'package:example/data_model/order_type_v1_model.dart';
 import 'package:example/data_model/price_decrease_model.dart';
 import 'package:example/data_model/range_grid_slider.dart';
 import 'package:example/data_model/rr_model.dart';
@@ -121,12 +122,7 @@ class MyHomePage extends StatelessWidget {
                       destination: ScaffoldWithAppBar(
                           title: "OrderTypeV1",
                           body: OrderScreen(
-                              model: OrderTypeV1.fromJson({
-                                "stockName": 'XYZ Industries',
-                                "currentPrice": 455.59,
-                                "tutorialMode": false,
-                                "tutorialId": 'delivery_tutorial',
-                              }),
+                              model: OrderTypeV1.fromJson(orderTypeV1Model),
                               onNextClick: () {}))),
                   NavigationButton(
                       text: "EduCornerV2",
