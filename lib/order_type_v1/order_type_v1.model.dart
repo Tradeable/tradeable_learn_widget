@@ -13,12 +13,12 @@ class OrderTypeV1 {
     this.tutorialType,
   });
 
-  factory OrderTypeV1.fromJson(Map<String, dynamic> json) {
+  factory OrderTypeV1.fromJson(dynamic data) {
     return OrderTypeV1(
-      stockName: json['stockName'] as String,
-      currentPrice: (json['currentPrice'] as num).toDouble(),
-      tutorialMode: json['tutorialMode'] as bool,
-      tutorialType: TutorialType.fromString(json['tutorialId'] as String?),
+      stockName: data['stockName'] as String,
+      currentPrice: (data['currentPrice'] as num).toDouble(),
+      tutorialMode: data['tutorialMode'] as bool,
+      tutorialType: TutorialType.fromString(data['tutorialId'] as String?),
     );
   }
 }
