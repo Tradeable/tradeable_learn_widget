@@ -129,7 +129,7 @@ class OrderScreenState extends State<OrderScreen> {
                                     ?.isElementEnabled('buy_button') ==
                                 true
                         ? () {
-                            widget.onNextClick;
+                            widget.onNextClick();
                             final orderData =
                                 orderWidgetKey.currentState?.getOrderData();
                             //print('Order Data: $orderData');
@@ -155,13 +155,13 @@ class OrderScreenState extends State<OrderScreen> {
                               // Regular order flow
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content:
-                                        Text('Order placed successfully!')),
+                                    content: Text(
+                                        "Don't worry! This is simulation")),
                               );
                             }
                           }
                         : () {
-                            widget.onNextClick;
+                            widget.onNextClick();
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
