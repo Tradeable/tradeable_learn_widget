@@ -103,45 +103,45 @@ class TutorialManager {
         'checkType': 'quantitySelection',
         'expectedValue': 8,
       },
-      {
-        'prompt':
-            'Great! Choose between MARKET or LIMIT order type. Toggle between them to see their explanations - this determines how your order will be executed.',
-        'enabledElements': ['price_type_MARKET', 'price_type_LIMIT'],
-        'checkType': 'priceTypeSelection',
-        'expectedValue': ['MARKET', 'LIMIT'],
-      },
+      // {
+      //   'prompt':
+      //       'Great! Choose between MARKET or LIMIT order type. Toggle between them to see their explanations - this determines how your order will be executed.',
+      //   'enabledElements': ['price_type_MARKET', 'price_type_LIMIT'],
+      //   'checkType': 'priceTypeSelection',
+      //   'expectedValue': ['MARKET', 'LIMIT'],
+      // },
       {
         'prompt':
             'Excellent! Now you\'ll see the Stop Loss field (auto-filled at -10% of current price). Set it three points higher.',
         'enabledElements': ['stop_loss_controls'],
         'checkType': 'set_stop_loss',
-        'expectedValue': 2477.55,
+        'expectedValue': 413.03,
       },
       {
         'prompt':
             'Perfect! Below you\'ll see the Target Price field (auto-filled at +10% of current price). Set it three points lower.',
         'enabledElements': ['target_price_controls'],
         'checkType': 'set_target_price',
-        'expectedValue': 3021.45,
+        'expectedValue': 498.15,
       },
-      {
-        'prompt':
-            'Great! Now toggle to the Advanced Section to explore validity options (DAY, IOC & GTD). Click on "Advanced Options".',
-        'enabledElements': ['advanced_toggle'],
-        'checkType': 'advancedToggle',
-        'expectedValue': true,
-      },
-      {
-        'prompt':
-            'Excellent! Toggle through each validity option to understand: DAY (current trading day only), IOC (immediate execution or cancel), GTD (good till specified date).',
-        'enabledElements': ['validity_DAY', 'validity_IOC', 'validity_GTD'],
-        'checkType': 'validitySelection',
-        'expectedValue': ['DAY', 'IOC', 'GTD'],
-      },
+      // {
+      //   'prompt':
+      //       'Great! Now toggle to the Advanced Section to explore validity options (DAY, IOC & GTD). Click on "Advanced Options".',
+      //   'enabledElements': ['advanced_toggle'],
+      //   'checkType': 'advancedToggle',
+      //   'expectedValue': true,
+      // },
+      // {
+      //   'prompt':
+      //       'Excellent! Toggle through each validity option to understand: DAY (current trading day only), IOC (immediate execution or cancel), GTD (good till specified date).',
+      //   'enabledElements': ['validity_DAY', 'validity_IOC', 'validity_GTD'],
+      //   'checkType': 'validitySelection',
+      //   'expectedValue': ['DAY', 'IOC', 'GTD'],
+      // },
       {
         'prompt':
             'Outstanding! You\'ve completed the Cover order tutorial. Click BUY to place your cover order with built-in risk management.',
-        'enabledElements': ['buy_button'],
+        'enabledElements': ['buy_button', 'advanced_toggle'],
         'checkType': 'buyButtonPressed',
         'expectedValue': true,
       },

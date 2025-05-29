@@ -71,15 +71,9 @@ class OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // appBar: AppBar(
-        //   title: Center(
-        //       child: Text(
-        //     '${widget.stockName} - ₹${widget.currentPrice.toStringAsFixed(2)}',
-        //   )),
-        // ),
-        body: Column(
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
           children: [
             // Tutorial prompt box - only visible in tutorial mode
             if (widget.model.tutorialMode)
