@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
-  // final String subtitle;
   final bool enabled;
   final VoidCallback? onIncrement;
   final VoidCallback? onDecrement;
@@ -15,7 +14,6 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.label,
-    // required this.subtitle,
     this.enabled = true,
     this.onIncrement,
     this.onDecrement,
@@ -44,7 +42,7 @@ class CustomTextField extends StatelessWidget {
                 padding: const EdgeInsets.all(0),
                 color: const Color(0xFFD3CABD),
                 icon: const Icon(Icons.remove),
-                iconSize: 32,
+                iconSize: 24,
                 onPressed: enabled ? onDecrement : null,
               ),
             Expanded(
@@ -59,7 +57,7 @@ class CustomTextField extends StatelessWidget {
                       Flexible(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 2, vertical: 8),
+                              horizontal: 0, vertical: 8),
                           decoration: BoxDecoration(
                             color: const Color(0xFF2BC381),
                             borderRadius: BorderRadius.circular(8),
@@ -108,7 +106,7 @@ class CustomTextField extends StatelessWidget {
                 padding: const EdgeInsets.all(0),
                 color: const Color(0xFFD3CABD),
                 icon: const Icon(Icons.add),
-                iconSize: 32,
+                iconSize: 24,
                 onPressed: enabled ? onIncrement : null,
               ),
           ],

@@ -1149,7 +1149,8 @@ const dynamicChartModel = {
         "actionType": "interupt",
         "taskType": "popUpTask",
         "title": "Sample Popup",
-        "description": "You are seeing a popup",
+        "description":
+            "You are seeing a popup, You are seeing a popup, You are seeing a popup",
         "buttonText": "Got it"
       },
       {
