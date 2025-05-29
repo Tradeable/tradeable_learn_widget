@@ -339,13 +339,13 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Transform.translate(
-            offset: Offset(0, -15),
+            offset: const Offset(0, -15),
             child: Container(
               width: 300,
               height: 40, // Adjust height as needed
               margin: const EdgeInsets.only(bottom: 8),
               // padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xFFEBF0F9), // Customize color
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(25),
@@ -354,7 +354,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
               child: Center(
                 child: Text(
                   widget.stockName,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       color: Color(0xFF6E6E6E)),
@@ -367,7 +367,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
               margin: const EdgeInsets.only(top: 18),
               padding: const EdgeInsets.only(top: 24),
               decoration: BoxDecoration(
-                color: Color(0xFFEBF0F9),
+                color: const Color(0xFFEBF0F9),
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
@@ -375,14 +375,14 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                   Container(
                       margin: const EdgeInsets.only(top: 8),
                       decoration: BoxDecoration(
-                        color: Color(0xFFE2E2E2),
+                        color: const Color(0xFFE2E2E2),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: PillboxSelector(
-                        options: ['DELIVERY', 'INTRADAY', 'COVER'],
+                        options: const ['DELIVERY', 'INTRADAY', 'COVER'],
                         selectedValue: selectedOrderType,
                         fontSize: 16,
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         onSelected: (value) {
                           setState(() {
                             selectedOrderType = value;
@@ -772,30 +772,35 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F6EB),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Text(
-                            'E-Margin',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: Color(0xFF6E6E6E)),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF9F6EB),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'E-Margin',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF6E6E6E)),
+                            ),
                           ),
                         ),
-                        CustomSwitch(
-                          value: eMarginEnabled,
-                          onChanged: isElementEnabled('e_margin_toggle')
-                              ? (value) {
-                                  setState(() {
-                                    eMarginEnabled = value;
-                                  });
-                                }
-                              : null,
+                        Flexible(
+                          flex: 1,
+                          child: CustomSwitch(
+                            value: eMarginEnabled,
+                            onChanged: isElementEnabled('e_margin_toggle')
+                                ? (value) {
+                                    setState(() {
+                                      eMarginEnabled = value;
+                                    });
+                                  }
+                                : null,
+                          ),
                         ),
                       ],
                     ),
@@ -814,25 +819,28 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 8),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF9F6EB),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Text(
-                            'Reqd Margin',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                                color: Color(0xFF6E6E6E)),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF9F6EB),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Reqd Margin',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  color: Color(0xFF6E6E6E)),
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 80),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5),
                             child: AutoSizeText(
                               '₹${getMarginRequirementText()}',
                               minFontSize: 8,
@@ -1001,7 +1009,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 16),
                               decoration: BoxDecoration(
-                                color: Color(0xFFF9F6EB),
+                                color: const Color(0xFFF9F6EB),
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: const Text(
