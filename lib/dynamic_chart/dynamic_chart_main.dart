@@ -10,6 +10,7 @@ import 'package:fin_chart/models/recipe.dart';
 import 'package:fin_chart/models/tasks/choose_correct_option_chain_task.dart';
 import 'package:fin_chart/models/tasks/highlight_correct_option_chain_value_task.dart';
 import 'package:fin_chart/models/tasks/show_bottom_sheet.task.dart';
+import 'package:fin_chart/models/tasks/show_insights_page.task.dart';
 import 'package:fin_chart/models/tasks/task.dart';
 import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
@@ -54,6 +55,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
 
   List<AddOptionChainTask> optionChainTasks = [];
   List<ShowPayOffGraphTask> payoffGraphTasks = [];
+  List<ShowInsightsPageTask> insightsTasks = [];
   List<Map<String, String>> tabs = [];
   int currentPageIndex = 0;
   List<OptionLeg> selectedLegs = [];
@@ -170,6 +172,19 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 "title": task.tabTitle,
                 "taskId": task.taskId
               });
+            } else {
+              final insightsTasks = recipe.tasks
+                  .whereType<ShowInsightsPageTask>()
+                  .where((t) => t.id == task.taskId)
+                  .toList();
+
+              if (insightsTasks.isNotEmpty) {
+                tabs.add({
+                  "type": "insights",
+                  "title": task.tabTitle,
+                  "taskId": task.taskId,
+                });
+              }
             }
           }
         });
@@ -240,6 +255,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           });
         });
         setState(() {});
+        break;
+      case TaskType.showInsightsPage:
+        ShowInsightsPageTask task = currentTask as ShowInsightsPageTask;
+        insightsTasks.add(task);
+        setState(() {});
+        onTaskFinish();
         break;
     }
   }
@@ -364,6 +385,41 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               onExecute: () {},
                               legs: selectedLegs,
                             );
+                    case "insights":
+                      final taskId = tab["taskId"]!;
+                      final insightsTask = recipe.tasks
+                          .whereType<ShowInsightsPageTask>()
+                          .firstWhere((t) => t.id == taskId);
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: colors.cardColorSecondary,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: colors.buttonColor,
+                            border:
+                                Border.all(color: colors.cardColorSecondary),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(20)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              Text(insightsTask.title,
+                                  style: textStyles.mediumBold),
+                              const SizedBox(height: 16),
+                              Text(insightsTask.description),
+                            ],
+                          ),
+                        ),
+                      );
                     default:
                       return Container();
                   }
@@ -404,6 +460,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.moveTab:
       case TaskType.popUpTask:
       case TaskType.showBottomSheet:
+      case TaskType.showInsightsPage:
         return Container();
     }
   }

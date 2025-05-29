@@ -20,6 +20,7 @@ class CustomDialogWidget extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
+        constraints: const BoxConstraints(maxHeight: 250),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -31,10 +32,17 @@ class CustomDialogWidget extends StatelessWidget {
               child: Text(task.title, style: textStyles.mediumBold),
             ),
             const SizedBox(height: 10),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-              child: Text(task.description),
+            Flexible(
+              child: Scrollbar(
+                thumbVisibility: true,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                    child: Text(task.description),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
             InkWell(

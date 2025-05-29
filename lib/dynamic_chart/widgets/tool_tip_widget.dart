@@ -12,8 +12,16 @@ class TapTooltip extends StatefulWidget {
 
 class _TapTooltipState extends State<TapTooltip> {
   OverlayEntry? _overlayEntry;
+  bool _isTooltipVisible = false;
 
   void _showTooltip() {
+    if (_isTooltipVisible) {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      _isTooltipVisible = false;
+      return;
+    }
+
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final offset = renderBox.localToGlobal(Offset.zero);
@@ -26,6 +34,7 @@ class _TapTooltipState extends State<TapTooltip> {
         child: Material(
           color: Colors.transparent,
           child: Container(
+            width: MediaQuery.of(context).size.width - 80,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.black87,
@@ -34,6 +43,8 @@ class _TapTooltipState extends State<TapTooltip> {
             child: Text(
               widget.message,
               style: const TextStyle(color: Colors.white, fontSize: 12),
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ),
         ),
@@ -41,10 +52,14 @@ class _TapTooltipState extends State<TapTooltip> {
     );
 
     overlay.insert(_overlayEntry!);
+    _isTooltipVisible = true;
 
     Future.delayed(const Duration(seconds: 5), () {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
+      if (_overlayEntry != null) {
+        _overlayEntry?.remove();
+        _overlayEntry = null;
+        _isTooltipVisible = false;
+      }
     });
   }
 
