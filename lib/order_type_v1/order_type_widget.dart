@@ -405,10 +405,10 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF9F6EB),
+                  color: const Color(0xFFF9F6EB),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Text(
+                child: const Text(
                   'PRODUCT',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -422,7 +422,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               getOrderTypeDescription(),
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
               ),
             ),
@@ -434,7 +434,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
             children: [
               // Quantity section (left side)
               Expanded(
-                flex: 20,
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -448,31 +448,26 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                             color: const Color(0xFFEBF0F9),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 16),
-                                child: CustomTextField(
-                                  controller: quantityController,
-                                  label: 'QUANTITY',
-                                  enabled:
-                                      isElementEnabled('quantity_controls'),
-                                  onChanged: (value) {
-                                    setState(() {});
-                                    checkStepCompletion();
-                                  },
-                                  onIncrement: () => _incrementValue(
-                                      quantityController,
-                                      minValue: 1,
-                                      triggerStepCompletion: true),
-                                  onDecrement: () => _decrementValue(
-                                      quantityController,
-                                      minValue: 1,
-                                      triggerStepCompletion: true),
-                                ),
-                              ),
-                            ],
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 0),
+                            child: CustomTextField(
+                              controller: quantityController,
+                              label: 'QUANTITY',
+                              enabled: isElementEnabled('quantity_controls'),
+                              onChanged: (value) {
+                                setState(() {});
+                                checkStepCompletion();
+                              },
+                              onIncrement: () => _incrementValue(
+                                  quantityController,
+                                  minValue: 1,
+                                  triggerStepCompletion: true),
+                              onDecrement: () => _decrementValue(
+                                  quantityController,
+                                  minValue: 1,
+                                  triggerStepCompletion: true),
+                            ),
                           ),
                         ),
                         Center(
@@ -499,14 +494,13 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                 ),
               ),
 
-              Flexible(
-                flex: 1,
-                child: Container(),
+              const SizedBox(
+                width: 10,
               ),
 
               // Order Type section (right side)
               Expanded(
-                flex: 30,
+                flex: 3,
                 child: Column(
                   children: [
                     Stack(
@@ -824,14 +818,14 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 8, horizontal: 8),
                           decoration: BoxDecoration(
-                            color: Color(0xFFF9F6EB),
+                            color: const Color(0xFFF9F6EB),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Text(
                             'Reqd Margin',
                             style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16,
+                                fontSize: 12,
                                 color: Color(0xFF6E6E6E)),
                           ),
                         ),
@@ -870,30 +864,35 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF9F6EB),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            'Reqd Margin',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF6E6E6E)),
+                        Flexible(
+                          flex: 1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF9F6EB),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Text(
+                              'Reqd Margin',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: Color(0xFF6E6E6E)),
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5),
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: 80),
+                        Flexible(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5),
                             child: AutoSizeText(
                               '₹${getMarginRequirementText()}',
                               minFontSize: 8,
                               maxLines: 1,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.w600,
+                                  fontSize: 14,
                                   color: Color(0xFF6E6E6E)),
                             ),
                           ),
@@ -916,7 +915,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
               ),
             ),
           ] else
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
 
           // Advanced section
           const SizedBox(height: 24),
@@ -1005,11 +1004,11 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                                 color: Color(0xFFF9F6EB),
                                 borderRadius: BorderRadius.circular(16),
                               ),
-                              child: Text(
+                              child: const Text(
                                 'VALIDITY',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 16,
+                                    //fontSize: 16,
                                     color: Color(0xFF6E6E6E)),
                               ),
                             ),
@@ -1031,7 +1030,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                             margin: const EdgeInsets.only(top: 18),
                             padding: const EdgeInsets.only(top: 24),
                             decoration: BoxDecoration(
-                              color: Color(0xFFEBF0F9),
+                              color: const Color(0xFFEBF0F9),
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Column(
@@ -1070,7 +1069,7 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
                                 'DISC. QUANTITY',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 16,
+                                    // fontSize: 16,
                                     color: Color(0xFF6E6E6E)),
                               ),
                             ),

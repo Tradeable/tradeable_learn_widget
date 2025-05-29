@@ -2,5 +2,5 @@ const orderTypeV1Model = {
   "stockName": 'XYZ Industries',
   "currentPrice": 455.59,
   "tutorialMode": true,
-  "tutorialId": 'intraday_tutorial',
+  "tutorialId": 'delivery_tutorial',
 };
