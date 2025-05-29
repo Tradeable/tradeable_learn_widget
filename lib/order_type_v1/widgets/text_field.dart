@@ -34,17 +34,17 @@ class CustomTextField extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
         decoration: BoxDecoration(
-          color: Color(0xFF395046),
+          color: const Color(0xFF395046),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
             if (onDecrement != null)
               IconButton(
-                padding: EdgeInsets.all(0),
-                color: Color(0xFFD3CABD),
+                padding: const EdgeInsets.all(0),
+                color: const Color(0xFFD3CABD),
                 icon: const Icon(Icons.remove),
-                iconSize: 40,
+                iconSize: 32,
                 onPressed: enabled ? onDecrement : null,
               ),
             Expanded(
@@ -59,9 +59,9 @@ class CustomTextField extends StatelessWidget {
                       Flexible(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 8),
+                              horizontal: 2, vertical: 8),
                           decoration: BoxDecoration(
-                            color: Color(0xFF2BC381),
+                            color: const Color(0xFF2BC381),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: TextField(
@@ -72,7 +72,7 @@ class CustomTextField extends StatelessWidget {
                             readOnly: !enabled, // Add this line
                             onChanged: onChanged,
                             style: const TextStyle(
-                              fontSize: 16,
+                              fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: Colors
                                   .white, // Force black text when disabled
@@ -108,7 +108,7 @@ class CustomTextField extends StatelessWidget {
                 padding: const EdgeInsets.all(0),
                 color: const Color(0xFFD3CABD),
                 icon: const Icon(Icons.add),
-                iconSize: 40,
+                iconSize: 32,
                 onPressed: enabled ? onIncrement : null,
               ),
           ],
