@@ -378,7 +378,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               ),
                             )
                           : OptionStrategyContainer(
-                              spotPrice: 23245,
+                              spotPrice: payoffTask.spotPrice,
                               spotPriceDayDelta: payoffTask.spotPriceDayDelta,
                               spotPriceDayDeltaPer:
                                   payoffTask.spotPriceDayDeltaPer,
