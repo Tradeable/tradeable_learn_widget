@@ -50,7 +50,7 @@ class HomeIntermediateScreen extends StatelessWidget {
                                 strike: 23250,
                                 type: PositionType.buy,
                                 optionType: OptionType.call,
-                                expiry: DateTime.parse("2025-02-06 15:30:00"),
+                                expiry: DateTime.parse("2025-06-06 15:30:00"),
                                 quantity: 25,
                                 premium: 362,
                               ),
@@ -59,7 +59,7 @@ class HomeIntermediateScreen extends StatelessWidget {
                                 strike: 23250,
                                 type: PositionType.buy,
                                 optionType: OptionType.put,
-                                expiry: DateTime.parse("2025-02-06 15:30:00"),
+                                expiry: DateTime.parse("2025-06-06 15:30:00"),
                                 quantity: 25,
                                 premium: 310,
                               )

@@ -120,7 +120,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         break;
       case TaskType.addOptionChain:
         AddOptionChainTask task = currentTask as AddOptionChainTask;
-        optionChainTasks.add(task);
+        if (!optionChainTasks
+            .any((t) => t.optionChainId == task.optionChainId)) {
+          optionChainTasks.add(task);
+        }
         setState(() {});
         onTaskFinish();
         break;
@@ -151,40 +154,28 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           final task = currentTask as AddTabTask;
           previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
 
-          final tasks = recipe.tasks
-              .whereType<ChooseCorrectOptionValueChainTask>()
-              .where((t) => t.taskId == task.taskId)
-              .toList();
-
-          if (tasks.isNotEmpty) {
-            tabs.add({
-              "type": "option_chain",
-              "title": task.tabTitle,
-              "taskId": task.taskId
-            });
-          } else {
-            final payoffTasks =
-                recipe.tasks.whereType<ShowPayOffGraphTask>().toList();
-
-            if (payoffTasks.isNotEmpty) {
+          if (!tabs.any((tab) => tab["taskId"] == task.taskId)) {
+            if (recipe.tasks.any((t) =>
+                t is ChooseCorrectOptionValueChainTask &&
+                t.taskId == task.taskId)) {
+              tabs.add({
+                "type": "option_chain",
+                "title": task.tabTitle,
+                "taskId": task.taskId
+              });
+            } else if (recipe.tasks
+                .any((t) => t is ShowInsightsPageTask && t.id == task.taskId)) {
+              tabs.add({
+                "type": "insights",
+                "title": task.tabTitle,
+                "taskId": task.taskId,
+              });
+            } else if (recipe.tasks.any((t) => t is ShowPayOffGraphTask)) {
               tabs.add({
                 "type": "payoff",
                 "title": task.tabTitle,
                 "taskId": task.taskId
               });
-            } else {
-              final insightsTasks = recipe.tasks
-                  .whereType<ShowInsightsPageTask>()
-                  .where((t) => t.id == task.taskId)
-                  .toList();
-
-              if (insightsTasks.isNotEmpty) {
-                tabs.add({
-                  "type": "insights",
-                  "title": task.tabTitle,
-                  "taskId": task.taskId,
-                });
-              }
             }
           }
         });
@@ -378,7 +369,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               ),
                             )
                           : OptionStrategyContainer(
-                              spotPrice: 23245,
+                              spotPrice: payoffTask.spotPrice,
                               spotPriceDayDelta: payoffTask.spotPriceDayDelta,
                               spotPriceDayDeltaPer:
                                   payoffTask.spotPriceDayDeltaPer,
@@ -389,7 +380,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                       final taskId = tab["taskId"]!;
                       final insightsTask = recipe.tasks
                           .whereType<ShowInsightsPageTask>()
-                          .firstWhere((t) => t.id == taskId);
+                          .firstWhere(
+                            (t) => t.id == taskId,
+                            orElse: () => insightsTasks.first,
+                          );
                       return Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10),
                         padding: const EdgeInsets.all(4),

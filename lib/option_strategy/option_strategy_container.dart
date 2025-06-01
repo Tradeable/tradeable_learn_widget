@@ -63,53 +63,55 @@ class _OptionStrategyContainerState extends State<OptionStrategyContainer>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TabBar(
-          controller: _tabController,
-          onTap: _updateCurrentPageIndex,
-          indicatorColor: Theme.of(context).customColors.primary,
-          indicatorSize: TabBarIndicatorSize.tab,
-          tabs: const [
-            Tab(text: "Payoff Graph"),
-            Tab(text: "Payoff Table"),
-          ],
-        ),
-        Expanded(
-          child: PageView(
-            controller: _pageViewController,
-            onPageChanged: _handlePageViewChanged,
-            children: [
-              PayoffGraphWidget(
-                helper: helper,
-                spotPrice: widget.spotPrice,
-                spotPriceDayDelta: widget.spotPriceDayDelta,
-                spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-                optionStrategyInfoComponent: OptionStrategyInfoComponent(
-                  helper: helper,
-                  spotPrice: widget.spotPrice,
-                  spotPriceDayDelta: widget.spotPriceDayDelta,
-                  spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-                  onExecute: widget.onExecute,
-                ),
-              ),
-              PayoffTableWidget(
-                helper: helper,
-                spotPrice: widget.spotPrice,
-                spotPriceDayDelta: widget.spotPriceDayDelta,
-                spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-                optionStrategyInfoComponent: OptionStrategyInfoComponent(
-                  helper: helper,
-                  spotPrice: widget.spotPrice,
-                  spotPriceDayDelta: widget.spotPriceDayDelta,
-                  spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
-                  onExecute: widget.onExecute,
-                ),
-              ),
+    return Scaffold(
+      body: Column(
+        children: [
+          TabBar(
+            controller: _tabController,
+            onTap: _updateCurrentPageIndex,
+            indicatorColor: Theme.of(context).customColors.primary,
+            indicatorSize: TabBarIndicatorSize.tab,
+            tabs: const [
+              Tab(text: "Payoff Graph"),
+              Tab(text: "Payoff Table"),
             ],
           ),
-        ),
-      ],
+          Expanded(
+            child: PageView(
+              controller: _pageViewController,
+              onPageChanged: _handlePageViewChanged,
+              children: [
+                PayoffGraphWidget(
+                  helper: helper,
+                  spotPrice: widget.spotPrice,
+                  spotPriceDayDelta: widget.spotPriceDayDelta,
+                  spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                  optionStrategyInfoComponent: OptionStrategyInfoComponent(
+                    helper: helper,
+                    spotPrice: widget.spotPrice,
+                    spotPriceDayDelta: widget.spotPriceDayDelta,
+                    spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                    onExecute: widget.onExecute,
+                  ),
+                ),
+                PayoffTableWidget(
+                  helper: helper,
+                  spotPrice: widget.spotPrice,
+                  spotPriceDayDelta: widget.spotPriceDayDelta,
+                  spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                  optionStrategyInfoComponent: OptionStrategyInfoComponent(
+                    helper: helper,
+                    spotPrice: widget.spotPrice,
+                    spotPriceDayDelta: widget.spotPriceDayDelta,
+                    spotPriceDayDeltaPer: widget.spotPriceDayDeltaPer,
+                    onExecute: widget.onExecute,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

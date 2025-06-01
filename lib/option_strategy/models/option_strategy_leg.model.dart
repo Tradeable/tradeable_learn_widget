@@ -23,13 +23,23 @@ class OptionLeg {
     required this.premium,
   });
 
-  // Helper method to parse position type
   static PositionType parsePositionType(String type) {
     return type.toLowerCase() == 'buy' ? PositionType.buy : PositionType.sell;
   }
 
-  // Helper method to parse option type
   static OptionType parseOptionType(String type) {
     return type.toLowerCase() == 'call' ? OptionType.call : OptionType.put;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'symbol': symbol,
+      'strike': strike,
+      'type': type.name,
+      'optionType': optionType.name,
+      'expiry': expiry.toIso8601String(),
+      'quantity': quantity,
+      'premium': premium
+    };
   }
 }
