@@ -38,7 +38,7 @@ class PillboxSelector extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Color(0xFFE2E2E2),
+        color: const Color(0xFFE2E2E2),
         borderRadius: BorderRadius.circular(borderRadius ?? 16),
       ),
       child: Row(
@@ -53,7 +53,7 @@ class PillboxSelector extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? (enabled ? Color(0xFF97144D) : Colors.grey)
+                      ? (enabled ? const Color(0xFF97144D) : Colors.grey)
                       : Colors.transparent,
                   border: isSelected
                       ? Border.all(color: Colors.white, width: 2)
@@ -61,7 +61,7 @@ class PillboxSelector extends StatelessWidget {
                   borderRadius: BorderRadius.circular(borderRadius ?? 16),
                   boxShadow: isSelected
                       ? [
-                          BoxShadow(
+                          const BoxShadow(
                               color: Colors.black26,
                               blurRadius: 4,
                               offset: Offset(0, 2))
@@ -75,7 +75,7 @@ class PillboxSelector extends StatelessWidget {
                     fontSize: fontSize ?? (visibleOptions.length > 2 ? 12 : 14),
                     color: isSelected
                         ? Colors.white
-                        : (enabled ? Color(0xFF6E6E6E) : Colors.grey),
+                        : (enabled ? const Color(0xFF6E6E6E) : Colors.grey),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

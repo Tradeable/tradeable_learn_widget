@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 class CustomSwitch extends StatefulWidget {
@@ -68,6 +70,11 @@ class _CustomSwitchState extends State<CustomSwitch>
 
   @override
   Widget build(BuildContext context) {
+    final responsiveWidth =
+        math.max(80, MediaQuery.of(context).size.width * 0.17).toDouble();
+    final responsiveHeight =
+        math.max(30, MediaQuery.of(context).size.width * 0.075).toDouble();
+
     return GestureDetector(
       onTap: widget.onChanged != null
           ? () => widget.onChanged!(!widget.value)
@@ -76,22 +83,24 @@ class _CustomSwitchState extends State<CustomSwitch>
         animation: _animation,
         builder: (context, child) {
           return Container(
-            width: widget.width,
-            height: widget.height,
+            width: responsiveWidth,
+            height: responsiveHeight,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Color(0xFFE2E2E2),
+              borderRadius: BorderRadius.circular(20),
+              color: const Color(0xFFE2E2E2),
             ),
             child: Stack(
               children: [
                 AnimatedPositioned(
                   duration: widget.animationDuration,
                   curve: Curves.easeInOut,
-                  left: widget.value ? widget.width - widget.height - 16 : 0,
+                  left: widget.value
+                      ? responsiveWidth - responsiveHeight - 16
+                      : 0,
                   top: 2,
                   child: Container(
-                    width: widget.height + 16,
-                    height: widget.height - 4,
+                    width: responsiveHeight + 12,
+                    height: responsiveHeight - 4,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: widget.onChanged != null
@@ -103,7 +112,7 @@ class _CustomSwitchState extends State<CustomSwitch>
                             : Colors.grey.shade400,
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(20),
                       color: widget.thumbColor,
                       boxShadow: [
                         BoxShadow(

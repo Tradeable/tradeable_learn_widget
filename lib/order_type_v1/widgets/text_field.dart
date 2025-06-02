@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -32,20 +34,27 @@ class CustomTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         decoration: BoxDecoration(
-          color: Color(0xFF395046),
+          color: const Color(0xFF395046),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
             if (onDecrement != null)
-              IconButton(
-                padding: EdgeInsets.all(0),
-                color: Color(0xFFD3CABD),
-                icon: const Icon(Icons.remove),
-                iconSize: 40,
-                onPressed: enabled ? onDecrement : null,
+              GestureDetector(
+                onTap: enabled ? onDecrement : null,
+                child: SizedBox(
+                  width: math.max(32, MediaQuery.of(context).size.width * 0.07),
+                  height:
+                      math.max(32, MediaQuery.of(context).size.width * 0.07),
+                  child: Icon(
+                    Icons.remove,
+                    color: const Color(0xFFD3CABD),
+                    size:
+                        math.max(18, MediaQuery.of(context).size.width * 0.07),
+                  ),
+                ),
               ),
             Expanded(
               child: Column(
@@ -61,7 +70,7 @@ class CustomTextField extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 8),
                           decoration: BoxDecoration(
-                            color: Color(0xFF2BC381),
+                            color: const Color(0xFF2BC381),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: TextField(
@@ -104,12 +113,19 @@ class CustomTextField extends StatelessWidget {
               ),
             ),
             if (onIncrement != null)
-              IconButton(
-                padding: const EdgeInsets.all(0),
-                color: const Color(0xFFD3CABD),
-                icon: const Icon(Icons.add),
-                iconSize: 40,
-                onPressed: enabled ? onIncrement : null,
+              GestureDetector(
+                onTap: enabled ? onIncrement : null,
+                child: SizedBox(
+                  width: math.max(32, MediaQuery.of(context).size.width * 0.07),
+                  height:
+                      math.max(32, MediaQuery.of(context).size.width * 0.07),
+                  child: Icon(
+                    Icons.add,
+                    color: const Color(0xFFD3CABD),
+                    size:
+                        math.max(18, MediaQuery.of(context).size.width * 0.07),
+                  ),
+                ),
               ),
           ],
         ),
