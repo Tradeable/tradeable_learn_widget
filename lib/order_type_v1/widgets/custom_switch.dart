@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 
 class CustomSwitch extends StatefulWidget {
   final bool value;
@@ -16,8 +19,8 @@ class CustomSwitch extends StatefulWidget {
     required this.onChanged,
     this.width = 100.0,
     this.height = 35.0,
-    this.activeColor = const Color(0xFF12877F),
-    this.inactiveColor = const Color(0xFF97144D),
+    this.activeColor = UIConstants.switchActiveColor,
+    this.inactiveColor = UIConstants.switchInactiveColor,
     this.thumbColor = Colors.white,
     this.animationDuration = const Duration(milliseconds: 200),
   });
@@ -68,6 +71,11 @@ class _CustomSwitchState extends State<CustomSwitch>
 
   @override
   Widget build(BuildContext context) {
+    final responsiveWidth =
+        math.max(80, MediaQuery.of(context).size.width * 0.17).toDouble();
+    final responsiveHeight =
+        math.max(30, MediaQuery.of(context).size.width * 0.075).toDouble();
+
     return GestureDetector(
       onTap: widget.onChanged != null
           ? () => widget.onChanged!(!widget.value)
@@ -76,22 +84,25 @@ class _CustomSwitchState extends State<CustomSwitch>
         animation: _animation,
         builder: (context, child) {
           return Container(
-            width: widget.width,
-            height: widget.height,
+            width: responsiveWidth,
+            height: responsiveHeight,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Color(0xFFE2E2E2),
+              borderRadius:
+                  BorderRadius.circular(UIConstants.switchBorderRadius),
+              color: UIConstants.secondaryCardColor,
             ),
             child: Stack(
               children: [
                 AnimatedPositioned(
                   duration: widget.animationDuration,
                   curve: Curves.easeInOut,
-                  left: widget.value ? widget.width - widget.height - 16 : 0,
+                  left: widget.value
+                      ? responsiveWidth - responsiveHeight - 16
+                      : 0,
                   top: 2,
                   child: Container(
-                    width: widget.height + 16,
-                    height: widget.height - 4,
+                    width: responsiveHeight + 12,
+                    height: responsiveHeight - 4,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: widget.onChanged != null
@@ -103,7 +114,8 @@ class _CustomSwitchState extends State<CustomSwitch>
                             : Colors.grey.shade400,
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius:
+                          BorderRadius.circular(UIConstants.switchBorderRadius),
                       color: widget.thumbColor,
                       boxShadow: [
                         BoxShadow(

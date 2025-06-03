@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/order_type_v1/order_type_v1.model.dart';
 import 'package:tradeable_learn_widget/order_type_v1/order_type_widget.dart';
 import 'package:tradeable_learn_widget/order_type_v1/tutorial_manager.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/app_theme.dart';
+import 'dart:math' as math;
 
 class OrderScreen extends StatefulWidget {
   final OrderTypeV1 model;
@@ -71,51 +76,131 @@ class OrderScreenState extends State<OrderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Tutorial prompt box - only visible in tutorial mode
             if (widget.model.tutorialMode)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16.0),
-                margin: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.blue.shade300),
-                ),
-                child: Text(
-                  orderWidgetKey.currentState?.getCurrentTutorialPrompt() ??
-                      'Loading tutorial...',
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+              if (widget.model.tutorialMode)
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: colors.cardColorSecondary,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
                   ),
-                  textAlign: TextAlign.center,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder: (child, animation) => SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(1, 0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                    child: Container(
+                      key: ValueKey(tutorialPrompt),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: colors.buttonColor,
+                        border: Border.all(color: colors.cardColorSecondary),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Instruction",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Color(0xFF6E6E6E),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            tutorialPrompt,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Row(
+                            children: [
+                              Spacer(),
+                              SizedBox(width: 8),
+                              FeedbackWidget(), // You'll need to import this widget
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
 
-            // Main content in an Expanded widget to take available space
             Expanded(
-              child: SingleChildScrollView(
-                child: StockOrderWidget(
-                  key: orderWidgetKey,
-                  stockName: widget.model.stockName,
-                  currentPrice: widget.model.currentPrice,
-                  onTutorialStepCompleted: onTutorialStepCompleted,
+              child: Container(
+                margin:
+                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.025),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: UIConstants.secondaryCardColor,
+                    width: MediaQuery.of(context).size.width * 0.025,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(UIConstants.defaultBorderRadius),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.04,
+                      decoration: const BoxDecoration(
+                        color: UIConstants.primaryCardColor,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25)),
+                      ),
+                      child: Center(
+                        child: Text(widget.model.stockName,
+                            style: UIConstants.stockNameStyle),
+                      ),
+                    ),
+                    // Scrollable content
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: StockOrderWidget(
+                          key: orderWidgetKey,
+                          stockName: widget.model.stockName,
+                          currentPrice: widget.model.currentPrice,
+                          onTutorialStepCompleted: onTutorialStepCompleted,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-
             // Fixed buy button at bottom of screen
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.only(
-                  bottom: 30, left: 30, right: 30, top: 10),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 0.010,
+                left: MediaQuery.of(context).size.width * 0.05,
+                right: MediaQuery.of(context).size.width * 0.05,
+                top: MediaQuery.of(context).size.height * 0.010,
+              ),
               child: SizedBox(
-                height: 60,
+                height:
+                    math.max(50, MediaQuery.of(context).size.height * 0.055),
                 child: Opacity(
                   opacity: !widget.model.tutorialMode ||
                           orderWidgetKey.currentState
@@ -132,7 +217,7 @@ class OrderScreenState extends State<OrderScreen> {
                             widget.onNextClick();
                             final orderData =
                                 orderWidgetKey.currentState?.getOrderData();
-                            //print('Order Data: $orderData');
+                            print('Order Data: $orderData');
 
                             if (widget.model.tutorialMode) {
                               // Handle tutorial completion
@@ -164,16 +249,8 @@ class OrderScreenState extends State<OrderScreen> {
                             widget.onNextClick();
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text(
-                      'BUY',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                        backgroundColor: UIConstants.textFieldAccentColor),
+                    child: const Text('BUY', style: UIConstants.buyButtonStyle),
                   ),
                 ),
               ),

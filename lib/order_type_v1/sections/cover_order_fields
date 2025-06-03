@@ -1,0 +1,128 @@
+// lib/order_type_v1/widgets/cover_order_fields.dart
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/widgets/text_field.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
+
+class CoverOrderFields extends StatelessWidget {
+  final TextEditingController stopLossController;
+  final TextEditingController targetPriceController;
+  final bool Function(String) isEnabled;
+  final VoidCallback onStopLossIncrement;
+  final VoidCallback onStopLossDecrement;
+  final VoidCallback onTargetIncrement;
+  final VoidCallback onTargetDecrement;
+  final Function(String)? onStopLossChanged;
+  final Function(String)? onTargetChanged;
+
+  const CoverOrderFields({
+    super.key,
+    required this.stopLossController,
+    required this.targetPriceController,
+    required this.isEnabled,
+    required this.onStopLossIncrement,
+    required this.onStopLossDecrement,
+    required this.onTargetIncrement,
+    required this.onTargetDecrement,
+    this.onStopLossChanged,
+    this.onTargetChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // Stop Loss section
+        Expanded(
+          child: _buildFieldSection(
+            context: context,
+            controller: stopLossController,
+            label: 'Sell Stop Loss',
+            fieldLabel: 'Stop Loss',
+            enabledKey: 'stop_loss_controls',
+            onIncrement: onStopLossIncrement,
+            onDecrement: onStopLossDecrement,
+            onChanged: onStopLossChanged,
+          ),
+        ),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+        // Target Price section
+        Expanded(
+          child: _buildFieldSection(
+            context: context,
+            controller: targetPriceController,
+            label: 'Sell Price',
+            fieldLabel: 'Target Price',
+            enabledKey: 'target_price_controls',
+            onIncrement: onTargetIncrement,
+            onDecrement: onTargetDecrement,
+            onChanged: onTargetChanged,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFieldSection({
+    required BuildContext context,
+    required TextEditingController controller,
+    required String label,
+    required String fieldLabel,
+    required String enabledKey,
+    required VoidCallback onIncrement,
+    required VoidCallback onDecrement,
+    Function(String)? onChanged,
+  }) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.018,
+          ),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.022,
+          ),
+          decoration: BoxDecoration(
+            color: UIConstants.primaryCardColor,
+            borderRadius: BorderRadius.circular(UIConstants.defaultBorderRadius),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: UIConstants.fieldPadding,
+                child: CustomTextField(
+                  controller: controller,
+                  label: fieldLabel,
+                  enabled: isEnabled(enabledKey),
+                  onChanged: onChanged,
+                  onIncrement: onIncrement,
+                  onDecrement: onDecrement,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            decoration: BoxDecoration(
+              color: UIConstants.labelBackgroundColor,
+              borderRadius: BorderRadius.circular(UIConstants.defaultBorderRadius),
+              border: Border.all(
+                color: UIConstants.primaryCardColor,
+                width: 2,
+              ),
+            ),
+            child: AutoSizeText(
+              label,
+              minFontSize: 8,
+              maxLines: 1,
+              style: UIConstants.labelStyle
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

@@ -1,9 +1,13 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:tradeable_learn_widget/order_type_v1/widgets/custom_switch.dart';
-import 'package:tradeable_learn_widget/order_type_v1/widgets/pillbox_selector.dart';
-import 'package:tradeable_learn_widget/order_type_v1/widgets/text_field.dart';
+import 'package:tradeable_learn_widget/order_type_v1/sections/advanced_options.dart';
+import 'package:tradeable_learn_widget/order_type_v1/sections/cover_order_fields';
+import 'package:tradeable_learn_widget/order_type_v1/sections/margin_section.dart';
+import 'package:tradeable_learn_widget/order_type_v1/sections/price_type_section.dart';
+import 'package:tradeable_learn_widget/order_type_v1/sections/product_section.dart';
+import 'package:tradeable_learn_widget/order_type_v1/sections/quantity_section.dart';
+import 'package:tradeable_learn_widget/order_type_v1/services/order_service.dart';
 
 class StockOrderWidget extends StatefulWidget {
   final String stockName;
@@ -37,7 +41,6 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
   bool eMarginEnabled = false;
   bool stopLossEnabled = false;
   bool targetPercentEnabled = false;
-  final NumberFormat numberFormatter = NumberFormat('#,##,##0.00', 'en_IN');
 
   @override
   void initState() {
@@ -48,22 +51,19 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
   }
 
   Map<String, dynamic> getOrderData() {
-    return {
-      'stockName': widget.stockName,
-      'currentPrice': widget.currentPrice,
-      'orderType': selectedOrderType,
-      'quantity': double.tryParse(quantityController.text),
-      'eMarginEnabled': eMarginEnabled,
-      'priceType': priceType,
-      'validity': validity,
-      'stopLoss': selectedOrderType == 'COVER' || stopLossEnabled
-          ? double.tryParse(stopLossController.text)
-          : null,
-      'targetPrice': selectedOrderType == 'COVER'
-          ? double.tryParse(targetPriceController.text)
-          : null,
-      'disclosedQuantity': double.tryParse(disclosedQuantityController.text),
-    };
+    return OrderService.createOrderData(
+      stockName: widget.stockName,
+      currentPrice: widget.currentPrice,
+      orderType: selectedOrderType,
+      quantityText: quantityController.text,
+      eMarginEnabled: eMarginEnabled,
+      priceType: priceType,
+      validity: validity,
+      stopLossText: stopLossController.text,
+      targetPriceText: targetPriceController.text,
+      disclosedQuantityText: disclosedQuantityController.text,
+      stopLossEnabled: stopLossEnabled,
+    );
   }
 
   bool isElementEnabled(String elementId) {
@@ -237,53 +237,11 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
   }
 
   void updateStopLossAndTarget() {
-    stopLossController.text = (widget.currentPrice * 0.9).toStringAsFixed(2);
-    targetPriceController.text = (widget.currentPrice * 1.1).toStringAsFixed(2);
-  }
-
-  String getMarginRequirementText() {
-    final quantity = double.tryParse(quantityController.text);
-    if (quantity == null || quantity == 0) {
-      return "0.00";
-    }
-    return numberFormatter.format(quantity * widget.currentPrice);
-  }
-
-  String getOrderTypeDescription() {
-    switch (selectedOrderType) {
-      case 'DELIVERY':
-        return 'Delivery (Cash & Carry) allows you to buy stocks and hold them in your demat account. The full value of shares is required as margin.';
-      case 'INTRADAY':
-        return 'Intraday orders must be squared off on the same trading day. They require lower margin as positions are not carried overnight.';
-      case 'COVER':
-        return 'Cover orders come with a built-in stop loss. They offer higher leverage but require you to set both stop loss and target price.';
-      default:
-        return '';
-    }
-  }
-
-  String getPriceTypeDescription() {
-    switch (priceType) {
-      case 'MARKET':
-        return 'Market orders are executed immediately at the best available current market price.';
-      case 'LIMIT':
-        return 'Limit orders are executed only at the specified price or better.';
-      default:
-        return '';
-    }
-  }
-
-  String getValidityDescription() {
-    switch (validity) {
-      case 'DAY':
-        return 'Order valid for the current trading day only. It gets canceled automatically at the end of the trading day if not executed.';
-      case 'IOC':
-        return 'Immediate or Cancel - Order is executed immediately (fully or partially). Any portion that cannot be executed immediately is canceled.';
-      case 'GTD':
-        return 'Good Till Date - Order remains active in the market until executed or until the specified date.';
-      default:
-        return '';
-    }
+    OrderService.updateStopLossAndTarget(
+      currentPrice: widget.currentPrice,
+      stopLossController: stopLossController,
+      targetPriceController: targetPriceController,
+    );
   }
 
   void _incrementValue(
@@ -333,773 +291,199 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Transform.translate(
-            offset: const Offset(0, -15),
-            child: Container(
-              width: 300,
-              height: 40, // Adjust height as needed
-              margin: const EdgeInsets.only(bottom: 8),
-              // padding: const EdgeInsets.all(16.0),
-              decoration: const BoxDecoration(
-                color: Color(0xFFEBF0F9), // Customize color
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25)),
-              ),
-              child: Center(
-                child: Text(
-                  widget.stockName,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Color(0xFF6E6E6E)),
-                ),
-              ),
-            ),
-          ),
-          Stack(clipBehavior: Clip.none, children: [
-            Container(
-              margin: const EdgeInsets.only(top: 18),
-              padding: const EdgeInsets.only(top: 24),
-              decoration: BoxDecoration(
-                color: const Color(0xFFEBF0F9),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Column(
-                children: [
-                  Container(
-                      margin: const EdgeInsets.only(top: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE2E2E2),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: PillboxSelector(
-                        options: const ['DELIVERY', 'INTRADAY', 'COVER'],
-                        selectedValue: selectedOrderType,
-                        fontSize: 16,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        onSelected: (value) {
-                          setState(() {
-                            selectedOrderType = value;
-                            if (value == 'COVER') {
-                              priceType = 'MARKET';
-                            }
-                            updateStopLossAndTarget();
-
-                            checkStepCompletion();
-                          });
-                        },
-                        isEnabled: (option) =>
-                            isElementEnabled('product_$option'),
-                      )),
-                ],
-              ),
-            ),
-            Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF9F6EB),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Text(
-                  'PRODUCT',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Color(0xFF6E6E6E)),
-                ),
-              ),
-            ),
-          ]),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              getOrderTypeDescription(),
-              style: const TextStyle(
-                fontSize: 14,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 8),
-
-          Row(
-            children: [
-              // Quantity section (left side)
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 18),
-                          padding: const EdgeInsets.only(top: 24),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEBF0F9),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 0),
-                            child: CustomTextField(
-                              controller: quantityController,
-                              label: 'QUANTITY',
-                              enabled: isElementEnabled('quantity_controls'),
-                              onChanged: (value) {
-                                setState(() {});
-                                checkStepCompletion();
-                              },
-                              onIncrement: () => _incrementValue(
-                                  quantityController,
-                                  minValue: 1,
-                                  triggerStepCompletion: true),
-                              onDecrement: () => _decrementValue(
-                                  quantityController,
-                                  minValue: 1,
-                                  triggerStepCompletion: true),
-                            ),
-                          ),
-                        ),
-                        Center(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9F6EB),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Text(
-                              'QUANTITY',
-                              textScaler: TextScaler.linear(1),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: Color(0xFF6E6E6E)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(
-                width: 10,
-              ),
-
-              // Order Type section (right side)
-              Expanded(
-                flex: 3,
-                child: Column(
-                  children: [
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          padding: const EdgeInsets.only(top: 25),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEBF0F9),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: priceType == 'LIMIT'
-                              ? Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
-                                  child: CustomTextField(
-                                    controller: targetPriceController,
-                                    label: 'Limit Price',
-                                    onIncrement: () => _incrementValue(
-                                        targetPriceController,
-                                        decimalPlaces: 2,
-                                        triggerStepCompletion: true),
-                                    onDecrement: () => _decrementValue(
-                                        targetPriceController,
-                                        decimalPlaces: 2,
-                                        triggerStepCompletion: true),
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: 75,
-                                  child: Center(
-                                    child: Text(
-                                      widget.currentPrice.toStringAsFixed(2),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Container(
-                            height: 40,
-                            padding: const EdgeInsets.only(
-                                left: 8, top: 1, bottom: 1),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9F6EB),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Flexible(
-                                  child: AutoSizeText(
-                                    'ORDER TYPE',
-                                    maxLines: 1,
-                                    minFontSize: 8,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF6E6E6E)),
-                                  ),
-                                ),
-                                IntrinsicWidth(
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey.shade200,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: PillboxSelector(
-                                        useFlexibleWidth: true,
-                                        fontSize: 14,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 7, horizontal: 8),
-                                        options: const ['MARKET', 'LIMIT'],
-                                        selectedValue: priceType,
-                                        onSelected: (value) => setState(() {
-                                          priceType = value;
-                                          checkStepCompletion();
-                                        }),
-                                        isEnabled: (option) {
-                                          // Disable MARKET when GTD is selected
-                                          if (validity == 'GTD' &&
-                                              option == 'MARKET') {
-                                            return false;
-                                          }
-                                          if (selectedOrderType == 'COVER' &&
-                                              option == 'LIMIT') {
-                                            return false;
-                                          }
-                                          return isElementEnabled(
-                                              'price_type_$option');
-                                        },
-                                      )),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              getPriceTypeDescription(),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-
-          if (selectedOrderType == 'COVER') ...[
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                // Stop Loss section
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 18),
-                            padding: const EdgeInsets.only(top: 24),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEBF0F9),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
-                                  child: CustomTextField(
-                                    controller: stopLossController,
-                                    label: 'Stop Loss',
-                                    enabled:
-                                        isElementEnabled('stop_loss_controls'),
-                                    onChanged: (value) => checkStepCompletion(),
-                                    onIncrement: () => _incrementValue(
-                                        stopLossController,
-                                        decimalPlaces: 2,
-                                        triggerStepCompletion: true),
-                                    onDecrement: () => _decrementValue(
-                                        stopLossController,
-                                        decimalPlaces: 2,
-                                        triggerStepCompletion: true),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF9F6EB),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Text(
-                                'Sell Stop Loss',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: Color(0xFF6E6E6E)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                // Target Price section
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 18),
-                            padding: const EdgeInsets.only(top: 24),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEBF0F9),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
-                                  child: CustomTextField(
-                                    controller: targetPriceController,
-                                    label: 'Target Price',
-                                    enabled: isElementEnabled(
-                                        'target_price_controls'),
-                                    onChanged: (value) => checkStepCompletion(),
-                                    onIncrement: () => _incrementValue(
-                                        targetPriceController,
-                                        decimalPlaces: 2,
-                                        triggerStepCompletion: true),
-                                    onDecrement: () => _decrementValue(
-                                        targetPriceController,
-                                        decimalPlaces: 2,
-                                        triggerStepCompletion: true),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF9F6EB),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Text(
-                                'Sell Price',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: Color(0xFF6E6E6E)),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-
-          const SizedBox(
-            height: 16,
-          ),
-
-          if (selectedOrderType == 'DELIVERY') ...[
-            Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    // margin: const EdgeInsets.only(top: 18),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEBF0F9),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9F6EB),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Text(
-                              'E-Margin',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF6E6E6E)),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: CustomSwitch(
-                            value: eMarginEnabled,
-                            onChanged: isElementEnabled('e_margin_toggle')
-                                ? (value) {
-                                    setState(() {
-                                      eMarginEnabled = value;
-                                    });
-                                  }
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                //Flexible(flex: 1, child: Container()),
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEBF0F9),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9F6EB),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Text(
-                              'Reqd Margin',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  color: Color(0xFF6E6E6E)),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: AutoSizeText(
-                              '₹${getMarginRequirementText()}',
-                              minFontSize: 8,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF6E6E6E)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ] else ...[
-            Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEBF0F9),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9F6EB),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Text(
-                              'Reqd Margin',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: Color(0xFF6E6E6E)),
-                            ),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: AutoSizeText(
-                              '₹${getMarginRequirementText()}',
-                              minFontSize: 8,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                  color: Color(0xFF6E6E6E)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(flex: 1, child: Container())
-              ],
-            ),
-          ],
-
-          if (eMarginEnabled == true) ...[
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                'E-Margin allows you to pledge your existing holdings as collateral to get additional buying power without selling your shares.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ] else
-            const SizedBox(height: 8),
-
-          // Advanced section
-          const SizedBox(height: 24),
-          InkWell(
-            onTap: isElementEnabled('advanced_toggle')
-                ? () {
-                    setState(() {
-                      showAdvanced = !showAdvanced;
-                    });
-                    checkStepCompletion();
+    return // Remove the override entirely, or make it conditional
+        MediaQuery(
+      data: MediaQuery.of(context).copyWith(
+        textScaler: Platform.isIOS
+            ? MediaQuery.of(context).textScaler // Respect iOS settings
+            : const TextScaler.linear(1.0), // Override only on Android
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ProductSelector(
+              selectedOrderType: selectedOrderType,
+              onOrderTypeChanged: (value) {
+                setState(() {
+                  selectedOrderType = value;
+                  if (value == 'COVER') {
+                    priceType = 'MARKET';
+                    validity = 'DAY';
                   }
-                : null,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Advanced Options',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                      color: Color(0xFF6E6E6E)),
-                ),
-                Icon(showAdvanced ? Icons.expand_less : Icons.expand_more),
-              ],
+                  OrderService.updateStopLossAndTarget(
+                    currentPrice: widget.currentPrice,
+                    stopLossController: stopLossController,
+                    targetPriceController: targetPriceController,
+                  );
+                  checkStepCompletion();
+                });
+              },
+              isEnabled: isElementEnabled,
             ),
-          ),
-
-          const SizedBox(height: 24),
-
-          if (showAdvanced) ...[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+                  Text(OrderService.getOrderTypeDescription(selectedOrderType)),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.width * 0.02),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  flex: 2,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(clipBehavior: Clip.none, children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 18),
-                            padding: const EdgeInsets.only(top: 24),
-                            decoration: BoxDecoration(
-                              color: Color(0xFFEBF0F9),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                    margin: const EdgeInsets.only(top: 8),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFE2E2E2),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: PillboxSelector(
-                                      fontSize: 14,
-                                      options: ['DAY', 'IOC', 'GTD'],
-                                      selectedValue: validity,
-                                      onSelected: (value) => setState(() {
-                                        validity = value;
-                                        // Auto-set price type to LIMIT when GTD is selected
-                                        if (value == 'GTD') {
-                                          priceType = 'LIMIT';
-                                        }
-                                        checkStepCompletion();
-                                      }),
-                                      isEnabled: (option) {
-                                        if (selectedOrderType == 'COVER' &&
-                                            (option == 'IOC' ||
-                                                option == 'GTD')) {
-                                          return false;
-                                        }
-                                        return true;
-                                      },
-                                    )),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF9F6EB),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Text(
-                                'VALIDITY',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    //fontSize: 16,
-                                    color: Color(0xFF6E6E6E)),
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ],
+                // Quantity section (left side)
+                Expanded(
+                  flex: 3,
+                  child: QuantitySection(
+                    quantityController: quantityController,
+                    isEnabled: isElementEnabled,
+                    onIncrement: () => _incrementValue(
+                      quantityController,
+                      minValue: 1,
+                      triggerStepCompletion: true,
+                    ),
+                    onDecrement: () => _decrementValue(
+                      quantityController,
+                      minValue: 1,
+                      triggerStepCompletion: true,
+                    ),
+                    onChanged: (value) {
+                      setState(() {});
+                      checkStepCompletion();
+                    },
+                  ),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                // Price Type section (right side)
+                Expanded(
+                  flex: 4,
+                  child: PriceTypeSection(
+                    priceType: priceType,
+                    selectedOrderType: selectedOrderType,
+                    validity: validity,
+                    currentPrice: widget.currentPrice,
+                    targetPriceController: targetPriceController,
+                    onPriceTypeChanged: (value) => setState(() {
+                      priceType = value;
+                      checkStepCompletion();
+                    }),
+                    isEnabled: isElementEnabled,
+                    onTargetIncrement: () => _incrementValue(
+                      targetPriceController,
+                      decimalPlaces: 2,
+                      triggerStepCompletion: true,
+                    ),
+                    onTargetDecrement: () => _decrementValue(
+                      targetPriceController,
+                      decimalPlaces: 2,
+                      triggerStepCompletion: true,
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                if (validity == 'DAY') ...[
-                  Flexible(
-                    flex: 2,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Stack(children: [
-                          Container(
-                            margin: const EdgeInsets.only(top: 18),
-                            padding: const EdgeInsets.only(top: 24),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEBF0F9),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
-                                  child: CustomTextField(
-                                    controller: disclosedQuantityController,
-                                    label: 'DISCLOSED QUANTITY',
-                                    enabled:
-                                        isElementEnabled('quantity_controls'),
-                                    onIncrement: () => _incrementValue(
-                                        disclosedQuantityController,
-                                        minValue: 0,
-                                        triggerStepCompletion: true),
-                                    onDecrement: () => _decrementValue(
-                                        disclosedQuantityController,
-                                        minValue: 0,
-                                        triggerStepCompletion: true),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF9F6EB),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Text(
-                                'DISC. QUANTITY',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    // fontSize: 16,
-                                    color: Color(0xFF6E6E6E)),
-                              ),
-                            ),
-                          ),
-                        ]),
-                      ],
-                    ),
-                  ),
-                ] else ...[
-                  Flexible(flex: 2, child: Container())
-                ]
               ],
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                getValidityDescription(),
+                OrderService.getPriceTypeDescription(priceType),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
+            if (selectedOrderType == 'COVER') ...[
+              SizedBox(height: MediaQuery.of(context).size.width * 0.02),
+              CoverOrderFields(
+                stopLossController: stopLossController,
+                targetPriceController: targetPriceController,
+                isEnabled: isElementEnabled,
+                onStopLossIncrement: () => _incrementValue(
+                  stopLossController,
+                  decimalPlaces: 2,
+                  triggerStepCompletion: true,
+                ),
+                onStopLossDecrement: () => _decrementValue(
+                  stopLossController,
+                  decimalPlaces: 2,
+                  triggerStepCompletion: true,
+                ),
+                onTargetIncrement: () => _incrementValue(
+                  targetPriceController,
+                  decimalPlaces: 2,
+                  triggerStepCompletion: true,
+                ),
+                onTargetDecrement: () => _decrementValue(
+                  targetPriceController,
+                  decimalPlaces: 2,
+                  triggerStepCompletion: true,
+                ),
+                onStopLossChanged: (value) => checkStepCompletion(),
+                onTargetChanged: (value) => checkStepCompletion(),
+              ),
+            ],
+            SizedBox(height: MediaQuery.of(context).size.width * 0.02),
+            MarginSection(
+              selectedOrderType: selectedOrderType,
+              eMarginEnabled: eMarginEnabled,
+              marginRequirementText: OrderService.calculateMarginRequirement(
+                double.tryParse(quantityController.text) ?? 0,
+                widget.currentPrice,
+              ),
+              isEnabled: isElementEnabled,
+              onEMarginChanged: (value) {
+                setState(() {
+                  eMarginEnabled = value;
+                });
+              },
+            ),
+            if (eMarginEnabled == true) ...[
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'E-Margin allows you to pledge your existing holdings as collateral to get additional buying power without selling your shares.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+            ] else
+              SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.020),
+            AdvancedOptions(
+              showAdvanced: showAdvanced,
+              validity: validity,
+              selectedOrderType: selectedOrderType,
+              disclosedQuantityController: disclosedQuantityController,
+              isEnabled: isElementEnabled,
+              onToggleAdvanced: () {
+                setState(() {
+                  showAdvanced = !showAdvanced;
+                });
+                checkStepCompletion();
+              },
+              onValidityChanged: (value) => setState(() {
+                validity = value;
+                if (value == 'GTD') {
+                  priceType = 'LIMIT';
+                }
+                checkStepCompletion();
+              }),
+              onDisclosedIncrement: () => _incrementValue(
+                disclosedQuantityController,
+                minValue: 0,
+                triggerStepCompletion: true,
+              ),
+              onDisclosedDecrement: () => _decrementValue(
+                disclosedQuantityController,
+                minValue: 0,
+                triggerStepCompletion: true,
+              ),
+            ),
+            if (showAdvanced)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  OrderService.getValidityDescription(validity),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
           ],
-        ],
+        ),
       ),
     );
   }

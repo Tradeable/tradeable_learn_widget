@@ -13,36 +13,36 @@ class CustomStyles {
     required double smallSize,
     required double mediumSize,
     required double largeSize,
-  }) : smallNormal = TextStyle(
-         fontSize: smallSize,
-         fontWeight: FontWeight.normal,
-         color: textColor,
-       ),
-       smallBold = TextStyle(
-         fontSize: smallSize,
-         fontWeight: FontWeight.bold,
-         color: textColor,
-       ),
-       mediumNormal = TextStyle(
-         fontSize: mediumSize,
-         fontWeight: FontWeight.normal,
-         color: textColor,
-       ),
-       mediumBold = TextStyle(
-         fontSize: mediumSize,
-         fontWeight: FontWeight.bold,
-         color: textColor,
-       ),
-       largeNormal = TextStyle(
-         fontSize: largeSize,
-         fontWeight: FontWeight.normal,
-         color: textColor,
-       ),
-       largeBold = TextStyle(
-         fontSize: largeSize,
-         fontWeight: FontWeight.bold,
-         color: textColor,
-       );
+  })  : smallNormal = TextStyle(
+          fontSize: smallSize,
+          fontWeight: FontWeight.normal,
+          color: textColor,
+        ),
+        smallBold = TextStyle(
+          fontSize: smallSize,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+        mediumNormal = TextStyle(
+          fontSize: mediumSize,
+          fontWeight: FontWeight.normal,
+          color: textColor,
+        ),
+        mediumBold = TextStyle(
+          fontSize: mediumSize,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        ),
+        largeNormal = TextStyle(
+          fontSize: largeSize,
+          fontWeight: FontWeight.normal,
+          color: textColor,
+        ),
+        largeBold = TextStyle(
+          fontSize: largeSize,
+          fontWeight: FontWeight.bold,
+          color: textColor,
+        );
 }
 
 class ThemeColors {
@@ -186,7 +186,7 @@ class AppTheme {
         background: Colors.white,
         error: customColors.bearishColor,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: customColors.cardBasicBackground,
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -305,7 +305,7 @@ class AppTheme {
           return Colors.grey.withOpacity(0.5);
         }),
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: customColors.primary,
         unselectedLabelColor: customColors.secondary,
         indicator: UnderlineTabIndicator(
@@ -317,7 +317,7 @@ class AppTheme {
         thickness: 1,
         space: 1,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         titleTextStyle: const TextStyle(
@@ -369,7 +369,7 @@ class AppTheme {
         background: const Color(0xFF161A26),
         error: customColors.bearishColor,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: customColors.cardColorPrimary,
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -490,7 +490,7 @@ class AppTheme {
           return Colors.grey.withOpacity(0.5);
         }),
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: customColors.primary,
         unselectedLabelColor: Colors.grey,
         indicator: UnderlineTabIndicator(
@@ -502,7 +502,7 @@ class AppTheme {
         thickness: 1,
         space: 1,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xff222838),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         titleTextStyle: const TextStyle(
