@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 
 class CustomSwitch extends StatefulWidget {
   final bool value;
@@ -18,8 +19,8 @@ class CustomSwitch extends StatefulWidget {
     required this.onChanged,
     this.width = 100.0,
     this.height = 35.0,
-    this.activeColor = const Color(0xFF12877F),
-    this.inactiveColor = const Color(0xFF97144D),
+    this.activeColor = UIConstants.switchActiveColor,
+    this.inactiveColor = UIConstants.switchInactiveColor,
     this.thumbColor = Colors.white,
     this.animationDuration = const Duration(milliseconds: 200),
   });
@@ -87,7 +88,7 @@ class _CustomSwitchState extends State<CustomSwitch>
             height: responsiveHeight,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: const Color(0xFFE2E2E2),
+              color: UIConstants.secondaryCardColor,
             ),
             child: Stack(
               children: [

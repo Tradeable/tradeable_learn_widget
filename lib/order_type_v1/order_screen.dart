@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/order_type_v1/order_type_v1.model.dart';
 import 'package:tradeable_learn_widget/order_type_v1/order_type_widget.dart';
 import 'package:tradeable_learn_widget/order_type_v1/tutorial_manager.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/app_theme.dart';
 import 'dart:math' as math;
@@ -116,22 +117,14 @@ class OrderScreenState extends State<OrderScreen> {
                       children: [
                         const Text(
                           "Instruction",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                            color: Color(0xFF6E6E6E),
-                          ),
+                          style: UIConstants.instructionLabelStyle,
                         ),
                         const SizedBox(height: 4),
                         Text(
                           orderWidgetKey.currentState
                                   ?.getCurrentTutorialPrompt() ??
                               'Loading tutorial...',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.black,
-                          ),
+                          style: UIConstants.instructionTextStyle,
                         ),
                       ],
                     ),
@@ -145,7 +138,7 @@ class OrderScreenState extends State<OrderScreen> {
                     EdgeInsets.all(MediaQuery.of(context).size.width * 0.025),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: const Color(0xFFE2E2E2),
+                    color: UIConstants.secondaryCardColor,
                     width: MediaQuery.of(context).size.width * 0.025,
                   ),
                   borderRadius: BorderRadius.circular(15),
@@ -156,19 +149,14 @@ class OrderScreenState extends State<OrderScreen> {
                       width: MediaQuery.of(context).size.width * 0.6,
                       height: MediaQuery.of(context).size.height * 0.04,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFEBF0F9),
+                        color: UIConstants.primaryCardColor,
                         borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(25),
                             bottomRight: Radius.circular(25)),
                       ),
                       child: Center(
-                        child: Text(
-                          widget.model.stockName,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                              color: Color(0xFF6E6E6E)),
-                        ),
+                        child: Text(widget.model.stockName,
+                            style: UIConstants.stockNameStyle),
                       ),
                     ),
                     // Scrollable content
@@ -246,16 +234,8 @@ class OrderScreenState extends State<OrderScreen> {
                             widget.onNextClick;
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text(
-                      'BUY',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                        backgroundColor: UIConstants.textFieldAccentColor),
+                    child: const Text('BUY', style: UIConstants.buyButtonStyle),
                   ),
                 ),
               ),

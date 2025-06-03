@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tradeable_learn_widget/order_type_v1/sections/advanced_options.dart';
 import 'package:tradeable_learn_widget/order_type_v1/sections/cover_order_fields';
 import 'package:tradeable_learn_widget/order_type_v1/sections/margin_section.dart';
@@ -309,7 +308,10 @@ class StockOrderWidgetState extends State<StockOrderWidget> {
               onOrderTypeChanged: (value) {
                 setState(() {
                   selectedOrderType = value;
-                  if (value == 'COVER') priceType = 'MARKET';
+                  if (value == 'COVER') {
+                    priceType = 'MARKET';
+                    validity = 'DAY';
+                  }
                   OrderService.updateStopLossAndTarget(
                     currentPrice: widget.currentPrice,
                     stopLossController: stopLossController,

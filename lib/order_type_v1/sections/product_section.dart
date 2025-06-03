@@ -1,5 +1,6 @@
 // lib/order_type_v1/widgets/product_selector.dart
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 import 'package:tradeable_learn_widget/order_type_v1/widgets/pillbox_selector.dart';
 import 'package:tradeable_learn_widget/order_type_v1/utils/order_constants.dart';
 
@@ -28,7 +29,7 @@ class ProductSelector extends StatelessWidget {
             top: MediaQuery.of(context).size.height * 0.022,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFFEBF0F9),
+            color: UIConstants.primaryCardColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: Column(
@@ -36,7 +37,7 @@ class ProductSelector extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE2E2E2),
+                  color: UIConstants.secondaryCardColor,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: PillboxSelector(
@@ -55,21 +56,14 @@ class ProductSelector extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF9F6EB),
+              color: UIConstants.labelBackgroundColor,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFFEBF0F9),
+                color: UIConstants.primaryCardColor,
                 width: 2,
               ),
             ),
-            child: const Text(
-              'PRODUCT',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Color(0xFF6E6E6E),
-              ),
-            ),
+            child: const Text('PRODUCT', style: UIConstants.labelStyle),
           ),
         ),
       ],

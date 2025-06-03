@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 
 class PillboxSelector extends StatelessWidget {
   final List<String> options;
@@ -39,7 +40,7 @@ class PillboxSelector extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: const Color(0xFFE2E2E2),
+        color: UIConstants.secondaryCardColor,
         borderRadius: BorderRadius.circular(borderRadius ?? 16),
       ),
       child: Row(
@@ -54,7 +55,7 @@ class PillboxSelector extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? (enabled ? const Color(0xFF97144D) : Colors.grey)
+                      ? (enabled ? UIConstants.primaryButtonColor : Colors.grey)
                       : Colors.transparent,
                   border: isSelected
                       ? Border.all(color: Colors.white, width: 2)
@@ -74,13 +75,17 @@ class PillboxSelector extends StatelessWidget {
                   maxLines: 1,
                   option,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: fontSize ?? (visibleOptions.length > 2 ? 12 : 14),
-                    color: isSelected
-                        ? Colors.white
-                        : (enabled ? const Color(0xFF6E6E6E) : Colors.grey),
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: isSelected
+                      ? UIConstants.getPillboxSelectedStyle(
+                          fontSize:
+                              fontSize ?? (visibleOptions.length > 2 ? 12 : 14),
+                          enabled: enabled,
+                        )
+                      : UIConstants.getPillboxUnselectedStyle(
+                          fontSize:
+                              fontSize ?? (visibleOptions.length > 2 ? 12 : 14),
+                          enabled: enabled,
+                        ),
                 ),
               ));
 

@@ -1,6 +1,7 @@
 // lib/order_type_v1/widgets/advanced_options.dart
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 import 'package:tradeable_learn_widget/order_type_v1/widgets/pillbox_selector.dart';
 import 'package:tradeable_learn_widget/order_type_v1/widgets/text_field.dart';
 import 'package:tradeable_learn_widget/order_type_v1/utils/order_constants.dart';
@@ -40,11 +41,7 @@ class AdvancedOptions extends StatelessWidget {
             children: [
               const Text(
                 'Advanced Options',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: Color(0xFF6E6E6E),
-                ),
+                style: UIConstants.advancedOptionsStyle,
               ),
               Icon(showAdvanced ? Icons.expand_less : Icons.expand_more),
             ],
@@ -87,16 +84,18 @@ class AdvancedOptions extends StatelessWidget {
             top: MediaQuery.of(context).size.height * 0.022,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFFEBF0F9),
-            borderRadius: BorderRadius.circular(15),
+            color: UIConstants.primaryCardColor,
+            borderRadius:
+                BorderRadius.circular(UIConstants.defaultBorderRadius),
           ),
           child: Column(
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE2E2E2),
-                  borderRadius: BorderRadius.circular(15),
+                  color: UIConstants.secondaryCardColor,
+                  borderRadius:
+                      BorderRadius.circular(UIConstants.defaultBorderRadius),
                 ),
                 child: PillboxSelector(
                   fontSize: 14,
@@ -119,23 +118,16 @@ class AdvancedOptions extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF9F6EB),
-              borderRadius: BorderRadius.circular(16),
+              color: UIConstants.labelBackgroundColor,
+              borderRadius:
+                  BorderRadius.circular(UIConstants.defaultBorderRadius),
               border: Border.all(
-                color: const Color(0xFFEBF0F9),
+                color: UIConstants.primaryCardColor,
                 width: 2,
               ),
             ),
-            child: const AutoSizeText(
-              'VALIDITY',
-              minFontSize: 8,
-              maxLines: 1,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Color(0xFF6E6E6E),
-              ),
-            ),
+            child: const AutoSizeText('VALIDITY',
+                minFontSize: 8, maxLines: 1, style: UIConstants.labelStyle),
           ),
         ),
       ],
@@ -153,17 +145,15 @@ class AdvancedOptions extends StatelessWidget {
             top: MediaQuery.of(context).size.height * 0.022,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFFEBF0F9),
-            borderRadius: BorderRadius.circular(15),
+            color: UIConstants.primaryCardColor,
+            borderRadius:
+                BorderRadius.circular(UIConstants.defaultBorderRadius),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 16,
-                ),
+                padding: UIConstants.fieldPadding,
                 child: CustomTextField(
                   controller: disclosedQuantityController,
                   label: 'DISCLOSED QUANTITY',
@@ -179,23 +169,16 @@ class AdvancedOptions extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFFF9F6EB),
-              borderRadius: BorderRadius.circular(16),
+              color: UIConstants.labelBackgroundColor,
+              borderRadius:
+                  BorderRadius.circular(UIConstants.defaultBorderRadius),
               border: Border.all(
-                color: const Color(0xFFEBF0F9),
+                color: UIConstants.primaryCardColor,
                 width: 2,
               ),
             ),
-            child: const AutoSizeText(
-              'DISC. QUANTITY',
-              maxLines: 1,
-              minFontSize: 8,
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-                color: Color(0xFF6E6E6E),
-              ),
-            ),
+            child: const AutoSizeText('DISC. QUANTITY',
+                maxLines: 1, minFontSize: 8, style: UIConstants.labelStyle),
           ),
         ),
       ],

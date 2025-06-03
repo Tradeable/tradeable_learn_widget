@@ -1,5 +1,6 @@
 // lib/order_type_v1/widgets/price_type_section.dart
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 import 'package:tradeable_learn_widget/order_type_v1/widgets/pillbox_selector.dart';
 import 'package:tradeable_learn_widget/order_type_v1/widgets/text_field.dart';
 import 'package:tradeable_learn_widget/order_type_v1/utils/order_constants.dart';
@@ -41,7 +42,7 @@ class PriceTypeSection extends StatelessWidget {
             top: MediaQuery.of(context).size.height * 0.022,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFFEBF0F9),
+            color: UIConstants.primaryCardColor,
             borderRadius: BorderRadius.circular(15),
           ),
           child: priceType == 'LIMIT'
@@ -60,7 +61,7 @@ class PriceTypeSection extends StatelessWidget {
                   ),
                 )
               : SizedBox(
-                  height: 72,
+                  height: 68,
                   child: Center(
                     child: Text(
                       currentPrice.toStringAsFixed(2),

@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -36,7 +37,7 @@ class CustomTextField extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         decoration: BoxDecoration(
-          color: const Color(0xFF395046),
+          color: UIConstants.textFieldBackgroundColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -50,7 +51,7 @@ class CustomTextField extends StatelessWidget {
                       math.max(32, MediaQuery.of(context).size.width * 0.07),
                   child: Icon(
                     Icons.remove,
-                    color: const Color(0xFFD3CABD),
+                    color: UIConstants.textFieldIconColor,
                     size:
                         math.max(18, MediaQuery.of(context).size.width * 0.07),
                   ),
@@ -70,7 +71,7 @@ class CustomTextField extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2BC381),
+                            color: UIConstants.textFieldAccentColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: TextField(
@@ -78,22 +79,17 @@ class CustomTextField extends StatelessWidget {
                             textAlign: TextAlign.center,
                             keyboardType: keyboardType,
                             enabled: enabled,
-                            readOnly: !enabled, // Add this line
+                            readOnly: !enabled,
                             onChanged: onChanged,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors
-                                  .white, // Force black text when disabled
-                            ),
+                            style: UIConstants.textFieldStyle,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               isDense: true,
                               contentPadding: EdgeInsets.zero,
                               fillColor: enabled
                                   ? null
-                                  : const Color(
-                                      0xFF2BC381), // Keep white background
+                                  : UIConstants
+                                      .textFieldAccentColor, // Keep white background
                               filled: !enabled, // Fill with white when disabled
                             ),
                           ),
@@ -121,7 +117,7 @@ class CustomTextField extends StatelessWidget {
                       math.max(32, MediaQuery.of(context).size.width * 0.07),
                   child: Icon(
                     Icons.add,
-                    color: const Color(0xFFD3CABD),
+                    color: UIConstants.textFieldIconColor,
                     size:
                         math.max(18, MediaQuery.of(context).size.width * 0.07),
                   ),
