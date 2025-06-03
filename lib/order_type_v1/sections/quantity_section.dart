@@ -34,17 +34,13 @@ class QuantitySection extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: UIConstants.primaryCardColor,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius:
+                BorderRadius.circular(UIConstants.defaultBorderRadius),
           ),
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.only(
-                  top: 8,
-                  bottom: 4,
-                  left: 8,
-                  right: 8,
-                ),
+                padding: UIConstants.fieldPadding,
                 child: CustomTextField(
                   controller: quantityController,
                   label: 'QUANTITY',
@@ -62,7 +58,8 @@ class QuantitySection extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
               color: UIConstants.labelBackgroundColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius:
+                  BorderRadius.circular(UIConstants.defaultBorderRadius),
               border: Border.all(
                 color: UIConstants.primaryCardColor,
                 width: 2,

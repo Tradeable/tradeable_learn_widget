@@ -86,27 +86,13 @@ class UIConstants {
   );
 
   // Dimensions, Animation, Layout (same as before)
-  static const double defaultBorderRadius = 15.0;
+  static const double defaultBorderRadius = 16.0;
   static const double smallBorderRadius = 8.0;
-  static const double labelBorderRadius = 16.0;
   static const double switchBorderRadius = 20.0;
 
-  static const EdgeInsets defaultPadding = EdgeInsets.all(8.0);
-  static const EdgeInsets cardPadding = EdgeInsets.all(16.0);
-  static const EdgeInsets fieldPadding =
-      EdgeInsets.symmetric(horizontal: 4, vertical: 4);
-
-  static const Duration defaultAnimationDuration = Duration(milliseconds: 400);
-  static const Duration switchAnimationDuration = Duration(milliseconds: 200);
-  static const Duration tutorialInitDelay = Duration(milliseconds: 100);
-
-  static const double minButtonHeight = 50.0;
-  static const double minIconSize = 18.0;
-  static const double minFieldSize = 32.0;
-
-  static double getResponsiveWidth(BuildContext context, double multiplier) =>
-      MediaQuery.of(context).size.width * multiplier;
-
-  static double getResponsiveHeight(BuildContext context, double multiplier) =>
-      MediaQuery.of(context).size.height * multiplier;
+  static const EdgeInsets fieldPadding = EdgeInsets.only(
+    bottom: 4,
+    left: 8,
+    right: 8,
+  );
 }

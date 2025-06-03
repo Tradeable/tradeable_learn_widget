@@ -41,7 +41,8 @@ class MarginSection extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: UIConstants.labelBackgroundColor,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius:
+                        BorderRadius.circular(UIConstants.defaultBorderRadius),
                   ),
                   child: const AutoSizeText('E-Margin',
                       minFontSize: 8,
@@ -74,7 +75,8 @@ class MarginSection extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: UIConstants.labelBackgroundColor,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius:
+                      BorderRadius.circular(UIConstants.defaultBorderRadius),
                 ),
                 child: const AutoSizeText('Required Margin',
                     minFontSize: 8, maxLines: 1, style: UIConstants.labelStyle),
@@ -84,7 +86,7 @@ class MarginSection extends StatelessWidget {
                   right: selectedOrderType == 'DELIVERY' ? 15 : 5,
                 ),
                 child: Text('₹$marginRequirementText',
-                    style: UIConstants.labelStyle),
+                    style: UIConstants.marginTextStyle),
               ),
             ],
           ),

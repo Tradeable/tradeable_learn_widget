@@ -87,7 +87,8 @@ class _CustomSwitchState extends State<CustomSwitch>
             width: responsiveWidth,
             height: responsiveHeight,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius:
+                  BorderRadius.circular(UIConstants.switchBorderRadius),
               color: UIConstants.secondaryCardColor,
             ),
             child: Stack(
@@ -113,7 +114,8 @@ class _CustomSwitchState extends State<CustomSwitch>
                             : Colors.grey.shade400,
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius:
+                          BorderRadius.circular(UIConstants.switchBorderRadius),
                       color: widget.thumbColor,
                       boxShadow: [
                         BoxShadow(

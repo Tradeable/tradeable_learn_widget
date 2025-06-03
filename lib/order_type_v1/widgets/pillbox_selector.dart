@@ -41,7 +41,8 @@ class PillboxSelector extends StatelessWidget {
       height: height,
       decoration: BoxDecoration(
         color: UIConstants.secondaryCardColor,
-        borderRadius: BorderRadius.circular(borderRadius ?? 16),
+        borderRadius: BorderRadius.circular(
+            borderRadius ?? UIConstants.defaultBorderRadius),
       ),
       child: Row(
         children: visibleOptions.map((option) {
@@ -60,7 +61,8 @@ class PillboxSelector extends StatelessWidget {
                   border: isSelected
                       ? Border.all(color: Colors.white, width: 2)
                       : null,
-                  borderRadius: BorderRadius.circular(borderRadius ?? 16),
+                  borderRadius: BorderRadius.circular(
+                      borderRadius ?? UIConstants.defaultBorderRadius),
                   boxShadow: isSelected
                       ? [
                           const BoxShadow(

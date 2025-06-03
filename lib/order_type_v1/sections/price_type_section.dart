@@ -43,16 +43,12 @@ class PriceTypeSection extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: UIConstants.primaryCardColor,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius:
+                BorderRadius.circular(UIConstants.defaultBorderRadius),
           ),
           child: priceType == 'LIMIT'
               ? Container(
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                    bottom: 4,
-                    left: 8,
-                    right: 8,
-                  ),
+                  padding: UIConstants.fieldPadding,
                   child: CustomTextField(
                     controller: targetPriceController,
                     label: 'Limit Price',
@@ -61,7 +57,7 @@ class PriceTypeSection extends StatelessWidget {
                   ),
                 )
               : SizedBox(
-                  height: 68,
+                  height: 60,
                   child: Center(
                     child: Text(
                       currentPrice.toStringAsFixed(2),

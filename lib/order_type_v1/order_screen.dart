@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/order_type_v1/order_type_v1.model.dart';
 import 'package:tradeable_learn_widget/order_type_v1/order_type_widget.dart';
 import 'package:tradeable_learn_widget/order_type_v1/tutorial_manager.dart';
@@ -82,55 +83,68 @@ class OrderScreenState extends State<OrderScreen> {
         child: Column(
           children: [
             if (widget.model.tutorialMode)
-              Container(
-                margin:
-                    EdgeInsets.all(MediaQuery.of(context).size.width * 0.025),
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: colors.cardColorSecondary,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                ),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 400),
-                  transitionBuilder: (child, animation) => SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(1, 0),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
+              if (widget.model.tutorialMode)
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: colors.cardColorSecondary,
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
                   ),
-                  child: Container(
-                    key: ValueKey(tutorialPrompt),
-                    width: double.infinity,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: colors.buttonColor,
-                      border: Border.all(
-                        color: colors.cardColorSecondary,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    transitionBuilder: (child, animation) => SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(1, 0),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                    child: Container(
+                      key: ValueKey(tutorialPrompt),
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: colors.buttonColor,
+                        border: Border.all(color: colors.cardColorSecondary),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
                       ),
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Instruction",
-                          style: UIConstants.instructionLabelStyle,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          orderWidgetKey.currentState
-                                  ?.getCurrentTutorialPrompt() ??
-                              'Loading tutorial...',
-                          style: UIConstants.instructionTextStyle,
-                        ),
-                      ],
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Instruction",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                              color: Color(0xFF6E6E6E),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            tutorialPrompt,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Row(
+                            children: [
+                              Spacer(),
+                              SizedBox(width: 8),
+                              FeedbackWidget(), // You'll need to import this widget
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
             Expanded(
               child: Container(
@@ -141,7 +155,8 @@ class OrderScreenState extends State<OrderScreen> {
                     color: UIConstants.secondaryCardColor,
                     width: MediaQuery.of(context).size.width * 0.025,
                   ),
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius:
+                      BorderRadius.circular(UIConstants.defaultBorderRadius),
                 ),
                 child: Column(
                   children: [
@@ -225,8 +240,8 @@ class OrderScreenState extends State<OrderScreen> {
                               // Regular order flow
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content:
-                                        Text('Order placed successfully!')),
+                                    content: Text(
+                                        "Don't worry, it's just a simulation!")),
                               );
                             }
                           }

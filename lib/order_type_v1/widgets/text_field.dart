@@ -38,7 +38,7 @@ class CustomTextField extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         decoration: BoxDecoration(
           color: UIConstants.textFieldBackgroundColor,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(UIConstants.defaultBorderRadius),
         ),
         child: Row(
           children: [
@@ -72,7 +72,8 @@ class CustomTextField extends StatelessWidget {
                               horizontal: 8, vertical: 8),
                           decoration: BoxDecoration(
                             color: UIConstants.textFieldAccentColor,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(
+                                UIConstants.smallBorderRadius),
                           ),
                           child: TextField(
                             controller: controller,
