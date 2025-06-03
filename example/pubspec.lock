@@ -274,8 +274,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: option_chain
-      resolved-ref: "17693a91a27279639194b704a8a9cae87fb5aef4"
+      ref: dev
+      resolved-ref: "891452e77181c6e2c60b49abda213d1cef31840e"
       url: "https://github.com/adityagohad/fin_chart.git"
     source: git
     version: "0.0.1"

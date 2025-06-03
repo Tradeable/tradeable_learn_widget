@@ -6,7 +6,6 @@ import 'package:tradeable_learn_widget/order_type_v1/utils/ui_constants.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
-  // final String subtitle;
   final bool enabled;
   final VoidCallback? onIncrement;
   final VoidCallback? onDecrement;
@@ -18,7 +17,6 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.label,
-    // required this.subtitle,
     this.enabled = true,
     this.onIncrement,
     this.onDecrement,
@@ -69,7 +67,7 @@ class CustomTextField extends StatelessWidget {
                       Flexible(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 8),
+                              horizontal: 0, vertical: 8),
                           decoration: BoxDecoration(
                             color: UIConstants.textFieldAccentColor,
                             borderRadius: BorderRadius.circular(
@@ -83,6 +81,7 @@ class CustomTextField extends StatelessWidget {
                             readOnly: !enabled,
                             onChanged: onChanged,
                             style: UIConstants.textFieldStyle,
+
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               isDense: true,

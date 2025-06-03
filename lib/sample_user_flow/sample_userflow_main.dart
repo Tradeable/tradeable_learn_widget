@@ -127,6 +127,15 @@ class _SampleUserflowScreenState extends State<SampleUserflowScreen> {
       case TaskType.moveTab:
         // TODO: Handle this case.
         throw UnimplementedError();
+      case TaskType.popUpTask:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.showBottomSheet:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.showInsightsPage:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 
@@ -371,6 +380,15 @@ class _SampleUserflowScreenState extends State<SampleUserflowScreen> {
         // TODO: Handle this case.
         throw UnimplementedError();
       case TaskType.moveTab:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.popUpTask:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.showBottomSheet:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case TaskType.showInsightsPage:
         // TODO: Handle this case.
         throw UnimplementedError();
     }
