@@ -166,7 +166,7 @@ class OrderScreenState extends State<OrderScreen> {
                           widget.model.stockName,
                           style: const TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontSize: 20,
                               color: Color(0xFF6E6E6E)),
                         ),
                       ),

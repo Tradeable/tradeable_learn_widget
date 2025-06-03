@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class PillboxSelector extends StatelessWidget {
@@ -68,7 +69,9 @@ class PillboxSelector extends StatelessWidget {
                         ]
                       : [],
                 ),
-                child: Text(
+                child: AutoSizeText(
+                  minFontSize: 8,
+                  maxLines: 1,
                   option,
                   textAlign: TextAlign.center,
                   style: TextStyle(
