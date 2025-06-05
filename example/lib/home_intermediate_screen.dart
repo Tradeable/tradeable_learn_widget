@@ -1,5 +1,6 @@
 import 'package:example/main.dart';
 import 'package:example/mutual_funds_widgets.dart';
+import 'package:example/dynamic_chart_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_json.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_main.dart';
@@ -45,21 +46,22 @@ class HomeIntermediateScreen extends StatelessWidget {
                             spotPriceDayDeltaPer: 0.2,
                             onExecute: () {},
                             legs: [
-                              // OptionLeg(
-                              //   symbol: "NIFTY",
-                              //   strike: 23250,
-                              //   type: PositionType.buy,
-                              //   optionType: OptionType.call,
-                              //   expiry: DateTime.parse("2025-06-06 15:30:00"),
-                              //   quantity: 25,
-                              //   premium: 362,
-                              // ),
+                              OptionLeg(
+                                symbol: "NIFTY",
+                                strike: 23250,
+                                type: PositionType.buy,
+                                optionType: OptionType.call,
+                                expiry: DateTime.parse("2025-06-06 15:30:00"),
+                                quantity: 25,
+                                premium: 362,
+                              ),
                               OptionLeg(
                                 symbol: "NIFTY",
                                 strike: 20000,
                                 type: PositionType.buy,
-                                optionType: OptionType.call,
-                                expiry: DateTime.parse("2025-07-03T21:42:42.130"),
+                                optionType: OptionType.put,
+                                expiry:
+                                    DateTime.parse("2025-07-03T21:42:42.130"),
                                 quantity: 1,
                                 premium: 50,
                               )
@@ -67,6 +69,12 @@ class HomeIntermediateScreen extends StatelessWidget {
                           )));
                 },
                 child: const Text("Option strategy")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const DynamicChartInputScreen()));
+                },
+                child: const Text("Custom Chart JSON")),
           ],
         ),
       )),
