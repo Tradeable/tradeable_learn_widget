@@ -40,28 +40,28 @@ class HomeIntermediateScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => OptionStrategyContainer(
-                            spotPrice: 23245,
-                            spotPriceDayDelta: 17.70,
-                            spotPriceDayDeltaPer: 0.07,
+                            spotPrice: 20100.0,
+                            spotPriceDayDelta: 1.0,
+                            spotPriceDayDeltaPer: 0.2,
                             onExecute: () {},
                             legs: [
+                              // OptionLeg(
+                              //   symbol: "NIFTY",
+                              //   strike: 23250,
+                              //   type: PositionType.buy,
+                              //   optionType: OptionType.call,
+                              //   expiry: DateTime.parse("2025-06-06 15:30:00"),
+                              //   quantity: 25,
+                              //   premium: 362,
+                              // ),
                               OptionLeg(
                                 symbol: "NIFTY",
-                                strike: 23250,
+                                strike: 20000,
                                 type: PositionType.buy,
                                 optionType: OptionType.call,
-                                expiry: DateTime.parse("2025-06-06 15:30:00"),
-                                quantity: 25,
-                                premium: 362,
-                              ),
-                              OptionLeg(
-                                symbol: "NIFTY",
-                                strike: 23250,
-                                type: PositionType.buy,
-                                optionType: OptionType.put,
-                                expiry: DateTime.parse("2025-06-06 15:30:00"),
-                                quantity: 25,
-                                premium: 310,
+                                expiry: DateTime.parse("2025-07-03T21:42:42.130"),
+                                quantity: 1,
+                                premium: 50,
                               )
                             ],
                           )));

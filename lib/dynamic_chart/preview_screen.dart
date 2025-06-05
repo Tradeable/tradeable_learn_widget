@@ -16,8 +16,7 @@ class PreviewScreen extends StatefulWidget {
   final PreviewData previewData;
   final VoidCallback onViewChartClicked;
   final VoidCallback onSettingsClicked;
-  final Function(OptionLeg? optionLeg)?
-      onBuySellSelected;
+  final Function(OptionLeg? optionLeg)? onBuySellSelected;
 
   const PreviewScreen({
     super.key,
@@ -32,8 +31,7 @@ class PreviewScreen extends StatefulWidget {
       required AddOptionChainTask task,
       List<int>? selectedRowIndex,
       List<int>? correctRowIndex,
-      Function(OptionLeg? optionLeg)?
-          onBuySellSelected,
+      Function(OptionLeg? optionLeg)? onBuySellSelected,
       required bool isEditorMode,
       required VoidCallback onViewChartClicked,
       required VoidCallback onSettingsClicked}) {
@@ -60,19 +58,22 @@ class PreviewScreen extends StatefulWidget {
 }
 
 class PreviewScreenState extends State<PreviewScreen> {
-  static const double cellHeight = 55;
+  static const double cellHeight = 70;
   static const double cellWidth = 75;
   List<int> _selectedRowIndex = [];
   bool _isChecked = false;
   List<int> userSelectedIndex = [];
-  final ScrollController _leftScrollController = ScrollController();
-  final ScrollController _rightScrollController = ScrollController();
+
+  final ScrollController _leftHeaderScrollController = ScrollController();
+  final ScrollController _rightHeaderScrollController = ScrollController();
+  final ScrollController _leftContentScrollController = ScrollController();
+  final ScrollController _rightContentScrollController = ScrollController();
   bool _isScrolling = false;
   List<Map<int, int>> correctBucketIndexes = [];
   Map<int, bool> bucketSelections = {};
   Map<int, bool> bucketCallSelections = {};
   Map<int, bool> bucketPutSelections = {};
-  Map<int, List<bool>> buySellSelections = {};
+  Map<String, List<bool>> buySellSelections = {};
 
   @override
   void initState() {
@@ -85,24 +86,86 @@ class PreviewScreenState extends State<PreviewScreen> {
 
   @override
   void dispose() {
-    _leftScrollController.dispose();
-    _rightScrollController.dispose();
+    _leftHeaderScrollController.dispose();
+    _rightHeaderScrollController.dispose();
+    _leftContentScrollController.dispose();
+    _rightContentScrollController.dispose();
     super.dispose();
   }
 
   void _setupScrollSync() {
-    _leftScrollController.addListener(() {
-      if (!_isScrolling && _rightScrollController.hasClients) {
+    _leftContentScrollController.addListener(() {
+      if (!_isScrolling) {
         _isScrolling = true;
-        _rightScrollController.jumpTo(_leftScrollController.offset);
+        if (_leftHeaderScrollController.hasClients) {
+          _leftHeaderScrollController
+              .jumpTo(_leftContentScrollController.offset);
+        }
+        if (_rightHeaderScrollController.hasClients) {
+          _rightHeaderScrollController
+              .jumpTo(_leftContentScrollController.offset);
+        }
+        if (_rightContentScrollController.hasClients) {
+          _rightContentScrollController
+              .jumpTo(_leftContentScrollController.offset);
+        }
         _isScrolling = false;
       }
     });
 
-    _rightScrollController.addListener(() {
-      if (!_isScrolling && _leftScrollController.hasClients) {
+    _rightContentScrollController.addListener(() {
+      if (!_isScrolling) {
         _isScrolling = true;
-        _leftScrollController.jumpTo(_rightScrollController.offset);
+        if (_rightHeaderScrollController.hasClients) {
+          _rightHeaderScrollController
+              .jumpTo(_rightContentScrollController.offset);
+        }
+        if (_leftHeaderScrollController.hasClients) {
+          _leftHeaderScrollController
+              .jumpTo(_rightContentScrollController.offset);
+        }
+        if (_leftContentScrollController.hasClients) {
+          _leftContentScrollController
+              .jumpTo(_rightContentScrollController.offset);
+        }
+        _isScrolling = false;
+      }
+    });
+
+    _leftHeaderScrollController.addListener(() {
+      if (!_isScrolling) {
+        _isScrolling = true;
+        if (_leftContentScrollController.hasClients) {
+          _leftContentScrollController
+              .jumpTo(_leftHeaderScrollController.offset);
+        }
+        if (_rightHeaderScrollController.hasClients) {
+          _rightHeaderScrollController
+              .jumpTo(_leftHeaderScrollController.offset);
+        }
+        if (_rightContentScrollController.hasClients) {
+          _rightContentScrollController
+              .jumpTo(_leftHeaderScrollController.offset);
+        }
+        _isScrolling = false;
+      }
+    });
+
+    _rightHeaderScrollController.addListener(() {
+      if (!_isScrolling) {
+        _isScrolling = true;
+        if (_rightContentScrollController.hasClients) {
+          _rightContentScrollController
+              .jumpTo(_rightHeaderScrollController.offset);
+        }
+        if (_leftHeaderScrollController.hasClients) {
+          _leftHeaderScrollController
+              .jumpTo(_rightHeaderScrollController.offset);
+        }
+        if (_leftContentScrollController.hasClients) {
+          _leftContentScrollController
+              .jumpTo(_rightHeaderScrollController.offset);
+        }
         _isScrolling = false;
       }
     });
@@ -177,7 +240,7 @@ class PreviewScreenState extends State<PreviewScreen> {
             .toList();
       case OptionChainVisibility.both:
         if (isLeftSide) {
-          return columns.reversed
+          return columns
               .where((column) =>
                   column.columnType.name.toLowerCase().contains("call"))
               .toList();
@@ -190,128 +253,167 @@ class PreviewScreenState extends State<PreviewScreen> {
     }
   }
 
-  Widget _buildTableBasedOnVisibility() {
+  @override
+  Widget build(BuildContext context) {
+    return OptionChainContainer(
+      child: Column(
+        children: [
+          OptionChainHeader(
+            onViewChartClicked: () => widget.onViewChartClicked(),
+            onSettingsClicked: () => widget.onSettingsClicked(),
+            expiry: DateFormat('dd MMM')
+                .format(widget.previewData.expiryDate ?? DateTime.now()),
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: _buildHeaderRow(),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: _buildContentRow(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderRow() {
     switch (widget.previewData.visibility) {
       case OptionChainVisibility.call:
         final columns = _getFilteredColumns();
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: _leftScrollController,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...columns.map(
-                      (column) => _buildColumn(column, _leftScrollController)),
-                  const SizedBox(width: cellWidth),
-                  // Placeholder for strike column
-                ],
-              ),
-            ),
-            Positioned(
-              right: 0,
-              child: Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: _buildStickyStrikeColumn(),
-              ),
-            ),
-          ],
+        final totalWidth = columns.length * cellWidth + cellWidth;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final needsScroll = totalWidth > screenWidth;
+
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _leftHeaderScrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...columns.map((column) => _buildColumnHeader(column)),
+                      SizedBox(
+                          width: cellWidth, child: _buildStrikeColumnHeader()),
+                    ],
+                  ),
+                ),
+                if (needsScroll)
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      width: cellWidth,
+                      height: 56,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: _buildStrikeColumnHeader(),
+                    ),
+                  ),
+              ],
+            );
+          },
         );
       case OptionChainVisibility.put:
         final columns = _getFilteredColumns();
-        return Stack(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: _rightScrollController,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(width: cellWidth),
-                  // Placeholder for strike column
-                  ...columns.map(
-                      (column) => _buildColumn(column, _rightScrollController)),
-                ],
-              ),
-            ),
-            Positioned(
-              left: 0,
-              child: Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: _buildStickyStrikeColumn(),
-              ),
-            ),
-          ],
+        final totalWidth = columns.length * cellWidth + cellWidth;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final needsScroll = totalWidth > screenWidth;
+
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _rightHeaderScrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: cellWidth, child: _buildStrikeColumnHeader()),
+                      ...columns.map((column) => _buildColumnHeader(column)),
+                    ],
+                  ),
+                ),
+                if (needsScroll)
+                  Positioned(
+                    left: 0,
+                    child: Container(
+                      width: cellWidth,
+                      height: 56,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: _buildStrikeColumnHeader(),
+                    ),
+                  ),
+              ],
+            );
+          },
         );
       case OptionChainVisibility.both:
         final leftColumns = _getFilteredColumns(isLeftSide: true);
         final rightColumns = _getFilteredColumns(isLeftSide: false);
-
         return LayoutBuilder(
           builder: (context, constraints) {
             final screenWidth = constraints.maxWidth;
             final centerPosition = (screenWidth - cellWidth) / 2;
-
-            // Calculate minimum width needed for columns
             final leftWidth = leftColumns.length * cellWidth;
             final rightWidth = rightColumns.length * cellWidth;
             final minTotalWidth = leftWidth + rightWidth + cellWidth;
 
-            // If total width is less than screen width, center the entire content
             if (minTotalWidth <= screenWidth) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ...leftColumns.map(
-                      (column) => _buildColumn(column, _leftScrollController)),
-                  _buildStickyStrikeColumn(),
-                  ...rightColumns.map(
-                      (column) => _buildColumn(column, _rightScrollController)),
+                  ...leftColumns.map((column) => _buildColumnHeader(column)),
+                  _buildStrikeColumnHeader(),
+                  ...rightColumns.map((column) => _buildColumnHeader(column)),
                 ],
               );
             }
 
-            // Otherwise use the scrollable layout
-            return Stack(
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: centerPosition,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        controller: _leftScrollController,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: leftColumns
-                              .map((column) =>
-                                  _buildColumn(column, _leftScrollController))
-                              .toList(),
-                        ),
-                      ),
+                SizedBox(
+                  width: centerPosition,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _leftHeaderScrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: leftColumns
+                          .map((column) => _buildColumnHeader(column))
+                          .toList(),
                     ),
-                    SizedBox(
-                      width: cellWidth,
-                      child: _buildStickyStrikeColumn(),
+                  ),
+                ),
+                SizedBox(width: cellWidth, child: _buildStrikeColumnHeader()),
+                SizedBox(
+                  width: centerPosition,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _rightHeaderScrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: rightColumns
+                          .map((column) => _buildColumnHeader(column))
+                          .toList(),
                     ),
-                    SizedBox(
-                      width: centerPosition,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        controller: _rightScrollController,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: rightColumns
-                              .map((column) =>
-                                  _buildColumn(column, _rightScrollController))
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             );
@@ -320,7 +422,154 @@ class PreviewScreenState extends State<PreviewScreen> {
     }
   }
 
-  Widget _buildColumn(ColumnConfig column, ScrollController controller) {
+  Widget _buildContentRow() {
+    switch (widget.previewData.visibility) {
+      case OptionChainVisibility.call:
+        final columns = _getFilteredColumns();
+        final totalWidth = columns.length * cellWidth + cellWidth;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final needsScroll = totalWidth > screenWidth;
+
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _leftContentScrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...columns.map((column) => _buildColumnContent(
+                          column, _leftContentScrollController)),
+                      SizedBox(
+                          width: cellWidth,
+                          child: _buildStickyStrikeColumnContent()),
+                    ],
+                  ),
+                ),
+                if (needsScroll)
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      width: cellWidth,
+                      height: widget.previewData.optionData.length * cellHeight,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: _buildStickyStrikeColumnContent(),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
+      case OptionChainVisibility.put:
+        final columns = _getFilteredColumns();
+        final totalWidth = columns.length * cellWidth + cellWidth;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final needsScroll = totalWidth > screenWidth;
+
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _rightContentScrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: cellWidth,
+                          child: _buildStickyStrikeColumnContent()),
+                      ...columns.map((column) => _buildColumnContent(
+                          column, _rightContentScrollController)),
+                    ],
+                  ),
+                ),
+                if (needsScroll)
+                  Positioned(
+                    left: 0,
+                    child: Container(
+                      width: cellWidth,
+                      height: widget.previewData.optionData.length * cellHeight,
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: _buildStickyStrikeColumnContent(),
+                    ),
+                  ),
+              ],
+            );
+          },
+        );
+      case OptionChainVisibility.both:
+        final leftColumns = _getFilteredColumns(isLeftSide: true);
+        final rightColumns = _getFilteredColumns(isLeftSide: false);
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final centerPosition = (screenWidth - cellWidth) / 2;
+            final leftWidth = leftColumns.length * cellWidth;
+            final rightWidth = rightColumns.length * cellWidth;
+            final minTotalWidth = leftWidth + rightWidth + cellWidth;
+
+            if (minTotalWidth <= screenWidth) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...leftColumns.map((column) => _buildColumnContent(
+                      column, _leftContentScrollController)),
+                  _buildStickyStrikeColumnContent(),
+                  ...rightColumns.map((column) => _buildColumnContent(
+                      column, _rightContentScrollController)),
+                ],
+              );
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: centerPosition,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _leftContentScrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: leftColumns
+                          .map((column) => _buildColumnContent(
+                              column, _leftContentScrollController))
+                          .toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                    width: cellWidth, child: _buildStickyStrikeColumnContent()),
+                SizedBox(
+                  width: centerPosition,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _rightContentScrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: rightColumns
+                          .map((column) => _buildColumnContent(
+                              column, _rightContentScrollController))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+    }
+  }
+
+  Widget _buildColumnHeader(ColumnConfig column) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final textStyles =
@@ -328,46 +577,129 @@ class PreviewScreenState extends State<PreviewScreen> {
 
     return SizedBox(
       width: cellWidth,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 56,
-            padding: const EdgeInsets.all(2),
-            color: colors.headerColumnColor,
+      child: Container(
+        height: 56,
+        padding: const EdgeInsets.all(2),
+        color: colors.headerColumnColor,
+        alignment: Alignment.center,
+        child: AutoSizeText(
+          column.columnTitle,
+          style: textStyles.smallNormal,
+          minFontSize: 10,
+          maxFontSize: 14,
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStrikeColumnHeader() {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+
+    final strikeColumn = widget.previewData.columns.firstWhere(
+        (column) => column.columnType == ColumnType.strike,
+        orElse: () => throw Exception("Strike column not found"));
+
+    return Container(
+      height: 56,
+      padding: const EdgeInsets.all(2),
+      color: colors.strikePriceColumnColor,
+      alignment: Alignment.center,
+      child: AutoSizeText(
+        strikeColumn.columnTitle,
+        style: textStyles.smallNormal,
+        minFontSize: 10,
+        maxFontSize: 14,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildColumnContent(ColumnConfig column, ScrollController controller) {
+    return SizedBox(
+      width: cellWidth,
+      child: SizedBox(
+        height: widget.previewData.optionData.length * cellHeight,
+        child: ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.previewData.optionData.length,
+          itemBuilder: (context, rowIndex) {
+            final data = widget.previewData.optionData[rowIndex];
+            final actualColumnIndex =
+                widget.previewData.columns.indexOf(column);
+            final strikeColumnIndex = _getStrikeColumnIndex();
+            return SizedBox(
+              height: cellHeight,
+              child: _buildCell(
+                rowIndex: rowIndex,
+                data: data,
+                column: column,
+                actualColumnIndex: actualColumnIndex,
+                strikeColumnIndex: strikeColumnIndex,
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStickyStrikeColumnContent() {
+    return SizedBox(
+      height: widget.previewData.optionData.length * cellHeight,
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: widget.previewData.optionData.length,
+        itemBuilder: (context, rowIndex) {
+          final data = widget.previewData.optionData[rowIndex];
+          final cellContent =
+              _buildCellContent(rowIndex, data, ColumnType.strike);
+          final colors =
+              TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+          Color? cellColor;
+          if (_selectedRowIndex.contains(rowIndex) ||
+              userSelectedIndex.contains(rowIndex)) {
+            if (userSelectedIndex.contains(rowIndex)) {
+              cellColor = colors.correctRowColor.withAlpha((0.2 * 255).round());
+            } else if (_selectedRowIndex.contains(rowIndex)) {
+              if (_isChecked &&
+                  !widget.previewData.correctRowIndices.contains(rowIndex)) {
+                cellColor =
+                    colors.incorrectRowColor.withAlpha((0.2 * 255).round());
+              } else {
+                cellColor =
+                    colors.selectedRowColor.withAlpha((0.2 * 255).round());
+              }
+            }
+          } else {
+            cellColor = colors.strikePriceColumnColor;
+          }
+
+          return Container(
+            height: cellHeight,
             alignment: Alignment.center,
-            child: AutoSizeText(
-              column.columnTitle,
-              style: textStyles.smallNormal,
-              minFontSize: 10,
-              maxFontSize: 14,
-              textAlign: TextAlign.center,
+            child: Container(
+              width: cellWidth,
+              margin: const EdgeInsets.only(bottom: 2, left: 2),
+              decoration: BoxDecoration(
+                color: cellColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                    color: colors.optionChainStrokeColor, width: 1.8),
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(14),
+                onTap: () => _handleCellTap(rowIndex),
+                child: Center(child: cellContent),
+              ),
             ),
-          ),
-          SizedBox(
-            height: widget.previewData.optionData.length * cellHeight,
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.previewData.optionData.length,
-              itemBuilder: (context, rowIndex) {
-                final data = widget.previewData.optionData[rowIndex];
-                final actualColumnIndex =
-                    widget.previewData.columns.indexOf(column);
-                final strikeColumnIndex = _getStrikeColumnIndex();
-                return SizedBox(
-                  height: cellHeight,
-                  child: _buildCell(
-                    rowIndex: rowIndex,
-                    data: data,
-                    column: column,
-                    actualColumnIndex: actualColumnIndex,
-                    strikeColumnIndex: strikeColumnIndex,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -395,6 +727,11 @@ class PreviewScreenState extends State<PreviewScreen> {
       selectionMode: selectionMode,
     );
 
+    // Add strike column color if this is the strike column
+    if (column.columnType == ColumnType.strike && cellColor == null) {
+      cellColor = colors.strikePriceColumnColor;
+    }
+
     bool isSelectable = _isCellSelectable(
       actualColumnIndex: actualColumnIndex,
       strikeColumnIndex: strikeColumnIndex,
@@ -404,6 +741,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     return Center(
       child: Container(
         width: cellWidth,
+        margin: const EdgeInsets.all(1),
         decoration: BoxDecoration(
           color: cellColor,
           borderRadius: BorderRadius.circular(14),
@@ -568,118 +906,6 @@ class PreviewScreenState extends State<PreviewScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return OptionChainContainer(
-      child: Column(
-        children: [
-          OptionChainHeader(
-            onViewChartClicked: () => widget.onViewChartClicked(),
-            onSettingsClicked: () => widget.onSettingsClicked(),
-            expiry: DateFormat('dd MMM')
-                .format(widget.previewData.expiryDate ?? DateTime.now()),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: widget.previewData.optionData.length * cellHeight + 56,
-                child: _buildTableBasedOnVisibility(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStickyStrikeColumn() {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles =
-        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-
-    final strikeColumn = widget.previewData.columns.firstWhere(
-        (column) => column.columnType == ColumnType.strike,
-        orElse: () => throw Exception("Strike column not found"));
-
-    return Container(
-      width: cellWidth,
-      decoration: BoxDecoration(color: colors.strikePriceColumnColor),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 56,
-            padding: const EdgeInsets.all(2),
-            color: colors.strikePriceHeaderColor,
-            alignment: Alignment.center,
-            child: AutoSizeText(
-              strikeColumn.columnTitle,
-              style: textStyles.smallNormal,
-              minFontSize: 10,
-              maxFontSize: 14,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(
-            height: widget.previewData.optionData.length * cellHeight,
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.previewData.optionData.length,
-              itemBuilder: (context, rowIndex) {
-                final data = widget.previewData.optionData[rowIndex];
-                final cellContent =
-                    _buildCellContent(rowIndex, data, ColumnType.strike);
-                final colors = TLW().themeData?.customColors ??
-                    Theme.of(context).customColors;
-
-                Color? cellColor;
-                if (_selectedRowIndex.contains(rowIndex) ||
-                    userSelectedIndex.contains(rowIndex)) {
-                  if (userSelectedIndex.contains(rowIndex)) {
-                    cellColor =
-                        colors.correctRowColor.withAlpha((0.2 * 255).round());
-                  } else if (_selectedRowIndex.contains(rowIndex)) {
-                    if (_isChecked &&
-                        !widget.previewData.correctRowIndices
-                            .contains(rowIndex)) {
-                      cellColor = colors.incorrectRowColor
-                          .withAlpha((0.2 * 255).round());
-                    } else {
-                      cellColor = colors.selectedRowColor
-                          .withAlpha((0.2 * 255).round());
-                    }
-                  }
-                }
-
-                return Container(
-                  height: cellHeight,
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: cellWidth,
-                    margin: const EdgeInsets.only(bottom: 2, left: 2),
-                    decoration: BoxDecoration(
-                      color: cellColor,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                          color: colors.optionChainStrokeColor, width: 1.8),
-                    ),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(14),
-                      onTap: () => _handleCellTap(rowIndex),
-                      child: Center(child: cellContent),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildCellContent(
       int rowIndex, OptionData data, ColumnType columnType) {
     final text = DataTransformer.getCellText(data, columnType);
@@ -691,18 +917,21 @@ class PreviewScreenState extends State<PreviewScreen> {
         widget.previewData.settings?.isBuySellVisible == true &&
         (columnType == ColumnType.callPremium ||
             columnType == ColumnType.putPremium)) {
-      final isBuySelected = buySellSelections[rowIndex]?[0] ?? false;
-      final isSellSelected = buySellSelections[rowIndex]?[1] ?? false;
+      final isCallSide = columnType == ColumnType.callPremium;
+      final buySellKey = _getBuySellKey(rowIndex, isCallSide);
+      final isBuySelected = buySellSelections[buySellKey]?[0] ?? false;
+      final isSellSelected = buySellSelections[buySellKey]?[1] ?? false;
 
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(text, overflow: TextOverflow.ellipsis),
+          Text(text),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                onTap: () => _handleBuySellSelection(rowIndex, true),
+                onTap: () =>
+                    _handleBuySellSelection(rowIndex, true, isCallSide),
                 child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
@@ -719,7 +948,8 @@ class PreviewScreenState extends State<PreviewScreen> {
               ),
               const SizedBox(height: 6),
               InkWell(
-                onTap: () => _handleBuySellSelection(rowIndex, false),
+                onTap: () =>
+                    _handleBuySellSelection(rowIndex, false, isCallSide),
                 child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
@@ -738,14 +968,16 @@ class PreviewScreenState extends State<PreviewScreen> {
         ],
       );
     }
-    return Text(
+    return AutoSizeText(
       text,
-      overflow: TextOverflow.ellipsis,
+      minFontSize: 8,
+      maxFontSize: 16,
+      maxLines: 1,
       style: textStyles.mediumNormal.copyWith(
-          fontSize: 16,
-          color: columnType == ColumnType.strike
-              ? colors.textColorSecondary
-              : colors.axisColor),
+          fontWeight: columnType == ColumnType.strike
+              ? FontWeight.bold
+              : FontWeight.normal,
+          color: colors.axisColor),
     );
   }
 
@@ -842,13 +1074,15 @@ class PreviewScreenState extends State<PreviewScreen> {
     });
   }
 
-  void _handleBuySellSelection(int rowIndex, bool isBuy) {
+  void _handleBuySellSelection(int rowIndex, bool isBuy, bool isCallSide) {
     setState(() {
-      if (!buySellSelections.containsKey(rowIndex)) {
-        buySellSelections[rowIndex] = [false, false];
+      final buySellKey = _getBuySellKey(rowIndex, isCallSide);
+
+      if (!buySellSelections.containsKey(buySellKey)) {
+        buySellSelections[buySellKey] = [false, false];
       }
 
-      final selections = buySellSelections[rowIndex]!;
+      final selections = buySellSelections[buySellKey]!;
       if (isBuy) {
         if (selections[0]) {
           selections[0] = false;
@@ -866,22 +1100,11 @@ class PreviewScreenState extends State<PreviewScreen> {
       }
 
       if (!selections[0] && !selections[1]) {
-        buySellSelections.remove(rowIndex);
+        buySellSelections.remove(buySellKey);
       }
 
       if (widget.onBuySellSelected != null) {
         final data = widget.previewData.optionData[rowIndex];
-        final strikeColumnIndex = _getStrikeColumnIndex();
-
-        final callPremiumColumn = widget.previewData.columns.firstWhere(
-          (c) => c.columnType == ColumnType.callPremium,
-          orElse: () => widget.previewData.columns.first,
-        );
-
-        final isCallSide = strikeColumnIndex != null &&
-            widget.previewData.columns.indexOf(callPremiumColumn) <
-                strikeColumnIndex;
-
         final optionLeg = OptionLeg(
           symbol: "NIFTY",
           strike: data.strike,
@@ -906,5 +1129,9 @@ class PreviewScreenState extends State<PreviewScreen> {
       }
     }
     return null;
+  }
+
+  String _getBuySellKey(int rowIndex, bool isCallSide) {
+    return '${rowIndex}_${isCallSide ? "call" : "put"}';
   }
 }

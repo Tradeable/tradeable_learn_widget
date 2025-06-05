@@ -41,9 +41,9 @@ class DynamicChartWidget extends StatefulWidget {
 
 class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   final GlobalKey<ChartState> _chartKey = GlobalKey();
-  final GlobalKey<PreviewScreenState> _previewScreenKey = GlobalKey();
   Map<String, GlobalKey<PreviewScreenState>> previewScreenKeys = {};
   late Recipe recipe;
+  bool _isOptionChainLoading = false;
 
   int taskPointer = 0;
   late Task currentTask;
@@ -134,11 +134,14 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.highlightCorrectOptionChainValue:
         HighlightCorrectOptionChainValueTask task =
             currentTask as HighlightCorrectOptionChainValueTask;
+        final taskId = task.optionChainId;
+        final previewKey = previewScreenKeys[taskId];
+
         if ((task.bucketRows ?? []).isNotEmpty) {
-          _previewScreenKey.currentState?.chooseBucketRows(task.bucketRows!);
+          previewKey?.currentState?.chooseBucketRows(task.bucketRows!);
         } else {
           for (int i in task.correctRowIndex) {
-            _previewScreenKey.currentState?.chooseRow(i);
+            previewKey?.currentState?.chooseRow(i);
           }
         }
         onTaskFinish();
@@ -259,12 +262,25 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   Future<void> navigateToPage(int pageIndex) async {
     setState(() {
       currentPageIndex = pageIndex;
+      if (tabs[pageIndex]["type"] == "option_chain") {
+        _isOptionChainLoading = true;
+      }
     });
+
     await controller.animateToPage(
       pageIndex,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
+
+    if (tabs[pageIndex]["type"] == "option_chain") {
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (mounted) {
+        setState(() {
+          _isOptionChainLoading = false;
+        });
+      }
+    }
   }
 
   void onTaskFinish() {
@@ -286,11 +302,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
 
   void _handleBuySellSelection(OptionLeg? optionLeg) {
     if (optionLeg != null) {
+      selectedLegs = [];
       setState(() {
-        selectedLegs.removeWhere((leg) =>
-            leg.strike == optionLeg.strike &&
-            leg.optionType == optionLeg.optionType);
-
         selectedLegs.add(optionLeg);
       });
     }
@@ -321,6 +334,27 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                           recipe: recipe,
                           onInteraction: (p0, p1) {});
                     case "option_chain":
+                      if (_isOptionChainLoading) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    colors.primary),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                "Loading option chain...",
+                                style: textStyles.mediumNormal.copyWith(
+                                  color: colors.textColorSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
                       final taskId = tab["taskId"]!;
                       final chooseTask = recipe.tasks
                           .whereType<ChooseCorrectOptionValueChainTask>()
@@ -332,7 +366,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                       );
 
                       return PreviewScreen.from(
-                          key: previewScreenKeys[taskId] ?? _previewScreenKey,
+                          key: previewScreenKeys[taskId] ?? GlobalKey(),
                           task: optionChainTask,
                           onViewChartClicked: () {
                             navigateToPage(0);
@@ -376,6 +410,23 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               onExecute: () {},
                               legs: selectedLegs,
                             );
+                      // return OptionStrategyContainer(
+                      //   spotPrice: payoffTask.spotPrice,
+                      //   spotPriceDayDelta: payoffTask.spotPriceDayDelta,
+                      //   spotPriceDayDeltaPer: payoffTask.spotPriceDayDeltaPer,
+                      //   onExecute: () {},
+                      //   legs: [
+                      //     OptionLeg(
+                      //       symbol: "NIFTY",
+                      //       strike: 23250,
+                      //       type: PositionType.buy,
+                      //       optionType: OptionType.put,
+                      //       expiry: DateTime.parse("2025-06-06 15:30:00"),
+                      //       quantity: 25,
+                      //       premium: 310,
+                      //     )
+                      //   ],
+                      // );
                     case "insights":
                       final taskId = tab["taskId"]!;
                       final insightsTask = recipe.tasks
@@ -385,7 +436,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             orElse: () => insightsTasks.first,
                           );
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: colors.cardColorSecondary,
@@ -402,15 +454,17 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20)),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 10),
-                              Text(insightsTask.title,
-                                  style: textStyles.mediumBold),
-                              const SizedBox(height: 16),
-                              Text(insightsTask.description),
-                            ],
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 10),
+                                Text(insightsTask.title,
+                                    style: textStyles.mediumBold),
+                                const SizedBox(height: 16),
+                                Text(insightsTask.description),
+                              ],
+                            ),
                           ),
                         ),
                       );
