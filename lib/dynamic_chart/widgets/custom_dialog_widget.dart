@@ -18,10 +18,13 @@ class CustomDialogWidget extends StatelessWidget {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
-        constraints: const BoxConstraints(maxHeight: 250),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+        constraints: const BoxConstraints(maxHeight: 600),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: colors.cardBasicBackground),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -31,20 +34,19 @@ class CustomDialogWidget extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
               child: Text(task.title, style: textStyles.mediumBold),
             ),
-            const SizedBox(height: 10),
             Flexible(
               child: Scrollbar(
                 thumbVisibility: true,
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     child: Text(task.description),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             InkWell(
               onTap: () => moveNext(),
               child: Container(

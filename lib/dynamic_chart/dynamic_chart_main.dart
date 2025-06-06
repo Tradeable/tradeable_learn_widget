@@ -410,23 +410,23 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               onExecute: () {},
                               legs: selectedLegs,
                             );
-                      // return OptionStrategyContainer(
-                      //   spotPrice: payoffTask.spotPrice,
-                      //   spotPriceDayDelta: payoffTask.spotPriceDayDelta,
-                      //   spotPriceDayDeltaPer: payoffTask.spotPriceDayDeltaPer,
-                      //   onExecute: () {},
-                      //   legs: [
-                      //     OptionLeg(
-                      //       symbol: "NIFTY",
-                      //       strike: 23250,
-                      //       type: PositionType.buy,
-                      //       optionType: OptionType.put,
-                      //       expiry: DateTime.parse("2025-06-06 15:30:00"),
-                      //       quantity: 25,
-                      //       premium: 310,
-                      //     )
-                      //   ],
-                      // );
+                    // return OptionStrategyContainer(
+                    //   spotPrice: payoffTask.spotPrice,
+                    //   spotPriceDayDelta: payoffTask.spotPriceDayDelta,
+                    //   spotPriceDayDeltaPer: payoffTask.spotPriceDayDeltaPer,
+                    //   onExecute: () {},
+                    //   legs: [
+                    //     OptionLeg(
+                    //       symbol: "NIFTY",
+                    //       strike: 23250,
+                    //       type: PositionType.buy,
+                    //       optionType: OptionType.put,
+                    //       expiry: DateTime.parse("2025-06-06 15:30:00"),
+                    //       quantity: 25,
+                    //       premium: 310,
+                    //     )
+                    //   ],
+                    // );
                     case "insights":
                       final taskId = tab["taskId"]!;
                       final insightsTask = recipe.tasks
@@ -644,13 +644,16 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 12, vertical: 6),
                                             decoration: BoxDecoration(
-                                              color: currentPageIndex ==
-                                                      tabs.indexOf(tab)
-                                                  ? colors.primary
-                                                  : colors.cardColorPrimary,
-                                              borderRadius:
-                                                  BorderRadius.circular(16),
-                                            ),
+                                                color: currentPageIndex ==
+                                                        tabs.indexOf(tab)
+                                                    ? colors.borderColorPrimary
+                                                    : colors
+                                                        .cardBasicBackground,
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                border: Border.all(
+                                                    color: colors
+                                                        .borderColorSecondary)),
                                             child: Text(
                                               tab["title"] ?? "",
                                               style: textStyles.smallNormal
@@ -658,7 +661,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                                 color: currentPageIndex ==
                                                         tabs.indexOf(tab)
                                                     ? colors.cardColorPrimary
-                                                    : colors.textColorSecondary,
+                                                    : colors.axisColor,
                                               ),
                                             ),
                                           ),

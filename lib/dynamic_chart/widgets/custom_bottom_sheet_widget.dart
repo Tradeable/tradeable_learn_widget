@@ -28,13 +28,19 @@ class CustomBottomSheetWidget extends StatelessWidget {
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+            color: colors.cardBasicBackground,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 10),
               Text(task.title, style: textStyles.mediumBold),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               if (task.showImage) ...[
                 const SizedBox(height: 10),
                 Image.asset(
@@ -44,7 +50,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
                   fit: BoxFit.fitHeight,
                 ),
               ],
-              const SizedBox(height: 20),
+              const SizedBox(height: 6),
               Text(task.description),
               const SizedBox(height: 16),
               task.secondaryButtonText == null

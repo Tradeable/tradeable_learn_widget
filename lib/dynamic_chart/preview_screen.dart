@@ -63,6 +63,7 @@ class PreviewScreenState extends State<PreviewScreen> {
   List<int> _selectedRowIndex = [];
   bool _isChecked = false;
   List<int> userSelectedIndex = [];
+  final AutoSizeGroup _textGroup = AutoSizeGroup();
 
   final ScrollController _leftHeaderScrollController = ScrollController();
   final ScrollController _rightHeaderScrollController = ScrollController();
@@ -267,10 +268,7 @@ class PreviewScreenState extends State<PreviewScreen> {
           Expanded(
             child: Column(
               children: [
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  child: _buildHeaderRow(),
-                ),
+                Container(child: _buildHeaderRow()),
                 Expanded(
                   child: SingleChildScrollView(
                     child: _buildContentRow(),
@@ -727,7 +725,6 @@ class PreviewScreenState extends State<PreviewScreen> {
       selectionMode: selectionMode,
     );
 
-    // Add strike column color if this is the strike column
     if (column.columnType == ColumnType.strike && cellColor == null) {
       cellColor = colors.strikePriceColumnColor;
     }
@@ -925,7 +922,18 @@ class PreviewScreenState extends State<PreviewScreen> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(text),
+          Expanded(
+            child: AutoSizeText(
+              text,
+              group: _textGroup,
+              minFontSize: 8,
+              maxFontSize: 16,
+              maxLines: 1,
+              style: textStyles.mediumNormal.copyWith(
+                color: colors.axisColor,
+              ),
+            ),
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -934,7 +942,7 @@ class PreviewScreenState extends State<PreviewScreen> {
                     _handleBuySellSelection(rowIndex, true, isCallSide),
                 child: Container(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                     decoration: BoxDecoration(
                         color: isBuySelected
                             ? Colors.green
@@ -952,7 +960,7 @@ class PreviewScreenState extends State<PreviewScreen> {
                     _handleBuySellSelection(rowIndex, false, isCallSide),
                 child: Container(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                     decoration: BoxDecoration(
                         color:
                             isSellSelected ? Colors.red : Colors.red.shade200,
@@ -970,6 +978,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     }
     return AutoSizeText(
       text,
+      group: _textGroup,
       minFontSize: 8,
       maxFontSize: 16,
       maxLines: 1,
