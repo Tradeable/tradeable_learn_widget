@@ -54,16 +54,16 @@ class OptionChainHeader extends StatelessWidget {
             onViewChartClicked();
           },
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 20),
+            margin: const EdgeInsets.symmetric(vertical: 4),
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
             decoration: BoxDecoration(
               border:
                   Border.all(color: colors.optionChainStrokeColor, width: 2),
-              color: colors.optionChainBgColor,
-              borderRadius: BorderRadius.circular(10),
+              color: colors.cardBasicBackground,
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(Icons.add_chart,
-                color: colors.optionChainChartIconColor, size: 26),
+            child: Icon(Icons.candlestick_chart_outlined,
+                color: colors.optionChainChartIconColor, size: 20),
           ),
         ),
       ),
@@ -75,7 +75,7 @@ class OptionChainHeader extends StatelessWidget {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(16),
@@ -84,7 +84,7 @@ class OptionChainHeader extends StatelessWidget {
               BoxShadow(color: colors.optionChainStrokeColor, spreadRadius: 1.2)
             ],
             border: Border.all(color: colors.optionChainStrokeColor),
-            color: colors.optionChainBgColor),
+            color: colors.cardBasicBackground),
         child: const Text("Nifty 50"));
   }
 
@@ -99,17 +99,17 @@ class OptionChainHeader extends StatelessWidget {
             onSettingsClicked();
           },
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 20),
+            margin: const EdgeInsets.symmetric(vertical: 4),
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border:
                     Border.all(color: colors.optionChainStrokeColor, width: 2),
-                color: colors.optionChainBgColor),
+                color: colors.cardBasicBackground),
             child: Image.asset(
               "assets/equalizer-line.png",
               package: 'tradeable_learn_widget/lib',
-              height: 24,
+              height: 20,
             ),
           ),
         ),

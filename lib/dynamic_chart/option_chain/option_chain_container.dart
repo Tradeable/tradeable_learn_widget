@@ -18,7 +18,7 @@ class OptionChainContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           color: colors.optionChainStrokeColor),
       child: Container(
-          margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+          margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(14), topRight: Radius.circular(14)),
