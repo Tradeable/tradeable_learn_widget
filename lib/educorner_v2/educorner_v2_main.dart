@@ -5,6 +5,7 @@ import 'package:tradeable_learn_widget/edu_cornerv1/edu_corner_model.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/educorner_v2/full_screen_image_viewer.dart';
 
 class EduCornerV2Main extends StatefulWidget {
   final EduCornerModel model;
@@ -136,10 +137,31 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(40),
-              child: Image.network(
-                imageUrl,
-                errorBuilder: (_, __, ___) =>
-                    const Icon(Icons.broken_image, size: 50),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    barrierColor: Colors.transparent,
+                    builder: (context) => FullScreenImageViewer(
+                      imageUrl: imageUrl,
+                      heroTag: 'image_$imageUrl',
+                      imageUrls: items
+                          .map((item) => item.imgUrl ?? "")
+                          .where((url) => url.isNotEmpty)
+                          .toList(),
+                      initialIndex: currentPage,
+                    ),
+                  );
+                },
+                child: Hero(
+                  tag: 'image_$imageUrl',
+                  child: Image.network(
+                    imageUrl,
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.broken_image, size: 50),
+                  ),
+                ),
               ),
             ),
           ),
