@@ -24,11 +24,12 @@ import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
-import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
-import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
-import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:fin_chart/option_chain/models/option_leg.dart' as finchart;
+import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart'
+    as strategy;
 
 class DynamicChartWidget extends StatefulWidget {
   final DynamicChartModel model;
@@ -60,7 +61,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   List<ShowInsightsPageTask> insightsTasks = [];
   List<Map<String, String>> tabs = [];
   int currentPageIndex = 0;
-  List<OptionLeg> selectedLegs = [];
+  List<finchart.OptionLeg> selectedLegs = [];
 
   @override
   void initState() {
@@ -142,7 +143,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           if (!mounted) return;
 
           if ((task.bucketRows ?? []).isNotEmpty) {
-            previewKey?.currentState?.chooseBucketRows(task.bucketRows!);
+            previewKey?.currentState
+                ?.chooseBucketRows(task.bucketRows!.cast<finchart.OptionLeg>());
           } else {
             for (int i in task.correctRowIndex) {
               previewKey?.currentState?.chooseRow(i);
@@ -268,13 +270,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           if (!mounted) return;
 
           if (previewKey != null) {
-            print("object1");
             if (task.bucketRows != null && task.bucketRows!.isNotEmpty) {
-              print("object2");
-              previewKey.currentState?.setBuySellSelections(task.bucketRows!);
+              previewKey.currentState?.setBuySellSelections(
+                  task.bucketRows!.cast<finchart.OptionLeg>());
             }
           }
         });
+        selectedLegs = (task.bucketRows ?? []).cast<finchart.OptionLeg>();
         setState(() {});
         onTaskFinish();
         break;
@@ -284,6 +286,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         if (previewKey != null) {
           previewKey.currentState?.clearBucketSelections();
         }
+        selectedLegs.clear();
         onTaskFinish();
         break;
     }
@@ -330,7 +333,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     }
   }
 
-  void _handleBuySellSelection(OptionLeg? optionLeg) {
+  void _handleBuySellSelection(finchart.OptionLeg? optionLeg) {
     if (optionLeg != null) {
       selectedLegs = [];
       setState(() {
@@ -422,6 +425,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                         (t) => t.id == taskId,
                         orElse: () => payoffGraphTasks.first,
                       );
+                      for (int i=0; i<selectedLegs.length;i++){
+                        print(selectedLegs[i].toJson());
+                      }
                       return selectedLegs.isEmpty
                           ? Center(
                               child: Text(
@@ -438,7 +444,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               spotPriceDayDeltaPer:
                                   payoffTask.spotPriceDayDeltaPer,
                               onExecute: () {},
-                              legs: selectedLegs,
+                              legs: selectedLegs
+                                  .map((e) =>
+                                      strategy.OptionLeg.fromJson(e.toJson()))
+                                  .toList(),
                             );
                     // return OptionStrategyContainer(
                     //   spotPrice: payoffTask.spotPrice,
