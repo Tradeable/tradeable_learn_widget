@@ -7,7 +7,9 @@ import 'package:fin_chart/models/tasks/add_option_chain.task.dart';
 import 'package:fin_chart/models/tasks/add_prompt.task.dart';
 import 'package:fin_chart/models/enums/task_type.dart';
 import 'package:fin_chart/models/recipe.dart';
+import 'package:fin_chart/models/tasks/choose_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/choose_correct_option_chain_task.dart';
+import 'package:fin_chart/models/tasks/clear_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/highlight_correct_option_chain_value_task.dart';
 import 'package:fin_chart/models/tasks/show_bottom_sheet.task.dart';
 import 'package:fin_chart/models/tasks/show_insights_page.task.dart';
@@ -136,15 +138,18 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             currentTask as HighlightCorrectOptionChainValueTask;
         final taskId = task.optionChainId;
         final previewKey = previewScreenKeys[taskId];
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
 
-        if ((task.bucketRows ?? []).isNotEmpty) {
-          previewKey?.currentState?.chooseBucketRows(task.bucketRows!);
-        } else {
-          for (int i in task.correctRowIndex) {
-            previewKey?.currentState?.chooseRow(i);
+          if ((task.bucketRows ?? []).isNotEmpty) {
+            previewKey?.currentState?.chooseBucketRows(task.bucketRows!);
+          } else {
+            for (int i in task.correctRowIndex) {
+              previewKey?.currentState?.chooseRow(i);
+            }
           }
-        }
-        onTaskFinish();
+          onTaskFinish();
+        });
         setState(() {});
         break;
       case TaskType.showPayOffGraph:
@@ -254,6 +259,31 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         ShowInsightsPageTask task = currentTask as ShowInsightsPageTask;
         insightsTasks.add(task);
         setState(() {});
+        onTaskFinish();
+        break;
+      case TaskType.chooseBucketRows:
+        ChooseBucketRowsTask task = currentTask as ChooseBucketRowsTask;
+        final previewKey = previewScreenKeys[task.optionChainId];
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+
+          if (previewKey != null) {
+            print("object1");
+            if (task.bucketRows != null && task.bucketRows!.isNotEmpty) {
+              print("object2");
+              previewKey.currentState?.setBuySellSelections(task.bucketRows!);
+            }
+          }
+        });
+        setState(() {});
+        onTaskFinish();
+        break;
+      case TaskType.clearBucketRows:
+        ClearBucketRowsTask task = currentTask as ClearBucketRowsTask;
+        final previewKey = previewScreenKeys[task.optionChainId];
+        if (previewKey != null) {
+          previewKey.currentState?.clearBucketSelections();
+        }
         onTaskFinish();
         break;
     }
@@ -509,6 +539,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.popUpTask:
       case TaskType.showBottomSheet:
       case TaskType.showInsightsPage:
+      case TaskType.chooseBucketRows:
+      case TaskType.clearBucketRows:
         return Container();
     }
   }
