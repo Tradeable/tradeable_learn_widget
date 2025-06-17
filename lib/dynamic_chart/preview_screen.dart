@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fin_chart/models/tasks/add_option_chain.task.dart';
+import 'package:fin_chart/models/tasks/choose_bucket_rows_task.dart';
 import 'package:fin_chart/option_chain/models/column_config.dart';
 import 'package:fin_chart/option_chain/models/option_data.dart';
 import 'package:fin_chart/option_chain/models/preview_data.dart';
@@ -75,11 +76,42 @@ class PreviewScreenState extends State<PreviewScreen> {
   Map<int, bool> bucketCallSelections = {};
   Map<int, bool> bucketPutSelections = {};
   Map<String, List<bool>> buySellSelections = {};
+  Map<int, bool> callBuySelections = {};
+  Map<int, bool> callSellSelections = {};
+  Map<int, bool> putBuySelections = {};
+  Map<int, bool> putSellSelections = {};
 
   @override
   void initState() {
     super.initState();
     _selectedRowIndex = List.from(widget.previewData.selectedRowIndices);
+
+    if (widget.previewData.bucketRows != null) {
+      for (var bucketRow in widget.previewData.bucketRows!) {
+        final rowIndex = bucketRow.rowIndex;
+        final side = bucketRow.side;
+        final isBuy = bucketRow.isBuy;
+
+        if (side == 0) {
+          bucketCallSelections[rowIndex] = true;
+          bucketSelections[rowIndex] = true;
+          if (isBuy) {
+            callBuySelections[rowIndex] = true;
+          } else {
+            callSellSelections[rowIndex] = true;
+          }
+        } else {
+          bucketPutSelections[rowIndex] = true;
+          bucketSelections[rowIndex] = true;
+          if (isBuy) {
+            putBuySelections[rowIndex] = true;
+          } else {
+            putSellSelections[rowIndex] = true;
+          }
+        }
+      }
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setupScrollSync();
     });
@@ -172,17 +204,28 @@ class PreviewScreenState extends State<PreviewScreen> {
     });
   }
 
-  void chooseBucketRows(List<Map<int, int>> bucketRows) {
+  void chooseBucketRows(List<BucketRowSelection> bucketRows) {
     setState(() {
-      correctBucketIndexes = bucketRows;
+      correctBucketIndexes = bucketRows.map((e) => e.toLegacyFormat()).toList();
       for (var bucketRow in bucketRows) {
-        final rowIndex = bucketRow.keys.first;
-        final side = bucketRow.values.first;
+        final rowIndex = bucketRow.rowIndex;
+        final side = bucketRow.side;
+        final isBuy = bucketRow.isBuy;
 
         if (side == 0) {
           bucketCallSelections[rowIndex] = true;
+          if (isBuy) {
+            callBuySelections[rowIndex] = true;
+          } else {
+            callSellSelections[rowIndex] = true;
+          }
         } else {
           bucketPutSelections[rowIndex] = true;
+          if (isBuy) {
+            putBuySelections[rowIndex] = true;
+          } else {
+            putSellSelections[rowIndex] = true;
+          }
         }
         bucketSelections[rowIndex] = true;
       }
@@ -202,22 +245,156 @@ class PreviewScreenState extends State<PreviewScreen> {
     return _selectedRowIndex;
   }
 
-  List<Map<int, int>>? getBucketRows() {
+  List<BucketRowSelection>? getBucketRows() {
     final selectionMode =
         widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
     if (selectionMode == SelectionMode.bucketRow) {
-      List<Map<int, int>> bucketRows = [];
+      List<BucketRowSelection> bucketRows = [];
+
+      // Handle call side selections (left side of strike)
+      callBuySelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          bucketRows.add(BucketRowSelection(
+            rowIndex: rowIndex,
+            side: 0, // 0 for call side
+            isBuy: true,
+          ));
+        }
+      });
+      callSellSelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          bucketRows.add(BucketRowSelection(
+            rowIndex: rowIndex,
+            side: 0, // 0 for call side
+            isBuy: false,
+          ));
+        }
+      });
+
+      // Handle put side selections (right side of strike)
+      putBuySelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          bucketRows.add(BucketRowSelection(
+            rowIndex: rowIndex,
+            side: 1, // 1 for put side
+            isBuy: true,
+          ));
+        }
+      });
+      putSellSelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          bucketRows.add(BucketRowSelection(
+            rowIndex: rowIndex,
+            side: 1, // 1 for put side
+            isBuy: false,
+          ));
+        }
+      });
+
+      // Handle direct row selections (when buy/sell buttons are not visible or user taps directly)
       bucketCallSelections.forEach((rowIndex, isSelected) {
-        if (isSelected) {
-          bucketRows.add({rowIndex: 0});
+        if (isSelected &&
+            !callBuySelections.containsKey(rowIndex) &&
+            !callSellSelections.containsKey(rowIndex)) {
+          // If this row is selected but not in buy/sell selections, add it as buy (default)
+          bucketRows.add(BucketRowSelection(
+            rowIndex: rowIndex,
+            side: 0, // 0 for call side
+            isBuy: true, // Default to buy when no specific buy/sell selection
+          ));
         }
       });
+
       bucketPutSelections.forEach((rowIndex, isSelected) {
-        if (isSelected) {
-          bucketRows.add({rowIndex: 1});
+        if (isSelected &&
+            !putBuySelections.containsKey(rowIndex) &&
+            !putSellSelections.containsKey(rowIndex)) {
+          // If this row is selected but not in buy/sell selections, add it as buy (default)
+          bucketRows.add(BucketRowSelection(
+            rowIndex: rowIndex,
+            side: 1, // 1 for put side
+            isBuy: true, // Default to buy when no specific buy/sell selection
+          ));
         }
       });
+
       return bucketRows;
+    }
+    return null;
+  }
+
+  // New method to get OptionLeg objects that properly distinguish between buy and sell
+  List<OptionLeg>? getOptionLegs() {
+    final selectionMode =
+        widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
+    if (selectionMode == SelectionMode.bucketRow) {
+      List<OptionLeg> optionLegs = [];
+
+      // Handle call buy selections
+      callBuySelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          final data = widget.previewData.optionData[rowIndex];
+          optionLegs.add(OptionLeg(
+            symbol: "NIFTY",
+            strike: data.strike,
+            type: PositionType.buy,
+            optionType: OptionType.call,
+            expiry: widget.previewData.expiryDate ?? DateTime.now(),
+            quantity: 1,
+            premium: data.callPremium,
+          ));
+        }
+      });
+
+      // Handle call sell selections
+      callSellSelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          final data = widget.previewData.optionData[rowIndex];
+          optionLegs.add(OptionLeg(
+            symbol: "NIFTY",
+            strike: data.strike,
+            type: PositionType.sell,
+            optionType: OptionType.call,
+            expiry: widget.previewData.expiryDate ?? DateTime.now(),
+            quantity: 1,
+            premium: data.callPremium,
+          ));
+        }
+      });
+
+      // Handle put buy selections
+      putBuySelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          final data = widget.previewData.optionData[rowIndex];
+          optionLegs.add(OptionLeg(
+            symbol: "NIFTY",
+            strike: data.strike,
+            type: PositionType.buy,
+            optionType: OptionType.put,
+            expiry: widget.previewData.expiryDate ?? DateTime.now(),
+            quantity: 1,
+            premium: data.putPremium,
+          ));
+        }
+      });
+
+      // Handle put sell selections
+      putSellSelections.forEach((rowIndex, isSelected) {
+        if (isSelected) {
+          final data = widget.previewData.optionData[rowIndex];
+          optionLegs.add(OptionLeg(
+            symbol: "NIFTY",
+            strike: data.strike,
+            type: PositionType.sell,
+            optionType: OptionType.put,
+            expiry: widget.previewData.expiryDate ?? DateTime.now(),
+            quantity: 1,
+            premium: data.putPremium,
+          ));
+        }
+      });
+
+      return optionLegs;
     }
     return null;
   }
@@ -658,23 +835,20 @@ class PreviewScreenState extends State<PreviewScreen> {
               _buildCellContent(rowIndex, data, ColumnType.strike);
           final colors =
               TLW().themeData?.customColors ?? Theme.of(context).customColors;
+          final strikeColumnIndex = _getStrikeColumnIndex();
+          final selectionMode = widget.previewData.settings?.selectionMode ??
+              SelectionMode.entireRow;
 
-          Color? cellColor;
-          if (_selectedRowIndex.contains(rowIndex) ||
-              userSelectedIndex.contains(rowIndex)) {
-            if (userSelectedIndex.contains(rowIndex)) {
-              cellColor = colors.correctRowColor.withAlpha((0.2 * 255).round());
-            } else if (_selectedRowIndex.contains(rowIndex)) {
-              if (_isChecked &&
-                  !widget.previewData.correctRowIndices.contains(rowIndex)) {
-                cellColor =
-                    colors.incorrectRowColor.withAlpha((0.2 * 255).round());
-              } else {
-                cellColor =
-                    colors.selectedRowColor.withAlpha((0.2 * 255).round());
-              }
-            }
-          } else {
+          Color? cellColor = _getCellColor(
+            rowIndex: rowIndex,
+            actualColumnIndex: strikeColumnIndex ?? 0,
+            strikeColumnIndex: strikeColumnIndex,
+            strikePrice: widget.previewData.strikePrice,
+            currentRowStrike: data.strike,
+            selectionMode: selectionMode,
+          );
+
+          if (cellColor == null) {
             cellColor = colors.strikePriceColumnColor;
           }
 
@@ -776,6 +950,22 @@ class PreviewScreenState extends State<PreviewScreen> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color? cellColor;
+
+    if (selectionMode == SelectionMode.bucketRow && strikeColumnIndex != null) {
+      if (actualColumnIndex < strikeColumnIndex) {
+        if (callBuySelections[rowIndex] == true) {
+          return colors.correctRowColor.withAlpha((0.2 * 255).round());
+        } else if (callSellSelections[rowIndex] == true) {
+          return colors.incorrectRowColor.withAlpha((0.2 * 255).round());
+        }
+      } else if (actualColumnIndex > strikeColumnIndex) {
+        if (putBuySelections[rowIndex] == true) {
+          return colors.correctRowColor.withAlpha((0.2 * 255).round());
+        } else if (putSellSelections[rowIndex] == true) {
+          return colors.incorrectRowColor.withAlpha((0.2 * 255).round());
+        }
+      }
+    }
 
     if (strikePrice != null && strikeColumnIndex != null) {
       if (currentRowStrike < strikePrice &&
@@ -884,18 +1074,16 @@ class PreviewScreenState extends State<PreviewScreen> {
 
   void chooseRow(int rowIndex) {
     setState(() {
-      final maxSelectedRows =
-          widget.previewData.settings?.maxSelectableRows ?? 0;
-      if (maxSelectedRows == 1) {
-        userSelectedIndex = [rowIndex];
-      } else if (maxSelectedRows > 1) {
-        if (userSelectedIndex.contains(rowIndex)) {
-          userSelectedIndex.remove(rowIndex);
-        } else if (userSelectedIndex.length < maxSelectedRows) {
+      final maxSelectedRows = widget.previewData.maxSelectableRows;
+
+      if (maxSelectedRows == null || maxSelectedRows == 0) {
+        if (!userSelectedIndex.contains(rowIndex)) {
           userSelectedIndex.add(rowIndex);
         }
       } else {
-        if (!userSelectedIndex.contains(rowIndex)) {
+        if (userSelectedIndex.contains(rowIndex)) {
+          userSelectedIndex.remove(rowIndex);
+        } else if (userSelectedIndex.length < maxSelectedRows) {
           userSelectedIndex.add(rowIndex);
         }
       }
@@ -910,14 +1098,24 @@ class PreviewScreenState extends State<PreviewScreen> {
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final strikeColumnIndex = _getStrikeColumnIndex();
+
     if (!widget.previewData.isEditorMode &&
         widget.previewData.settings?.isBuySellVisible == true &&
         (columnType == ColumnType.callPremium ||
             columnType == ColumnType.putPremium)) {
-      final isCallSide = columnType == ColumnType.callPremium;
-      final buySellKey = _getBuySellKey(rowIndex, isCallSide);
-      final isBuySelected = buySellSelections[buySellKey]?[0] ?? false;
-      final isSellSelected = buySellSelections[buySellKey]?[1] ?? false;
+      final columnIndex = widget.previewData.columns
+          .indexWhere((col) => col.columnType == columnType);
+
+      final isCallSide =
+          strikeColumnIndex != null && columnIndex < strikeColumnIndex;
+
+      final buySelections = isCallSide ? callBuySelections : putBuySelections;
+      final sellSelections =
+          isCallSide ? callSellSelections : putSellSelections;
+
+      final isBuySelected = buySelections[rowIndex] ?? false;
+      final isSellSelected = sellSelections[rowIndex] ?? false;
 
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -938,8 +1136,39 @@ class PreviewScreenState extends State<PreviewScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
-                onTap: () =>
-                    _handleBuySellSelection(rowIndex, true, isCallSide),
+                onTap: () {
+                  setState(() {
+                    if (isBuySelected) {
+                      buySelections.remove(rowIndex);
+                    } else {
+                      buySelections[rowIndex] = true;
+                      sellSelections.remove(rowIndex);
+                      if (isCallSide) {
+                        bucketCallSelections[rowIndex] = true;
+                        bucketSelections[rowIndex] = true;
+                      } else {
+                        bucketPutSelections[rowIndex] = true;
+                        bucketSelections[rowIndex] = true;
+                      }
+                    }
+                    if (widget.onBuySellSelected != null) {
+                      final optionLeg = OptionLeg(
+                        symbol: "NIFTY",
+                        strike: data.strike,
+                        type: buySelections[rowIndex] == true
+                            ? PositionType.buy
+                            : PositionType.sell,
+                        optionType:
+                            isCallSide ? OptionType.call : OptionType.put,
+                        expiry: widget.previewData.expiryDate ?? DateTime.now(),
+                        quantity: 1,
+                        premium:
+                            isCallSide ? data.callPremium : data.putPremium,
+                      );
+                      widget.onBuySellSelected!(optionLeg);
+                    }
+                  });
+                },
                 child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
@@ -956,8 +1185,39 @@ class PreviewScreenState extends State<PreviewScreen> {
               ),
               const SizedBox(height: 6),
               InkWell(
-                onTap: () =>
-                    _handleBuySellSelection(rowIndex, false, isCallSide),
+                onTap: () {
+                  setState(() {
+                    if (isSellSelected) {
+                      sellSelections.remove(rowIndex);
+                    } else {
+                      sellSelections[rowIndex] = true;
+                      buySelections.remove(rowIndex);
+                      if (isCallSide) {
+                        bucketCallSelections[rowIndex] = true;
+                        bucketSelections[rowIndex] = true;
+                      } else {
+                        bucketPutSelections[rowIndex] = true;
+                        bucketSelections[rowIndex] = true;
+                      }
+                    }
+                    if (widget.onBuySellSelected != null) {
+                      final optionLeg = OptionLeg(
+                        symbol: "NIFTY",
+                        strike: data.strike,
+                        type: sellSelections[rowIndex] == true
+                            ? PositionType.sell
+                            : PositionType.buy,
+                        optionType:
+                            isCallSide ? OptionType.call : OptionType.put,
+                        expiry: widget.previewData.expiryDate ?? DateTime.now(),
+                        quantity: 1,
+                        premium:
+                            isCallSide ? data.callPremium : data.putPremium,
+                      );
+                      widget.onBuySellSelected!(optionLeg);
+                    }
+                  });
+                },
                 child: Container(
                     padding:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
@@ -995,8 +1255,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     if (strikeColumnIndex == null) return;
 
     setState(() {
-      final maxSelectedRows =
-          widget.previewData.settings?.maxSelectableRows ?? 0;
+      final maxSelectedRows = widget.previewData.maxSelectableRows;
 
       if (columnIndex < strikeColumnIndex) {
         if (bucketCallSelections.containsKey(rowIndex)) {
@@ -1011,7 +1270,7 @@ class PreviewScreenState extends State<PreviewScreen> {
             bucketSelections.clear();
             bucketCallSelections[rowIndex] = true;
             bucketSelections[rowIndex] = true;
-          } else if (maxSelectedRows > 1) {
+          } else if (maxSelectedRows != null && maxSelectedRows > 1) {
             if (bucketSelections.length < maxSelectedRows) {
               bucketCallSelections[rowIndex] = true;
               bucketSelections[rowIndex] = true;
@@ -1034,7 +1293,7 @@ class PreviewScreenState extends State<PreviewScreen> {
             bucketSelections.clear();
             bucketPutSelections[rowIndex] = true;
             bucketSelections[rowIndex] = true;
-          } else if (maxSelectedRows > 1) {
+          } else if (maxSelectedRows != null && maxSelectedRows > 1) {
             if (bucketSelections.length < maxSelectedRows) {
               bucketPutSelections[rowIndex] = true;
               bucketSelections[rowIndex] = true;
@@ -1053,8 +1312,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     setState(() {
       final selectionMode =
           widget.previewData.settings?.selectionMode ?? SelectionMode.entireRow;
-      final maxSelectedRows =
-          widget.previewData.settings?.maxSelectableRows ?? 0;
+      final maxSelectedRows = widget.previewData.maxSelectableRows;
 
       if (selectionMode == SelectionMode.bucketRow) {
         return;
@@ -1066,7 +1324,7 @@ class PreviewScreenState extends State<PreviewScreen> {
         } else {
           _selectedRowIndex = [rowIndex];
         }
-      } else if (maxSelectedRows > 1) {
+      } else if (maxSelectedRows != null && maxSelectedRows > 1) {
         if (_selectedRowIndex.contains(rowIndex)) {
           _selectedRowIndex.remove(rowIndex);
         } else if (_selectedRowIndex.length < maxSelectedRows) {
@@ -1083,52 +1341,6 @@ class PreviewScreenState extends State<PreviewScreen> {
     });
   }
 
-  void _handleBuySellSelection(int rowIndex, bool isBuy, bool isCallSide) {
-    setState(() {
-      final buySellKey = _getBuySellKey(rowIndex, isCallSide);
-
-      if (!buySellSelections.containsKey(buySellKey)) {
-        buySellSelections[buySellKey] = [false, false];
-      }
-
-      final selections = buySellSelections[buySellKey]!;
-      if (isBuy) {
-        if (selections[0]) {
-          selections[0] = false;
-        } else {
-          selections[0] = true;
-          selections[1] = false;
-        }
-      } else {
-        if (selections[1]) {
-          selections[1] = false;
-        } else {
-          selections[0] = false;
-          selections[1] = true;
-        }
-      }
-
-      if (!selections[0] && !selections[1]) {
-        buySellSelections.remove(buySellKey);
-      }
-
-      if (widget.onBuySellSelected != null) {
-        final data = widget.previewData.optionData[rowIndex];
-        final optionLeg = OptionLeg(
-          symbol: "NIFTY",
-          strike: data.strike,
-          type: selections[0] ? PositionType.buy : PositionType.sell,
-          optionType: isCallSide ? OptionType.call : OptionType.put,
-          expiry: widget.previewData.expiryDate ?? DateTime.now(),
-          quantity: 1,
-          premium: isCallSide ? data.callPremium : data.putPremium,
-        );
-
-        widget.onBuySellSelected!(optionLeg);
-      }
-    });
-  }
-
   int? _getStrikeColumnIndex() {
     final visibleColumns =
         widget.previewData.columns.where((c) => c.isColumnVisible).toList();
@@ -1140,7 +1352,55 @@ class PreviewScreenState extends State<PreviewScreen> {
     return null;
   }
 
-  String _getBuySellKey(int rowIndex, bool isCallSide) {
-    return '${rowIndex}_${isCallSide ? "call" : "put"}';
+  void setBuySellSelections(List<BucketRowSelection> bucketRows) {
+    setState(() {
+      bucketCallSelections.clear();
+      bucketPutSelections.clear();
+      callBuySelections.clear();
+      callSellSelections.clear();
+      putBuySelections.clear();
+      putSellSelections.clear();
+
+      for (var bucketRow in bucketRows) {
+        final rowIndex = bucketRow.rowIndex;
+        final side = bucketRow.side;
+        final isBuy = bucketRow.isBuy;
+
+        if (side == 0) {
+          bucketCallSelections[rowIndex] = true;
+          bucketSelections[rowIndex] = true;
+          if (isBuy) {
+            callBuySelections[rowIndex] = true;
+          } else {
+            callSellSelections[rowIndex] = true;
+          }
+        } else {
+          bucketPutSelections[rowIndex] = true;
+          bucketSelections[rowIndex] = true;
+          if (isBuy) {
+            putBuySelections[rowIndex] = true;
+          } else {
+            putSellSelections[rowIndex] = true;
+          }
+        }
+      }
+
+      correctBucketIndexes = bucketRows.map((e) => e.toLegacyFormat()).toList();
+      _isChecked = true;
+    });
+  }
+
+  void clearBucketSelections() {
+    setState(() {
+      bucketCallSelections.clear();
+      bucketPutSelections.clear();
+      callBuySelections.clear();
+      callSellSelections.clear();
+      putBuySelections.clear();
+      putSellSelections.clear();
+      bucketSelections.clear();
+      correctBucketIndexes = [];
+      _isChecked = false;
+    });
   }
 }
