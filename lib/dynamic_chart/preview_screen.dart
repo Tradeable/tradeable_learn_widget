@@ -889,9 +889,7 @@ class PreviewScreenState extends State<PreviewScreen> {
             selectionMode: selectionMode,
           );
 
-          if (cellColor == null) {
-            cellColor = colors.strikePriceColumnColor;
-          }
+          cellColor ??= colors.strikePriceColumnColor;
 
           return Container(
             height: cellHeight,
@@ -903,7 +901,7 @@ class PreviewScreenState extends State<PreviewScreen> {
                 color: cellColor,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                    color: colors.optionChainStrokeColor, width: 1.8),
+                    color: colors.optionChainStrokeColor, width: 1),
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(14),
@@ -957,7 +955,7 @@ class PreviewScreenState extends State<PreviewScreen> {
         decoration: BoxDecoration(
           color: cellColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: colors.optionChainStrokeColor, width: 1.8),
+          border: Border.all(color: colors.optionChainStrokeColor, width: 1),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
@@ -1162,117 +1160,123 @@ class PreviewScreenState extends State<PreviewScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
-            child: AutoSizeText(
-              text,
-              group: _textGroup,
-              minFontSize: 8,
-              maxFontSize: 16,
-              maxLines: 1,
-              style: textStyles.mediumNormal.copyWith(
-                color: colors.axisColor,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: AutoSizeText(
+                text,
+                group: _textGroup,
+                minFontSize: 8,
+                maxFontSize: 16,
+                maxLines: 1,
+                style: textStyles.mediumNormal.copyWith(
+                  color: colors.axisColor,
+                ),
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    if (isBuySelected) {
-                      buySelections.remove(rowIndex);
-                    } else {
-                      buySelections[rowIndex] = true;
-                      sellSelections.remove(rowIndex);
-                      if (isCallSide) {
-                        bucketCallSelections[rowIndex] = true;
-                        bucketSelections[rowIndex] = true;
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (isBuySelected) {
+                        buySelections.remove(rowIndex);
                       } else {
-                        bucketPutSelections[rowIndex] = true;
-                        bucketSelections[rowIndex] = true;
+                        buySelections[rowIndex] = true;
+                        sellSelections.remove(rowIndex);
+                        if (isCallSide) {
+                          bucketCallSelections[rowIndex] = true;
+                          bucketSelections[rowIndex] = true;
+                        } else {
+                          bucketPutSelections[rowIndex] = true;
+                          bucketSelections[rowIndex] = true;
+                        }
                       }
-                    }
-                    if (widget.onBuySellSelected != null) {
-                      final optionLeg = OptionLeg(
-                        symbol: "NIFTY",
-                        strike: data.strike,
-                        type: buySelections[rowIndex] == true
-                            ? PositionType.buy
-                            : PositionType.sell,
-                        optionType:
-                            isCallSide ? OptionType.call : OptionType.put,
-                        expiry: widget.previewData.expiryDate ?? DateTime.now(),
-                        quantity: 1,
-                        premium:
-                            isCallSide ? data.callPremium : data.putPremium,
-                      );
-                      widget.onBuySellSelected!(optionLeg);
-                    }
-                  });
-                },
-                child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                    decoration: BoxDecoration(
-                        color: isBuySelected
-                            ? Colors.green
-                            : Colors.green.shade200,
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Text('B',
-                        style: TextStyle(
-                            fontSize: 10,
-                            color:
-                                isBuySelected ? Colors.white : Colors.black))),
-              ),
-              const SizedBox(height: 6),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    if (isSellSelected) {
-                      sellSelections.remove(rowIndex);
-                    } else {
-                      sellSelections[rowIndex] = true;
-                      buySelections.remove(rowIndex);
-                      if (isCallSide) {
-                        bucketCallSelections[rowIndex] = true;
-                        bucketSelections[rowIndex] = true;
+                      if (widget.onBuySellSelected != null) {
+                        final optionLeg = OptionLeg(
+                          symbol: "NIFTY",
+                          strike: data.strike,
+                          type: buySelections[rowIndex] == true
+                              ? PositionType.buy
+                              : PositionType.sell,
+                          optionType:
+                              isCallSide ? OptionType.call : OptionType.put,
+                          expiry: widget.previewData.expiryDate ?? DateTime.now(),
+                          quantity: 1,
+                          premium:
+                              isCallSide ? data.callPremium : data.putPremium,
+                        );
+                        widget.onBuySellSelected!(optionLeg);
+                      }
+                    });
+                  },
+                  child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      decoration: BoxDecoration(
+                          color: isBuySelected
+                              ? Colors.green
+                              : Colors.green.shade200,
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Text('B',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color:
+                                  isBuySelected ? Colors.white : Colors.black))),
+                ),
+                const SizedBox(height: 6),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (isSellSelected) {
+                        sellSelections.remove(rowIndex);
                       } else {
-                        bucketPutSelections[rowIndex] = true;
-                        bucketSelections[rowIndex] = true;
+                        sellSelections[rowIndex] = true;
+                        buySelections.remove(rowIndex);
+                        if (isCallSide) {
+                          bucketCallSelections[rowIndex] = true;
+                          bucketSelections[rowIndex] = true;
+                        } else {
+                          bucketPutSelections[rowIndex] = true;
+                          bucketSelections[rowIndex] = true;
+                        }
                       }
-                    }
-                    if (widget.onBuySellSelected != null) {
-                      final optionLeg = OptionLeg(
-                        symbol: "NIFTY",
-                        strike: data.strike,
-                        type: sellSelections[rowIndex] == true
-                            ? PositionType.sell
-                            : PositionType.buy,
-                        optionType:
-                            isCallSide ? OptionType.call : OptionType.put,
-                        expiry: widget.previewData.expiryDate ?? DateTime.now(),
-                        quantity: 1,
-                        premium:
-                            isCallSide ? data.callPremium : data.putPremium,
-                      );
-                      widget.onBuySellSelected!(optionLeg);
-                    }
-                  });
-                },
-                child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-                    decoration: BoxDecoration(
-                        color:
-                            isSellSelected ? Colors.red : Colors.red.shade200,
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Text('S',
-                        style: TextStyle(
-                            fontSize: 10,
-                            color:
-                                isSellSelected ? Colors.white : Colors.black))),
-              ),
-            ],
+                      if (widget.onBuySellSelected != null) {
+                        final optionLeg = OptionLeg(
+                          symbol: "NIFTY",
+                          strike: data.strike,
+                          type: sellSelections[rowIndex] == true
+                              ? PositionType.sell
+                              : PositionType.buy,
+                          optionType:
+                              isCallSide ? OptionType.call : OptionType.put,
+                          expiry: widget.previewData.expiryDate ?? DateTime.now(),
+                          quantity: 1,
+                          premium:
+                              isCallSide ? data.callPremium : data.putPremium,
+                        );
+                        widget.onBuySellSelected!(optionLeg);
+                      }
+                    });
+                  },
+                  child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      decoration: BoxDecoration(
+                          color:
+                              isSellSelected ? Colors.red : Colors.red.shade200,
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Text('S',
+                          style: TextStyle(
+                              fontSize: 10,
+                              color:
+                                  isSellSelected ? Colors.white : Colors.black))),
+                ),
+              ],
+            ),
           ),
         ],
       );

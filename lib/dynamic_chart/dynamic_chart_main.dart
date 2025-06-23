@@ -513,7 +513,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 }),
           ),
           Container(
-              padding: const EdgeInsets.all(20), child: userActionContainer()),
+              padding: const EdgeInsets.all(16), child: userActionContainer()),
         ],
       ),
     );
@@ -622,8 +622,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             color: colors.cardColorSecondary,
             borderRadius: (promptTask!.hint ?? "").isNotEmpty
                 ? const BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    topLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))
                 : const BorderRadius.all(Radius.circular(20)),
           ),

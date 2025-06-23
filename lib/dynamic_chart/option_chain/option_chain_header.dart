@@ -58,7 +58,7 @@ class OptionChainHeader extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
             decoration: BoxDecoration(
               border:
-                  Border.all(color: colors.optionChainStrokeColor, width: 2),
+                  Border.all(color: colors.optionChainStrokeColor, width: 1),
               color: colors.cardBasicBackground,
               borderRadius: BorderRadius.circular(8),
             ),
@@ -81,9 +81,9 @@ class OptionChainHeader extends StatelessWidget {
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16)),
             boxShadow: [
-              BoxShadow(color: colors.optionChainStrokeColor, spreadRadius: 1.2)
+              BoxShadow(color: colors.optionChainStrokeColor, spreadRadius: 0)
             ],
-            border: Border.all(color: colors.optionChainStrokeColor),
+            border: Border.all(color: colors.optionChainStrokeColor, width: 1),
             color: colors.cardBasicBackground),
         child: const Text("Nifty 50"));
   }
@@ -104,7 +104,7 @@ class OptionChainHeader extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border:
-                    Border.all(color: colors.optionChainStrokeColor, width: 2),
+                    Border.all(color: colors.optionChainStrokeColor, width: 1),
                 color: colors.cardBasicBackground),
             child: Image.asset(
               "assets/equalizer-line.png",

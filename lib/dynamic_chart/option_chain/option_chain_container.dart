@@ -16,13 +16,15 @@ class OptionChainContainer extends StatelessWidget {
       margin: const EdgeInsets.only(top: 20, left: 8, right: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: colors.optionChainStrokeColor),
+          color: colors.optionChainBgColor,
+          border: Border.all(color: colors.optionChainStrokeColor)),
       child: Container(
           margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
           decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(14), topRight: Radius.circular(14)),
-              color: colors.cardBasicBackground),
+              color: colors.cardBasicBackground,
+              border: Border.all(color: colors.optionChainStrokeColor)),
           child: child),
     );
   }

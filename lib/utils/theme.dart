@@ -146,7 +146,7 @@ extension ThemeDataExtension on ThemeData {
           strikePriceColumnColor: const Color(0x14F14687),
           selectedRowColor: const Color(0xff007BFF),
           correctRowColor: const Color(0xff28A745),
-          incorrectRowColor: const Color(0xffFF3B30));
+          incorrectRowColor: const Color(0xffF9F6EB));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
