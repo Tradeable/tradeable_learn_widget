@@ -13,11 +13,14 @@ import 'package:fin_chart/models/tasks/clear_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/highlight_correct_option_chain_value_task.dart';
 import 'package:fin_chart/models/tasks/show_bottom_sheet.task.dart';
 import 'package:fin_chart/models/tasks/show_insights_page.task.dart';
+import 'package:fin_chart/models/tasks/table_task.dart';
 import 'package:fin_chart/models/tasks/task.dart';
 import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
@@ -59,6 +62,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   List<AddOptionChainTask> optionChainTasks = [];
   List<ShowPayOffGraphTask> payoffGraphTasks = [];
   List<ShowInsightsPageTask> insightsTasks = [];
+  List<TableTask> tableTasks = [];
   List<Map<String, String>> tabs = [];
   int currentPageIndex = 0;
   List<finchart.OptionLeg> selectedLegs = [];
@@ -180,6 +184,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 "title": task.tabTitle,
                 "taskId": task.taskId,
               });
+            } else if (recipe.tasks
+                .any((t) => t is TableTask && t.id == task.taskId)) {
+              tabs.add({
+                "type": "table",
+                "title": task.tabTitle,
+                "taskId": task.taskId,
+              });
             } else if (recipe.tasks.any((t) => t is ShowPayOffGraphTask)) {
               tabs.add({
                 "type": "payoff",
@@ -287,6 +298,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           previewKey.currentState?.clearBucketSelections();
         }
         selectedLegs.clear();
+        onTaskFinish();
+        break;
+      case TaskType.tableTask:
+        TableTask task = currentTask as TableTask;
+        tableTasks.add(task);
+        setState(() {});
         onTaskFinish();
         break;
     }
@@ -425,9 +442,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                         (t) => t.id == taskId,
                         orElse: () => payoffGraphTasks.first,
                       );
-                      for (int i=0; i<selectedLegs.length;i++){
-                        print(selectedLegs[i].toJson());
-                      }
                       return selectedLegs.isEmpty
                           ? Center(
                               child: Text(
@@ -449,23 +463,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                       strategy.OptionLeg.fromJson(e.toJson()))
                                   .toList(),
                             );
-                    // return OptionStrategyContainer(
-                    //   spotPrice: payoffTask.spotPrice,
-                    //   spotPriceDayDelta: payoffTask.spotPriceDayDelta,
-                    //   spotPriceDayDeltaPer: payoffTask.spotPriceDayDeltaPer,
-                    //   onExecute: () {},
-                    //   legs: [
-                    //     OptionLeg(
-                    //       symbol: "NIFTY",
-                    //       strike: 23250,
-                    //       type: PositionType.buy,
-                    //       optionType: OptionType.put,
-                    //       expiry: DateTime.parse("2025-06-06 15:30:00"),
-                    //       quantity: 25,
-                    //       premium: 310,
-                    //     )
-                    //   ],
-                    // );
                     case "insights":
                       final taskId = tab["taskId"]!;
                       final insightsTask = recipe.tasks
@@ -474,39 +471,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             (t) => t.id == taskId,
                             orElse: () => insightsTasks.first,
                           );
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colors.cardColorSecondary,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: colors.buttonColor,
-                            border:
-                                Border.all(color: colors.cardColorSecondary),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10),
-                                Text(insightsTask.title,
-                                    style: textStyles.mediumBold),
-                                const SizedBox(height: 16),
-                                Text(insightsTask.description),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                      return InsightsWidget(insightsTask: insightsTask);
+                    case "table":
+                      final taskId = tab["taskId"]!;
+                      final tableTask = recipe.tasks
+                          .whereType<TableTask>()
+                          .firstWhere((t) => t.id == taskId);
+                      return CustomTable(tableTask: tableTask);
                     default:
                       return Container();
                   }
@@ -550,6 +521,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.showInsightsPage:
       case TaskType.chooseBucketRows:
       case TaskType.clearBucketRows:
+      case TaskType.tableTask:
         return Container();
     }
   }
@@ -622,7 +594,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             color: colors.cardColorSecondary,
             borderRadius: (promptTask!.hint ?? "").isNotEmpty
                 ? const BorderRadius.only(
-                    bottomRight: Radius.circular(20))
+                    bottomRight: Radius.circular(20),
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))
                 : const BorderRadius.all(Radius.circular(20)),
           ),
           child: AnimatedSwitcher(

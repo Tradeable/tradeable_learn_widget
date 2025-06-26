@@ -77,6 +77,10 @@ class CustomColors {
   final Color selectedRowColor;
   final Color correctRowColor;
   final Color incorrectRowColor;
+  final Color tableBorderColor;
+  final Color tableHeaderRowColor;
+  final Color tableHeaderRowColorAlt;
+  final Color tableAltRowColor;
 
   CustomColors(
       {required this.primary,
@@ -104,12 +108,16 @@ class CustomColors {
       required this.optionChainBgColor,
       required this.optionChainStrokeColor,
       required this.optionChainChartIconColor,
-      required this.headerColumnColor,
       required this.strikePriceHeaderColor,
+      required this.headerColumnColor,
       required this.strikePriceColumnColor,
       required this.selectedRowColor,
       required this.correctRowColor,
-      required this.incorrectRowColor});
+      required this.incorrectRowColor,
+      required this.tableBorderColor,
+      required this.tableHeaderRowColor,
+      required this.tableHeaderRowColorAlt,
+      required this.tableAltRowColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -146,7 +154,11 @@ extension ThemeDataExtension on ThemeData {
           strikePriceColumnColor: const Color(0x14F14687),
           selectedRowColor: const Color(0xff007BFF),
           correctRowColor: const Color(0xff28A745),
-          incorrectRowColor: const Color(0xffF9F6EB));
+          incorrectRowColor: const Color(0xffF9F6EB),
+          tableBorderColor: const Color(0xFF404040),
+          tableHeaderRowColor: const Color(0xFFF1F4F7),
+          tableHeaderRowColorAlt: const Color(0xFFB8DDDB),
+          tableAltRowColor: const Color(0xFFEBF9F8));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -180,7 +192,11 @@ extension ThemeDataExtension on ThemeData {
           strikePriceColumnColor: const Color(0x14F14687),
           selectedRowColor: const Color(0xff007BFF),
           correctRowColor: const Color(0xff28A745),
-          incorrectRowColor: const Color(0xffFF3B30));
+          incorrectRowColor: const Color(0xffFF3B30),
+          tableBorderColor: const Color(0xFF404040),
+          tableHeaderRowColor: const Color(0xFFF1F4F7),
+          tableHeaderRowColorAlt: const Color(0xFFB8DDDB),
+          tableAltRowColor: const Color(0xFFEBF9F8));
     }
   }
 
