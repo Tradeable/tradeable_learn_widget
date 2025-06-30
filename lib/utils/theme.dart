@@ -81,6 +81,7 @@ class CustomColors {
   final Color tableHeaderRowColor;
   final Color tableHeaderRowColorAlt;
   final Color tableAltRowColor;
+  final Color tableSelectedRowColor;
 
   CustomColors(
       {required this.primary,
@@ -117,7 +118,8 @@ class CustomColors {
       required this.tableBorderColor,
       required this.tableHeaderRowColor,
       required this.tableHeaderRowColorAlt,
-      required this.tableAltRowColor});
+      required this.tableAltRowColor,
+      required this.tableSelectedRowColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -158,7 +160,8 @@ extension ThemeDataExtension on ThemeData {
           tableBorderColor: const Color(0xFF404040),
           tableHeaderRowColor: const Color(0xFFF1F4F7),
           tableHeaderRowColorAlt: const Color(0xFFB8DDDB),
-          tableAltRowColor: const Color(0xFFEBF9F8));
+          tableAltRowColor: const Color(0xFFEBF9F8),
+          tableSelectedRowColor: const Color(0xffF9B0CC));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -196,7 +199,8 @@ extension ThemeDataExtension on ThemeData {
           tableBorderColor: const Color(0xFF404040),
           tableHeaderRowColor: const Color(0xFFF1F4F7),
           tableHeaderRowColorAlt: const Color(0xFFB8DDDB),
-          tableAltRowColor: const Color(0xFFEBF9F8));
+          tableAltRowColor: const Color(0xFFEBF9F8),
+          tableSelectedRowColor: const Color(0xffF9B0CC));
     }
   }
 

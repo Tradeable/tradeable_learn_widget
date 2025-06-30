@@ -1,5 +1,6 @@
 import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
+import 'package:fin_chart/models/table_model.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
 import 'package:fin_chart/models/tasks/add_indicator.task.dart';
 import 'package:fin_chart/models/tasks/add_layer.task.dart';
@@ -11,6 +12,7 @@ import 'package:fin_chart/models/tasks/choose_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/choose_correct_option_chain_task.dart';
 import 'package:fin_chart/models/tasks/clear_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/highlight_correct_option_chain_value_task.dart';
+import 'package:fin_chart/models/tasks/highlight_table_row_task.dart';
 import 'package:fin_chart/models/tasks/show_bottom_sheet.task.dart';
 import 'package:fin_chart/models/tasks/show_insights_page.task.dart';
 import 'package:fin_chart/models/tasks/table_task.dart';
@@ -18,7 +20,7 @@ import 'package:fin_chart/models/tasks/task.dart';
 import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/custom_table.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
@@ -66,6 +68,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   List<Map<String, String>> tabs = [];
   int currentPageIndex = 0;
   List<finchart.OptionLeg> selectedLegs = [];
+  Map<String, List<GlobalKey<CustomTableState>>> tableWidgetKeys = {};
+  Map<String, List<Set<int>>> highlightedRows = {};
 
   @override
   void initState() {
@@ -306,6 +310,20 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         onTaskFinish();
         break;
+      case TaskType.highlightTableRow:
+        final task = currentTask as HighlightTableRowTask;
+        final tableTask = recipe.tasks
+            .whereType<TableTask>()
+            .firstWhere((t) => t.id == task.tableTaskId);
+        highlightedRows[task.tableTaskId] = List.generate(
+          tableTask.tables.tables.length,
+          (i) => task.selectedRows[i] != null
+              ? Set<int>.from(task.selectedRows[i]!)
+              : <int>{},
+        );
+        setState(() {});
+        onTaskFinish();
+        break;
     }
   }
 
@@ -477,7 +495,26 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                       final tableTask = recipe.tasks
                           .whereType<TableTask>()
                           .firstWhere((t) => t.id == taskId);
-                      return CustomTable(tableTask: tableTask);
+                      final highlights = highlightedRows[taskId] ??
+                          List.generate(
+                              tableTask.tables.tables.length, (_) => <int>{});
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                            tableTask.tables.tables.length,
+                            (tableIdx) => CustomTable.from(
+                              tableTask: TableTask(
+                                tables: TablesModel(
+                                  tables: [tableTask.tables.tables[tableIdx]],
+                                ),
+                              ),
+                              highlightedRows: highlights.length > tableIdx
+                                  ? highlights[tableIdx]
+                                  : {},
+                            ),
+                          ),
+                        ),
+                      );
                     default:
                       return Container();
                   }
@@ -522,6 +559,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.chooseBucketRows:
       case TaskType.clearBucketRows:
       case TaskType.tableTask:
+      case TaskType.highlightTableRow:
         return Container();
     }
   }
