@@ -69,7 +69,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   int currentPageIndex = 0;
   List<finchart.OptionLeg> selectedLegs = [];
   Map<String, List<GlobalKey<CustomTableState>>> tableWidgetKeys = {};
-  Map<String, List<Set<int>>> highlightedRows = {};
 
   @override
   void initState() {
@@ -315,12 +314,18 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         final tableTask = recipe.tasks
             .whereType<TableTask>()
             .firstWhere((t) => t.id == task.tableTaskId);
-        highlightedRows[task.tableTaskId] = List.generate(
-          tableTask.tables.tables.length,
-          (i) => task.selectedRows[i] != null
-              ? Set<int>.from(task.selectedRows[i]!)
-              : <int>{},
-        );
+        final keys = tableWidgetKeys[task.tableTaskId];
+        if (keys != null) {
+          for (int i = 0; i < tableTask.tables.tables.length; i++) {
+            final key = keys[i];
+            final selected = (task.selectedRows[i] != null)
+                ? Set<int>.from(task.selectedRows[i]!)
+                : <int>{};
+            if (key.currentState != null) {
+              key.currentState!.setSelectedRows(selected);
+            }
+          }
+        }
         setState(() {});
         onTaskFinish();
         break;
@@ -495,22 +500,25 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                       final tableTask = recipe.tasks
                           .whereType<TableTask>()
                           .firstWhere((t) => t.id == taskId);
-                      final highlights = highlightedRows[taskId] ??
-                          List.generate(
-                              tableTask.tables.tables.length, (_) => <int>{});
+                      if (tableWidgetKeys[taskId] == null ||
+                          tableWidgetKeys[taskId]!.length !=
+                              tableTask.tables.tables.length) {
+                        tableWidgetKeys[taskId] = List.generate(
+                          tableTask.tables.tables.length,
+                          (_) => GlobalKey<CustomTableState>(),
+                        );
+                      }
                       return SingleChildScrollView(
                         child: Column(
                           children: List.generate(
                             tableTask.tables.tables.length,
                             (tableIdx) => CustomTable.from(
+                              key: tableWidgetKeys[taskId]![tableIdx],
                               tableTask: TableTask(
                                 tables: TablesModel(
                                   tables: [tableTask.tables.tables[tableIdx]],
                                 ),
                               ),
-                              highlightedRows: highlights.length > tableIdx
-                                  ? highlights[tableIdx]
-                                  : {},
                             ),
                           ),
                         ),
