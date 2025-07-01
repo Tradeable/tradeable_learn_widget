@@ -1,5 +1,6 @@
 import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
+import 'package:fin_chart/models/table_model.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
 import 'package:fin_chart/models/tasks/add_indicator.task.dart';
 import 'package:fin_chart/models/tasks/add_layer.task.dart';
@@ -11,24 +12,29 @@ import 'package:fin_chart/models/tasks/choose_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/choose_correct_option_chain_task.dart';
 import 'package:fin_chart/models/tasks/clear_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/highlight_correct_option_chain_value_task.dart';
+import 'package:fin_chart/models/tasks/highlight_table_row_task.dart';
 import 'package:fin_chart/models/tasks/show_bottom_sheet.task.dart';
 import 'package:fin_chart/models/tasks/show_insights_page.task.dart';
+import 'package:fin_chart/models/tasks/table_task.dart';
 import 'package:fin_chart/models/tasks/task.dart';
 import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
-import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart';
-import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
-import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:fin_chart/option_chain/models/option_leg.dart' as finchart;
+import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart'
+    as strategy;
 
 class DynamicChartWidget extends StatefulWidget {
   final DynamicChartModel model;
@@ -58,9 +64,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   List<AddOptionChainTask> optionChainTasks = [];
   List<ShowPayOffGraphTask> payoffGraphTasks = [];
   List<ShowInsightsPageTask> insightsTasks = [];
+  List<TableTask> tableTasks = [];
   List<Map<String, String>> tabs = [];
   int currentPageIndex = 0;
-  List<OptionLeg> selectedLegs = [];
+  List<finchart.OptionLeg> selectedLegs = [];
+  Map<String, List<GlobalKey<CustomTableState>>> tableWidgetKeys = {};
+  Map<String, List<Set<int>>> highlightedRows = {};
 
   @override
   void initState() {
@@ -142,7 +151,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           if (!mounted) return;
 
           if ((task.bucketRows ?? []).isNotEmpty) {
-            previewKey?.currentState?.chooseBucketRows(task.bucketRows!);
+            previewKey?.currentState
+                ?.chooseBucketRows(task.bucketRows!.cast<finchart.OptionLeg>());
           } else {
             for (int i in task.correctRowIndex) {
               previewKey?.currentState?.chooseRow(i);
@@ -175,6 +185,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 .any((t) => t is ShowInsightsPageTask && t.id == task.taskId)) {
               tabs.add({
                 "type": "insights",
+                "title": task.tabTitle,
+                "taskId": task.taskId,
+              });
+            } else if (recipe.tasks
+                .any((t) => t is TableTask && t.id == task.taskId)) {
+              tabs.add({
+                "type": "table",
                 "title": task.tabTitle,
                 "taskId": task.taskId,
               });
@@ -268,13 +285,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           if (!mounted) return;
 
           if (previewKey != null) {
-            print("object1");
             if (task.bucketRows != null && task.bucketRows!.isNotEmpty) {
-              print("object2");
-              previewKey.currentState?.setBuySellSelections(task.bucketRows!);
+              previewKey.currentState?.setBuySellSelections(
+                  task.bucketRows!.cast<finchart.OptionLeg>());
             }
           }
         });
+        selectedLegs = (task.bucketRows ?? []).cast<finchart.OptionLeg>();
         setState(() {});
         onTaskFinish();
         break;
@@ -284,6 +301,27 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         if (previewKey != null) {
           previewKey.currentState?.clearBucketSelections();
         }
+        selectedLegs.clear();
+        onTaskFinish();
+        break;
+      case TaskType.tableTask:
+        TableTask task = currentTask as TableTask;
+        tableTasks.add(task);
+        setState(() {});
+        onTaskFinish();
+        break;
+      case TaskType.highlightTableRow:
+        final task = currentTask as HighlightTableRowTask;
+        final tableTask = recipe.tasks
+            .whereType<TableTask>()
+            .firstWhere((t) => t.id == task.tableTaskId);
+        highlightedRows[task.tableTaskId] = List.generate(
+          tableTask.tables.tables.length,
+          (i) => task.selectedRows[i] != null
+              ? Set<int>.from(task.selectedRows[i]!)
+              : <int>{},
+        );
+        setState(() {});
         onTaskFinish();
         break;
     }
@@ -330,7 +368,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     }
   }
 
-  void _handleBuySellSelection(OptionLeg? optionLeg) {
+  void _handleBuySellSelection(finchart.OptionLeg? optionLeg) {
     if (optionLeg != null) {
       selectedLegs = [];
       setState(() {
@@ -438,25 +476,11 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               spotPriceDayDeltaPer:
                                   payoffTask.spotPriceDayDeltaPer,
                               onExecute: () {},
-                              legs: selectedLegs,
+                              legs: selectedLegs
+                                  .map((e) =>
+                                      strategy.OptionLeg.fromJson(e.toJson()))
+                                  .toList(),
                             );
-                    // return OptionStrategyContainer(
-                    //   spotPrice: payoffTask.spotPrice,
-                    //   spotPriceDayDelta: payoffTask.spotPriceDayDelta,
-                    //   spotPriceDayDeltaPer: payoffTask.spotPriceDayDeltaPer,
-                    //   onExecute: () {},
-                    //   legs: [
-                    //     OptionLeg(
-                    //       symbol: "NIFTY",
-                    //       strike: 23250,
-                    //       type: PositionType.buy,
-                    //       optionType: OptionType.put,
-                    //       expiry: DateTime.parse("2025-06-06 15:30:00"),
-                    //       quantity: 25,
-                    //       premium: 310,
-                    //     )
-                    //   ],
-                    // );
                     case "insights":
                       final taskId = tab["taskId"]!;
                       final insightsTask = recipe.tasks
@@ -465,35 +489,28 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             (t) => t.id == taskId,
                             orElse: () => insightsTasks.first,
                           );
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: colors.cardColorSecondary,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: colors.buttonColor,
-                            border:
-                                Border.all(color: colors.cardColorSecondary),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10),
-                                Text(insightsTask.title,
-                                    style: textStyles.mediumBold),
-                                const SizedBox(height: 16),
-                                Text(insightsTask.description),
-                              ],
+                      return InsightsWidget(insightsTask: insightsTask);
+                    case "table":
+                      final taskId = tab["taskId"]!;
+                      final tableTask = recipe.tasks
+                          .whereType<TableTask>()
+                          .firstWhere((t) => t.id == taskId);
+                      final highlights = highlightedRows[taskId] ??
+                          List.generate(
+                              tableTask.tables.tables.length, (_) => <int>{});
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: List.generate(
+                            tableTask.tables.tables.length,
+                            (tableIdx) => CustomTable.from(
+                              tableTask: TableTask(
+                                tables: TablesModel(
+                                  tables: [tableTask.tables.tables[tableIdx]],
+                                ),
+                              ),
+                              highlightedRows: highlights.length > tableIdx
+                                  ? highlights[tableIdx]
+                                  : {},
                             ),
                           ),
                         ),
@@ -504,7 +521,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 }),
           ),
           Container(
-              padding: const EdgeInsets.all(20), child: userActionContainer()),
+              padding: const EdgeInsets.all(16), child: userActionContainer()),
         ],
       ),
     );
@@ -541,6 +558,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.showInsightsPage:
       case TaskType.chooseBucketRows:
       case TaskType.clearBucketRows:
+      case TaskType.tableTask:
+      case TaskType.highlightTableRow:
         return Container();
     }
   }
@@ -613,9 +632,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             color: colors.cardColorSecondary,
             borderRadius: (promptTask!.hint ?? "").isNotEmpty
                 ? const BorderRadius.only(
-                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
                     topLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20))
+                    topRight: Radius.circular(20))
                 : const BorderRadius.all(Radius.circular(20)),
           ),
           child: AnimatedSwitcher(
