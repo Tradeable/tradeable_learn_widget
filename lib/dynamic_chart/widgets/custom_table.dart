@@ -7,12 +7,10 @@ import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 
 class CustomTable extends StatefulWidget {
   final TableTask tableTask;
-  final Set<int> highlightedRows;
 
   const CustomTable({
     super.key,
     required this.tableTask,
-    this.highlightedRows = const {},
   });
 
   @override
@@ -21,12 +19,10 @@ class CustomTable extends StatefulWidget {
   factory CustomTable.from({
     GlobalKey? key,
     required TableTask tableTask,
-    Set<int> highlightedRows = const {},
   }) {
     return CustomTable(
       key: key,
       tableTask: TableTask(tables: tableTask.tables),
-      highlightedRows: highlightedRows,
     );
   }
 }
@@ -47,6 +43,12 @@ class CustomTableState extends State<CustomTable> {
       } else {
         selectedRows.add(rowIdx);
       }
+    });
+  }
+
+  void setSelectedRows(Set<int> rows) {
+    setState(() {
+      selectedRows = Set<int>.from(rows);
     });
   }
 
@@ -176,7 +178,6 @@ class CustomTableState extends State<CustomTable> {
     final row = table.rows[rowIdx];
     final bool isAltRow = table.rows.length > 5 && rowIdx % 2 == 1;
     final bool isUserSelected = selectedRows.contains(rowIdx);
-    final bool isHighlighted = widget.highlightedRows.contains(rowIdx);
     return TableRow(
       children: List.generate(row.length, (colIdx) {
         return GestureDetector(
@@ -185,11 +186,9 @@ class CustomTableState extends State<CustomTable> {
             decoration: BoxDecoration(
                 color: isUserSelected
                     ? colors.tableSelectedRowColor
-                    : isHighlighted
-                        ? colors.tableSelectedRowColor
-                        : isAltRow
-                            ? colors.tableAltRowColor
-                            : Colors.white,
+                    : isAltRow
+                        ? colors.tableAltRowColor
+                        : Colors.white,
                 border: Border(
                     left: colIdx != 0
                         ? BorderSide(color: colors.optionChainStrokeColor)
