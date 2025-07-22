@@ -173,7 +173,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return WidgetBottomContainer(
-      onMenuClick: () => widget.onMenuClick,
+      onMenuClick: widget.onMenuClick,
       buttonWidget: ButtonWidget(
         color: colors.primary,
         btnContent: "Next",

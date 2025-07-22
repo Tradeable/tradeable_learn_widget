@@ -568,7 +568,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             ),
             const SizedBox(height: 10),
             WidgetBottomContainer(
-              onMenuClick: () => widget.onMenuClick,
+              onMenuClick: widget.onMenuClick,
               buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",
@@ -579,7 +579,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         );
       case TaskType.waitTask:
         return WidgetBottomContainer(
-          onMenuClick: () => widget.onMenuClick,
+          onMenuClick: widget.onMenuClick,
           buttonWidget: ButtonWidget(
             color: colors.primary,
             btnContent: (currentTask as WaitTask).btnText,

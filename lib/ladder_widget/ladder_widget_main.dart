@@ -128,7 +128,7 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                 ),
               ),
               WidgetBottomContainer(
-                onMenuClick: () => widget.onMenuClick,
+                onMenuClick: widget.onMenuClick,
                 buttonWidget: ButtonWidget(
                   color: answeredAllCorrectly()
                       ? colors.primary

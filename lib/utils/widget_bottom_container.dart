@@ -38,7 +38,7 @@ class WidgetBottomContainer extends StatelessWidget {
       if (onMenuClick != null) ...[
         const SizedBox(width: 20),
         InkWell(
-          onTap: () => onMenuClick,
+          onTap: () => onMenuClick!(),
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(

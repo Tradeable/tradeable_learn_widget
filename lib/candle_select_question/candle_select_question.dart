@@ -189,7 +189,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
     switch (model.state) {
       case CandleSelectState.loadUI:
         return WidgetBottomContainer(
-            onMenuClick: () => widget.onMenuClick,
+            onMenuClick: widget.onMenuClick,
             buttonWidget: ButtonWidget(
                 color: model.selectedCandles.isNotEmpty
                     ? colors.primary
@@ -202,7 +202,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
                 }));
       case CandleSelectState.submitResponse:
         return WidgetBottomContainer(
-          onMenuClick: () => widget.onMenuClick,
+          onMenuClick: widget.onMenuClick,
           buttonWidget: ButtonWidget(
               color: colors.primary,
               btnContent: "Next",

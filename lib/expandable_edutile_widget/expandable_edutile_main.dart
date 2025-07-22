@@ -111,7 +111,7 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
               ),
             ),
             WidgetBottomContainer(
-              onMenuClick: () => widget.onMenuClick,
+              onMenuClick: widget.onMenuClick,
               buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",

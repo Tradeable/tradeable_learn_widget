@@ -74,7 +74,7 @@ class _ATMWidgetState extends State<ATMWidget> {
             : Container(),
         const Spacer(),
         WidgetBottomContainer(
-            onMenuClick: () => widget.onMenuClick,
+            onMenuClick: widget.onMenuClick,
             buttonWidget: ButtonWidget(
                 color:
                     userResponse.isNotEmpty ? colors.primary : colors.secondary,
