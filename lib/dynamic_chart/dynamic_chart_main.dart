@@ -369,7 +369,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     }
     print(taskPointer);
     print(recipe.tasks.length);
-    if (taskPointer == recipe.tasks.length) {
+    if (taskPointer >= recipe.tasks.length) {
       // if (currentTask.actionType != ActionType.interupt) {
       //   setState(() {
       //     showNextButton = true;

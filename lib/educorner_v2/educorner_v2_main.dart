@@ -104,6 +104,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
 
   Widget renderItem(
       BoxConstraints constraints, String imageUrl, bool isCurrent) {
+    print(imageUrl);
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -138,7 +139,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                         : constraints.maxHeight * 0.34,
                     child: Image.network(
                       imageUrl,
-                      fit: BoxFit.contain,
+                      fit: BoxFit.fitHeight,
                       errorBuilder: (_, __, ___) =>
                           const Icon(Icons.broken_image, size: 50),
                     ),
