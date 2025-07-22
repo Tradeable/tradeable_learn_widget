@@ -130,7 +130,8 @@ class MyHomePage extends StatelessWidget {
                           title: "EduCornerV2",
                           body: EduCornerV2Main(
                               model: EduCornerModel.fromJson(educornerV1Model),
-                              onNextClick: () {}))),
+                              onNextClick: () {},
+                              onMenuClick: () {}))),
                   const NavigationButton(
                     text: "Ladder Widget",
                     destination: LadderWidgetPage(),

@@ -1,4 +1,3 @@
-import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
 import 'package:fin_chart/models/table_model.dart';
 import 'package:fin_chart/models/tasks/add_data.task.dart';
@@ -30,8 +29,7 @@ import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widge
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
-
-// import 'package:tradeable_learn_widget/utils/button_widget.dart';
+import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:fin_chart/option_chain/models/option_leg.dart' as finchart;
 import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart'
@@ -369,13 +367,14 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       onTaskRun();
     }
     if (taskPointer == recipe.tasks.length) {
-      if (currentTask.actionType != ActionType.interupt) {
-        setState(() {
-          showNextButton = true;
-        });
-      } else {
-        widget.onNextClick();
-      }
+      // if (currentTask.actionType != ActionType.interupt) {
+      //   setState(() {
+      //     showNextButton = true;
+      //   });
+      // } else {
+      //   widget.onNextClick();
+      // }
+      widget.onNextClick();
     }
   }
 
@@ -400,6 +399,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (promptTask == null) Container() else renderPrompt(),
+          const SizedBox(height: 10),
           Expanded(
             child: PageView.builder(
                 controller: controller,
@@ -408,10 +408,17 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   final tab = tabs[index];
                   switch (tab["type"]) {
                     case "chart":
-                      return Chart.from(
-                          key: _chartKey,
-                          recipe: recipe,
-                          onInteraction: (p0, p1) {});
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                                color: colors.cardColorSecondary, width: 2)),
+                        child: Chart.from(
+                            key: _chartKey,
+                            recipe: recipe,
+                            onInteraction: (p0, p1) {}),
+                      );
                     case "option_chain":
                       if (_isOptionChainLoading) {
                         return Center(
@@ -534,6 +541,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   }
                 }),
           ),
+          const SizedBox(height: 20),
           userActionContainer(),
         ],
       ),
@@ -541,8 +549,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   }
 
   Widget userActionContainer() {
-    // final colors =
-    //     TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (currentTask.taskType) {
       case TaskType.addData:
@@ -551,35 +559,38 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addPrompt:
         return Container();
       case TaskType.addMcq:
-        return mcqWidget();
+        return Column(
+          children: [
+            mcqWidget(),
+            const SizedBox(height: 10),
+            WidgetBottomContainer(
+              onMenuClick: () => widget.onMenuClick(),
+              buttonWidget: ButtonWidget(
+                color: colors.primary,
+                btnContent: (currentTask as WaitTask).btnText,
+                onTap: () => onTaskFinish(),
+              ),
+            )
+          ],
+        );
       case TaskType.waitTask:
-        return WidgetBottomContainer(
-            buttonContent: (currentTask as WaitTask).btnText,
-            onNextClick: () => onTaskFinish(),
-            onMenuClick: () => widget.onMenuClick());
-      // return Row(
-      //   children: [
-      //     Expanded(
-      //       child: ButtonWidget(
-      //         color: colors.primary,
-      //         btnContent: (currentTask as WaitTask).btnText,
-      //         onTap: () => onTaskFinish(),
-      //       ),
-      //     ),
-      //     const SizedBox(width: 20),
-      //     Container(
-      //       padding: const EdgeInsets.all(8),
-      //       decoration: BoxDecoration(
-      //           borderRadius: BorderRadius.circular(10),
-      //           border:
-      //               Border.all(color: colors.cardColorSecondary, width: 2)),
-      //       child: Icon(
-      //         Icons.more_vert,
-      //         color: colors.primary,
-      //       ),
-      //     )
-      //   ],
-      // );
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: mcqWidget(),
+            ),
+            const SizedBox(height: 10),
+            WidgetBottomContainer(
+              onMenuClick: () => widget.onMenuClick(),
+              buttonWidget: ButtonWidget(
+                color: colors.primary,
+                btnContent: (currentTask as WaitTask).btnText,
+                onTap: () => onTaskFinish(),
+              ),
+            )
+          ],
+        );
       case TaskType.clearTask:
       case TaskType.addOptionChain:
       case TaskType.chooseCorrectOptionChainValue:
@@ -639,11 +650,14 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 height: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: colors.buttonColor,
+                  color: colors.cardBasicBackground,
                   border: Border.all(color: colors.cardColorSecondary),
                 ),
                 child: Center(
-                  child: Text(mcqTask.options[index]),
+                  child: Text(mcqTask.options[index],
+                      style: TextStyle(
+                          color: colors.borderColorPrimary,
+                          fontWeight: FontWeight.bold)),
                 ),
               ),
             ),
@@ -664,7 +678,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           margin: const EdgeInsets.symmetric(horizontal: 10),
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: colors.cardColorSecondary,
             borderRadius: (promptTask!.hint ?? "").isNotEmpty
                 ? const BorderRadius.only(
                     bottomRight: Radius.circular(20),
@@ -685,10 +698,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   key: ValueKey(promptTask),
                   width: double.infinity,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   decoration: BoxDecoration(
-                    color: colors.buttonColor,
-                    border: Border.all(color: colors.cardColorSecondary),
+                    color: colors.cardBasicBackground,
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                   ),
                   child: Column(
@@ -703,12 +715,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               ],
                             )
                           : Text("Instruction",
-                              style: textStyles.smallNormal
-                                  .copyWith(color: colors.textColorSecondary)),
+                              style: textStyles.smallBold
+                                  .copyWith(color: colors.axisColor)),
                       const SizedBox(height: 4),
                       Text(
                         promptTask?.promptText ?? "",
-                        style: textStyles.smallNormal,
+                        style: textStyles.smallNormal
+                            .copyWith(color: colors.textColorSecondary),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -771,7 +784,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   margin: const EdgeInsets.only(left: 10),
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: colors.cardColorSecondary,
+                    color: colors.buttonColor,
                     borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(20),
                       bottomLeft: Radius.circular(20),
@@ -781,7 +794,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: colors.cardBasicBackground,
+                      color: colors.buttonColor,
                     ),
                     child: Image.asset(
                       "assets/prompt_hint_icon.png",
