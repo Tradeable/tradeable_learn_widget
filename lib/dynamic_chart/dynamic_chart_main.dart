@@ -30,18 +30,24 @@ import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widge
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
-import 'package:tradeable_learn_widget/utils/button_widget.dart';
+
+// import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:fin_chart/option_chain/models/option_leg.dart' as finchart;
 import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart'
     as strategy;
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class DynamicChartWidget extends StatefulWidget {
   final DynamicChartModel model;
   final VoidCallback onNextClick;
+  final VoidCallback onMenuClick;
 
   const DynamicChartWidget(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      required this.onMenuClick});
 
   @override
   State<DynamicChartWidget> createState() => _DynamicChartWidgetState();
@@ -528,16 +534,15 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   }
                 }),
           ),
-          Container(
-              padding: const EdgeInsets.all(16), child: userActionContainer()),
+          userActionContainer(),
         ],
       ),
     );
   }
 
   Widget userActionContainer() {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    // final colors =
+    //     TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (currentTask.taskType) {
       case TaskType.addData:
@@ -548,11 +553,33 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addMcq:
         return mcqWidget();
       case TaskType.waitTask:
-        return ButtonWidget(
-          color: colors.primary,
-          btnContent: (currentTask as WaitTask).btnText,
-          onTap: () => onTaskFinish(),
-        );
+        return WidgetBottomContainer(
+            buttonContent: (currentTask as WaitTask).btnText,
+            onNextClick: () => onTaskFinish(),
+            onMenuClick: () => widget.onMenuClick());
+      // return Row(
+      //   children: [
+      //     Expanded(
+      //       child: ButtonWidget(
+      //         color: colors.primary,
+      //         btnContent: (currentTask as WaitTask).btnText,
+      //         onTap: () => onTaskFinish(),
+      //       ),
+      //     ),
+      //     const SizedBox(width: 20),
+      //     Container(
+      //       padding: const EdgeInsets.all(8),
+      //       decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(10),
+      //           border:
+      //               Border.all(color: colors.cardColorSecondary, width: 2)),
+      //       child: Icon(
+      //         Icons.more_vert,
+      //         color: colors.primary,
+      //       ),
+      //     )
+      //   ],
+      // );
       case TaskType.clearTask:
       case TaskType.addOptionChain:
       case TaskType.chooseCorrectOptionChainValue:

@@ -492,7 +492,8 @@ class MyHomePage extends StatelessWidget {
                           body: DynamicChartWidget(
                               model:
                                   DynamicChartModel.fromJson(dynamicChartModel),
-                              onNextClick: () {}))),
+                              onNextClick: () {},
+                              onMenuClick: () {}))),
                 ],
               ),
             ),

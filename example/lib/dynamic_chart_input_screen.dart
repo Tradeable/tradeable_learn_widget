@@ -120,9 +120,7 @@ class ChartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DynamicChartWidget(
-        model: model,
-        onNextClick: () {},
-      ),
+          model: model, onNextClick: () {}, onMenuClick: () {}),
     );
   }
 }
