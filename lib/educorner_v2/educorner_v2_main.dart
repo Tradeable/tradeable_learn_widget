@@ -47,6 +47,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 10),
           renderCards(constraints),
           const SizedBox(height: 24),
           renderContentSection(constraints),
@@ -64,17 +65,19 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
     return Column(
       children: [
         SizedBox(
-            height: constraints.maxHeight * 0.4,
-            child: PageView.builder(
-              controller: controller,
-              itemCount: items.length,
-              onPageChanged: (index) => setState(() => currentPage = index),
-              itemBuilder: (context, index) {
-                final imageUrl = items[index].imgUrl ?? "";
-                final isCurrent = index == currentPage;
-                return renderItem(constraints, imageUrl, isCurrent);
-              },
-            )),
+          height: constraints.maxHeight * 0.5,
+          // fixed, large enough for tallest image
+          child: PageView.builder(
+            controller: controller,
+            itemCount: items.length,
+            onPageChanged: (index) => setState(() => currentPage = index),
+            itemBuilder: (context, index) {
+              final imageUrl = items[index].imgUrl ?? "";
+              final isCurrent = index == currentPage;
+              return renderItem(constraints, imageUrl, isCurrent);
+            },
+          ),
+        ),
         const SizedBox(height: 24),
         const SizedBox(height: 24),
         SmoothPageIndicator(
@@ -101,16 +104,12 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
 
   Widget renderItem(
       BoxConstraints constraints, String imageUrl, bool isCurrent) {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Transform.scale(
-          scale: isCurrent ? 1.1 : 0.9,
+          scale: isCurrent ? 1 : 0.9,
           child: SizedBox(
-            height: constraints.maxHeight * 0.5,
             width: double.infinity,
             child: GestureDetector(
               onTap: () {
@@ -131,27 +130,17 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
               },
               child: Hero(
                 tag: 'image_$imageUrl',
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: colors.cardBasicBackground,
-                      boxShadow: [
-                        BoxShadow(
-                            color: colors.cardColorSecondary,
-                            offset: const Offset(0, 2),
-                            spreadRadius: 2,
-                            blurRadius: 1)
-                      ]),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: AspectRatio(
-                      aspectRatio: 3 / 2,
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) =>
-                            const Icon(Icons.broken_image, size: 50),
-                      ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    height: isCurrent
+                        ? constraints.maxHeight * 0.45
+                        : constraints.maxHeight * 0.34,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.broken_image, size: 50),
                     ),
                   ),
                 ),

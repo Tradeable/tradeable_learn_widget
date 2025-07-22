@@ -398,6 +398,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 10),
           if (promptTask == null) Container() else renderPrompt(),
           const SizedBox(height: 10),
           Expanded(
@@ -567,7 +568,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
               onMenuClick: () => widget.onMenuClick(),
               buttonWidget: ButtonWidget(
                 color: colors.primary,
-                btnContent: (currentTask as WaitTask).btnText,
+                btnContent: "Next",
                 onTap: () => onTaskFinish(),
               ),
             )
