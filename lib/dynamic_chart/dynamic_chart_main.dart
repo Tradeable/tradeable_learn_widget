@@ -361,11 +361,14 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   }
 
   void onTaskFinish() {
+    print("object on task finish");
     taskPointer += 1;
     if (taskPointer < recipe.tasks.length) {
       currentTask = recipe.tasks[taskPointer];
       onTaskRun();
     }
+    print(taskPointer);
+    print(recipe.tasks.length);
     if (taskPointer == recipe.tasks.length) {
       // if (currentTask.actionType != ActionType.interupt) {
       //   setState(() {
@@ -562,7 +565,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.addMcq:
         return Column(
           children: [
-            mcqWidget(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: mcqWidget(),
+            ),
             const SizedBox(height: 10),
             WidgetBottomContainer(
               onMenuClick: () => widget.onMenuClick(),
@@ -575,22 +581,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           ],
         );
       case TaskType.waitTask:
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: mcqWidget(),
-            ),
-            const SizedBox(height: 10),
-            WidgetBottomContainer(
-              onMenuClick: () => widget.onMenuClick(),
-              buttonWidget: ButtonWidget(
-                color: colors.primary,
-                btnContent: (currentTask as WaitTask).btnText,
-                onTap: () => onTaskFinish(),
-              ),
-            )
-          ],
+        return WidgetBottomContainer(
+          onMenuClick: () => widget.onMenuClick(),
+          buttonWidget: ButtonWidget(
+            color: colors.primary,
+            btnContent: (currentTask as WaitTask).btnText,
+            onTap: () => onTaskFinish(),
+          ),
         );
       case TaskType.clearTask:
       case TaskType.addOptionChain:

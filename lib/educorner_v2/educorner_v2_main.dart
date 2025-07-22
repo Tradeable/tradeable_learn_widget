@@ -138,6 +138,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                         : constraints.maxHeight * 0.34,
                     child: Image.network(
                       imageUrl,
+                      fit: BoxFit.contain,
                       errorBuilder: (_, __, ___) =>
                           const Icon(Icons.broken_image, size: 50),
                     ),
