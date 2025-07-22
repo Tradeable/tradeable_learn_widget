@@ -7,13 +7,18 @@ import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class CandleFormationV2Main extends StatefulWidget {
   final CandleFormationV2Model model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const CandleFormationV2Main(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<CandleFormationV2Main> createState() => _CandleFormationV2MainState();
@@ -113,7 +118,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -165,10 +171,9 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                   ),
                 ),
                 model.state == CandleFormationState.selecting
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 16),
-                        child: ButtonWidget(
+                    ? WidgetBottomContainer(
+                        onMenuClick: widget.onMenuClick,
+                        buttonWidget: ButtonWidget(
                             color: colors.primary,
                             btnContent: "Submit",
                             onTap: submit),
@@ -183,8 +188,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
                     color: model.isIncorrect
-                        ? colors.bearishColor.withOpacity(0.2)
-                        : Colors.black.withOpacity(0.8),
+                        ? colors.bearishColor.withAlpha((0.2 * 255).round())
+                        : Colors.black.withAlpha((0.8 * 255).round()),
                     child: buildResultContainer(),
                   ),
                 ),
@@ -201,7 +206,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
       String selectedOption,
       List<String> options,
       ValueChanged<String> onSelected) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     PageController controller;
     if (type == 'wick') {
       controller = _wickController;
@@ -247,7 +253,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
   }
 
   Widget buildResultContainer() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Center(
       child: Column(
         children: [
@@ -284,10 +291,9 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
           ),
           listEquals(model.correctOptions,
                   [model.selectedWick, model.selectedBody, model.selectedTail])
-              ? Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                  child: ButtonWidget(
+              ? WidgetBottomContainer(
+                  onMenuClick: widget.onMenuClick,
+                  buttonWidget: ButtonWidget(
                       color: colors.primary,
                       btnContent: "Next",
                       onTap: () {

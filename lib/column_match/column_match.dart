@@ -6,13 +6,18 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class ColumnMatch extends StatefulWidget {
   final ColumnModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const ColumnMatch(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<ColumnMatch> createState() => _ColumnMatchState();
@@ -50,8 +55,10 @@ class _ColumnMatchState extends State<ColumnMatch> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -91,9 +98,9 @@ class _ColumnMatchState extends State<ColumnMatch> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
             color: answeredAllCorrectly() ? colors.primary : colors.secondary,
             btnContent: "Next",
             onTap: () {
@@ -119,7 +126,8 @@ class _ColumnMatchState extends State<ColumnMatch> {
   }
 
   Widget renderLadderUnit(ColumnUnit unit) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +165,8 @@ class _ColumnMatchState extends State<ColumnMatch> {
   }
 
   Widget buildDragTarget(ColumnCell e) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return DragTarget<ColumnDraggableOption>(
       builder: (
@@ -251,8 +260,10 @@ class _ColumnMatchState extends State<ColumnMatch> {
   }
 
   Widget renderOption(ColumnDraggableOption option) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     Color optionBgColor = colors.buttonColor;
     switch (option.state) {

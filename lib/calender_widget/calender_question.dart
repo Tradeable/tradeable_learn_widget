@@ -5,13 +5,18 @@ import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class CalenderQuestion extends StatefulWidget {
   final CalenderQuestionModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const CalenderQuestion(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<CalenderQuestion> createState() => _CalenderQuestionState();
@@ -30,7 +35,8 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Center(
       child: Column(
@@ -78,14 +84,14 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
             },
           ),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
               color:
                   selectedDates.isNotEmpty ? colors.primary : colors.secondary,
               btnContent: "Submit",
               onTap: () {
-                if(selectedDates.isNotEmpty) {
+                if (selectedDates.isNotEmpty) {
                   widget.onNextClick();
                 }
               },

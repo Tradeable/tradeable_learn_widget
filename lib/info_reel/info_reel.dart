@@ -4,12 +4,18 @@ import 'package:tradeable_learn_widget/info_reel/info_reel_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class InfoReel extends StatefulWidget {
   final InfoReelModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
-  const InfoReel({super.key, required this.model, required this.onNextClick});
+  const InfoReel(
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<InfoReel> createState() => _InfoReelState();
@@ -26,8 +32,10 @@ class _InfoReelState extends State<InfoReel> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Stack(
       fit: StackFit.passthrough,
@@ -49,10 +57,9 @@ class _InfoReelState extends State<InfoReel> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          child: WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",
                 onTap: () {

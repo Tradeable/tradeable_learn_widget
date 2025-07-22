@@ -9,13 +9,18 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/learn_error_border.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class LadderWidgetMain extends StatefulWidget {
   final LadderModel ladderModel;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const LadderWidgetMain(
-      {super.key, required this.ladderModel, required this.onNextClick});
+      {super.key,
+      required this.ladderModel,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<LadderWidgetMain> createState() => _LadderWidgetMainState();
@@ -64,74 +69,81 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    return LearnErrorBorder(
-      showErrorBody: showErrorBorder,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+    return Scaffold(
+      backgroundColor: colors.background,
+      body: SafeArea(
+        child: LearnErrorBorder(
+          showErrorBody: showErrorBorder,
+          child: Column(
             children: [
-              SizedBox(
-                  height: constraints.maxHeight * 0.11,
-                  child: QuestionWidget(question: model.question)),
-              SizedBox(
-                  height: constraints.maxHeight * 0.66,
-                  child: renderLadderContainer(BoxConstraints(
-                      maxHeight: constraints.maxHeight * 0.66,
-                      maxWidth: constraints.maxWidth / 4))),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: constraints.maxHeight * 0.23,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Bricks and Rungs", style: textStyles.mediumBold),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color:
-                                colors.borderColorSecondary.withOpacity(0.6)),
-                        borderRadius: BorderRadius.circular(8),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      QuestionWidget(question: model.question),
+                      const SizedBox(height: 16),
+                      renderLadderContainer(BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.66,
+                        maxWidth: MediaQuery.of(context).size.width / 4,
+                      )),
+                      const SizedBox(height: 24),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text("Bricks and Rungs",
+                            style: textStyles.mediumBold),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: options.map((option) {
-                          switch (option.state) {
-                            case DraggableOptionState.origin:
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: buildDraggableOption(option),
-                              );
-                            case DraggableOptionState.dragging:
-                            case DraggableOptionState.snapped:
-                              return Container();
-                          }
-                        }).toList(),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        width: double.infinity,
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: colors.borderColorSecondary
+                                  .withAlpha((0.6 * 255).round())),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: options.map((option) {
+                            switch (option.state) {
+                              case DraggableOptionState.origin:
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: buildDraggableOption(option),
+                                );
+                              case DraggableOptionState.dragging:
+                              case DraggableOptionState.snapped:
+                                return Container();
+                            }
+                          }).toList(),
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    ButtonWidget(
-                        color: answeredAllCorrectly()
-                            ? colors.primary
-                            : colors.secondary,
-                        btnContent: "Next",
-                        onTap: () {
-                          if (answeredAllCorrectly()) {
-                            widget.onNextClick();
-                          }
-                        }),
-                    const SizedBox(height: 10),
-                  ],
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
+              WidgetBottomContainer(
+                onMenuClick: () => widget.onMenuClick,
+                buttonWidget: ButtonWidget(
+                  color: answeredAllCorrectly()
+                      ? colors.primary
+                      : colors.secondary,
+                  btnContent: "Next",
+                  onTap: () {
+                    if (answeredAllCorrectly()) {
+                      widget.onNextClick();
+                    }
+                  },
+                ),
+              )
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }

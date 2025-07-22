@@ -7,13 +7,18 @@ import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class CandlePartMatchLink extends StatefulWidget {
   final CandleMatchThePairModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const CandlePartMatchLink(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<CandlePartMatchLink> createState() => _CandlePartMatchLinkState();
@@ -49,9 +54,9 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
           const SizedBox(height: 10),
           renderProblem(constraints),
           const Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: model.state == CandlePartMatchLinkState.loadUI
                     ? colors.secondary
                     : colors.primary,

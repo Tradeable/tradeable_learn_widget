@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class OptionsEduCorner extends StatelessWidget {
   final Widget topSection;
@@ -9,6 +10,7 @@ class OptionsEduCorner extends StatelessWidget {
   final Widget explanationSection;
   final String title;
   final VoidCallback onNextPressed;
+  final VoidCallback? onMenuClicked;
 
   const OptionsEduCorner(
       {super.key,
@@ -16,12 +18,15 @@ class OptionsEduCorner extends StatelessWidget {
       required this.middleSection,
       required this.explanationSection,
       required this.title,
-      required this.onNextPressed});
+      required this.onNextPressed,
+      this.onMenuClicked});
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,9 +38,9 @@ class OptionsEduCorner extends StatelessWidget {
         Expanded(flex: 3, child: middleSection),
         const SizedBox(height: 30),
         Expanded(flex: 3, child: explanationSection),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ButtonWidget(
+        WidgetBottomContainer(
+            onMenuClick: onMenuClicked,
+            buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: 'Next',
                 onTap: onNextPressed)),

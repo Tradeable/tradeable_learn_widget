@@ -5,12 +5,18 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class ImageMcq extends StatefulWidget {
   final ImageMCQModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
-  const ImageMcq({super.key, required this.model, required this.onNextClick});
+  const ImageMcq(
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<ImageMcq> createState() => _ImageMcqState();
@@ -27,7 +33,8 @@ class _ImageMcqState extends State<ImageMcq> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -53,9 +60,9 @@ class _ImageMcqState extends State<ImageMcq> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: (model.userResponse ?? "").isNotEmpty
                     ? colors.primary
                     : colors.secondary,
@@ -134,8 +141,10 @@ class ImageMCQOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return InkWell(
       onTap: () {
         onTap(option);

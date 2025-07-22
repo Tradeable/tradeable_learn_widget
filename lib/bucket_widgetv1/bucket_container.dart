@@ -6,13 +6,18 @@ import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class BucketContainerV1 extends StatefulWidget {
   final BucketContainerModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const BucketContainerV1(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<BucketContainerV1> createState() => _BucketContainerV1State();
@@ -31,8 +36,10 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,9 +206,9 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
           ),
         ),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: model.stockBucketMap.isEmpty
                   ? colors.primary
                   : colors.secondary,

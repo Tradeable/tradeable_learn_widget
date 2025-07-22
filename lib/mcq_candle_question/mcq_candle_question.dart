@@ -5,13 +5,18 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class MCQCandleQuestion extends StatefulWidget {
   final MCQCandleModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const MCQCandleQuestion(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<MCQCandleQuestion> createState() => _MCQCandleQuestionState();
@@ -28,7 +33,8 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -37,9 +43,9 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
           children: [
             QuestionWidget(question: model.question),
             Expanded(child: renderOptionsWithScroll()),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              child: ButtonWidget(
+            WidgetBottomContainer(
+              onMenuClick: widget.onMenuClick,
+              buttonWidget: ButtonWidget(
                   color: (model.userResponse ?? "").isNotEmpty
                       ? colors.primary
                       : colors.secondary,
@@ -125,7 +131,8 @@ class QuizQuestionOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return InkWell(
       onTap: () {

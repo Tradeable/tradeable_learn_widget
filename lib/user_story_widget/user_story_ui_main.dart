@@ -41,13 +41,18 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
 import 'package:tradeable_learn_widget/utils/trade_taker_widget.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class UserStoryUIMain extends StatefulWidget {
   final UserStoryModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const UserStoryUIMain(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<StatefulWidget> createState() => _UserStoryUIMainState();
@@ -284,8 +289,10 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     final step = widget.model.userStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,
@@ -558,9 +565,9 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
             color: !(step.isActionNeeded) ||
                     isAnsweredCorrect != null ||
                     highlightedRowData != null

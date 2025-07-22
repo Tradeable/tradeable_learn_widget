@@ -6,13 +6,18 @@ import 'package:tradeable_learn_widget/range_grid_widget/stamp_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class RatingWidget extends StatefulWidget {
   final RangeGridSliderModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const RatingWidget(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<RatingWidget> createState() => _RangeGridSliderWidgetState();
@@ -38,8 +43,10 @@ class _RangeGridSliderWidgetState extends State<RatingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -175,9 +182,9 @@ class _RangeGridSliderWidgetState extends State<RatingWidget> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: draggedMedal != null ? colors.primary : colors.secondary,
                 btnContent: "Next",
                 onTap: () {

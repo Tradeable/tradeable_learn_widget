@@ -4,11 +4,14 @@ import 'package:tradeable_learn_widget/reading_option_chain/table.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class ReadingOptionChain extends StatefulWidget {
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
-  const ReadingOptionChain({super.key, required this.onNextClick});
+  const ReadingOptionChain(
+      {super.key, required this.onNextClick, this.onMenuClick});
 
   @override
   State<ReadingOptionChain> createState() => _ReadingOptionChainState();
@@ -19,8 +22,10 @@ class _ReadingOptionChainState extends State<ReadingOptionChain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Column(
       children: [
@@ -79,7 +84,8 @@ class _ReadingOptionChainState extends State<ReadingOptionChain> {
                             children: [
                               TableRow(
                                 decoration: BoxDecoration(
-                                  color: colors.buttonColor.withOpacity(0.3),
+                                  color: colors.buttonColor
+                                      .withAlpha((0.3 * 255).round()),
                                   borderRadius: const BorderRadius.only(
                                     topRight: Radius.circular(10),
                                     topLeft: Radius.circular(10),
@@ -102,7 +108,7 @@ class _ReadingOptionChainState extends State<ReadingOptionChain> {
                                 TableRow(
                                   decoration: BoxDecoration(
                                     color: colors.cardColorSecondary
-                                        .withOpacity(0.2),
+                                        .withAlpha((0.2 * 255).round()),
                                   ),
                                   children: List.generate(
                                     1,
@@ -147,7 +153,8 @@ class _ReadingOptionChainState extends State<ReadingOptionChain> {
                               vertical: 20, horizontal: 6),
                           width: 20,
                           height: 20,
-                          color: colors.buttonColor.withOpacity(0.3),
+                          color:
+                              colors.buttonColor.withAlpha((0.3 * 255).round()),
                         ),
                         Text("In-the-Money options",
                             style: textStyles.mediumNormal)
@@ -240,9 +247,9 @@ class _ReadingOptionChainState extends State<ReadingOptionChain> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: colors.primary,
               btnContent: "Next",
               onTap: () {

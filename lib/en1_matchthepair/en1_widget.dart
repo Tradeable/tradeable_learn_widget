@@ -5,12 +5,18 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class EN1 extends StatefulWidget {
   final EN1Model model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
-  const EN1({super.key, required this.model, required this.onNextClick});
+  const EN1(
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<EN1> createState() => _EN1State();
@@ -27,7 +33,8 @@ class _EN1State extends State<EN1> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -88,10 +95,9 @@ class _EN1State extends State<EN1> {
                     ),
                   ),
                   const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 16),
-                    child: ButtonWidget(
+                  WidgetBottomContainer(
+                    onMenuClick: widget.onMenuClick,
+                    buttonWidget: ButtonWidget(
                         color: model.state == EN1State.isMatching
                             ? colors.secondary
                             : colors.primary,
@@ -194,7 +200,8 @@ class LeftColumnItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color shadowColor = colors.borderColorSecondary;
     Color itemColor = colors.cardColorSecondary;
@@ -204,7 +211,7 @@ class LeftColumnItemWidget extends StatelessWidget {
         break;
       case ColumnItemState.selected:
         shadowColor = colors.primary;
-        itemColor = colors.borderColorPrimary.withOpacity(0.4);
+        itemColor = colors.borderColorPrimary.withAlpha((0.4 * 255).round());
         break;
       case ColumnItemState.correct:
         shadowColor = colors.bullishColor;
@@ -224,7 +231,7 @@ class LeftColumnItemWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: shadowColor, width: 1),
-          color: itemColor.withOpacity(0.2),
+          color: itemColor.withAlpha((0.2 * 255).round()),
         ),
         child: Center(
           child: AutoSizeText(
@@ -251,7 +258,8 @@ class RightColumnItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color shadowColor = colors.borderColorSecondary;
     switch (item.state) {
@@ -308,7 +316,7 @@ class RightColumnItemWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             border: Border.all(color: shadowColor, width: 1),
-            color: colors.cardColorSecondary.withOpacity(0.2),
+            color: colors.cardColorSecondary.withAlpha((0.2 * 255).round()),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(

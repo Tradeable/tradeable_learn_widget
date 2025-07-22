@@ -17,13 +17,18 @@ import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class MCQQuestion extends StatefulWidget {
   final MCQModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const MCQQuestion(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<MCQQuestion> createState() => _MCQQuestionState();
@@ -41,7 +46,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -75,9 +81,9 @@ class _MCQQuestionState extends State<MCQQuestion> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
             color: (model.userResponse ?? "").isNotEmpty
                 ? colors.primary
                 : colors.secondary,
@@ -90,7 +96,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Chart(layers: [
       AxisLayer(
@@ -159,7 +166,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
   }
 
   void showAnimation() {
-    if((model.userResponse ?? "").isNotEmpty) {
+    if ((model.userResponse ?? "").isNotEmpty) {
       setState(() {
         model.state = MCQState.submitResponse;
       });

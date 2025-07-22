@@ -11,13 +11,13 @@ import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 class EduCornerV2Main extends StatefulWidget {
   final EduCornerModel model;
   final VoidCallback onNextClick;
-  final VoidCallback onMenuClick;
+  final VoidCallback? onMenuClick;
 
   const EduCornerV2Main(
       {super.key,
       required this.model,
       required this.onNextClick,
-      required this.onMenuClick});
+      this.onMenuClick});
 
   @override
   State<StatefulWidget> createState() => _EduCornerV2Main();
@@ -65,8 +65,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
     return Column(
       children: [
         SizedBox(
-          height: constraints.maxHeight * 0.5,
-          // fixed, large enough for tallest image
+          height: constraints.maxHeight * 0.4,
           child: PageView.builder(
             controller: controller,
             itemCount: items.length,
@@ -104,7 +103,6 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
 
   Widget renderItem(
       BoxConstraints constraints, String imageUrl, bool isCurrent) {
-    print(imageUrl);
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -139,7 +137,6 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                         : constraints.maxHeight * 0.34,
                     child: Image.network(
                       imageUrl,
-                      fit: BoxFit.fitHeight,
                       errorBuilder: (_, __, ___) =>
                           const Icon(Icons.broken_image, size: 50),
                     ),
@@ -176,7 +173,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return WidgetBottomContainer(
-      onMenuClick: () => widget.onMenuClick(),
+      onMenuClick: () => widget.onMenuClick,
       buttonWidget: ButtonWidget(
         color: colors.primary,
         btnContent: "Next",

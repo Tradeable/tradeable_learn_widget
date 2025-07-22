@@ -4,13 +4,18 @@ import 'package:tradeable_learn_widget/fno_buy_story/option_intro_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class ScenarioIntroWidget extends StatefulWidget {
   final OptionIntroModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const ScenarioIntroWidget(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<ScenarioIntroWidget> createState() => _PageIntroState();
@@ -31,8 +36,10 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -71,9 +78,9 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color:
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,
               btnContent: "Next",
@@ -88,7 +95,8 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
   }
 
   Widget question() {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -123,8 +131,10 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
 
   Widget optionBtn(
       {required String src, required String txt, required VoidCallback onTap}) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return InkWell(
       onTap: onTap,
       child: Container(

@@ -5,12 +5,18 @@ import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class ATMWidget extends StatefulWidget {
   final ATMWidgetModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
-  const ATMWidget({super.key, required this.model, required this.onNextClick});
+  const ATMWidget(
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<ATMWidget> createState() => _ATMWidgetState();
@@ -42,7 +48,8 @@ class _ATMWidgetState extends State<ATMWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,25 +73,27 @@ class _ATMWidgetState extends State<ATMWidget> {
               )
             : Container(),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
-              color:
-                  userResponse.isNotEmpty ? colors.primary : colors.secondary,
-              btnContent: "Next",
-              onTap: () {
-                if (userResponse.isNotEmpty) {
-                  widget.onNextClick();
-                }
-              }),
-        ),
+        WidgetBottomContainer(
+            onMenuClick: () => widget.onMenuClick,
+            buttonWidget: ButtonWidget(
+                color:
+                    userResponse.isNotEmpty ? colors.primary : colors.secondary,
+                btnContent: "Next",
+                onTap: () {
+                  if (userResponse.isNotEmpty) {
+                    widget.onNextClick();
+                  }
+                }))
       ],
     );
   }
 
   Widget textContent(String title, String value, bool isToBeAnswered) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    ;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final double containerWidth = MediaQuery.of(context).size.width * 0.4;
 
     return Padding(

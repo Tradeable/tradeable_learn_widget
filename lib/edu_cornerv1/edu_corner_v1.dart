@@ -5,13 +5,18 @@ import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/info_bottom_sheet.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class EduCornerV1 extends StatefulWidget {
   final EduCornerModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const EduCornerV1(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<EduCornerV1> createState() => _EduCornerV1State();
@@ -32,8 +37,10 @@ class _EduCornerV1State extends State<EduCornerV1> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
@@ -70,10 +77,9 @@ class _EduCornerV1State extends State<EduCornerV1> {
                 ),
               ),
               const Spacer(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                child: ButtonWidget(
+              WidgetBottomContainer(
+                onMenuClick: widget.onMenuClick,
+                buttonWidget: ButtonWidget(
                   color: currentPage == model.cards.length - 1
                       ? colors.primary
                       : colors.secondary,
@@ -129,7 +135,8 @@ class _EduCornerV1State extends State<EduCornerV1> {
   }
 
   Widget renderTitle(String title) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return title.isEmpty
         ? Container()
@@ -170,8 +177,10 @@ class _EduCornerV1State extends State<EduCornerV1> {
   }
 
   Widget buildimageTextCard(EduCornerContent card) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(builder: ((context, constraints) {
       return Column(
@@ -298,7 +307,8 @@ class _EduCornerV1State extends State<EduCornerV1> {
   }
 
   Widget videoButton(String? videoId) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     if (videoId == "" || videoId == null) {
       return Container();
@@ -312,13 +322,15 @@ class _EduCornerV1State extends State<EduCornerV1> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Material(
-                          child: VideoEduCorner(
-                              model: VideoEduCornerModel.fromJson(
-                                  {"video_id": videoId}),
-                              onNextClick: () {
-                                Navigator.of(context).pop();
-                              }),
+                    builder: (context) => Scaffold(
+                          body: SafeArea(
+                            child: VideoEduCorner(
+                                model: VideoEduCornerModel.fromJson(
+                                    {"video_id": videoId}),
+                                onNextClick: () {
+                                  Navigator.of(context).pop();
+                                }),
+                          ),
                         )));
           },
           style: ElevatedButton.styleFrom(

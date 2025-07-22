@@ -19,13 +19,18 @@ import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class HorizontalLineQuestionV1 extends StatefulWidget {
   final HorizontalLineModelV1 model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const HorizontalLineQuestionV1(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<HorizontalLineQuestionV1> createState() =>
@@ -46,7 +51,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -103,7 +109,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case HorizontalLineV1QuestionState.loadUI:
@@ -144,11 +151,12 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-      child: ButtonWidget(
+    return WidgetBottomContainer(
+      onMenuClick: widget.onMenuClick,
+      buttonWidget: ButtonWidget(
           color: colors.primary,
           btnContent: "Submit",
           onTap: () {
@@ -217,8 +225,10 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   }
 
   void showSheet() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     showModalBottomSheet(
         isDismissible: false,

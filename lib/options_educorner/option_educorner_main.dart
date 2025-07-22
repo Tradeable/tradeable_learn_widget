@@ -13,9 +13,13 @@ import 'package:tradeable_learn_widget/tlw.dart';
 class OptionEduCorner extends StatefulWidget {
   final OptionsEduCornerModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const OptionEduCorner(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<OptionEduCorner> createState() => _OptionEduCornerState();
@@ -132,8 +136,10 @@ class _OptionEduCornerState extends State<OptionEduCorner>
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return OptionsEduCorner(
       title: model.educornerType,
@@ -295,11 +301,13 @@ class _OptionEduCornerState extends State<OptionEduCorner>
         widget.onNextClick();
         // finish(widget.node.edges?.first.pathId ?? "finished", true);
       },
+      onMenuClicked: widget.onMenuClick,
     );
   }
 
   List<Widget> buildFixedCounterContainers(String number) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     String numberStr = number.toString().padLeft(number.toString().length, '0');
     return numberStr.split('').map((digit) {

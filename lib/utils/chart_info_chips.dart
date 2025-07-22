@@ -16,14 +16,15 @@ class ChartInfoChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     BoxDecoration containerDecoration = BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: colors.cardBasicBackground,
         boxShadow: [
           BoxShadow(
-              color: colors.borderColorSecondary.withOpacity(0.6),
+              color: colors.borderColorSecondary.withAlpha((0.6 * 255).round()),
               spreadRadius: 0.4)
         ],
         border: Border.all(color: colors.borderColorSecondary));
@@ -58,7 +59,11 @@ class ChartInfoChips extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         buildContainer("Script", ticker),
-        buildContainer("Time Frame", timeFrame[0].toUpperCase() + timeFrame.substring(1)),
+        buildContainer(
+            "Time Frame",
+            timeFrame.isNotEmpty
+                ? timeFrame[0].toUpperCase() + timeFrame.substring(1)
+                : ""),
         buildContainer("Date", date),
       ],
     );

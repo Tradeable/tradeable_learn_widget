@@ -7,13 +7,18 @@ import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class DragAndDropMatch extends StatefulWidget {
   final LadderModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const DragAndDropMatch(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<DragAndDropMatch> createState() => _DragAndDropMatchState();
@@ -57,8 +62,10 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +106,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: colors.borderColorSecondary.withOpacity(0.6)),
+                      color: colors.borderColorSecondary
+                          .withAlpha((0.6 * 255).round())),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -135,9 +143,9 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
               )
             : Container(),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: answeredAllCorrectly() ? colors.primary : colors.secondary,
               btnContent: "Next",
               onTap: () {
@@ -164,8 +172,10 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget renderLadderUnit(LadderUnit ladderUnit) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -212,7 +222,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget buildDragTarget(LadderCell e) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -308,7 +319,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   void showError(bool isSnappedCorrectly) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     setState(() {
       showErrorBorder = true;
@@ -321,7 +333,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget renderOption(DraggableOption option) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color optionBgColor = colors.selectedItemColor;
     switch (option.state) {

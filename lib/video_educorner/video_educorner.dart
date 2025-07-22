@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 import 'package:tradeable_learn_widget/video_educorner/video_educorner_model.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
@@ -8,9 +9,13 @@ import 'package:tradeable_learn_widget/tlw.dart';
 class VideoEduCorner extends StatefulWidget {
   final VideoEduCornerModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const VideoEduCorner(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<VideoEduCorner> createState() => _VideoEduCorner();
@@ -118,14 +123,14 @@ class _VideoEduCorner extends State<VideoEduCorner> {
             ),
           ),
         ),
-        Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ButtonWidget(
+        WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",
                 onTap: () {
                   widget.onNextClick();
-                })),
+                }))
       ],
     );
   }

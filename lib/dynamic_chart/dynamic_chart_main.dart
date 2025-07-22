@@ -39,13 +39,13 @@ import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 class DynamicChartWidget extends StatefulWidget {
   final DynamicChartModel model;
   final VoidCallback onNextClick;
-  final VoidCallback onMenuClick;
+  final VoidCallback? onMenuClick;
 
   const DynamicChartWidget(
       {super.key,
       required this.model,
       required this.onNextClick,
-      required this.onMenuClick});
+      this.onMenuClick});
 
   @override
   State<DynamicChartWidget> createState() => _DynamicChartWidgetState();
@@ -361,14 +361,11 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   }
 
   void onTaskFinish() {
-    print("object on task finish");
     taskPointer += 1;
     if (taskPointer < recipe.tasks.length) {
       currentTask = recipe.tasks[taskPointer];
       onTaskRun();
     }
-    print(taskPointer);
-    print(recipe.tasks.length);
     if (taskPointer >= recipe.tasks.length) {
       // if (currentTask.actionType != ActionType.interupt) {
       //   setState(() {
@@ -571,7 +568,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             ),
             const SizedBox(height: 10),
             WidgetBottomContainer(
-              onMenuClick: () => widget.onMenuClick(),
+              onMenuClick: () => widget.onMenuClick,
               buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",
@@ -582,7 +579,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         );
       case TaskType.waitTask:
         return WidgetBottomContainer(
-          onMenuClick: () => widget.onMenuClick(),
+          onMenuClick: () => widget.onMenuClick,
           buttonWidget: ButtonWidget(
             color: colors.primary,
             btnContent: (currentTask as WaitTask).btnText,

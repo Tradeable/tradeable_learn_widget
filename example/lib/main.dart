@@ -201,158 +201,197 @@ class MyHomePage extends StatelessWidget {
                       destination: ScaffoldWithAppBar(
                         title: "Calender Question",
                         body: CalenderQuestion(
-                            model: CalenderQuestionModel.fromJson(
-                                calenderQuestionModel),
-                            onNextClick: () {}),
+                          model: CalenderQuestionModel.fromJson(
+                              calenderQuestionModel),
+                          onNextClick: () {},
+                          onMenuClick: () {},
+                        ),
                       )),
                   NavigationButton(
                       text: "Formula Placeholder Widget",
                       destination: ScaffoldWithAppBar(
                         title: "Formula Placeholder Widget",
                         body: FormulaPlaceholderWidget(
-                            model: FormulaPlaceHolderModel.fromJson(
-                                formulaPlaceholderDataModel),
-                            onNextClick: () {}),
+                          model: FormulaPlaceHolderModel.fromJson(
+                              formulaPlaceholderDataModel),
+                          onNextClick: () {},
+                          onMenuClick: () {},
+                        ),
                       )),
                   NavigationButton(
                       text: "Candle Formation V2",
                       destination: ScaffoldWithAppBar(
                         title: "Candle Formation V2",
                         body: CandleFormationV2Main(
-                            model: CandleFormationV2Model.fromJson(
-                                candleFormationV2),
-                            onNextClick: () => {}),
+                          model: CandleFormationV2Model.fromJson(
+                              candleFormationV2),
+                          onNextClick: () => {},
+                          onMenuClick: () {},
+                        ),
                       )),
                   NavigationButton(
                       text: "Multiple Select MCQ",
                       destination: ScaffoldWithAppBar(
                         title: "Multiple Select MCQ",
                         body: MultipleMCQSelect(
-                            model: MultipleMCQModel.fromJson(multipleSelectMCQ),
-                            onNextClick: () => {}),
+                          model: MultipleMCQModel.fromJson(multipleSelectMCQ),
+                          onNextClick: () => {},
+                          onMenuClick: () {},
+                        ),
                       )),
                   NavigationButton(
                       text: "Trend Line",
                       destination: ScaffoldWithAppBar(
                         title: "Trend Line",
                         body: TrendLineWidget(
-                            model: TrendLineModel.fromJson(trendLineModel),
-                            onNextClick: () => {}),
+                          model: TrendLineModel.fromJson(trendLineModel),
+                          onNextClick: () => {},
+                          onMenuClick: () {},
+                        ),
                       )),
                   NavigationButton(
                       text: "Supply Demand Educorner",
                       destination: ScaffoldWithAppBar(
                         title: "Supply Demand Educorner",
                         body: DemandSuplyEduCornerMain(
-                            model: DemandSupplyEduCornerModel.fromJson(
-                                supplyDemandModel),
-                            onNextClick: () {}),
+                          model: DemandSupplyEduCornerModel.fromJson(
+                              supplyDemandModel),
+                          onNextClick: () {},
+                          onMenuClick: () {},
+                        ),
                       )),
                   NavigationButton(
                       text: "Market Depth",
                       destination: ScaffoldWithAppBar(
                           title: "Market Depth",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(marketDepthModel),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(marketDepthModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Horizontal Line V1",
                       destination: ScaffoldWithAppBar(
                           title: "Horizontal Line V1",
                           body: HorizontalLineQuestionV1(
-                              model: HorizontalLineModelV1.fromJson(
-                                  horizontalLineModelV1),
-                              onNextClick: () {}))),
+                            model: HorizontalLineModelV1.fromJson(
+                                horizontalLineModelV1),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Stock High Low user story",
                       destination: ScaffoldWithAppBar(
                           title: "Stock High Low user story",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(
-                                  stockHighLowUserStoryModel),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(
+                                stockHighLowUserStoryModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Volume User story",
                       destination: ScaffoldWithAppBar(
                           title: "Volume User story",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(volumeUserStory),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(volumeUserStory),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Horizontal Line V2",
                       destination: ScaffoldWithAppBar(
                           title: "Horizontal Line V2",
                           body: HorizontalLineQuestionV2(
-                              model: HorizontalLineModelV1.fromJson(
-                                  horizontalLineModelV1),
-                              onNextClick: () {}))),
+                            model: HorizontalLineModelV1.fromJson(
+                                horizontalLineModelV1),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Ticket User Story",
                       destination: ScaffoldWithAppBar(
                           title: "Ticket User Story",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(ticketUserStory),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(ticketUserStory),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Market Depth",
                       destination: ScaffoldWithAppBar(
                           title: "Market Depth 2",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(marketDepth1),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(marketDepth1),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Option Typeform",
                       destination: ScaffoldWithAppBar(
                           title: "Option Typeform",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(optionsTypeForm),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(optionsTypeForm),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Trendline typeform",
                       destination: ScaffoldWithAppBar(
                           title: "Trendline typeformm",
                           body: UserStoryUIMain(
-                              model:
-                                  UserStoryModel.fromJson(trendLineUserStory),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(trendLineUserStory),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Expiry Derivatives (Weekly)",
                       destination: ScaffoldWithAppBar(
                           title: "Expiry Derivatives",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(
-                                  expiryDerivativeWeekly),
-                              onNextClick: () {}))),
+                            model:
+                                UserStoryModel.fromJson(expiryDerivativeWeekly),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Expiry Derivatives (Monthly)",
                       destination: ScaffoldWithAppBar(
                           title: "Expiry Derivatives",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(
-                                  expiryDerivativeMonthly),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(
+                                expiryDerivativeMonthly),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Contract Derivatives",
                       destination: ScaffoldWithAppBar(
                           title: "Contract Derivatives",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(
-                                  contractPriceSliderModel),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(
+                                contractPriceSliderModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Greeks typeform",
                       destination: ScaffoldWithAppBar(
                           title: "Greeks typeform",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(greeksTypeform),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(greeksTypeform),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Banana widget",
                       destination: ScaffoldWithAppBar(
                           title: "Banana widget",
                           body: BananaWidget(
-                              model: BananaModel.fromJson(bananaWidgetModel),
-                              onNextClick: () {}))),
+                            model: BananaModel.fromJson(bananaWidgetModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   const NavigationButton(
                       text: "Buy Sell Widget",
                       destination: ScaffoldWithAppBar(
@@ -362,53 +401,67 @@ class MyHomePage extends StatelessWidget {
                       destination: ScaffoldWithAppBar(
                           title: "Candle Formation",
                           body: CandleFormation(
-                              model: CandleFormationModel.fromJson(
-                                  candleFormationModel),
-                              onNextClick: () {}))),
+                            model: CandleFormationModel.fromJson(
+                                candleFormationModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Column Match Widget",
                       destination: ScaffoldWithAppBar(
                           title: "Column Match Widget",
                           body: ColumnMatch(
-                              model: ColumnModel.fromJson(columnMatchDataModel),
-                              onNextClick: () {}))),
+                            model: ColumnModel.fromJson(columnMatchDataModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Scenario Intro",
                       destination: ScaffoldWithAppBar(
                           title: "Scenario Intro",
                           body: ScenarioIntroWidget(
-                              model:
-                                  OptionIntroModel.fromJson(scenarioIntroModel),
-                              onNextClick: () {}))),
+                            model:
+                                OptionIntroModel.fromJson(scenarioIntroModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Price Decreased",
                       destination: ScaffoldWithAppBar(
                           title: "Price Decreased",
                           body: PriceDecreased(
-                              model: PriceDecreaseModel.fromJson(
-                                  priceDecreaseModel),
-                              onNextClick: () {}))),
+                            model:
+                                PriceDecreaseModel.fromJson(priceDecreaseModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Image MCQ",
                       destination: ScaffoldWithAppBar(
                           title: "Image MCQ",
                           body: ImageMcq(
-                              model: ImageMCQModel.fromJson(imageMCQ),
-                              onNextClick: () {}))),
+                            model: ImageMCQModel.fromJson(imageMCQ),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Index Page",
                       destination: ScaffoldWithAppBar(
                           title: "Index Page",
                           body: IndexPage(
-                              model: IndexPageModel.fromJson(indexPageModel),
-                              onNextClick: () {}))),
+                            model: IndexPageModel.fromJson(indexPageModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Info Reel",
                       destination: ScaffoldWithAppBar(
                           title: "Info Reel",
                           body: InfoReel(
-                              model: InfoReelModel.fromJson(infoReelModel),
-                              onNextClick: () {}))),
+                            model: InfoReelModel.fromJson(infoReelModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   // NavigationButton(
                   //     text: "LS11",
                   //     destination: ScaffoldWithAppBar(
@@ -421,71 +474,91 @@ class MyHomePage extends StatelessWidget {
                       destination: ScaffoldWithAppBar(
                           title: "Range Grid Slider",
                           body: RatingWidget(
-                              model: RangeGridSliderModel.fromJson(
-                                  rangeGridSlider),
-                              onNextClick: () {}))),
+                            model:
+                                RangeGridSliderModel.fromJson(rangeGridSlider),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Reading Option Chain",
                       destination: ScaffoldWithAppBar(
                           title: "Reading Option Chain",
-                          body: ReadingOptionChain(onNextClick: () {}))),
+                          body: ReadingOptionChain(
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "RR Widget",
                       destination: ScaffoldWithAppBar(
                           title: "RR Widget",
                           body: RRQuestion(
-                              model: RRModel.fromJson(rrModel),
-                              onNextClick: () {}))),
+                            model: RRModel.fromJson(rrModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Web Info Reel",
                       destination: ScaffoldWithAppBar(
                           title: "Web Info Reel",
                           body: WebInfoReel(
-                              model: WebpageModel.fromJson(webPageModel),
-                              onNextClick: () {}))),
+                            model: WebpageModel.fromJson(webPageModel),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "RR Typeform",
                       destination: ScaffoldWithAppBar(
                           title: "RR Typeform",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(rrTypeForm),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(rrTypeForm),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Taking Options Trade",
                       destination: ScaffoldWithAppBar(
                           title: "Taking Options Trade",
                           body: UserStoryUIMain(
-                              model:
-                                  UserStoryModel.fromJson(takingOptionsTrade),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(takingOptionsTrade),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Moneyness Typeform",
                       destination: ScaffoldWithAppBar(
                           title: "Moneyness Typeform",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(moneynessTypeform),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(moneynessTypeform),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Delta Typeform",
                       destination: ScaffoldWithAppBar(
                           title: "Delta Typeform",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(deltaTypeForm),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(deltaTypeForm),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "TR1",
                       destination: ScaffoldWithAppBar(
                           title: "TR1",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(tr2),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(tr2),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "RR new Typeform",
                       destination: ScaffoldWithAppBar(
                           title: "RR new Typeform",
                           body: UserStoryUIMain(
-                              model: UserStoryModel.fromJson(rrTypeForm2),
-                              onNextClick: () {}))),
+                            model: UserStoryModel.fromJson(rrTypeForm2),
+                            onNextClick: () {},
+                            onMenuClick: () {},
+                          ))),
                   NavigationButton(
                       text: "Dynamic Chart Widget",
                       destination: ScaffoldWithAppBar(
@@ -537,8 +610,10 @@ class OptionsEduPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: OptionEduCorner(
-          model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
-          onNextClick: () {}),
+        model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -553,6 +628,7 @@ class LadderWidgetPage extends StatelessWidget {
       body: LadderWidgetMain(
         ladderModel: LadderModel.fromJson(ladderQuestionData),
         onNextClick: () {},
+        onMenuClick: () {},
       ),
     );
   }
@@ -568,6 +644,7 @@ class AtmDropdownWidgetPage extends StatelessWidget {
       body: ATMWidget(
         model: ATMWidgetModel.fromJson(atmItmDropdownModel),
         onNextClick: () {},
+        onMenuClick: () {},
       ),
     );
   }
@@ -581,8 +658,10 @@ class ExpandableEduCornerPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: ExpandableEduTileMain(
-          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
-          onNextClick: () {}),
+        model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -596,7 +675,8 @@ class CandleBodySelectPage extends StatelessWidget {
       title: "Problem",
       body: CandleBodySelect(
           model: CandlePartSelectModel.fromJson(candleBodySelectModelData),
-          onNextClick: () {}),
+          onNextClick: () {},
+          onMenuClick: () {}),
     );
   }
 }
@@ -610,7 +690,8 @@ class CandlePartMatchPage extends StatelessWidget {
       title: "Problem",
       body: CandlePartMatchLink(
           model: CandleMatchThePairModel.fromJson(candlePartMatchModelData),
-          onNextClick: () {}),
+          onNextClick: () {},
+          onMenuClick: () {}),
     );
   }
 }
@@ -622,7 +703,11 @@ class EN1Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScaffoldWithAppBar(
       title: "Problem",
-      body: EN1(model: EN1Model.fromJson(en1DataModel), onNextClick: () {}),
+      body: EN1(
+        model: EN1Model.fromJson(en1DataModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -636,7 +721,8 @@ class CandleSelectQuestionPage extends StatelessWidget {
       title: "Problem",
       body: CandleSelectQuestion(
           model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel),
-          onNextClick: () {}),
+          onNextClick: () {},
+          onMenuClick: () {}),
     );
   }
 }
@@ -649,7 +735,10 @@ class MCQQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MCQQuestion(
-          model: MCQModel.fromJson(mcqStaticModel), onNextClick: () {}),
+        model: MCQModel.fromJson(mcqStaticModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -662,8 +751,10 @@ class HorizontalLineQuestionPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: HorizontalLineQuestion(
-          model: HorizontalLineModel.fromJson(horizontalLineModel),
-          onNextClick: () {}),
+        model: HorizontalLineModel.fromJson(horizontalLineModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -676,8 +767,10 @@ class MCQCandleImagePage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MCQCandleQuestion(
-          model: MCQCandleModel.fromJson(mcqCandleImageModel),
-          onNextClick: () {}),
+        model: MCQCandleModel.fromJson(mcqCandleImageModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -690,8 +783,10 @@ class VideoEducornerPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: VideoEduCorner(
-          model: VideoEduCornerModel.fromJson(videoEducornerModel),
-          onNextClick: () {}),
+        model: VideoEduCornerModel.fromJson(videoEducornerModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -704,8 +799,10 @@ class FnoScenarioPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: DragAndDropMatch(
-          model: LadderModel.fromJson(optionsScenarioModel),
-          onNextClick: () {}),
+        model: LadderModel.fromJson(optionsScenarioModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -718,8 +815,10 @@ class BucketWidgetPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: BucketContainerV1(
-          model: BucketContainerModel.fromJson(bucketContainerV1Model),
-          onNextClick: () {}),
+        model: BucketContainerModel.fromJson(bucketContainerV1Model),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -732,7 +831,10 @@ class EducornerV1Page extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: EduCornerV1(
-          model: EduCornerModel.fromJson(educornerV1Model), onNextClick: () {}),
+        model: EduCornerModel.fromJson(educornerV1Model),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }
@@ -745,8 +847,10 @@ class ContentPreviewPage extends StatelessWidget {
     return ScaffoldWithAppBar(
       title: "Problem",
       body: MarkdownPreviewWidget(
-          model: MarkdownPreviewModel.fromJson(contentPreviewModel),
-          onNextClick: () {}),
+        model: MarkdownPreviewModel.fromJson(contentPreviewModel),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     );
   }
 }

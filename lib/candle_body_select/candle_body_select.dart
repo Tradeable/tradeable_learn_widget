@@ -5,13 +5,18 @@ import 'package:tradeable_learn_widget/utils/bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class CandleBodySelect extends StatefulWidget {
   final CandlePartSelectModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const CandleBodySelect(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<CandleBodySelect> createState() => _CandleBodySelectState();
@@ -28,7 +33,8 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,9 +45,9 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
             child:
                 renderSingleSelectQuestion(model.userResponse ?? "", colors)),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
             color: (model.userResponse ?? "").isEmpty
                 ? colors.secondary
                 : colors.primary,
@@ -170,7 +176,8 @@ class CandleBodyPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final isSelected = currentSelected == type;
 
     return InkWell(
@@ -181,7 +188,7 @@ class CandleBodyPart extends StatelessWidget {
         color: correctResponse == type
             ? colors.selectedItemColor
             : isSelected
-                ? colors.selectedItemColor.withOpacity(0.5)
+                ? colors.selectedItemColor.withAlpha((0.5 * 255).round())
                 : color,
       ),
     );

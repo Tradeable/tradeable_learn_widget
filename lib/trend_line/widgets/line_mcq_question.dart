@@ -4,6 +4,7 @@ import 'package:tradeable_learn_widget/trend_line/models/trendline_model.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class LineMCQQuestionWidget extends StatefulWidget {
   final TrendLineModel model;
@@ -11,6 +12,7 @@ class LineMCQQuestionWidget extends StatefulWidget {
   final List<String> options;
   final VoidCallback onSubmit;
   final String correctResponse;
+  final VoidCallback? onMenuItemClicked;
 
   const LineMCQQuestionWidget(
       {super.key,
@@ -18,7 +20,8 @@ class LineMCQQuestionWidget extends StatefulWidget {
       required this.question,
       required this.options,
       required this.onSubmit,
-      required this.correctResponse});
+      required this.correctResponse,
+      required this.onMenuItemClicked});
 
   @override
   State<LineMCQQuestionWidget> createState() => _LineMCQQuestionWidgetState();
@@ -32,7 +35,8 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
@@ -40,16 +44,19 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
         children: [
           buildOptions(correctResponse: widget.correctResponse),
           const SizedBox(height: 20),
-          ButtonWidget(
-              color: widget.model.userResponse.isNotEmpty
-                  ? colors.primary
-                  : colors.secondary,
-              btnContent: 'Next',
-              onTap: () {
-                if (widget.model.userResponse.isNotEmpty) {
-                  widget.onSubmit();
-                }
-              })
+          WidgetBottomContainer(
+            onMenuClick: widget.onMenuItemClicked,
+            buttonWidget: ButtonWidget(
+                color: widget.model.userResponse.isNotEmpty
+                    ? colors.primary
+                    : colors.secondary,
+                btnContent: 'Next',
+                onTap: () {
+                  if (widget.model.userResponse.isNotEmpty) {
+                    widget.onSubmit();
+                  }
+                }),
+          )
         ],
       ),
     );
@@ -101,8 +108,10 @@ class QuizQuestionOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return InkWell(
       onTap: () {

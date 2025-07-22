@@ -3,11 +3,11 @@ import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class WidgetBottomContainer extends StatelessWidget {
-  final VoidCallback onMenuClick;
+  final VoidCallback? onMenuClick;
   final Widget buttonWidget;
 
   const WidgetBottomContainer(
-      {super.key, required this.onMenuClick, required this.buttonWidget});
+      {super.key, this.onMenuClick, required this.buttonWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +35,22 @@ class WidgetBottomContainer extends StatelessWidget {
       Expanded(
         child: SizedBox(height: 54, child: buttonWidget),
       ),
-      const SizedBox(width: 20),
-      InkWell(
-        onTap: () => onMenuClick(),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: colors.cardColorSecondary, width: 2)),
-          child: Icon(
-            Icons.more_vert,
-            color: colors.primary,
+      if (onMenuClick != null) ...[
+        const SizedBox(width: 20),
+        InkWell(
+          onTap: () => onMenuClick,
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: colors.cardColorSecondary, width: 2)),
+            child: Icon(
+              Icons.more_vert,
+              color: colors.primary,
+            ),
           ),
-        ),
-      )
+        )
+      ]
     ]);
   }
 }

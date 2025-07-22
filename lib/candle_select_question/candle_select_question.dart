@@ -17,13 +17,18 @@ import 'package:tradeable_learn_widget/utils/chart_simulation_widget.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class CandleSelectQuestion extends StatefulWidget {
   final CandleSelectModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const CandleSelectQuestion(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<CandleSelectQuestion> createState() => _CandleSelectQuestionState();
@@ -67,11 +72,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
                   ),
                 renderIndicator(),
                 const Spacer(),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-                  child: renderSubmitBtn(),
-                ),
+                renderSubmitBtn(),
               ],
             ),
           ),
@@ -81,7 +82,8 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleSelectState.loadUI:
@@ -164,12 +166,12 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
               Container(
                   width: 20,
                   height: 20,
-                  color: Colors.blue.withOpacity(0.5),
+                  color: Colors.blue.withAlpha((0.5 * 255).round()),
                   child: Center(
                     child: Container(
                       width: 1,
                       height: 20,
-                      color: Colors.white.withOpacity(0.0),
+                      color: Colors.white.withAlpha((0.0 * 255).round()),
                     ),
                   )),
               const SizedBox(width: 5),
@@ -181,35 +183,41 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleSelectState.loadUI:
-        return ButtonWidget(
-            color: model.selectedCandles.isNotEmpty
-                ? colors.primary
-                : colors.secondary,
-            btnContent: "Submit",
-            onTap: () {
-              if (model.selectedCandles.isNotEmpty) {
-                showAnimation();
-              }
-            });
+        return WidgetBottomContainer(
+            onMenuClick: () => widget.onMenuClick,
+            buttonWidget: ButtonWidget(
+                color: model.selectedCandles.isNotEmpty
+                    ? colors.primary
+                    : colors.secondary,
+                btnContent: "Submit",
+                onTap: () {
+                  if (model.selectedCandles.isNotEmpty) {
+                    showAnimation();
+                  }
+                }));
       case CandleSelectState.submitResponse:
-        return ButtonWidget(
-            color: colors.primary,
-            btnContent: "Next",
-            onTap: () {
-              showModalBottomSheet(
-                  isDismissible: false,
-                  context: context,
-                  builder: (context) => BottomSheetWidget(
-                      isCorrect: model.isCorrect,
-                      model: model.explanationV1,
-                      onNextClick: () {
-                        widget.onNextClick();
-                      }));
-            });
+        return WidgetBottomContainer(
+          onMenuClick: () => widget.onMenuClick,
+          buttonWidget: ButtonWidget(
+              color: colors.primary,
+              btnContent: "Next",
+              onTap: () {
+                showModalBottomSheet(
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) => BottomSheetWidget(
+                        isCorrect: model.isCorrect,
+                        model: model.explanationV1,
+                        onNextClick: () {
+                          widget.onNextClick();
+                        }));
+              }),
+        );
     }
   }
 

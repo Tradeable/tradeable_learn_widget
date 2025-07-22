@@ -7,13 +7,18 @@ import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class CandleFormation extends StatefulWidget {
   final CandleFormationModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const CandleFormation(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<CandleFormation> createState() => _CandlePartMatchLinkState();
@@ -123,13 +128,14 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleFormationState.loadUI:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        return WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: model.selectedOptions.length < 3
                   ? colors.secondary
                   : colors.primary,
@@ -141,9 +147,9 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
               }),
         );
       case CandleFormationState.submitResponse:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        return WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: colors.primary,
               btnContent: "Next",
               onTap: () {

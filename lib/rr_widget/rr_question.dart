@@ -15,12 +15,18 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tradeable_chart/layers/candle_layer.dart/candle.dart'
     as ui;
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class RRQuestion extends StatefulWidget {
   final RRModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
-  const RRQuestion({super.key, required this.model, required this.onNextClick});
+  const RRQuestion(
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<RRQuestion> createState() => _RRQuestionState();
@@ -65,7 +71,8 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Chart(layers: [
       AxisLayer(
           settings: AxisSettings(
@@ -89,13 +96,14 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case RRQuestionState.loadUI:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        return WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: colors.primary,
               btnContent: "Submit",
               onTap: () {
@@ -103,9 +111,9 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
               }),
         );
       case RRQuestionState.submitResponse:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
+        return WidgetBottomContainer(
+          onMenuClick: widget.onMenuClick,
+          buttonWidget: ButtonWidget(
               color: colors.primary,
               btnContent: "Next",
               onTap: () {
@@ -134,7 +142,8 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget helperText() {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     switch (model.state) {
       case RRQuestionState.loadUI:

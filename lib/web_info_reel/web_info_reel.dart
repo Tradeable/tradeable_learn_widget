@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 import 'package:tradeable_learn_widget/web_info_reel/webpage_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
@@ -16,9 +17,13 @@ import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 class WebInfoReel extends StatefulWidget {
   final WebpageModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const WebInfoReel(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<WebInfoReel> createState() => _WebInfoReelState();
@@ -53,7 +58,8 @@ class _WebInfoReelState extends State<WebInfoReel> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Stack(
       fit: StackFit.passthrough,
@@ -67,10 +73,9 @@ class _WebInfoReelState extends State<WebInfoReel> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(
-            height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          child: WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",
                 onTap: () {

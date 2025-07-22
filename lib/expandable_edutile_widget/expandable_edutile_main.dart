@@ -4,13 +4,18 @@ import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/info_bottom_sheet.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class ExpandableEduTileMain extends StatefulWidget {
   final ExpandableEduTileModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const ExpandableEduTileMain(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<StatefulWidget> createState() => _ExpandableEduTileMainState();
@@ -28,99 +33,98 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        model.shortInfo,
-                        style: textStyles.smallNormal,
-                      ),
-                      const SizedBox(height: 16),
-                      ListView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        children: model.tiles.map((tile) {
-                          return ExpandableEduTile(
-                            title: tile.title,
-                            subtitle: tile.subtitle,
-                            content: tile.content,
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 10),
-                      model.videoId.isNotEmpty
-                          ? Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                  height: 50,
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: colors.primary),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Material(
-                                                    child: VideoEduCorner(
-                                                        model:
-                                                            VideoEduCornerModel
-                                                                .fromJson({
-                                                          "video_id":
-                                                              model.videoId
-                                                        }),
-                                                        onNextClick: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        }),
-                                                  )));
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        const Icon(Icons.play_arrow,
-                                            color: Colors.white),
-                                        Text('Watch Video',
-                                            style: textStyles.smallNormal
-                                                .copyWith(color: Colors.white)),
-                                      ],
-                                    ),
-                                  )),
-                            )
-                          : Container(),
-                      const SizedBox(height: 60),
-                    ],
-                  ),
+        Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      model.shortInfo,
+                      style: textStyles.smallNormal,
+                    ),
+                    const SizedBox(height: 16),
+                    ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      children: model.tiles.map((tile) {
+                        return ExpandableEduTile(
+                          title: tile.title,
+                          subtitle: tile.subtitle,
+                          content: tile.content,
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 10),
+                    model.videoId.isNotEmpty
+                        ? Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                                height: 50,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: colors.primary),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Material(
+                                                  child: VideoEduCorner(
+                                                      model: VideoEduCornerModel
+                                                          .fromJson({
+                                                        "video_id":
+                                                            model.videoId
+                                                      }),
+                                                      onNextClick: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      }),
+                                                )));
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      const Icon(Icons.play_arrow,
+                                          color: Colors.white),
+                                      Text('Watch Video',
+                                          style: textStyles.smallNormal
+                                              .copyWith(color: Colors.white)),
+                                    ],
+                                  ),
+                                )),
+                          )
+                        : Container(),
+                    const SizedBox(height: 60),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 50,
-                child: ButtonWidget(
-                  color: colors.primary,
-                  btnContent: "Next",
-                  onTap: () {
-                    showModalBottomSheet(
-                        isDismissible: false,
-                        context: context,
-                        builder: (context) => InfoBottomSheet(
-                            onNextClick: () => widget.onNextClick()));
-                  },
-                ),
+            ),
+            WidgetBottomContainer(
+              onMenuClick: () => widget.onMenuClick,
+              buttonWidget: ButtonWidget(
+                color: colors.primary,
+                btnContent: "Next",
+                onTap: () {
+                  showModalBottomSheet(
+                      isDismissible: false,
+                      context: context,
+                      builder: (context) => InfoBottomSheet(
+                          onNextClick: () => widget.onNextClick()));
+                },
               ),
-            ],
-          ),
+            )
+          ],
         ),
         Positioned(
           top: 10,
@@ -179,8 +183,10 @@ class _ExpandableEduTileState extends State<ExpandableEduTile> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),

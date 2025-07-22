@@ -47,84 +47,115 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
     WidgetChips(
         label: "Youtube Video Education Corner",
         widget: VideoEduCorner(
-            model: VideoEduCornerModel.fromJson(videoEducornerModel),
-            onNextClick: () {})),
+          model: VideoEduCornerModel.fromJson(videoEducornerModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Market Value Selector",
         widget: ATMWidget(
           model: ATMWidgetModel.fromJson(atmItmDropdownModel),
           onNextClick: () {},
+          onMenuClick: () {},
         )),
     WidgetChips(
       label: "Expandable EduCorner",
       widget: ExpandableEduTileMain(
-          model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
-          onNextClick: () {}),
+        model: ExpandableEduTileModel.fromJson(expandableEduTileModelData),
+        onNextClick: () {},
+        onMenuClick: () {},
+      ),
     ),
     WidgetChips(
       label: "Candle Part Identifier",
       widget: CandleBodySelect(
           model: CandlePartSelectModel.fromJson(candleBodySelectModelData),
-          onNextClick: () {}),
+          onNextClick: () {},
+          onMenuClick: () {}),
     ),
     WidgetChips(
         label: "Options Wall",
         widget: LadderWidgetMain(
-            ladderModel: LadderModel.fromJson(ladderQuestionData),
-            onNextClick: () {})),
+          ladderModel: LadderModel.fromJson(ladderQuestionData),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Candle Part Identifier V2",
         widget: CandlePartMatchLink(
-            model: CandleMatchThePairModel.fromJson(candlePartMatchModelData),
-            onNextClick: () {})),
+          model: CandleMatchThePairModel.fromJson(candlePartMatchModelData),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Match the pair",
-        widget:
-            EN1(model: EN1Model.fromJson(en1DataModel), onNextClick: () {})),
+        widget: EN1(
+          model: EN1Model.fromJson(en1DataModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Candle Selection Tool",
         widget: CandleSelectQuestion(
             model: CandleSelectModel.fromJson(candleSelectQuestionStaticModel),
-            onNextClick: () {})),
+            onNextClick: () {},
+            onMenuClick: () {})),
     WidgetChips(
         label: "MCQ Question",
         widget: MCQQuestion(
-            model: MCQModel.fromJson(mcqStaticModel), onNextClick: () {})),
+          model: MCQModel.fromJson(mcqStaticModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Horizontal line Question",
         widget: HorizontalLineQuestion(
-            model: HorizontalLineModel.fromJson(horizontalLineModel),
-            onNextClick: () {})),
+          model: HorizontalLineModel.fromJson(horizontalLineModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "MCQ Question",
         widget: MCQCandleQuestion(
-            model: MCQCandleModel.fromJson(mcqCandleImageModel),
-            onNextClick: () {})),
+          model: MCQCandleModel.fromJson(mcqCandleImageModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "FNO Scenario Page",
         widget: DragAndDropMatch(
-            model: LadderModel.fromJson(optionsScenarioModel),
-            onNextClick: () {})),
+          model: LadderModel.fromJson(optionsScenarioModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Categorisation Widget",
         widget: BucketContainerV1(
-            model: BucketContainerModel.fromJson(bucketContainerV1Model),
-            onNextClick: () {})),
+          model: BucketContainerModel.fromJson(bucketContainerV1Model),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Edu Corner V1",
         widget: EduCornerV1(
-            model: EduCornerModel.fromJson(educornerV1Model),
-            onNextClick: () {})),
+          model: EduCornerModel.fromJson(educornerV1Model),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "EduCorner V2",
         widget: MarkdownPreviewWidget(
-            model: MarkdownPreviewModel.fromJson(contentPreviewModel),
-            onNextClick: () {})),
+          model: MarkdownPreviewModel.fromJson(contentPreviewModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Options EduCorner",
         widget: OptionEduCorner(
-            model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
-            onNextClick: () {})),
+          model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
+          onNextClick: () {},
+          onMenuClick: () {},
+        )),
     WidgetChips(
         label: "Bucket Container Widget",
         widget: BucketContainerV2(

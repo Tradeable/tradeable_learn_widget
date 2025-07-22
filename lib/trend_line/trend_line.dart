@@ -12,13 +12,18 @@ import 'package:tradeable_learn_widget/utils/chart_info_chips.dart';
 import 'package:tradeable_learn_widget/utils/question_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/widget_bottom_container.dart';
 
 class TrendLineWidget extends StatefulWidget {
   final TrendLineModel model;
   final VoidCallback onNextClick;
+  final VoidCallback? onMenuClick;
 
   const TrendLineWidget(
-      {super.key, required this.model, required this.onNextClick});
+      {super.key,
+      required this.model,
+      required this.onNextClick,
+      this.onMenuClick});
 
   @override
   State<TrendLineWidget> createState() => _TrendLineState();
@@ -116,7 +121,8 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Question currentQuestion = questions[currentQuestionIndex];
 
@@ -146,9 +152,9 @@ class _TrendLineState extends State<TrendLineWidget> {
           ),
         ),
         if (currentQuestion.type == "line")
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            child: ButtonWidget(
+          WidgetBottomContainer(
+            onMenuClick: widget.onMenuClick,
+            buttonWidget: ButtonWidget(
                 color: colors.primary,
                 btnContent: 'Submit',
                 onTap: () {
@@ -169,11 +175,13 @@ class _TrendLineState extends State<TrendLineWidget> {
               }
               goToNextQuestion();
             },
+            onMenuItemClicked: widget.onMenuClick,
           ),
         if (currentQuestion.type == "content")
           ContentWidget(
             content: questions[currentQuestionIndex].question,
             moveNext: () => widget.onNextClick(),
+            onMenuClick: widget.onMenuClick,
           )
       ],
     );
