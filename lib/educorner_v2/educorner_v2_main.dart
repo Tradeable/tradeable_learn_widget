@@ -132,13 +132,12 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                 tag: 'image_$imageUrl',
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Container(
+                  child: SizedBox(
                     height: isCurrent
                         ? constraints.maxHeight * 0.45
                         : constraints.maxHeight * 0.34,
                     child: Image.network(
                       imageUrl,
-                      fit: BoxFit.cover,
                       errorBuilder: (_, __, ___) =>
                           const Icon(Icons.broken_image, size: 50),
                     ),
