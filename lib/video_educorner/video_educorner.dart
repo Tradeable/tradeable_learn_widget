@@ -77,15 +77,15 @@ class _VideoEduCorner extends State<VideoEduCorner> {
           child: Container(
             padding: const EdgeInsets.all(8),
             margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: colors.eduCornerV2ContainerBg1,
-              borderRadius: BorderRadius.circular(20),
-            ),
+            // decoration: BoxDecoration(
+            //   color: colors.eduCornerV2ContainerBg1,
+            //   borderRadius: BorderRadius.circular(20),
+            // ),
             child: Container(
-              decoration: BoxDecoration(
-                color: colors.eduCornerV2ContainerBg2,
-                borderRadius: BorderRadius.circular(20),
-              ),
+              // decoration: BoxDecoration(
+              //   color: colors.eduCornerV2ContainerBg2,
+              //   borderRadius: BorderRadius.circular(20),
+              // ),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
