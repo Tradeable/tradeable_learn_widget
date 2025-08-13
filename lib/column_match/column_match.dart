@@ -50,8 +50,10 @@ class _ColumnMatchState extends State<ColumnMatch> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -60,7 +62,7 @@ class _ColumnMatchState extends State<ColumnMatch> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, top: 20, bottom: 10),
                   child: Text(model.title ?? "", style: textStyles.largeBold),
@@ -76,7 +78,7 @@ class _ColumnMatchState extends State<ColumnMatch> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   childAspectRatio: 4.5,
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(16),
                   children: options.map((e) {
                     switch (e.state) {
                       case DraggableOptionState.origin:
@@ -92,7 +94,7 @@ class _ColumnMatchState extends State<ColumnMatch> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
             color: answeredAllCorrectly() ? colors.primary : colors.secondary,
             btnContent: "Next",
@@ -106,20 +108,24 @@ class _ColumnMatchState extends State<ColumnMatch> {
   }
 
   Widget renderLadderContainer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Column(
-            children: units.map((e) => renderLadderUnit(e)).toList(),
-          ),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              children: units.map((e) => renderLadderUnit(e)).toList(),
+            ),
+          )
+        ],
+      ),
     );
   }
 
   Widget renderLadderUnit(ColumnUnit unit) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +163,8 @@ class _ColumnMatchState extends State<ColumnMatch> {
   }
 
   Widget buildDragTarget(ColumnCell e) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return DragTarget<ColumnDraggableOption>(
       builder: (
@@ -251,8 +258,10 @@ class _ColumnMatchState extends State<ColumnMatch> {
   }
 
   Widget renderOption(ColumnDraggableOption option) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     Color optionBgColor = colors.buttonColor;
     switch (option.state) {

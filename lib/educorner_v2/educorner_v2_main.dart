@@ -39,14 +39,17 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          renderCards(constraints),
-          renderContentSection(constraints),
-          const Spacer(),
-          renderNextButton()
-        ],
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            renderCards(constraints),
+            renderContentSection(constraints),
+            const Spacer(),
+            renderNextButton()
+          ],
+        ),
       );
     });
   }
@@ -58,7 +61,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
     return Container(
       width: constraints.maxWidth,
       height: constraints.maxHeight * 0.65,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: colors.eduCornerV2ContainerBg1,
@@ -179,7 +182,6 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
     return Container(
       height: constraints.maxHeight * 0.2,
       padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -222,7 +224,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: ButtonWidget(
         color:
             currentPage == items.length - 1 ? colors.primary : colors.secondary,

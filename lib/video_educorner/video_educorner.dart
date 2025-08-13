@@ -107,7 +107,7 @@ class _VideoEduCorner extends State<VideoEduCorner> {
       child: Column(
         children: [
           Expanded(
-            flex: 7, // major portion for image
+            flex: 7,
             child: ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
@@ -122,7 +122,7 @@ class _VideoEduCorner extends State<VideoEduCorner> {
             ),
           ),
           Expanded(
-            flex: 3, // smaller portion for text + buttons
+            flex: 3,
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(

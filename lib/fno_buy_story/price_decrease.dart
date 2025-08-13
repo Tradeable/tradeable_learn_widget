@@ -29,19 +29,21 @@ class _PriceDecreasedState extends State<PriceDecreased> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Column(
       children: [
+        const SizedBox(height: 16),
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: LayoutBuilder(builder: (context, constraints) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 20),
                       Text(
                         model.title,
                         style: textStyles.largeBold,
@@ -56,26 +58,29 @@ class _PriceDecreasedState extends State<PriceDecreased> {
                       const SizedBox(height: 80),
                       QuestionWidget(question: model.question),
                       const SizedBox(height: 30),
-                      GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 20,
-                        childAspectRatio: 1 / 0.5,
-                        padding: const EdgeInsets.all(10),
-                        children: model.options
-                            .map(
-                              (e) => PriceDecreaseMCQOptions(
-                                  option: e,
-                                  correctResponse: model.correctResponse,
-                                  onTap: (option) {
-                                    setState(() {
-                                      userResponse = option;
-                                    });
-                                  },
-                                  selectedOption: userResponse),
-                            )
-                            .toList(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GridView.count(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 20,
+                          childAspectRatio: 1 / 0.5,
+                          padding: const EdgeInsets.all(10),
+                          children: model.options
+                              .map(
+                                (e) => PriceDecreaseMCQOptions(
+                                    option: e,
+                                    correctResponse: model.correctResponse,
+                                    onTap: (option) {
+                                      setState(() {
+                                        userResponse = option;
+                                      });
+                                    },
+                                    selectedOption: userResponse),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ],
                   );
@@ -83,7 +88,7 @@ class _PriceDecreasedState extends State<PriceDecreased> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color:
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,

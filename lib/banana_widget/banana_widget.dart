@@ -45,7 +45,7 @@ class _BananaWidgetState extends State<BananaWidget> {
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(16),
               child: ListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -111,7 +111,7 @@ class _BananaWidgetState extends State<BananaWidget> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color: colors.primary,
               btnContent: 'Next',

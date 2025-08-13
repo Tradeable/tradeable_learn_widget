@@ -45,7 +45,7 @@ class _TextImagePreviewWidget extends State<MarkdownPreviewWidget> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+        padding: const EdgeInsets.all(16),
         child: ButtonWidget(
             color: colors.primary,
             btnContent: "Next",

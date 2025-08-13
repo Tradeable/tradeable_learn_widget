@@ -48,6 +48,7 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const SizedBox(height: 16),
       QuestionWidget(question: model.question),
       const SizedBox(height: 10),
       SizedBox(height: 350, child: renderChart()),
@@ -94,7 +95,7 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
     switch (model.state) {
       case RRQuestionState.loadUI:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color: colors.primary,
               btnContent: "Submit",
@@ -104,7 +105,7 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
         );
       case RRQuestionState.submitResponse:
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color: colors.primary,
               btnContent: "Next",

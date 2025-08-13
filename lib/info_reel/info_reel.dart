@@ -26,12 +26,15 @@ class _InfoReelState extends State<InfoReel> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Stack(
       fit: StackFit.passthrough,
       children: [
+        const SizedBox(height: 16),
         Align(
           alignment: Alignment.topLeft,
           child: Container(
@@ -51,7 +54,7 @@ class _InfoReelState extends State<InfoReel> {
           alignment: Alignment.bottomCenter,
           child: Container(
             height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",

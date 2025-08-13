@@ -38,12 +38,13 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 16),
           QuestionWidget(question: model.question),
           const Spacer(),
           renderOptions(),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
               color: model.userResponse.isNotEmpty
                   ? colors.primary
@@ -78,7 +79,7 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
       crossAxisSpacing: 20,
       mainAxisSpacing: 20,
       childAspectRatio: 1 / 0.18,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(16),
       children: model.options
           .map(
             (e) => QuestionOptions(

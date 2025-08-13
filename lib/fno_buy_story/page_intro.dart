@@ -36,11 +36,12 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
 
     return Column(
       children: [
+        const SizedBox(height: 16),
         Expanded(
           child: ListView(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: <Widget>[
                     MarkdownBody(
@@ -72,7 +73,7 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color:
                   userResponse.isNotEmpty ? colors.primary : colors.secondary,

@@ -41,7 +41,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               renderTitle(model.title),
               const SizedBox(height: 30),
               SizedBox(
@@ -72,7 +72,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
               const Spacer(),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+                    const EdgeInsets.all(16),
                 child: ButtonWidget(
                   color: currentPage == model.cards.length - 1
                       ? colors.primary
@@ -134,7 +134,7 @@ class _EduCornerV1State extends State<EduCornerV1> {
     return title.isEmpty
         ? Container()
         : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(title, style: textStyles.largeBold),
           );
   }
