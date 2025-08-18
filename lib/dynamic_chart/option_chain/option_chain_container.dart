@@ -13,19 +13,11 @@ class OptionChainContainer extends StatelessWidget {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
-      margin: const EdgeInsets.only(top: 20, left: 8, right: 8),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: colors.optionChainBgColor,
-          border: Border.all(color: colors.optionChainStrokeColor)),
-      child: Container(
-          margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
-          decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(14), topRight: Radius.circular(14)),
-              color: colors.cardBasicBackground,
-              border: Border.all(color: colors.optionChainStrokeColor)),
-          child: child),
-    );
+        margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(14), topRight: Radius.circular(14)),
+            color: colors.cardBasicBackground),
+        child: child);
   }
 }

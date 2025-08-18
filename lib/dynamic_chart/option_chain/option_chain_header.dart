@@ -56,14 +56,8 @@ class OptionChainHeader extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 4),
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-            decoration: BoxDecoration(
-              border:
-                  Border.all(color: colors.optionChainStrokeColor, width: 1),
-              color: colors.cardBasicBackground,
-              borderRadius: BorderRadius.circular(8),
-            ),
             child: Icon(Icons.candlestick_chart_outlined,
-                color: colors.optionChainChartIconColor, size: 20),
+                color: colors.optionChainChartIconColor, size: 22),
           ),
         ),
       ),
@@ -73,6 +67,8 @@ class OptionChainHeader extends StatelessWidget {
   Widget renderTickerContainer(BuildContext context) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
@@ -80,17 +76,11 @@ class OptionChainHeader extends StatelessWidget {
             borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16)),
-            boxShadow: [
-              BoxShadow(color: colors.optionChainStrokeColor, spreadRadius: 0)
-            ],
-            border: Border.all(color: colors.optionChainStrokeColor, width: 1),
-            color: colors.cardBasicBackground),
-        child: const Text("Nifty 50"));
+            color: colors.containerColor),
+        child: Text("Nifty 50", style: textStyles.smallBold));
   }
 
   Widget renderSettingsButtonContainer(BuildContext context) {
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Expanded(
       child: Align(
         alignment: Alignment.centerRight,
@@ -101,15 +91,10 @@ class OptionChainHeader extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 4),
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border:
-                    Border.all(color: colors.optionChainStrokeColor, width: 1),
-                color: colors.cardBasicBackground),
             child: Image.asset(
               "assets/equalizer-line.png",
               package: 'tradeable_learn_widget/lib',
-              height: 20,
+              height: 22,
             ),
           ),
         ),

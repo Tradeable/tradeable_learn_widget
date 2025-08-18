@@ -896,12 +896,11 @@ class PreviewScreenState extends State<PreviewScreen> {
             alignment: Alignment.center,
             child: Container(
               width: cellWidth,
-              margin: const EdgeInsets.only(bottom: 2, left: 2),
+              margin: const EdgeInsets.only(bottom: 3, left: 2),
               decoration: BoxDecoration(
                 color: cellColor,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                    color: colors.optionChainStrokeColor, width: 1),
+                border: Border.all(color: colors.axisColor, width: 1),
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(14),
@@ -951,7 +950,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     return Center(
       child: Container(
         width: cellWidth,
-        margin: const EdgeInsets.all(1),
+        margin: const EdgeInsets.all(2),
         decoration: BoxDecoration(
           color: cellColor,
           borderRadius: BorderRadius.circular(14),
@@ -1204,7 +1203,8 @@ class PreviewScreenState extends State<PreviewScreen> {
                               : PositionType.sell,
                           optionType:
                               isCallSide ? OptionType.call : OptionType.put,
-                          expiry: widget.previewData.expiryDate ?? DateTime.now(),
+                          expiry:
+                              widget.previewData.expiryDate ?? DateTime.now(),
                           quantity: 1,
                           premium:
                               isCallSide ? data.callPremium : data.putPremium,
@@ -1214,8 +1214,8 @@ class PreviewScreenState extends State<PreviewScreen> {
                     });
                   },
                   child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 8),
                       decoration: BoxDecoration(
                           color: isBuySelected
                               ? Colors.green
@@ -1224,8 +1224,9 @@ class PreviewScreenState extends State<PreviewScreen> {
                       child: Text('B',
                           style: TextStyle(
                               fontSize: 10,
-                              color:
-                                  isBuySelected ? Colors.white : Colors.black))),
+                              color: isBuySelected
+                                  ? Colors.white
+                                  : Colors.black))),
                 ),
                 const SizedBox(height: 6),
                 InkWell(
@@ -1253,7 +1254,8 @@ class PreviewScreenState extends State<PreviewScreen> {
                               : PositionType.buy,
                           optionType:
                               isCallSide ? OptionType.call : OptionType.put,
-                          expiry: widget.previewData.expiryDate ?? DateTime.now(),
+                          expiry:
+                              widget.previewData.expiryDate ?? DateTime.now(),
                           quantity: 1,
                           premium:
                               isCallSide ? data.callPremium : data.putPremium,
@@ -1263,8 +1265,8 @@ class PreviewScreenState extends State<PreviewScreen> {
                     });
                   },
                   child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 8),
                       decoration: BoxDecoration(
                           color:
                               isSellSelected ? Colors.red : Colors.red.shade200,
@@ -1272,8 +1274,9 @@ class PreviewScreenState extends State<PreviewScreen> {
                       child: Text('S',
                           style: TextStyle(
                               fontSize: 10,
-                              color:
-                                  isSellSelected ? Colors.white : Colors.black))),
+                              color: isSellSelected
+                                  ? Colors.white
+                                  : Colors.black))),
                 ),
               ],
             ),

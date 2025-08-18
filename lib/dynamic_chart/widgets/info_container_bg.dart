@@ -12,16 +12,11 @@ class InfoContainerBg extends StatelessWidget {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: colors.cardColorSecondary,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-      ),
       child: Container(
         decoration: BoxDecoration(
-          color: colors.buttonColor,
-          border: Border.all(color: colors.cardColorSecondary),
+          color: colors.cardBasicBackground,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: child,
