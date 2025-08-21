@@ -45,6 +45,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 16),
           QuestionWidget(question: model.question),
           const SizedBox(height: 20),
           SizedBox(
@@ -81,7 +82,8 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleSelectState.loadUI:
@@ -164,12 +166,12 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
               Container(
                   width: 20,
                   height: 20,
-                  color: Colors.blue.withOpacity(0.5),
+                  color: Colors.blue.withAlpha((0.5 * 255).round()),
                   child: Center(
                     child: Container(
                       width: 1,
                       height: 20,
-                      color: Colors.white.withOpacity(0.0),
+                      color: Colors.white.withAlpha((0.0 * 255).round()),
                     ),
                   )),
               const SizedBox(width: 5),
@@ -181,7 +183,8 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleSelectState.loadUI:

@@ -25,10 +25,10 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.borderColorSecondary),
-        color: colors.cardColorSecondary,
+        borderRadius: BorderRadius.circular(24),
+        color: colors.containerColor,
       ),
       child: Row(
         children: [

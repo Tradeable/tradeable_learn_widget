@@ -176,7 +176,7 @@ class _RangeGridSliderWidgetState extends State<RatingWidget> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: draggedMedal != null ? colors.primary : colors.secondary,
                 btnContent: "Next",

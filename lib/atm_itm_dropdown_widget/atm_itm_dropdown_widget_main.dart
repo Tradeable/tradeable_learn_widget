@@ -44,41 +44,44 @@ class _ATMWidgetState extends State<ATMWidget> {
   Widget build(BuildContext context) {
     final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        QuestionWidget(question: model.question),
-        const SizedBox(height: 40),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ...model.entries.map((e) =>
-                textContent(e.model.title, e.model.value, e.model.isQuestion))
-          ],
-        ),
-        const SizedBox(height: 30),
-        submitted
-            ? Center(
-                child: Text(model.correctResponse != userResponse
-                    ? "${model.correctResponse} is the correct value"
-                    : ""),
-              )
-            : Container(),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
-              color:
-                  userResponse.isNotEmpty ? colors.primary : colors.secondary,
-              btnContent: "Next",
-              onTap: () {
-                if (userResponse.isNotEmpty) {
-                  widget.onNextClick();
-                }
-              }),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          QuestionWidget(question: model.question),
+          const SizedBox(height: 40),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...model.entries.map((e) =>
+                  textContent(e.model.title, e.model.value, e.model.isQuestion))
+            ],
+          ),
+          const SizedBox(height: 30),
+          submitted
+              ? Center(
+                  child: Text(model.correctResponse != userResponse
+                      ? "${model.correctResponse} is the correct value"
+                      : ""),
+                )
+              : Container(),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: ButtonWidget(
+                color:
+                    userResponse.isNotEmpty ? colors.primary : colors.secondary,
+                btnContent: "Next",
+                onTap: () {
+                  if (userResponse.isNotEmpty) {
+                    widget.onNextClick();
+                  }
+                }),
+          ),
+        ],
+      ),
     );
   }
 

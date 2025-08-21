@@ -36,6 +36,7 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SizedBox(height: 16),
           QuestionWidget(question: model.question),
           const SizedBox(height: 20),
           HeatMap(
@@ -79,7 +80,7 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
           ),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
               color:
                   selectedDates.isNotEmpty ? colors.primary : colors.secondary,

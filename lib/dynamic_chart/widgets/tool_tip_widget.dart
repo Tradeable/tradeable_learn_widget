@@ -34,7 +34,7 @@ class _TapTooltipState extends State<TapTooltip> {
         child: Material(
           color: Colors.transparent,
           child: Container(
-            width: MediaQuery.of(context).size.width - 80,
+            width: MediaQuery.of(context).size.width - 200,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Colors.black87,

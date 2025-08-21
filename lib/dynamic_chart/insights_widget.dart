@@ -16,7 +16,7 @@ class InsightsWidget extends StatelessWidget {
 
     return InfoContainerBg(
         child: SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

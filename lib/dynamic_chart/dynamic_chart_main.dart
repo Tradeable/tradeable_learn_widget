@@ -20,6 +20,7 @@ import 'package:fin_chart/models/tasks/task.dart';
 import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
@@ -393,6 +394,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 16),
           if (promptTask == null) Container() else renderPrompt(),
           Expanded(
             child: PageView.builder(
@@ -402,10 +404,16 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   final tab = tabs[index];
                   switch (tab["type"]) {
                     case "chart":
-                      return Chart.from(
-                          key: _chartKey,
-                          recipe: recipe,
-                          onInteraction: (p0, p1) {});
+                      return Container(
+                        decoration: BoxDecoration(
+                            color: colors.cardBasicBackground,
+                            borderRadius: BorderRadius.circular(12)),
+                        margin: const EdgeInsets.all(16),
+                        child: Chart.from(
+                            key: _chartKey,
+                            recipe: recipe,
+                            onInteraction: (p0, p1) {}),
+                      );
                     case "option_chain":
                       if (_isOptionChainLoading) {
                         return Center(
@@ -634,16 +642,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          padding: const EdgeInsets.all(4),
+          margin: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: colors.cardColorSecondary,
-            borderRadius: (promptTask!.hint ?? "").isNotEmpty
-                ? const BorderRadius.only(
-                    bottomRight: Radius.circular(20),
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))
-                : const BorderRadius.all(Radius.circular(20)),
+            borderRadius: BorderRadius.circular(12),
+            color: colors.cardBasicBackground,
           ),
           child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
@@ -654,118 +656,132 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                     ).animate(animation),
                     child: child,
                   ),
-              child: Container(
+              child: SizedBox(
                   key: ValueKey(promptTask),
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: colors.buttonColor,
-                    border: Border.all(color: colors.cardColorSecondary),
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      promptTask != null && promptTask!.isExplanation
-                          ? Row(
+                      renderTabs(),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          children: [
+                            Row(
                               children: [
-                                Text("Take Away", style: textStyles.smallBold),
-                                const SizedBox(width: 6),
-                              ],
-                            )
-                          : Text("Instruction",
-                              style: textStyles.smallNormal
-                                  .copyWith(color: colors.textColorSecondary)),
-                      const SizedBox(height: 4),
-                      Text(
-                        promptTask?.promptText ?? "",
-                        style: textStyles.smallNormal,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  ...tabs.map((tab) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            final tabIndex = tabs.indexOf(tab);
-                                            navigateToPage(tabIndex);
-                                          },
+                                promptTask != null && promptTask!.isExplanation
+                                    ? Row(
+                                        children: [
+                                          Text("Take Away",
+                                              style: textStyles.smallBold),
+                                          const SizedBox(width: 6),
+                                        ],
+                                      )
+                                    : Text("Instruction",
+                                        style: textStyles.mediumBold),
+                                (promptTask!.hint ?? "").isNotEmpty
+                                    ? TapTooltip(
+                                        message: 'Hint!\n${promptTask!.hint}',
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
                                           child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 6),
+                                            padding: const EdgeInsets.all(6),
                                             decoration: BoxDecoration(
-                                                color: currentPageIndex ==
-                                                        tabs.indexOf(tab)
-                                                    ? colors.borderColorPrimary
-                                                    : colors
-                                                        .cardBasicBackground,
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                border: Border.all(
-                                                    color: colors
-                                                        .borderColorSecondary)),
-                                            child: Text(
-                                              tab["title"] ?? "",
-                                              style: textStyles.smallNormal
-                                                  .copyWith(
-                                                color: currentPageIndex ==
-                                                        tabs.indexOf(tab)
-                                                    ? colors.cardColorPrimary
-                                                    : colors.axisColor,
-                                              ),
+                                              shape: BoxShape.circle,
+                                              color: colors.containerColor,
+                                            ),
+                                            child: SvgPicture.asset(
+                                              "assets/instruction_hint.svg",
+                                              package:
+                                                  'tradeable_learn_widget/lib',
+                                              height: 20,
                                             ),
                                           ),
                                         ),
-                                      )),
-                                ],
-                              ),
+                                      )
+                                    : Container(),
+                                const Spacer(),
+                                const FeedbackWidget()
+                              ],
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          const FeedbackWidget()
-                        ],
+                            const SizedBox(height: 4),
+                            Text(
+                              promptTask?.promptText ?? "",
+                              style: textStyles.smallNormal,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ))),
         ),
-        (promptTask!.hint ?? "").isNotEmpty
-            ? TapTooltip(
-                message: 'Hint!\n${promptTask!.hint}',
-                child: Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: colors.cardColorSecondary,
-                    borderRadius: const BorderRadius.only(
-                      bottomRight: Radius.circular(20),
-                      bottomLeft: Radius.circular(20),
-                    ),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colors.cardBasicBackground,
-                    ),
-                    child: Image.asset(
-                      "assets/prompt_hint_icon.png",
-                      package: 'tradeable_learn_widget/lib',
-                      height: 20,
-                    ),
-                  ),
-                ),
-              )
-            : Container()
       ],
+    );
+  }
+
+  Widget renderTabs() {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: colors.buttonColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha((0.1 * 255).round()),
+              blurRadius: 4,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12))),
+      child: Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  ...tabs.map((tab) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            final tabIndex = tabs.indexOf(tab);
+                            navigateToPage(tabIndex);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                                color: currentPageIndex == tabs.indexOf(tab)
+                                    ? colors.borderColorPrimary
+                                    : colors.cardBasicBackground,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: colors.borderColorSecondary)),
+                            child: Text(
+                              tab["title"] ?? "",
+                              style: textStyles.smallNormal.copyWith(
+                                color: currentPageIndex == tabs.indexOf(tab)
+                                    ? colors.cardColorPrimary
+                                    : colors.axisColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -127,7 +127,7 @@ class _TrendLineState extends State<TrendLineWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
+                const SizedBox(height: 16),
                 QuestionWidget(
                     question: questions[currentQuestionIndex].question),
                 LineGraphWidget(
@@ -147,7 +147,7 @@ class _TrendLineState extends State<TrendLineWidget> {
         ),
         if (currentQuestion.type == "line")
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: colors.primary,
                 btnContent: 'Submit',

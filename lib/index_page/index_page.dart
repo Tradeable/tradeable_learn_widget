@@ -93,7 +93,7 @@ class _IndexPageState extends State<IndexPage> {
           alignment: Alignment.bottomCenter,
           child: Container(
             height: 70,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: colors.primary,
                 btnContent: "Next",

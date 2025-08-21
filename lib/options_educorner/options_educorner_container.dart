@@ -26,7 +26,7 @@ class OptionsEduCorner extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         Center(child: Text(title, style: textStyles.largeBold)),
         Expanded(flex: 4, child: topSection),
         const SizedBox(height: 20),
@@ -34,7 +34,7 @@ class OptionsEduCorner extends StatelessWidget {
         const SizedBox(height: 30),
         Expanded(flex: 3, child: explanationSection),
         Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: colors.primary,
                 btnContent: 'Next',

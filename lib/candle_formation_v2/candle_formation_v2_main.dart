@@ -113,7 +113,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -123,18 +124,16 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(child: QuestionWidget(question: model.question)),
-                      IconButton(
-                          onPressed: () {
-                            scrollToCorrectAnswers();
-                          },
-                          icon: const Icon(Icons.info_outline))
-                    ],
-                  ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(child: QuestionWidget(question: model.question)),
+                    IconButton(
+                        onPressed: () {
+                          scrollToCorrectAnswers();
+                        },
+                        icon: const Icon(Icons.info_outline))
+                  ],
                 ),
                 Expanded(
                   child: Column(
@@ -166,8 +165,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                 ),
                 model.state == CandleFormationState.selecting
                     ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 16),
+                        padding: const EdgeInsets.all(16),
                         child: ButtonWidget(
                             color: colors.primary,
                             btnContent: "Submit",
@@ -183,8 +181,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                   filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
                     color: model.isIncorrect
-                        ? colors.bearishColor.withOpacity(0.2)
-                        : Colors.black.withOpacity(0.8),
+                        ? colors.bearishColor.withAlpha((0.2 * 255).round())
+                        : Colors.black.withAlpha((0.8 * 255).round()),
                     child: buildResultContainer(),
                   ),
                 ),
@@ -201,7 +199,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
       String selectedOption,
       List<String> options,
       ValueChanged<String> onSelected) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     PageController controller;
     if (type == 'wick') {
       controller = _wickController;
@@ -247,7 +246,8 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
   }
 
   Widget buildResultContainer() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Center(
       child: Column(
         children: [

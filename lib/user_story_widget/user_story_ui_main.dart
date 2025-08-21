@@ -284,442 +284,450 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     final step = widget.model.userStory.steps.firstWhere(
       (step) => step.stepId == currentStepId,
       orElse: () => StepData(stepId: '', ui: [], isActionNeeded: false),
     );
 
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: step.ui.map((uiData) {
-                switch (uiData.widget) {
-                  case "AnimatedText":
-                    return AnimatedTextWidget(
-                        prompt: uiData.prompt,
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: step.ui.map((uiData) {
+                  switch (uiData.widget) {
+                    case "AnimatedText":
+                      return AnimatedTextWidget(
+                          prompt: uiData.prompt,
+                          title: uiData.title,
+                          logo: "assets/axis_logo.png");
+                    case "MarketDepthTable":
+                      return MarketDepthTableWidget(
+                        tableAlignment:
+                            uiData.tableModel?.tableAlignment ?? "horizontal",
+                        tableData: uiData.tableModel?.tableData ?? [],
                         title: uiData.title,
-                        logo: "assets/axis_logo.png");
-                  case "MarketDepthTable":
-                    return MarketDepthTableWidget(
-                      tableAlignment:
-                          uiData.tableModel?.tableAlignment ?? "horizontal",
-                      tableData: uiData.tableModel?.tableData ?? [],
-                      title: uiData.title,
-                      highlightedRowData: highlightedRowData,
-                    );
-                  case "Buttons":
-                    return MultipleButtonsWidget(
-                      buttonsFormat: uiData.buttonsFormat ?? "horizontal",
-                      buttonsData: uiData.buttonsData ?? [],
-                      onAction: moveToNextStep,
-                    );
-                  case "MCQQuestion":
-                    return MCQQuestionWidget(
-                      title: uiData.title,
-                      format: uiData.format ?? "",
-                      options: uiData.options ?? [],
-                      correctResponse: uiData.correctResponse ?? [],
-                      onOptionSelected: (selectedItems) {
-                        setState(() {
-                          selectedResponses = selectedItems;
-                        });
-                        setState(() {
-                          isAnsweredCorrect = Set.from(selectedItems)
-                                  .difference(
-                                      Set.from(uiData.correctResponse ?? []))
-                                  .isEmpty &&
-                              selectedResponses.length ==
-                                  (uiData.correctResponse ?? []).length;
-                        });
-                      },
-                    );
-                  case "PlainText":
-                    return Markdown(
-                      data: uiData.prompt,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      styleSheet: MarkdownStyleSheet(
-                          h1Align: WrapAlignment.center,
-                          p: textStyles.smallNormal.copyWith(fontSize: 16)),
-                    );
-                  case "HorizontalLineChart":
-                    return Column(
-                      children: [
-                        SizedBox(
-                            height: 350,
-                            child: HorizontalLineChart(model: uiData.chart!)),
-                        const ChartSimulationWidget()
-                      ],
-                    );
-                  case "VolumeChart":
-                    return VolumeBarChart(candles: uiData.candles ?? []);
-                  case "VolumePriceSlider":
-                    return VolumePriceSlider(
-                        title: uiData.title,
-                        prompt: uiData.prompt,
-                        textData: uiData.volumePriceTextData ?? [],
-                        candles: uiData.candles ?? [],
-                        onSliderChanged: (sliderVal) {
-                          addCandles(step, sliderVal, uiData);
-                        });
-                  case "TradeInfo":
-                    return TradeInfo(
-                        title: uiData.title,
-                        limitPrice: staticHighlightedRowData?.price ?? '',
-                        quantity: staticHighlightedRowData?.quantity ?? '',
-                        status: status);
-                  case "ImageWidget":
-                    return Image.network(uiData.imageUrl!,
-                        fit: BoxFit.cover,
-                        height: double.parse(uiData.height ?? "150"));
-                  case "CustomMCQWidget":
-                    return CustomMCQWidget(
-                      format: uiData.format ?? "",
-                      question: uiData.prompt,
-                      ui: uiData.uiWidgets ?? [],
-                      onOptionSelected: (selectedOption) {
-                        setState(() {
-                          if (selectedOption.widget == "CouponWidget") {
-                            selectedTicket = selectedOption;
-                          }
-                        });
-                        setState(() {
-                          selectedResponses = [selectedOption.prompt];
-                          isAnsweredCorrect = Set.from(selectedResponses)
-                                  .difference(
-                                      Set.from(uiData.correctResponse ?? []))
-                                  .isEmpty &&
-                              selectedResponses.length ==
-                                  (uiData.correctResponse ?? []).length;
-                        });
-                      },
-                      selectedItem: selectedTicket,
-                    );
-                  case "CouponWidget":
-                    if (selectedTicket != null) {
-                      selectedTicket?.ticketCouponModel = TicketCouponModel(
-                        title: selectedTicket!.ticketCouponModel!.title,
-                        color: selectedTicket!.ticketCouponModel!.color,
-                        infoModel: List.from(
-                            uiData.ticketCouponModel!.infoModel), // Deep copy
+                        highlightedRowData: highlightedRowData,
                       );
-                    }
+                    case "Buttons":
+                      return MultipleButtonsWidget(
+                        buttonsFormat: uiData.buttonsFormat ?? "horizontal",
+                        buttonsData: uiData.buttonsData ?? [],
+                        onAction: moveToNextStep,
+                      );
+                    case "MCQQuestion":
+                      return MCQQuestionWidget(
+                        title: uiData.title,
+                        format: uiData.format ?? "",
+                        options: uiData.options ?? [],
+                        correctResponse: uiData.correctResponse ?? [],
+                        onOptionSelected: (selectedItems) {
+                          setState(() {
+                            selectedResponses = selectedItems;
+                          });
+                          setState(() {
+                            isAnsweredCorrect = Set.from(selectedItems)
+                                    .difference(
+                                        Set.from(uiData.correctResponse ?? []))
+                                    .isEmpty &&
+                                selectedResponses.length ==
+                                    (uiData.correctResponse ?? []).length;
+                          });
+                        },
+                      );
+                    case "PlainText":
+                      return Markdown(
+                        data: uiData.prompt,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        styleSheet: MarkdownStyleSheet(
+                            h1Align: WrapAlignment.center,
+                            p: textStyles.smallNormal.copyWith(fontSize: 16)),
+                      );
+                    case "HorizontalLineChart":
+                      return Column(
+                        children: [
+                          SizedBox(
+                              height: 350,
+                              child: HorizontalLineChart(model: uiData.chart!)),
+                          const ChartSimulationWidget()
+                        ],
+                      );
+                    case "VolumeChart":
+                      return VolumeBarChart(candles: uiData.candles ?? []);
+                    case "VolumePriceSlider":
+                      return VolumePriceSlider(
+                          title: uiData.title,
+                          prompt: uiData.prompt,
+                          textData: uiData.volumePriceTextData ?? [],
+                          candles: uiData.candles ?? [],
+                          onSliderChanged: (sliderVal) {
+                            addCandles(step, sliderVal, uiData);
+                          });
+                    case "TradeInfo":
+                      return TradeInfo(
+                          title: uiData.title,
+                          limitPrice: staticHighlightedRowData?.price ?? '',
+                          quantity: staticHighlightedRowData?.quantity ?? '',
+                          status: status);
+                    case "ImageWidget":
+                      return Image.network(uiData.imageUrl!,
+                          fit: BoxFit.cover,
+                          height: double.parse(uiData.height ?? "150"));
+                    case "CustomMCQWidget":
+                      return CustomMCQWidget(
+                        format: uiData.format ?? "",
+                        question: uiData.prompt,
+                        ui: uiData.uiWidgets ?? [],
+                        onOptionSelected: (selectedOption) {
+                          setState(() {
+                            if (selectedOption.widget == "CouponWidget") {
+                              selectedTicket = selectedOption;
+                            }
+                          });
+                          setState(() {
+                            selectedResponses = [selectedOption.prompt];
+                            isAnsweredCorrect = Set.from(selectedResponses)
+                                    .difference(
+                                        Set.from(uiData.correctResponse ?? []))
+                                    .isEmpty &&
+                                selectedResponses.length ==
+                                    (uiData.correctResponse ?? []).length;
+                          });
+                        },
+                        selectedItem: selectedTicket,
+                      );
+                    case "CouponWidget":
+                      if (selectedTicket != null) {
+                        selectedTicket?.ticketCouponModel = TicketCouponModel(
+                          title: selectedTicket!.ticketCouponModel!.title,
+                          color: selectedTicket!.ticketCouponModel!.color,
+                          infoModel: List.from(
+                              uiData.ticketCouponModel!.infoModel), // Deep copy
+                        );
+                      }
 
-                    return TicketCouponWidget(
-                      model: selectedTicket?.ticketCouponModel ??
-                          uiData.ticketCouponModel!,
-                    );
+                      return TicketCouponWidget(
+                        model: selectedTicket?.ticketCouponModel ??
+                            uiData.ticketCouponModel!,
+                      );
 
-                  case "SizedBox":
-                    return SizedBox(
-                        height: double.parse(uiData.height ?? "0"),
-                        width: uiData.width != null && uiData.width!.isNotEmpty
-                            ? double.parse(uiData.width!)
-                            : double.infinity);
-                  case "MCQQuestionV1":
-                    return MCQQuestionWidgetV1(
-                      title: uiData.title,
-                      format: uiData.format ?? "",
-                      options: uiData.options ?? [],
-                      correctResponse: uiData.correctResponse ?? [],
-                      onOptionSelected: (selectedItems) {
-                        setState(() {
-                          selectedResponses = selectedItems;
-                        });
-                        setState(() {
-                          isAnsweredCorrect = Set.from(selectedItems)
-                                  .difference(
-                                      Set.from(uiData.correctResponse ?? []))
-                                  .isEmpty &&
-                              selectedResponses.length ==
-                                  (uiData.correctResponse ?? []).length;
-                        });
-                      },
-                    );
-                  case "OptionChain":
-                    return OptionsDataWidget(
-                      data: uiData.optionsData!,
-                      onRowSelected: (entry, tf) {
-                        setState(() {
-                          selectedOptionEntry = entry;
-                          quantity = tf.quantity.toString();
-                        });
-                        updateTrendFormModel(tf);
-                        updateLtps();
-                      },
-                      selectedOptionEntry: selectedOptionEntry,
-                    );
-                  case "DeltaOptionChainWidget":
-                    return DeltaOptionChainWidget(
-                      data: uiData.optionsData!,
-                      onRowSelected: (entry, tf) {
-                        setState(() {
-                          selectedOptionEntry = entry;
-                          quantity = tf.quantity.toString();
-                        });
-                        updateTrendFormModel(tf);
-                        updateLtps();
-                      },
-                      selectedOptionEntry: selectedOptionEntry,
-                    );
-                  case "OptionTradeSheet":
-                    return OptionTradeSheet(
-                        limitPrice:
-                            selectedOptionEntry!.premium.toStringAsFixed(2),
-                        quantity: quantity.toString());
-                  case "OrderStatusWidget":
-                    return OrderStatusWidget(
-                        limitPrice:
-                            selectedOptionEntry!.premium.toStringAsFixed(2),
-                        quantity: quantity.toString(),
-                        model: step.ui
-                            .firstWhere((widget) =>
-                                widget.widget == "HorizontalLineChart")
-                            .chart!);
-                  case "TrendLineChart":
-                    return Column(
-                      children: [
-                        SizedBox(
-                            height: 400,
-                            child: TrendLineChart(
-                                model: uiData.trendLineModelV1!)),
-                        const ChartSimulationWidget()
-                      ],
-                    );
-                  case "ContractsInfo":
-                    return ContractsInfoWidget(
-                        model: uiData.contractDetailsModel!,
+                    case "SizedBox":
+                      return SizedBox(
+                          height: double.parse(uiData.height ?? "0"),
+                          width:
+                              uiData.width != null && uiData.width!.isNotEmpty
+                                  ? double.parse(uiData.width!)
+                                  : double.infinity);
+                    case "MCQQuestionV1":
+                      return MCQQuestionWidgetV1(
+                        title: uiData.title,
+                        format: uiData.format ?? "",
+                        options: uiData.options ?? [],
+                        correctResponse: uiData.correctResponse ?? [],
+                        onOptionSelected: (selectedItems) {
+                          setState(() {
+                            selectedResponses = selectedItems;
+                          });
+                          setState(() {
+                            isAnsweredCorrect = Set.from(selectedItems)
+                                    .difference(
+                                        Set.from(uiData.correctResponse ?? []))
+                                    .isEmpty &&
+                                selectedResponses.length ==
+                                    (uiData.correctResponse ?? []).length;
+                          });
+                        },
+                      );
+                    case "OptionChain":
+                      return OptionsDataWidget(
+                        data: uiData.optionsData!,
+                        onRowSelected: (entry, tf) {
+                          setState(() {
+                            selectedOptionEntry = entry;
+                            quantity = tf.quantity.toString();
+                          });
+                          updateTrendFormModel(tf);
+                          updateLtps();
+                        },
+                        selectedOptionEntry: selectedOptionEntry,
+                      );
+                    case "DeltaOptionChainWidget":
+                      return DeltaOptionChainWidget(
+                        data: uiData.optionsData!,
+                        onRowSelected: (entry, tf) {
+                          setState(() {
+                            selectedOptionEntry = entry;
+                            quantity = tf.quantity.toString();
+                          });
+                          updateTrendFormModel(tf);
+                          updateLtps();
+                        },
+                        selectedOptionEntry: selectedOptionEntry,
+                      );
+                    case "OptionTradeSheet":
+                      return OptionTradeSheet(
+                          limitPrice:
+                              selectedOptionEntry!.premium.toStringAsFixed(2),
+                          quantity: quantity.toString());
+                    case "OrderStatusWidget":
+                      return OrderStatusWidget(
+                          limitPrice:
+                              selectedOptionEntry!.premium.toStringAsFixed(2),
+                          quantity: quantity.toString(),
+                          model: step.ui
+                              .firstWhere((widget) =>
+                                  widget.widget == "HorizontalLineChart")
+                              .chart!);
+                    case "TrendLineChart":
+                      return Column(
+                        children: [
+                          SizedBox(
+                              height: 400,
+                              child: TrendLineChart(
+                                  model: uiData.trendLineModelV1!)),
+                          const ChartSimulationWidget()
+                        ],
+                      );
+                    case "ContractsInfo":
+                      return ContractsInfoWidget(
+                          model: uiData.contractDetailsModel!,
+                          moveToNextStep: () {
+                            setState(() {
+                              step.isActionNeeded = false;
+                            });
+                          });
+                    case "CustomSlider":
+                      return CustomSliderWidget(
+                          sliderData: uiData.sliderDataModel!);
+                    case "GreeksExplainerWidget":
+                      return GreeksExplainerWidget(
+                        model: uiData.greeksExplainerModel!,
                         moveToNextStep: () {
                           setState(() {
                             step.isActionNeeded = false;
                           });
-                        });
-                  case "CustomSlider":
-                    return CustomSliderWidget(
-                        sliderData: uiData.sliderDataModel!);
-                  case "GreeksExplainerWidget":
-                    return GreeksExplainerWidget(
-                      model: uiData.greeksExplainerModel!,
-                      moveToNextStep: () {
-                        setState(() {
-                          step.isActionNeeded = false;
-                        });
-                      },
-                    );
-                  case "RRChart":
-                    return RRChart(
-                      model: uiData.rrModel!,
-                      enableNext: () {
-                        setState(() {
-                          step.isActionNeeded = false;
-                        });
-                      },
-                      tradeFormModel: tradeFormModel,
-                      scrollToBottom: () {
-                        setState(() {
-                          _scrollController.animateTo(200,
-                              duration: const Duration(milliseconds: 1),
-                              curve: Curves.easeInOut);
-                        });
-                      },
-                    );
-                  case "TradeFormWidget":
-                    return Column(
-                      children: tradeFormModel
-                          .map((model) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: TradeFormWidget(tradeFormModel: model),
-                              ))
-                          .toList(),
-                    );
-                  case "DeltaWidget":
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Delta: ", style: textStyles.largeBold),
-                        const SizedBox(width: 6),
-                        AnimatedNumber(value: delta ?? "0")
-                      ],
-                    );
-                  case "PlainTextWithBorder":
-                    return PlainTextWithBorder(
-                        title: uiData.title, prompt: uiData.prompt);
-                  default:
-                    return const SizedBox.shrink();
-                }
-              }).toList(),
+                        },
+                      );
+                    case "RRChart":
+                      return RRChart(
+                        model: uiData.rrModel!,
+                        enableNext: () {
+                          setState(() {
+                            step.isActionNeeded = false;
+                          });
+                        },
+                        tradeFormModel: tradeFormModel,
+                        scrollToBottom: () {
+                          setState(() {
+                            _scrollController.animateTo(200,
+                                duration: const Duration(milliseconds: 1),
+                                curve: Curves.easeInOut);
+                          });
+                        },
+                      );
+                    case "TradeFormWidget":
+                      return Column(
+                        children: tradeFormModel
+                            .map((model) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: TradeFormWidget(tradeFormModel: model),
+                                ))
+                            .toList(),
+                      );
+                    case "DeltaWidget":
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Delta: ", style: textStyles.largeBold),
+                          const SizedBox(width: 6),
+                          AnimatedNumber(value: delta ?? "0")
+                        ],
+                      );
+                    case "PlainTextWithBorder":
+                      return PlainTextWithBorder(
+                          title: uiData.title, prompt: uiData.prompt);
+                    default:
+                      return const SizedBox.shrink();
+                  }
+                }).toList(),
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-          child: ButtonWidget(
-            color: !(step.isActionNeeded) ||
-                    isAnsweredCorrect != null ||
-                    highlightedRowData != null
-                ? colors.primary
-                : colors.secondary,
-            btnContent: step.ui.last.title,
-            onTap: () {
-              if (isAnsweredCorrect != null ||
-                  highlightedRowData != null ||
-                  !(step.isActionNeeded)) {
-                switch (step.ui.last.action) {
-                  case "moveNext":
-                    widget.onNextClick();
-                    break;
-                  case "confirmOrder":
-                    confirmOrder(false);
-                    break;
-                  case "showBottomSheet":
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          final step = widget.model.userStory.steps.firstWhere(
-                            (step) => step.stepId == currentStepId,
-                          );
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ButtonWidget(
+              color: !(step.isActionNeeded) ||
+                      isAnsweredCorrect != null ||
+                      highlightedRowData != null
+                  ? colors.primary
+                  : colors.secondary,
+              btnContent: step.ui.last.title,
+              onTap: () {
+                if (isAnsweredCorrect != null ||
+                    highlightedRowData != null ||
+                    !(step.isActionNeeded)) {
+                  switch (step.ui.last.action) {
+                    case "moveNext":
+                      widget.onNextClick();
+                      break;
+                    case "confirmOrder":
+                      confirmOrder(false);
+                      break;
+                    case "showBottomSheet":
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            final step =
+                                widget.model.userStory.steps.firstWhere(
+                              (step) => step.stepId == currentStepId,
+                            );
 
-                          final uiWithTableModel = step.ui.firstWhere(
-                            (ui) => ui.tableModel != null,
-                          );
+                            final uiWithTableModel = step.ui.firstWhere(
+                              (ui) => ui.tableModel != null,
+                            );
 
-                          final tableModel = uiWithTableModel.tableModel!;
+                            final tableModel = uiWithTableModel.tableModel!;
 
-                          return TradeSheet(
-                            tableRowDataMap: {
-                              0: tableModel.tableData!.first.data
-                            },
-                            onRowDataSelected: (RowData data) {
-                              setState(() {
-                                highlightedRowData = data;
-                              });
-                            },
-                            moveNext: () {
-                              confirmOrder(
-                                  tableModel.isQuantitySquared ?? false);
-                            },
-                            isQuantitySquared:
-                                tableModel.isQuantitySquared ?? false,
-                          );
-                        });
-                    break;
-                  case "submitResponse":
-                    showModalBottomSheet(
-                        isDismissible: false,
-                        context: context,
-                        builder: (context) => BottomSheetWidget(
-                            isCorrect: isAnsweredCorrect ?? false,
-                            model: step.explanationV1,
-                            onNextClick: () {
-                              moveToNextStep();
-                            }));
-                    break;
-                  case "showCorrectHorizontalLines":
-                    showAnimation(step.ui
-                        .firstWhere((a) => a.widget == "HorizontalLineChart")
-                        .chart!);
-                    break;
-                  case "moveToNextStep":
-                    moveToNextStep();
-                    break;
-                  case "submitTrendLineWidget":
-                    takeToCorrectOffsets(step.ui
-                        .firstWhere((a) => a.widget == "TrendLineChart")
-                        .trendLineModelV1!);
-                    break;
-                  case "showSummaryBottomSheet":
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Markdown(
-                                    data: step.ui.last.prompt,
-                                    shrinkWrap: true),
-                                const SizedBox(height: 10),
-                                ButtonWidget(
-                                    color: colors.primary,
-                                    btnContent: "Next",
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                      widget.onNextClick();
-                                    }),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          );
-                        });
-                    break;
-                  case "setupOrderBottomSheet":
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          final rrModel = step.ui
-                              .firstWhere((w) => w.widget == "RRChart")
-                              .rrModel!;
-                          OrderType getUnlockedOrderType() {
-                            for (var tradeType
-                                in rrModel.tradeTypeModel ?? []) {
-                              for (var executionType
-                                  in tradeType.executionTypes) {
-                                for (var orderType
-                                    in executionType.orderTypes) {
-                                  if (!orderType.isLocked) {
-                                    return orderType.orderType;
+                            return TradeSheet(
+                              tableRowDataMap: {
+                                0: tableModel.tableData!.first.data
+                              },
+                              onRowDataSelected: (RowData data) {
+                                setState(() {
+                                  highlightedRowData = data;
+                                });
+                              },
+                              moveNext: () {
+                                confirmOrder(
+                                    tableModel.isQuantitySquared ?? false);
+                              },
+                              isQuantitySquared:
+                                  tableModel.isQuantitySquared ?? false,
+                            );
+                          });
+                      break;
+                    case "submitResponse":
+                      showModalBottomSheet(
+                          isDismissible: false,
+                          context: context,
+                          builder: (context) => BottomSheetWidget(
+                              isCorrect: isAnsweredCorrect ?? false,
+                              model: step.explanationV1,
+                              onNextClick: () {
+                                moveToNextStep();
+                              }));
+                      break;
+                    case "showCorrectHorizontalLines":
+                      showAnimation(step.ui
+                          .firstWhere((a) => a.widget == "HorizontalLineChart")
+                          .chart!);
+                      break;
+                    case "moveToNextStep":
+                      moveToNextStep();
+                      break;
+                    case "submitTrendLineWidget":
+                      takeToCorrectOffsets(step.ui
+                          .firstWhere((a) => a.widget == "TrendLineChart")
+                          .trendLineModelV1!);
+                      break;
+                    case "showSummaryBottomSheet":
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Markdown(
+                                      data: step.ui.last.prompt,
+                                      shrinkWrap: true),
+                                  const SizedBox(height: 10),
+                                  ButtonWidget(
+                                      color: colors.primary,
+                                      btnContent: "Next",
+                                      onTap: () {
+                                        Navigator.of(context).pop();
+                                        widget.onNextClick();
+                                      }),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                            );
+                          });
+                      break;
+                    case "setupOrderBottomSheet":
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            final rrModel = step.ui
+                                .firstWhere((w) => w.widget == "RRChart")
+                                .rrModel!;
+                            OrderType getUnlockedOrderType() {
+                              for (var tradeType
+                                  in rrModel.tradeTypeModel ?? []) {
+                                for (var executionType
+                                    in tradeType.executionTypes) {
+                                  for (var orderType
+                                      in executionType.orderTypes) {
+                                    if (!orderType.isLocked) {
+                                      return orderType.orderType;
+                                    }
                                   }
                                 }
                               }
+                              return OrderType.market;
                             }
-                            return OrderType.market;
-                          }
 
-                          return TradeTakerForm(
-                            model: TradeFormModel(
-                                target:
-                                    rrModel.rrLayer.target.toStringAsFixed(2),
-                                stopLoss:
-                                    rrModel.rrLayer.stoploss.toStringAsFixed(2),
-                                quantity: 0,
-                                isNse: true,
-                                isSell: false,
-                                tradeType: TradeType.intraday,
-                                orderType: getUnlockedOrderType(),
-                                isCallTrade: true),
-                            tradeFormModel: (tf) {
-                              setState(() {
-                                tradeFormModel.add(tf);
-                              });
-                              loadCandlesTillEnd();
-                            },
-                            tradeTypeModel: rrModel.tradeTypeModel ?? [],
-                          );
-                        });
-                    break;
-                  case "executeTrades":
-                    updateLtps();
-                    break;
-                  case "submitRRQuestion":
-                    submitRRQuestion();
-                    break;
-                  case "calculateDelta":
-                    calculateDeltaValue();
-                    break;
+                            return TradeTakerForm(
+                              model: TradeFormModel(
+                                  target:
+                                      rrModel.rrLayer.target.toStringAsFixed(2),
+                                  stopLoss: rrModel.rrLayer.stoploss
+                                      .toStringAsFixed(2),
+                                  quantity: 0,
+                                  isNse: true,
+                                  isSell: false,
+                                  tradeType: TradeType.intraday,
+                                  orderType: getUnlockedOrderType(),
+                                  isCallTrade: true),
+                              tradeFormModel: (tf) {
+                                setState(() {
+                                  tradeFormModel.add(tf);
+                                });
+                                loadCandlesTillEnd();
+                              },
+                              tradeTypeModel: rrModel.tradeTypeModel ?? [],
+                            );
+                          });
+                      break;
+                    case "executeTrades":
+                      updateLtps();
+                      break;
+                    case "submitRRQuestion":
+                      submitRRQuestion();
+                      break;
+                    case "calculateDelta":
+                      calculateDeltaValue();
+                      break;
+                  }
                 }
-              }
-            },
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
