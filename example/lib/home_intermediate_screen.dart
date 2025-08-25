@@ -1,5 +1,4 @@
 import 'package:example/main.dart';
-import 'package:example/mutual_funds_widgets.dart';
 import 'package:example/dynamic_chart_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_json.dart';
@@ -31,12 +30,6 @@ class HomeIntermediateScreen extends StatelessWidget {
                       builder: (context) => const MyHomePage()));
                 },
                 child: const Text("Learn Widgets")),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MutualFundsWidgets()));
-                },
-                child: const Text("MutualFunds Widgets")),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
