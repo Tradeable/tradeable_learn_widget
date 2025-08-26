@@ -147,7 +147,7 @@ extension ThemeDataExtension on ThemeData {
           textColorSecondary: const Color(0xff6E6E6E),
           disabledContainer: const Color(0xffB3BCB9),
           supportItemColor: const Color(0xff165964),
-          eduCornerV2ContainerBg1: const Color(0xffE2E2E2),
+          eduCornerV2ContainerBg1: const Color(0xffF1F4F7),
           eduCornerV2ContainerBg2: const Color(0xff404040),
           eduCornerImageBg: Colors.white,
           optionChainBgColor: const Color(0xffF1F4F7),

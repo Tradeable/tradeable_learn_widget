@@ -87,8 +87,13 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  color: colors.primary,
+                  icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colors.cardBasicBackground),
+                      child: const Icon(Icons.arrow_back_ios_new, size: 14)),
+                  color: colors.borderColorPrimary,
                   onPressed: currentPage > 0
                       ? () => controller.previousPage(
                             duration: const Duration(milliseconds: 300),
@@ -104,8 +109,13 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                       textAlign: TextAlign.center),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  color: colors.primary,
+                  icon: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: colors.cardBasicBackground),
+                      child: const Icon(Icons.arrow_forward_ios, size: 14)),
+                  color: colors.borderColorPrimary,
                   onPressed: currentPage < items.length - 1
                       ? () => controller.nextPage(
                             duration: const Duration(milliseconds: 300),
@@ -124,7 +134,7 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
   Widget renderItem(BoxConstraints constraints, String imageUrl) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.all(8),
         child: SizedBox(
           height: constraints.maxHeight * 0.5,
           width: double.infinity,
