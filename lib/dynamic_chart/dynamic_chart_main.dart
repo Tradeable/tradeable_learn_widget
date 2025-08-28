@@ -21,6 +21,7 @@ import 'package:fin_chart/models/tasks/wait.task.dart';
 import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/insights_v2.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
@@ -65,6 +66,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   List<AddOptionChainTask> optionChainTasks = [];
   List<ShowPayOffGraphTask> payoffGraphTasks = [];
   List<ShowInsightsPageTask> insightsTasks = [];
+  List<ShowInsightsPageV2Task> v2insightsTasks = [];
   List<TableTask> tableTasks = [];
   List<Map<String, String>> tabs = [];
   int currentPageIndex = 0;
@@ -201,6 +203,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 "title": task.tabTitle,
                 "taskId": task.taskId
               });
+            } else if (recipe.tasks.any(
+                (t) => t is ShowInsightsPageV2Task && t.id == task.taskId)) {
+              tabs.add({
+                "type": "insights_v2",
+                "title": task.tabTitle,
+                "taskId": task.taskId,
+              });
             }
           }
         });
@@ -327,6 +336,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             }
           }
         }
+        setState(() {});
+        onTaskFinish();
+        break;
+      case TaskType.showInsightsV2Page:
+        ShowInsightsPageV2Task task = currentTask as ShowInsightsPageV2Task;
+        v2insightsTasks.add(task);
         setState(() {});
         onTaskFinish();
         break;
@@ -531,6 +546,16 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                           ),
                         ),
                       );
+
+                    case "insights_v2":
+                      final taskId = tab["taskId"]!;
+                      final v2insightsTask = recipe.tasks
+                          .whereType<ShowInsightsPageV2Task>()
+                          .firstWhere(
+                            (t) => t.id == taskId,
+                            orElse: () => v2insightsTasks.first,
+                          );
+                      return InsightsV2Widget(task: v2insightsTask);
                     default:
                       return Container();
                   }
@@ -576,6 +601,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.clearBucketRows:
       case TaskType.tableTask:
       case TaskType.highlightTableRow:
+      case TaskType.showInsightsV2Page:
         return Container();
     }
   }
