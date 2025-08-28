@@ -56,13 +56,18 @@ class InsightsV2Widget extends StatelessWidget {
                         )
                       ]));
                 } else if (block is ImageBlock) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      block.url,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) =>
-                          const Icon(Icons.broken_image, size: 50),
+                  return Align(
+                    alignment: Alignment.center,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        block.url,
+                        fit: BoxFit.cover,
+                        width: block.width ?? 250,
+                        height: block.height ?? 250,
+                        errorBuilder: (context, obj, stackTrace) =>
+                            const Icon(Icons.broken_image, size: 50),
+                      ),
                     ),
                   );
                 } else if (block is VideoBlock) {
