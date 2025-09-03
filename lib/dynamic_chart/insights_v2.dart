@@ -5,6 +5,7 @@ import 'package:fin_chart/models/insights_v2/image_block.dart';
 import 'package:fin_chart/models/insights_v2/video_block.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/info_container_bg.dart';
+import 'package:tradeable_learn_widget/educorner_v2/full_screen_image_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InsightsV2Widget extends StatelessWidget {
@@ -57,19 +58,32 @@ class InsightsV2Widget extends StatelessWidget {
                       ]));
                 } else if (block is ImageBlock) {
                   return Align(
-                    alignment: Alignment.center,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        block.url,
-                        fit: BoxFit.cover,
-                        width: block.width ?? 250,
-                        height: block.height ?? 250,
-                        errorBuilder: (context, obj, stackTrace) =>
-                            const Icon(Icons.broken_image, size: 50),
-                      ),
-                    ),
-                  );
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierColor: Colors.transparent,
+                              builder: (context) => FullScreenImageViewer(
+                                  imageUrl: block.url,
+                                  heroTag: 'image_${block.url}'),
+                            );
+                          },
+                          child: Hero(
+                            tag: 'image_${block.url}',
+                            child: Image.network(
+                              block.url,
+                              width: block.width ?? 250,
+                              height: block.height ?? 250,
+                              errorBuilder: (_, __, ___) =>
+                                  const Icon(Icons.broken_image, size: 50),
+                            ),
+                          ),
+                        ),
+                      ));
                 } else if (block is VideoBlock) {
                   return GestureDetector(
                     onTap: () => _openLink(block.url),

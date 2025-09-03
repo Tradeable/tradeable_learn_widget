@@ -664,16 +664,17 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: colors.cardBasicBackground,
-          ),
-          child: AnimatedSwitcher(
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: colors.cardBasicBackground,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          renderTabs(),
+          AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
               transitionBuilder: (child, animation) => SlideTransition(
                     position: Tween<Offset>(
@@ -689,10 +690,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      renderTabs(),
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               children: [
@@ -742,8 +743,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                       ),
                     ],
                   ))),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
