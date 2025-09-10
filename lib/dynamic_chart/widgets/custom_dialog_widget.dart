@@ -1,5 +1,6 @@
 import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 
@@ -32,7 +33,16 @@ class CustomDialogWidget extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-              child: Text(task.title, style: textStyles.mediumBold),
+              child: MarkdownWidget(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                data: task.title,
+                config: MarkdownConfig(configs: [
+                  H1Config(
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ]),
+              ),
             ),
             Flexible(
               child: Scrollbar(
@@ -41,7 +51,10 @@ class CustomDialogWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 10),
-                    child: Text(task.description),
+                    child: MarkdownWidget(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        data: task.description),
                   ),
                 ),
               ),
