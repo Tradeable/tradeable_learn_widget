@@ -269,8 +269,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: dev
-      resolved-ref: "092f90ca48356f8fc15a424b03f46a8337c16867"
+      ref: side_nav_task
+      resolved-ref: b3db572affd0374cd21315f6cf1859ffae620fb8
       url: "https://github.com/adityagohad/fin_chart.git"
     source: git
     version: "0.0.1"
