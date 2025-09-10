@@ -1,5 +1,6 @@
 import 'package:fin_chart/models/tasks/show_bottom_sheet.task.dart';
 import 'package:flutter/material.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
@@ -39,7 +40,16 @@ class CustomBottomSheetWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text(task.title, style: textStyles.mediumBold),
+              MarkdownWidget(
+                data: task.title,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                config: MarkdownConfig(configs: [
+                  H1Config(
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ]),
+              ),
               const SizedBox(height: 10),
               if (task.showImage) ...[
                 const SizedBox(height: 10),
@@ -51,7 +61,10 @@ class CustomBottomSheetWidget extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: 6),
-              Text(task.description),
+              MarkdownWidget(
+                  data: task.description,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true),
               const SizedBox(height: 16),
               task.secondaryButtonText == null
                   ? SizedBox(
