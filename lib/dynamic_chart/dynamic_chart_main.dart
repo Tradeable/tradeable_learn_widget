@@ -203,7 +203,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 "title": task.tabTitle,
                 "taskId": task.taskId,
               });
-            } else if (recipe.tasks.any((t) => t is ShowPayOffGraphTask)) {
+            } else if (recipe.tasks
+                .any((t) => t is ShowPayOffGraphTask && t.id == task.taskId)) {
               tabs.add({
                 "type": "payoff",
                 "title": task.tabTitle,

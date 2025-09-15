@@ -80,8 +80,9 @@ class PriceTypeSection extends StatelessWidget {
             onSelected: onPriceTypeChanged,
             isEnabled: (option) {
               if (validity == 'GTD' && option == 'MARKET') return false;
-              if (selectedOrderType == 'COVER' && option == 'LIMIT')
+              if (selectedOrderType == 'COVER' && option == 'LIMIT') {
                 return false;
+              }
               return isEnabled('price_type_$option');
             },
           ),
