@@ -144,7 +144,6 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
       required String infoContent}) {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    ;
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
