@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
 import 'package:fin_chart/models/table_model.dart';
@@ -31,7 +33,9 @@ import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/floating_side_nav.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/side_nav_panel.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/sidenav_manager.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -78,6 +82,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   bool isSideNavVisible = false;
   Map<String, String?> sideNavSelectedDesc = {};
   String? expandedSideNavId;
+  late SideNavController sideNavController;
 
   @override
   void initState() {
@@ -87,7 +92,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       dd();
     }
     tabs.add({"type": "chart", "title": "Chart"});
-
+    sideNavController = SideNavController();
     super.initState();
   }
 
@@ -358,9 +363,9 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           if (!sideNavTasks.any((t) => t.id == task.id)) {
             sideNavTasks.add(task);
           }
-          isSideNavVisible = true;
           expandedSideNavId = task.id;
         });
+        sideNavController.open();
         break;
     }
   }
@@ -589,33 +594,72 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   child: userActionContainer()),
             ],
           ),
-          if (currentTask.taskType == TaskType.showSideNav && isSideNavVisible)
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    closeSideNav(moveToNextNode: true);
-                  },
-                  child: Container(
-                      color: Colors.black.withAlpha((0.3 * 255).round())),
-                ),
-              ),
-            ),
-          if (currentTask.taskType == TaskType.showSideNav && isSideNavVisible)
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 320,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(left: BorderSide(color: Colors.grey.shade300)),
-                ),
-                child: _buildSideNavPanel(),
-              ),
+          FloatingSideNav(
+            onMenuItemClick: (type) {
+              switch (type) {
+                case "chat":
+                  break;
+                case "bookmark":
+                  sideNavController.open();
+                  break;
+                case "texttospeech":
+                  break;
+              }
+            },
+          ),
+          if (sideNavController.isVisible)
+            AnimatedBuilder(
+              animation: sideNavController,
+              builder: (context, _) {
+                if (!sideNavController.isVisible) return SizedBox.shrink();
+
+                return Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            sideNavController.close();
+                          },
+                          child: Container(
+                            color: Colors.black.withAlpha((0.3 * 255).round()),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: ClipRRect(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+                          child: Container(
+                            width: 320,
+                            decoration: BoxDecoration(
+                              gradient: RadialGradient(
+                                center: Alignment.center,
+                                radius: 1.2,
+                                colors: [
+                                  colors.primary.withAlpha((0.1 * 255).round()),
+                                  Colors.white.withAlpha((0.1 * 255).round()),
+                                  Colors.white.withAlpha((0.3 * 255).round()),
+                                  Colors.white.withAlpha((0.5 * 255).round()),
+                                  Colors.white.withAlpha((0.7 * 255).round()),
+                                  Colors.white,
+                                ],
+                              ),
+                            ),
+                            child: _buildSideNavPanel(),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              },
             ),
         ],
       ),
@@ -656,8 +700,13 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.tableTask:
       case TaskType.highlightTableRow:
       case TaskType.showInsightsV2Page:
-      case TaskType.showSideNav:
         return Container();
+      case TaskType.showSideNav:
+        return ButtonWidget(
+          color: colors.primary,
+          btnContent: "Done",
+          onTap: () => onTaskFinish(),
+        );
     }
   }
 
@@ -867,16 +916,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     );
   }
 
-  void closeSideNav({bool moveToNextNode = false}) {
-    if (!isSideNavVisible) return;
-    setState(() {
-      isSideNavVisible = false;
-    });
-    if (moveToNextNode) {
-      onTaskFinish();
-    }
-  }
-
   Widget _buildSideNavPanel() {
     return SideNavPanel(
       tasks: sideNavTasks,
@@ -891,6 +930,17 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {
           sideNavSelectedDesc[taskId] = desc;
         });
+      },
+      closeSidenav: () {
+        sideNavController.close();
+      },
+      onActionTaken: (type){
+        switch(type) {
+          case "talktoexpert":
+            break;
+          case "takeatrade":
+            break;
+        }
       },
     );
   }
