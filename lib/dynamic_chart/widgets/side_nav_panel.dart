@@ -123,7 +123,7 @@ class SideNavPanel extends StatelessWidget {
                             child: _optionButton(
                                 task.id,
                                 task.secondaryButtonText,
-                                task.secondaryButtonText,
+                                task.secondaryDescription,
                                 colors,
                                 textStyles)),
                       ]
