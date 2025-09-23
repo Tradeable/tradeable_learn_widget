@@ -277,8 +277,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: main
-      resolved-ref: f2b726634349e1844c470934a4e392094167501a
+      ref: axis_main
+      resolved-ref: b9525ea89b03fa6b02e92c191c6df91a32428471
       url: "https://github.com/adityagohad/fin_chart.git"
     source: git
     version: "0.0.1"
