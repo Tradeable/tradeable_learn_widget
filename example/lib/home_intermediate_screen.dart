@@ -1,5 +1,5 @@
 import 'package:example/main.dart';
-import 'package:example/mutual_funds_widgets.dart';
+import 'package:example/dynamic_chart_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_json.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_main.dart';
@@ -33,16 +33,10 @@ class HomeIntermediateScreen extends StatelessWidget {
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MutualFundsWidgets()));
-                },
-                child: const Text("MutualFunds Widgets")),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => OptionStrategyContainer(
-                            spotPrice: 23245,
-                            spotPriceDayDelta: 17.70,
-                            spotPriceDayDeltaPer: 0.07,
+                            spotPrice: 20100.0,
+                            spotPriceDayDelta: 1.0,
+                            spotPriceDayDeltaPer: 0.2,
                             onExecute: () {},
                             legs: [
                               OptionLeg(
@@ -50,23 +44,30 @@ class HomeIntermediateScreen extends StatelessWidget {
                                 strike: 23250,
                                 type: PositionType.buy,
                                 optionType: OptionType.call,
-                                expiry: DateTime.parse("2025-02-06 15:30:00"),
+                                expiry: DateTime.parse("2025-06-06 15:30:00"),
                                 quantity: 25,
                                 premium: 362,
                               ),
                               OptionLeg(
                                 symbol: "NIFTY",
-                                strike: 23250,
+                                strike: 20000,
                                 type: PositionType.buy,
                                 optionType: OptionType.put,
-                                expiry: DateTime.parse("2025-02-06 15:30:00"),
-                                quantity: 25,
-                                premium: 310,
+                                expiry:
+                                    DateTime.parse("2025-07-03T21:42:42.130"),
+                                quantity: 1,
+                                premium: 50,
                               )
                             ],
                           )));
                 },
                 child: const Text("Option strategy")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const DynamicChartInputScreen()));
+                },
+                child: const Text("Custom Chart JSON")),
           ],
         ),
       )),

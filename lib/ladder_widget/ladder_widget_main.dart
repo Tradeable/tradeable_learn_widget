@@ -66,74 +66,75 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return LearnErrorBorder(
       showErrorBody: showErrorBorder,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                  height: constraints.maxHeight * 0.11,
-                  child: QuestionWidget(question: model.question)),
-              SizedBox(
-                  height: constraints.maxHeight * 0.66,
-                  child: renderLadderContainer(BoxConstraints(
-                      maxHeight: constraints.maxHeight * 0.66,
-                      maxWidth: constraints.maxWidth / 4))),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: constraints.maxHeight * 0.23,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Bricks and Rungs", style: textStyles.mediumBold),
-                    const SizedBox(height: 10),
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color:
-                                colors.borderColorSecondary.withOpacity(0.6)),
-                        borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                    height: constraints.maxHeight * 0.11,
+                    child: QuestionWidget(question: model.question)),
+                SizedBox(
+                    height: constraints.maxHeight * 0.66,
+                    child: renderLadderContainer(BoxConstraints(
+                        maxHeight: constraints.maxHeight * 0.66,
+                        maxWidth: constraints.maxWidth / 4))),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: constraints.maxHeight * 0.23,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Bricks and Rungs", style: textStyles.mediumBold),
+                      const SizedBox(height: 10),
+                      Container(
+                        width: double.infinity,
+                        height: 50,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: colors.borderColorSecondary
+                                  .withAlpha((0.6 * 255).round())),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: options.map((option) {
+                            switch (option.state) {
+                              case DraggableOptionState.origin:
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: buildDraggableOption(option),
+                                );
+                              case DraggableOptionState.dragging:
+                              case DraggableOptionState.snapped:
+                                return Container();
+                            }
+                          }).toList(),
+                        ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: options.map((option) {
-                          switch (option.state) {
-                            case DraggableOptionState.origin:
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: buildDraggableOption(option),
-                              );
-                            case DraggableOptionState.dragging:
-                            case DraggableOptionState.snapped:
-                              return Container();
-                            default:
-                              return Container();
-                          }
-                        }).toList(),
-                      ),
-                    ),
-                    const Spacer(),
-                    ButtonWidget(
-                        color: answeredAllCorrectly()
-                            ? colors.primary
-                            : colors.secondary,
-                        btnContent: "Next",
-                        onTap: () {
-                          if (answeredAllCorrectly()) {
-                            widget.onNextClick();
-                          }
-                        }),
-                    const SizedBox(height: 10),
-                  ],
+                      const Spacer(),
+                      ButtonWidget(
+                          color: answeredAllCorrectly()
+                              ? colors.primary
+                              : colors.secondary,
+                          btnContent: "Next",
+                          onTap: () {
+                            if (answeredAllCorrectly()) {
+                              widget.onNextClick();
+                            }
+                          }),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -156,8 +157,10 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   }
 
   Widget buildDragTarget(LadderCell cell) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -250,8 +253,10 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
   }
 
   Widget renderOption(DraggableOption option) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       width: 60,
       height: 30,

@@ -50,6 +50,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 16),
                 QuestionWidget(question: model.question),
                 const SizedBox(height: 20),
                 SizedBox(height: 350, child: renderChart()),
@@ -76,7 +77,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
             color: (model.userResponse ?? "").isNotEmpty
                 ? colors.primary

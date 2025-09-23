@@ -1,0 +1,2 @@
+/Users/deepakgrandhi/StudioProjects/tradeable_learn_widget/example/android/app/.cxx/Debug/4j1g6520/x86_64/CMakeFiles/rebuild_cache.dir
+/Users/deepakgrandhi/StudioProjects/tradeable_learn_widget/example/android/app/.cxx/Debug/4j1g6520/x86_64/CMakeFiles/edit_cache.dir

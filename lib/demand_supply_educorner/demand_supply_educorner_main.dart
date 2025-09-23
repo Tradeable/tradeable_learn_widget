@@ -39,16 +39,20 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 30),
-        AnimatedTextWidget(
-            title: '',
-            prompt: getExplanation(),
-            logo: "assets/market_depth/profile_guy.png"),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AnimatedTextWidget(
+              title: '',
+              prompt: getExplanation(),
+              logo: "assets/market_depth/profile_guy.png"),
+        ),
         const SizedBox(height: 40),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -60,7 +64,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
         ),
         const SizedBox(height: 40),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
               _buildPriceRow(
@@ -114,7 +118,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
         ),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
             color: colors.primary,
             btnContent: "Next",
@@ -138,8 +142,10 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
       {required String title,
       required String infoTitle,
       required String infoContent}) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Row(
       children: [
@@ -225,7 +231,8 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
   }
 
   Widget infoWidget(String heading, String content) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Column(
       children: [
         Text(

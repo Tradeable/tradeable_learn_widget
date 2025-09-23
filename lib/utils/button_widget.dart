@@ -6,35 +6,35 @@ class ButtonWidget extends StatelessWidget {
   final Color color;
   final String btnContent;
   final VoidCallback onTap;
+  final TextStyle? textStyle;
+  final BorderRadiusGeometry? borderRadius;
 
   const ButtonWidget(
       {super.key,
       required this.color,
       required this.btnContent,
-      required this.onTap});
+      required this.onTap,
+      this.textStyle,
+      this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    ;
-    final colors =
-        TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    ;
-
     return InkWell(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: borderRadius ?? BorderRadius.circular(6),
           color: color,
         ),
         child: Center(
           child: Text(btnContent,
-              style: textStyles.mediumBold
-                  .copyWith(fontSize: 16, color: Colors.white)),
+              style: textStyle ??
+                  textStyles.mediumBold
+                      .copyWith(fontSize: 16, color: Colors.white)),
         ),
       ),
     );

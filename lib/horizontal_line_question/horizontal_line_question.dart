@@ -52,6 +52,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 16),
                 QuestionWidget(question: model.question),
                 const SizedBox(height: 20),
                 SizedBox(height: 350, child: renderChart()),
@@ -75,7 +76,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case HorizontalLineQuestionState.loadUI:
@@ -116,10 +118,11 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+      padding: const EdgeInsets.all(16),
       child: ButtonWidget(
           color: colors.primary,
           btnContent: "Submit",
@@ -181,8 +184,10 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
   }
 
   void showSheet() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     showModalBottomSheet(
         isDismissible: false,

@@ -164,7 +164,7 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
           ),
         )),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
             color: model.options.isEmpty ? colors.primary : colors.secondary,
             btnContent: "Next",

@@ -90,9 +90,7 @@ class _EduCornerV2EditorState extends State<EduCornerV2Editor> {
           });
         });
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   void _copyToClipboard() {

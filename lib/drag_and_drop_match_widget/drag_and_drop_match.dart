@@ -57,14 +57,17 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 16),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             model.title ?? "",
             style: textStyles.smallNormal,
@@ -75,7 +78,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
         const SizedBox(height: 10),
         renderLadderContainer(),
         Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(16),
           child: MarkdownBody(
             data: model.content1 ?? "",
             styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
@@ -87,7 +90,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
         ),
         const SizedBox(height: 10),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -99,7 +102,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: colors.borderColorSecondary.withOpacity(0.6)),
+                      color: colors.borderColorSecondary
+                          .withAlpha((0.6 * 255).round())),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -123,7 +127,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
         ),
         (model.content2 ?? "").isNotEmpty
             ? Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16),
                 child: MarkdownBody(
                   data: model.content2 ?? "",
                   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
@@ -136,7 +140,7 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
             : Container(),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color: answeredAllCorrectly() ? colors.primary : colors.secondary,
               btnContent: "Next",
@@ -164,8 +168,10 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget renderLadderUnit(LadderUnit ladderUnit) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -212,7 +218,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget buildDragTarget(LadderCell e) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return DragTarget<DraggableOption>(
       builder: (
@@ -244,15 +251,6 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
             e.capturedOption?.state = DraggableOptionState.origin;
             options.add(e.capturedOption!);
             e.capturedOption = details.data;
-          }
-
-          if (answeredAllCorrectly()) {
-            // widget.node.edges!.length > 1
-            //     ? _showBottomSheet(context)
-            //     : widget.onFinish(
-            //         widget.node.edges?.first.pathId ?? "finished", true);
-            //todo
-            // finish(widget.node.edges?.first.pathId ?? "finished", true);
           }
         });
       },
@@ -308,7 +306,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   void showError(bool isSnappedCorrectly) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     setState(() {
       showErrorBorder = true;
@@ -321,7 +320,8 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
   }
 
   Widget renderOption(DraggableOption option) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Color optionBgColor = colors.selectedItemColor;
     switch (option.state) {

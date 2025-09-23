@@ -44,13 +44,13 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
+          const SizedBox(height: 16),
           QuestionWidget(question: model.question),
           const SizedBox(height: 10),
           renderProblem(constraints),
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: model.state == CandlePartMatchLinkState.loadUI
                     ? colors.secondary

@@ -27,7 +27,8 @@ class _ImageMcqState extends State<ImageMcq> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -54,7 +55,7 @@ class _ImageMcqState extends State<ImageMcq> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: (model.userResponse ?? "").isNotEmpty
                     ? colors.primary
@@ -134,8 +135,10 @@ class ImageMCQOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return InkWell(
       onTap: () {
         onTap(option);

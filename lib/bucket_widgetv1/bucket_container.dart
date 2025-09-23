@@ -37,6 +37,7 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(height: 16),
         QuestionWidget(question: model.question),
         const SizedBox(height: 20),
         Padding(
@@ -126,7 +127,7 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
         ),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -200,7 +201,7 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
         ),
         const Spacer(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color: model.stockBucketMap.isEmpty
                   ? colors.primary
