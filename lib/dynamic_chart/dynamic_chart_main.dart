@@ -31,7 +31,6 @@ import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/side_nav_panel.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -74,7 +73,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   int currentPageIndex = 0;
   List<finchart.OptionLeg> selectedLegs = [];
   Map<String, List<GlobalKey<CustomTableState>>> tableWidgetKeys = {};
-  List<ShowSideNavTask> sideNavTasks = [];
   bool isSideNavVisible = false;
   Map<String, String?> sideNavSelectedDesc = {};
   String? expandedSideNavId;
@@ -352,16 +350,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         onTaskFinish();
         break;
-      case TaskType.showSideNav:
-        final task = currentTask as ShowSideNavTask;
-        setState(() {
-          if (!sideNavTasks.any((t) => t.id == task.id)) {
-            sideNavTasks.add(task);
-          }
-          isSideNavVisible = true;
-          expandedSideNavId = task.id;
-        });
-        break;
     }
   }
 
@@ -589,34 +577,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                   child: userActionContainer()),
             ],
           ),
-          if (currentTask.taskType == TaskType.showSideNav && isSideNavVisible)
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    closeSideNav(moveToNextNode: true);
-                  },
-                  child: Container(
-                      color: Colors.black.withAlpha((0.3 * 255).round())),
-                ),
-              ),
-            ),
-          if (currentTask.taskType == TaskType.showSideNav && isSideNavVisible)
-            Positioned(
-              top: 0,
-              right: 0,
-              bottom: 0,
-              child: Container(
-                width: 320,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(left: BorderSide(color: Colors.grey.shade300)),
-                ),
-                child: _buildSideNavPanel(),
-              ),
-            ),
         ],
       ),
     );
@@ -656,7 +616,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.tableTask:
       case TaskType.highlightTableRow:
       case TaskType.showInsightsV2Page:
-      case TaskType.showSideNav:
         return Container();
     }
   }
@@ -875,23 +834,5 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     if (moveToNextNode) {
       onTaskFinish();
     }
-  }
-
-  Widget _buildSideNavPanel() {
-    return SideNavPanel(
-      tasks: sideNavTasks,
-      expandedId: expandedSideNavId,
-      onExpandedChange: (id) {
-        setState(() {
-          expandedSideNavId = id;
-        });
-      },
-      selectedDescriptions: sideNavSelectedDesc,
-      onDescriptionSelect: (taskId, desc) {
-        setState(() {
-          sideNavSelectedDesc[taskId] = desc;
-        });
-      },
-    );
   }
 }
