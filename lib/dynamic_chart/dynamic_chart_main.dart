@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fin_chart/models/enums/action_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
 import 'package:fin_chart/models/table_model.dart';
@@ -22,6 +24,7 @@ import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_v2.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
@@ -31,6 +34,9 @@ import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/floating_side_nav.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/side_nav_panel.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/sidenav_manager.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -85,7 +91,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       dd();
     }
     tabs.add({"type": "chart", "title": "Chart"});
-
+    sideNavController = SideNavController();
     super.initState();
   }
 
@@ -201,6 +207,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                 "title": task.tabTitle,
                 "taskId": task.taskId,
               });
+            } else if (recipe.tasks
+                .any((t) => t is ShowPayOffGraphTask && t.id == task.taskId)) {
             } else if (recipe.tasks
                 .any((t) => t is ShowPayOffGraphTask && t.id == task.taskId)) {
               tabs.add({
@@ -350,6 +358,16 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         onTaskFinish();
         break;
+      case TaskType.showSideNav:
+        final task = currentTask as ShowSideNavTask;
+        setState(() {
+          if (!sideNavTasks.any((t) => t.id == task.id)) {
+            sideNavTasks.add(task);
+          }
+          expandedSideNavId = task.id;
+        });
+        sideNavController.open();
+        break;
     }
   }
 
@@ -457,7 +475,57 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               ),
                             );
                           }
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              if (promptTask == null) Container() else renderPrompt(),
+              Expanded(
+                child: PageView.builder(
+                    controller: controller,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final tab = tabs[index];
+                      switch (tab["type"]) {
+                        case "chart":
+                          return Container(
+                            decoration: BoxDecoration(
+                                color: colors.cardBasicBackground,
+                                borderRadius: BorderRadius.circular(12)),
+                            margin: const EdgeInsets.all(16),
+                            child: Chart.from(
+                                key: _chartKey,
+                                recipe: recipe,
+                                onInteraction: (p0, p1) {}),
+                          );
+                        case "option_chain":
+                          if (_isOptionChainLoading) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        colors.primary),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    "Loading option chain...",
+                                    style: textStyles.mediumNormal.copyWith(
+                                      color: colors.textColorSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
 
+                          final taskId = tab["taskId"]!;
+                          final chooseTask = recipe.tasks
+                              .whereType<ChooseCorrectOptionValueChainTask>()
+                              .firstWhere((t) => t.taskId == taskId);
                           final taskId = tab["taskId"]!;
                           final chooseTask = recipe.tasks
                               .whereType<ChooseCorrectOptionValueChainTask>()
@@ -467,7 +535,100 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             (t) => t.optionChainId == chooseTask.taskId,
                             orElse: () => optionChainTasks.first,
                           );
+                          final optionChainTask = optionChainTasks.firstWhere(
+                            (t) => t.optionChainId == chooseTask.taskId,
+                            orElse: () => optionChainTasks.first,
+                          );
 
+                          return PreviewScreen.from(
+                              key: previewScreenKeys[taskId] ?? GlobalKey(),
+                              task: optionChainTask,
+                              onViewChartClicked: () {
+                                navigateToPage(0);
+                              },
+                              onSettingsClicked: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => ColumnVisibilityEditor(
+                                    columns: optionChainTask.columns,
+                                    onVisibilityChanged: (updatedColumns) {
+                                      setState(() {
+                                        optionChainTask.columns =
+                                            updatedColumns;
+                                      });
+                                    },
+                                  ),
+                                );
+                              },
+                              onBuySellSelected: _handleBuySellSelection,
+                              isEditorMode: false);
+                        case "payoff":
+                          final taskId = tab["taskId"]!;
+                          final payoffTask = payoffGraphTasks.firstWhere(
+                            (t) => t.id == taskId,
+                            orElse: () => payoffGraphTasks.first,
+                          );
+                          return selectedLegs.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    "Select buy/sell positions in the option chain to view payoff",
+                                    style: textStyles.mediumNormal.copyWith(
+                                      color: colors.textColorSecondary,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              : OptionStrategyContainer(
+                                  spotPrice: payoffTask.spotPrice,
+                                  spotPriceDayDelta:
+                                      payoffTask.spotPriceDayDelta,
+                                  spotPriceDayDeltaPer:
+                                      payoffTask.spotPriceDayDeltaPer,
+                                  onExecute: () {},
+                                  legs: selectedLegs
+                                      .map((e) => strategy.OptionLeg.fromJson(
+                                          e.toJson()))
+                                      .toList(),
+                                );
+                        case "insights":
+                          final taskId = tab["taskId"]!;
+                          final insightsTask = recipe.tasks
+                              .whereType<ShowInsightsPageTask>()
+                              .firstWhere(
+                                (t) => t.id == taskId,
+                                orElse: () => insightsTasks.first,
+                              );
+                          return InsightsWidget(insightsTask: insightsTask);
+                        case "table":
+                          final taskId = tab["taskId"]!;
+                          final tableTask = recipe.tasks
+                              .whereType<TableTask>()
+                              .firstWhere((t) => t.id == taskId);
+                          if (tableWidgetKeys[taskId] == null ||
+                              tableWidgetKeys[taskId]!.length !=
+                                  tableTask.tables.tables.length) {
+                            tableWidgetKeys[taskId] = List.generate(
+                              tableTask.tables.tables.length,
+                              (_) => GlobalKey<CustomTableState>(),
+                            );
+                          }
+                          return SingleChildScrollView(
+                            child: Column(
+                              children: List.generate(
+                                tableTask.tables.tables.length,
+                                (tableIdx) => CustomTable.from(
+                                  key: tableWidgetKeys[taskId]![tableIdx],
+                                  tableTask: TableTask(
+                                    tables: TablesModel(
+                                      tables: [
+                                        tableTask.tables.tables[tableIdx]
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
                           return PreviewScreen.from(
                               key: previewScreenKeys[taskId] ?? GlobalKey(),
                               task: optionChainTask,
@@ -617,6 +778,12 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.highlightTableRow:
       case TaskType.showInsightsV2Page:
         return Container();
+      case TaskType.showSideNav:
+        return ButtonWidget(
+          color: colors.primary,
+          btnContent: "Done",
+          onTap: () => onTaskFinish(),
+        );
     }
   }
 
@@ -748,6 +915,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               ],
                             ),
                             const SizedBox(height: 4),
+                            MarkdownWidget(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                data: promptTask?.promptText ?? "")
                             MarkdownWidget(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
