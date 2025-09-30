@@ -47,13 +47,13 @@ import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_le
 class DynamicChartWidget extends StatefulWidget {
   final DynamicChartModel model;
   final VoidCallback onNextClick;
-  final VoidCallback? onChatClciked;
+  final VoidCallback? onChatClick;
 
   const DynamicChartWidget(
       {super.key,
       required this.model,
       required this.onNextClick,
-      this.onChatClciked});
+      this.onChatClick});
 
   @override
   State<DynamicChartWidget> createState() => _DynamicChartWidgetState();
@@ -602,8 +602,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             onMenuItemClick: (type) {
               switch (type) {
                 case "chat":
-                  if (widget.onChatClciked != null) {
-                    widget.onChatClciked!();
+                  if (widget.onChatClick != null) {
+                    widget.onChatClick!();
                   }
                   break;
                 case "bookmark":
