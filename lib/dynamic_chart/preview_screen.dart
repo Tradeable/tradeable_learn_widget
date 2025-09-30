@@ -868,7 +868,6 @@ class PreviewScreenState extends State<PreviewScreen> {
   Widget _buildStickyStrikeColumnContent() {
     return SizedBox(
       height: widget.previewData.optionData.length * cellHeight,
-      //width: cellWidth,
       child: ListView.builder(
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
