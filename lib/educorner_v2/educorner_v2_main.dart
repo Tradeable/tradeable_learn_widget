@@ -82,50 +82,58 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
                   return renderItem(constraints, imageUrl);
                 },
               )),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colors.cardBasicBackground),
-                      child: const Icon(Icons.arrow_back_ios_new, size: 14)),
-                  color: colors.borderColorPrimary,
-                  onPressed: currentPage > 0
-                      ? () => controller.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          )
-                      : null,
-                ),
-                Expanded(
-                  child: Text(items[currentPage].textContent?.title ?? "",
-                      maxLines: 2,
-                      style: textStyles.smallBold,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center),
-                ),
-                IconButton(
-                  icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colors.cardBasicBackground),
-                      child: const Icon(Icons.arrow_forward_ios, size: 14)),
-                  color: colors.borderColorPrimary,
-                  onPressed: currentPage < items.length - 1
-                      ? () => controller.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          )
-                      : null,
-                ),
-              ],
-            ),
-          )
+          items.length > 1
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colors.cardBasicBackground),
+                            child:
+                                const Icon(Icons.arrow_back_ios_new, size: 14)),
+                        color: colors.borderColorPrimary,
+                        onPressed: currentPage > 0
+                            ? () => controller.previousPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                )
+                            : null,
+                      ),
+                      Expanded(
+                        child: Text(items[currentPage].textContent?.title ?? "",
+                            maxLines: 2,
+                            style: textStyles.smallBold,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center),
+                      ),
+                      IconButton(
+                        icon: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colors.cardBasicBackground),
+                            child:
+                                const Icon(Icons.arrow_forward_ios, size: 14)),
+                        color: colors.borderColorPrimary,
+                        onPressed: currentPage < items.length - 1
+                            ? () => controller.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                )
+                            : null,
+                      )
+                    ],
+                  ),
+                )
+              : Text(items[currentPage].textContent?.title ?? "",
+                  maxLines: 2,
+                  style: textStyles.smallBold,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center),
         ],
       ),
     );
