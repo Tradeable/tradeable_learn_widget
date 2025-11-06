@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class FullScreenImageViewer extends StatefulWidget {
   final String imageUrl;
@@ -50,6 +52,9 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
     return Stack(
       children: [
         if (images.length == 1)
@@ -121,12 +126,12 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
           right: 16,
           child: GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: const SizedBox(
+            child: SizedBox(
               width: 40,
               height: 40,
               child: Icon(
                 Icons.close,
-                color: Colors.white,
+                color: colors.primary,
                 size: 24,
               ),
             ),
