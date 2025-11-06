@@ -122,7 +122,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
             },
           ),
         Positioned(
-          top: MediaQuery.of(context).padding.top + 16,
+          top: MediaQuery.of(context).padding.top + 30,
           right: 16,
           child: GestureDetector(
             onTap: () => Navigator.of(context).pop(),
@@ -139,7 +139,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
         ),
         if (images.length > 1)
           Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
+            top: MediaQuery.of(context).padding.top + 30,
             left: 16,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
