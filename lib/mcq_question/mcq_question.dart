@@ -41,7 +41,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -80,7 +81,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
             color: (model.userResponse ?? "").isNotEmpty
-                ? colors.primary
+                ? colors.primaryButtonColor
                 : colors.secondary,
             btnContent: "Submit",
             onTap: showAnimation,
@@ -91,7 +92,8 @@ class _MCQQuestionState extends State<MCQQuestion> {
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Chart(layers: [
       AxisLayer(
@@ -160,7 +162,7 @@ class _MCQQuestionState extends State<MCQQuestion> {
   }
 
   void showAnimation() {
-    if((model.userResponse ?? "").isNotEmpty) {
+    if ((model.userResponse ?? "").isNotEmpty) {
       setState(() {
         model.state = MCQState.submitResponse;
       });

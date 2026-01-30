@@ -119,7 +119,7 @@ class _LadderWidgetMainState extends State<LadderWidgetMain> {
                       const Spacer(),
                       ButtonWidget(
                           color: answeredAllCorrectly()
-                              ? colors.primary
+                              ? colors.primaryButtonColor
                               : colors.secondary,
                           btnContent: "Next",
                           onTap: () {

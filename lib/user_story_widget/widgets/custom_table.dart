@@ -27,7 +27,8 @@ class CustomTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -72,7 +73,8 @@ class CustomTable extends StatelessWidget {
 
   TableRow _buildTableRow(List<String> cells, BuildContext context,
       {bool isHeader = false, bool isHighlighted = false}) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return TableRow(
       decoration: isHighlighted
@@ -81,7 +83,8 @@ class CustomTable extends StatelessWidget {
               color: colors.buttonColor,
               boxShadow: [
                 BoxShadow(
-                  color: colors.borderColorPrimary.withOpacity(0.5),
+                  color:
+                      colors.borderColorPrimary.withAlpha((0.5 * 255).round()),
                   spreadRadius: 1,
                   blurRadius: 4,
                   offset: const Offset(1, 2),

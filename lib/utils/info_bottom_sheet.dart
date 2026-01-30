@@ -10,8 +10,10 @@ class InfoBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -45,7 +47,7 @@ class InfoBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: "Next",
               onTap: () {
                 Navigator.of(context).pop();

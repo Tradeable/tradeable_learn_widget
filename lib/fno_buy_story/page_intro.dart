@@ -31,8 +31,10 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -75,8 +77,9 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-              color:
-                  userResponse.isNotEmpty ? colors.primary : colors.secondary,
+              color: userResponse.isNotEmpty
+                  ? colors.primaryButtonColor
+                  : colors.secondary,
               btnContent: "Next",
               onTap: () {
                 if (userResponse.isNotEmpty) {
@@ -89,7 +92,8 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
   }
 
   Widget question() {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,8 +128,10 @@ class _PageIntroState extends State<ScenarioIntroWidget> {
 
   Widget optionBtn(
       {required String src, required String txt, required VoidCallback onTap}) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return InkWell(
       onTap: onTap,
       child: Container(

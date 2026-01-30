@@ -43,7 +43,7 @@ class _MCQCandleQuestionState extends State<MCQCandleQuestion> {
               padding: const EdgeInsets.all(16),
               child: ButtonWidget(
                   color: (model.userResponse ?? "").isNotEmpty
-                      ? colors.primary
+                      ? colors.primaryButtonColor
                       : colors.secondary,
                   btnContent: "Submit",
                   onTap: () {

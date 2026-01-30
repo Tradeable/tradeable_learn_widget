@@ -53,7 +53,8 @@ class _WebInfoReelState extends State<WebInfoReel> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Stack(
       fit: StackFit.passthrough,
@@ -71,7 +72,7 @@ class _WebInfoReelState extends State<WebInfoReel> {
             height: 70,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
             child: ButtonWidget(
-                color: colors.primary,
+                color: colors.primaryButtonColor,
                 btnContent: "Next",
                 onTap: () {
                   widget.onNextClick();

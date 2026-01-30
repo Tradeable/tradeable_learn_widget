@@ -116,7 +116,8 @@ class _TrendLineState extends State<TrendLineWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     Question currentQuestion = questions[currentQuestionIndex];
 
@@ -149,7 +150,7 @@ class _TrendLineState extends State<TrendLineWidget> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
-                color: colors.primary,
+                color: colors.primaryButtonColor,
                 btnContent: 'Submit',
                 onTap: () {
                   takeToCorrectOffsets();

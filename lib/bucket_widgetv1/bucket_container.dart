@@ -31,8 +31,10 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,7 +206,7 @@ class _BucketContainerV1State extends State<BucketContainerV1> {
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
               color: model.stockBucketMap.isEmpty
-                  ? colors.primary
+                  ? colors.primaryButtonColor
                   : colors.secondary,
               btnContent: "Next",
               onTap: () {

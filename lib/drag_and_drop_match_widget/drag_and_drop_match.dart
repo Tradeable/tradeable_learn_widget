@@ -142,7 +142,9 @@ class _DragAndDropMatchState extends State<DragAndDropMatch> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-              color: answeredAllCorrectly() ? colors.primary : colors.secondary,
+              color: answeredAllCorrectly()
+                  ? colors.primaryButtonColor
+                  : colors.secondary,
               btnContent: "Next",
               onTap: () {
                 if (answeredAllCorrectly()) {

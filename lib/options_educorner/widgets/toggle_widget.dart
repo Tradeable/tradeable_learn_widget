@@ -23,7 +23,7 @@ class OptionEducornerToggle extends StatelessWidget {
             onChanged: toggleChanged,
             activeColor: Colors.green,
             inactiveThumbColor: Colors.orange,
-            inactiveTrackColor: Colors.orange.withOpacity(0.4),
+            inactiveTrackColor: Colors.orange.withAlpha((0.4 * 255).round()),
           ),
         ),
         const Text('CALL'),

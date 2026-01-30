@@ -570,7 +570,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
               color: !(step.isActionNeeded) ||
                       isAnsweredCorrect != null ||
                       highlightedRowData != null
-                  ? colors.primary
+                  ? colors.primaryButtonColor
                   : colors.secondary,
               btnContent: step.ui.last.title,
               onTap: () {
@@ -655,7 +655,7 @@ class _UserStoryUIMainState extends State<UserStoryUIMain> {
                                       shrinkWrap: true),
                                   const SizedBox(height: 10),
                                   ButtonWidget(
-                                      color: colors.primary,
+                                      color: colors.primaryButtonColor,
                                       btnContent: "Next",
                                       onTap: () {
                                         Navigator.of(context).pop();

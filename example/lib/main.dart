@@ -44,7 +44,7 @@ import 'package:example/data_model/rr_typeform.dart';
 import 'package:example/data_model/scenario_intro.dart';
 import 'package:example/data_model/stock_high_low_user_story_model.dart';
 import 'package:example/data_model/supply_demand_educorner_model.dart';
-import 'package:example/data_model/takingOptionsTrade.dart';
+import 'package:example/data_model/taking_options_trade.dart';
 import 'package:example/data_model/ticket_user_story.dart';
 import 'package:example/data_model/tr2.dart';
 import 'package:example/data_model/trend_line_model.dart';
@@ -74,13 +74,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
+      theme: ThemeData.dark(),
       initialRoute: "/homeIntermediate",
       routes: {
         "/": (context) => const TradeableWidgetDemoPage(),

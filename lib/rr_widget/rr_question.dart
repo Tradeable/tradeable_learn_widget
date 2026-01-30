@@ -66,7 +66,8 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Chart(layers: [
       AxisLayer(
           settings: AxisSettings(
@@ -90,14 +91,15 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case RRQuestionState.loadUI:
         return Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: "Submit",
               onTap: () {
                 showAnimation();
@@ -107,7 +109,7 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
         return Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: "Next",
               onTap: () {
                 showModalBottomSheet(
@@ -135,7 +137,8 @@ class _RRQuestionState extends State<RRQuestion> with TickerProviderStateMixin {
   }
 
   Widget helperText() {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     switch (model.state) {
       case RRQuestionState.loadUI:

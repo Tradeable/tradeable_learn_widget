@@ -16,7 +16,7 @@ class InfoContainerBg extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       child: Container(
         decoration: BoxDecoration(
-          color: colors.cardBasicBackground,
+          color: colors.dynamicChartInstructionBG,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: child,

@@ -42,7 +42,8 @@ class _ATMWidgetState extends State<ATMWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -71,8 +72,9 @@ class _ATMWidgetState extends State<ATMWidget> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
-                color:
-                    userResponse.isNotEmpty ? colors.primary : colors.secondary,
+                color: userResponse.isNotEmpty
+                    ? colors.primaryButtonColor
+                    : colors.secondary,
                 btnContent: "Next",
                 onTap: () {
                   if (userResponse.isNotEmpty) {
@@ -86,8 +88,10 @@ class _ATMWidgetState extends State<ATMWidget> {
   }
 
   Widget textContent(String title, String value, bool isToBeAnswered) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final double containerWidth = MediaQuery.of(context).size.width * 0.4;
 
     return Padding(

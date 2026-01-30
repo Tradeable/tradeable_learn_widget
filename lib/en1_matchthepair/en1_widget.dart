@@ -96,7 +96,7 @@ class _EN1State extends State<EN1> {
                     child: ButtonWidget(
                         color: model.state == EN1State.isMatching
                             ? colors.secondary
-                            : colors.primary,
+                            : colors.primaryButtonColor,
                         btnContent: "Next",
                         onTap: () {
                           if (model.state == EN1State.submitResponse) {

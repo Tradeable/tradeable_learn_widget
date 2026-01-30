@@ -28,8 +28,10 @@ class _CustomMCQWidgetState extends State<CustomMCQWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +60,8 @@ class _CustomMCQWidgetState extends State<CustomMCQWidget> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? Colors.transparent
-                      : colors.cardColorSecondary.withOpacity(0.2),
+                      : colors.cardColorSecondary
+                          .withAlpha((0.2 * 255).round()),
                   borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(
                     color: isSelected
@@ -95,7 +98,8 @@ class _CustomMCQWidgetState extends State<CustomMCQWidget> {
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? colors.cardColorSecondary.withOpacity(0.2)
+                          ? colors.cardColorSecondary
+                              .withAlpha((0.2 * 255).round())
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(8.0),
                       border: Border.all(

@@ -70,7 +70,7 @@ class CustomDialogWidget extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(20),
                       bottomLeft: Radius.circular(20)),
-                  color: colors.primary,
+                  color: colors.primaryButtonColor,
                 ),
                 child: Center(
                   child: Text(task.buttonText,

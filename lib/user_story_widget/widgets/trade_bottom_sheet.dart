@@ -28,8 +28,10 @@ class _TradeBottomSheet extends State<TradeBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       decoration: BoxDecoration(
@@ -140,7 +142,7 @@ class _TradeBottomSheet extends State<TradeBottomSheet> {
             ),
           ),
           ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: "Confirm Order",
               onTap: () {
                 widget.confirmOrder(controller.text);
@@ -152,8 +154,10 @@ class _TradeBottomSheet extends State<TradeBottomSheet> {
   }
 
   Widget _buildPill(String label) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     final isSelected = label == selectedOrderType || label == selectedValidity;
     return GestureDetector(
@@ -173,14 +177,15 @@ class _TradeBottomSheet extends State<TradeBottomSheet> {
           border: Border.all(
               color: isSelected
                   ? colors.axisColor
-                  : colors.textColorSecondary.withOpacity(0.2)),
+                  : colors.textColorSecondary.withAlpha((0.2 * 255).round())),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(label,
             style: textStyles.smallNormal.copyWith(
                 color: isSelected
                     ? colors.axisColor
-                    : colors.textColorSecondary.withOpacity(0.6))),
+                    : colors.textColorSecondary
+                        .withAlpha((0.6 * 255).round()))),
       ),
     );
   }

@@ -8,9 +8,9 @@ class LearnErrorBorder extends StatelessWidget {
 
   const LearnErrorBorder(
       {super.key,
-        required this.showErrorBody,
-        required this.child,
-        this.color});
+      required this.showErrorBody,
+      required this.child,
+      this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,13 @@ class LearnErrorBorder extends StatelessWidget {
         color: Theme.of(context).customColors.background,
         gradient: showErrorBody
             ? LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            color ?? Colors.red.withOpacity(0.5),
-            Colors.transparent,
-          ],
-        )
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  color ?? Colors.red.withAlpha((0.5 * 255).round()),
+                  Colors.transparent,
+                ],
+              )
             : null,
       ),
       child: child,

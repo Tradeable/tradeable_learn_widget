@@ -48,7 +48,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV2>
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -103,7 +104,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV2>
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Chart(layers: [
       AxisLayer(
@@ -145,13 +147,14 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV2>
   }
 
   Widget renderActionButton() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final isLastLine = currentLineIndex == model.responseRange.length;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       child: ButtonWidget(
-          color: colors.primary,
+          color: colors.primaryButtonColor,
           btnContent: isLastLine ? "Next" : "Submit",
           onTap: () {
             if (isLastLine) {

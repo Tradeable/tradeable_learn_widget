@@ -27,7 +27,8 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -76,12 +77,14 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
   }
 
   Widget _buildTopLabel(String text) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Text(text, style: textStyles.mediumNormal);
   }
 
   Widget _buildHeader(String text) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     return Container(
       alignment: Alignment.center,
       child: Text(text, style: textStyles.smallNormal),
@@ -92,8 +95,10 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     required List<OptionEntry> data,
     required bool isCallColumn,
   }) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     int halfLength = data.length ~/ 2;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -220,8 +225,10 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
 
   Widget _buildBuySellButton(
       bool isSelected, bool isValue, bool isCallColumn, OptionEntry entry) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     if (!isSelected) return const SizedBox.shrink();
 
     String label = isValue ? 'SELL' : 'BUY';
@@ -265,7 +272,7 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 8),
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
-          color: isButtonEnabled ? color : color.withOpacity(0.5),
+          color: isButtonEnabled ? color : color.withAlpha((0.5 * 255).round()),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
@@ -282,8 +289,10 @@ class _OptionsDataWidget extends State<OptionsDataWidget> {
     required List<OptionEntry> entries,
     required Color backgroundColor,
   }) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Container(
       color: backgroundColor,

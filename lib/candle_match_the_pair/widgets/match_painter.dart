@@ -86,7 +86,8 @@ class CandlePartMatchPainter extends CustomPainter {
     required bool alignFromRight,
   }) {
     final borderPaint = Paint()
-      ..color = theme.customColors.borderColorPrimary.withOpacity(0.6)
+      ..color =
+          theme.customColors.borderColorPrimary.withAlpha((0.6 * 255).round())
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;

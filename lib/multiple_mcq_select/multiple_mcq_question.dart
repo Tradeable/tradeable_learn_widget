@@ -31,7 +31,8 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -47,11 +48,11 @@ class _MultipleMCQSelectState extends State<MultipleMCQSelect> {
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
               color: model.userResponse.isNotEmpty
-                  ? colors.primary
+                  ? colors.primaryButtonColor
                   : colors.secondary,
               btnContent: "Submit",
               onTap: () {
-                if(model.userResponse.isNotEmpty) {
+                if (model.userResponse.isNotEmpty) {
                   showAnimation();
                 }
               },
@@ -157,8 +158,10 @@ class _QuestionOptionsState extends State<QuestionOptions> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     Color getColor() {
       if (widget.state == MultipleMCQQuestionState.submitResponse) {

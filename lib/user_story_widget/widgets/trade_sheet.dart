@@ -102,8 +102,10 @@ class _TradeSheetState extends State<TradeSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final bidPriceItems = getBidPrices();
 
     return Container(
@@ -203,7 +205,7 @@ class _TradeSheetState extends State<TradeSheet> {
             ),
             const SizedBox(height: 20),
             ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: "Confirm Order",
               onTap: () {
                 if (selectedTableIndex != null && selectedBidPrice != null) {

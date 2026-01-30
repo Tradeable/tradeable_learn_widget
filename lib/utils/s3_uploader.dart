@@ -72,12 +72,12 @@ class S3Uploader {
       if (response.statusCode == 200) {
         return 'https://$host/$s3Key';
       } else {
-        print(
-            'Error uploading image: ${response.statusCode} - ${response.body}');
+        // print(
+        //     'Error uploading image: ${response.statusCode} - ${response.body}');
         return null;
       }
     } catch (e) {
-      print('Exception during S3 upload: $e');
+      // print('Exception during S3 upload: $e');
       return null;
     }
   }

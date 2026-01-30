@@ -80,7 +80,7 @@ class _VideoEduCorner extends State<VideoEduCorner> {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: ButtonWidget(
-            color: colors.primary,
+            color: colors.primaryButtonColor,
             btnContent: "Next",
             onTap: widget.onNextClick,
           ),
@@ -160,7 +160,7 @@ class _VideoEduCorner extends State<VideoEduCorner> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: ButtonWidget(
-                          color: colors.primary,
+                          color: colors.primaryButtonColor,
                           btnContent: "Watch on Youtube",
                           onTap: () async {
                             final url = Uri.parse(

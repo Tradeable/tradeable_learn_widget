@@ -90,8 +90,9 @@ class _PriceDecreasedState extends State<PriceDecreased> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-              color:
-                  userResponse.isNotEmpty ? colors.primary : colors.secondary,
+              color: userResponse.isNotEmpty
+                  ? colors.primaryButtonColor
+                  : colors.secondary,
               btnContent: 'Submit',
               onTap: () {
                 if (userResponse.isNotEmpty) {

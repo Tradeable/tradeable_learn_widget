@@ -50,7 +50,7 @@ class RRLayer extends ChartLayer {
         vMin,
         originOffset,
         origin,
-        const Color(0xff278829).withOpacity(0.6),
+        const Color(0xff278829).withAlpha((0.6 * 255).round()),
         boxWidth,
         isTarget: true);
 
@@ -68,7 +68,7 @@ class RRLayer extends ChartLayer {
         vMin,
         originOffset,
         origin,
-        const Color(0xffEB0000).withOpacity(0.6),
+        const Color(0xffEB0000).withAlpha((0.6 * 255).round()),
         boxWidth,
         isStoploss: true);
 
