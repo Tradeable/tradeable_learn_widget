@@ -95,6 +95,11 @@ class CustomColors {
   final Color optionChainBg;
   final Color optionChainTickerBg;
   final Color strikePriceCellColor;
+  final Color marketDepthFooterValue;
+  final Color customTableHeaderColor;
+  final Color customTableBackground;
+  final Color customTableHeaderFontColor;
+  final Color customTableCellFontColor;
 
   CustomColors(
       {required this.primary,
@@ -145,7 +150,12 @@ class CustomColors {
       required this.dynamicChartBlurBg,
       required this.optionChainBg,
       required this.optionChainTickerBg,
-      required this.strikePriceCellColor});
+      required this.strikePriceCellColor,
+      required this.marketDepthFooterValue,
+      required this.customTableHeaderColor,
+      required this.customTableBackground,
+      required this.customTableHeaderFontColor,
+      required this.customTableCellFontColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -200,7 +210,12 @@ extension ThemeDataExtension on ThemeData {
           dynamicChartBlurBg: Colors.transparent,
           optionChainBg: Colors.white,
           optionChainTickerBg: const Color(0xffF1F4F7),
-          strikePriceCellColor: const Color(0xffEBE4F0));
+          strikePriceCellColor: const Color(0xffEBE4F0),
+          marketDepthFooterValue: Colors.black,
+          customTableHeaderColor: Colors.white,
+          customTableBackground: const Color(0xffF9F9F9),
+          customTableHeaderFontColor: Colors.black54,
+          customTableCellFontColor: Colors.black87);
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -252,7 +267,12 @@ extension ThemeDataExtension on ThemeData {
           dynamicChartBlurBg: const Color(0xFF404040),
           optionChainBg: const Color(0xFF404040),
           optionChainTickerBg: const Color(0xFF0C1015),
-          strikePriceCellColor: const Color(0xFF594B52));
+          strikePriceCellColor: const Color(0xFF594B52),
+          marketDepthFooterValue: Colors.white,
+          customTableHeaderColor: Colors.black,
+          customTableBackground: const Color(0xFF404040),
+          customTableHeaderFontColor: Colors.white54,
+          customTableCellFontColor: Colors.white70);
     }
   }
 

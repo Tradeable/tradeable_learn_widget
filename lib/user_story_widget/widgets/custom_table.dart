@@ -40,10 +40,11 @@ class CustomTable extends StatelessWidget {
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12), topRight: Radius.circular(32)),
           ),
-          child: Text(title),
+          child: Text(title,
+              style: TextStyle(color: colors.customTableHeaderColor)),
         ),
         Container(
-          color: colors.buttonColor,
+          color: colors.customTableBackground,
           child: Table(
             border: TableBorder(
               left: BorderSide(color: colors.cardColorSecondary),
@@ -100,7 +101,9 @@ class CustomTable extends StatelessWidget {
               cell,
               maxLines: 1,
               style: TextStyle(
-                color: isHeader ? Colors.black54 : Colors.black87,
+                color: isHeader
+                    ? colors.customTableHeaderFontColor
+                    : colors.customTableCellFontColor,
                 fontWeight: isHighlighted ? FontWeight.bold : FontWeight.normal,
                 fontSize: isHeader ? 12 : 14,
               ),
