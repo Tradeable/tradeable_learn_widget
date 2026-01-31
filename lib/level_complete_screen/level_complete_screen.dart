@@ -11,8 +11,10 @@ class LevelCompleteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Column(
       children: [
@@ -50,7 +52,7 @@ class LevelCompleteScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color: colors.borderColorSecondary
-                                          .withOpacity(0.5)),
+                                          .withAlpha((0.5 * 255).round())),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: ListTile(

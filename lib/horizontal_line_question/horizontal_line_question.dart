@@ -124,7 +124,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ButtonWidget(
-          color: colors.primary,
+          color: colors.primaryButtonColor,
           btnContent: "Submit",
           onTap: () {
             showAnimation();
@@ -211,7 +211,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestion>
                   Text("Explanation goes here", style: textStyles.smallNormal),
                   const SizedBox(height: 20),
                   ButtonWidget(
-                      color: colors.primary,
+                      color: colors.primaryButtonColor,
                       btnContent: "Next",
                       onTap: () {
                         widget.onNextClick();

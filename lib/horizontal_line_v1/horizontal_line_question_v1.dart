@@ -46,7 +46,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -103,7 +104,8 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   }
 
   Widget renderChart() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case HorizontalLineV1QuestionState.loadUI:
@@ -144,12 +146,13 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       child: ButtonWidget(
-          color: colors.primary,
+          color: colors.primaryButtonColor,
           btnContent: "Submit",
           onTap: () {
             showAnimation();
@@ -217,8 +220,10 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
   }
 
   void showSheet() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     showModalBottomSheet(
         isDismissible: false,
@@ -242,7 +247,7 @@ class _HorizontalLineQuestionState extends State<HorizontalLineQuestionV1>
                   Text("Explanation goes here", style: textStyles.smallNormal),
                   const SizedBox(height: 20),
                   ButtonWidget(
-                      color: colors.primary,
+                      color: colors.primaryButtonColor,
                       btnContent: "Next",
                       onTap: () {
                         widget.onNextClick();

@@ -56,7 +56,7 @@ class _InfoReelState extends State<InfoReel> {
             height: 70,
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
-                color: colors.primary,
+                color: colors.primaryButtonColor,
                 btnContent: "Next",
                 onTap: () {
                   widget.onNextClick();

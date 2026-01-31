@@ -27,7 +27,8 @@ class CustomTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,10 +40,11 @@ class CustomTable extends StatelessWidget {
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12), topRight: Radius.circular(32)),
           ),
-          child: Text(title),
+          child: Text(title,
+              style: TextStyle(color: colors.customTableHeaderColor)),
         ),
         Container(
-          color: colors.buttonColor,
+          color: colors.customTableBackground,
           child: Table(
             border: TableBorder(
               left: BorderSide(color: colors.cardColorSecondary),
@@ -72,7 +74,8 @@ class CustomTable extends StatelessWidget {
 
   TableRow _buildTableRow(List<String> cells, BuildContext context,
       {bool isHeader = false, bool isHighlighted = false}) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return TableRow(
       decoration: isHighlighted
@@ -81,7 +84,8 @@ class CustomTable extends StatelessWidget {
               color: colors.buttonColor,
               boxShadow: [
                 BoxShadow(
-                  color: colors.borderColorPrimary.withOpacity(0.5),
+                  color:
+                      colors.borderColorPrimary.withAlpha((0.5 * 255).round()),
                   spreadRadius: 1,
                   blurRadius: 4,
                   offset: const Offset(1, 2),
@@ -97,7 +101,9 @@ class CustomTable extends StatelessWidget {
               cell,
               maxLines: 1,
               style: TextStyle(
-                color: isHeader ? Colors.black54 : Colors.black87,
+                color: isHeader
+                    ? colors.customTableHeaderFontColor
+                    : colors.customTableCellFontColor,
                 fontWeight: isHighlighted ? FontWeight.bold : FontWeight.normal,
                 fontSize: isHeader ? 12 : 14,
               ),

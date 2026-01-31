@@ -36,7 +36,8 @@ class _MCQQuestionWidgetV1State extends State<MCQQuestionWidgetV1> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
@@ -80,7 +81,8 @@ class _MCQQuestionWidgetV1State extends State<MCQQuestionWidgetV1> {
   }
 
   Widget optionWidget(String option, BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final isSelected = selectedOptions.contains(option);
 
     return InkWell(

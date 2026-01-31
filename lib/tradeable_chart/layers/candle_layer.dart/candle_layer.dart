@@ -36,10 +36,10 @@ class CandleLayer extends ChartLayer {
         candleColor = const Color(0xff278829);
       } else if (candle.isSelected) {
         if (layer.areCandlesPreSelected) {
-          shadowColor = shadowColor.withOpacity(0.5);
+          shadowColor = shadowColor.withAlpha((0.5 * 255).round());
           candleColor = Colors.red;
         } else {
-          candleColor = const Color(0xffF14687).withOpacity(0.5);
+          candleColor = const Color(0xffF14687).withAlpha((0.5 * 255).round());
         }
       } else {
         if (layer.areCandlesPreSelected) {

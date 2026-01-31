@@ -58,7 +58,7 @@ class _ImageMcqState extends State<ImageMcq> {
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
                 color: (model.userResponse ?? "").isNotEmpty
-                    ? colors.primary
+                    ? colors.primaryButtonColor
                     : colors.secondary,
                 btnContent: "Next",
                 onTap: () {

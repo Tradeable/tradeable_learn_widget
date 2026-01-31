@@ -32,7 +32,8 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
@@ -42,7 +43,7 @@ class _LineMCQQuestionWidgetState extends State<LineMCQQuestionWidget> {
           const SizedBox(height: 20),
           ButtonWidget(
               color: widget.model.userResponse.isNotEmpty
-                  ? colors.primary
+                  ? colors.primaryButtonColor
                   : colors.secondary,
               btnContent: 'Next',
               onTap: () {
@@ -101,8 +102,10 @@ class QuizQuestionOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return InkWell(
       onTap: () {

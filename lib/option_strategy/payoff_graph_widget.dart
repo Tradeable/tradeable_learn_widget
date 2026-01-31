@@ -154,11 +154,11 @@ class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
                               ? Theme.of(context)
                                   .customColors
                                   .bullishColor
-                                  .withOpacity(0.5)
+                                  .withAlpha((0.5 * 255).round())
                               : Theme.of(context)
                                   .customColors
                                   .bearishColor
-                                  .withOpacity(0.5);
+                                  .withAlpha((0.5 * 255).round());
                         },
                       ),
                     ),
@@ -170,13 +170,13 @@ class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
                       //     spots: widget.helper.expirationPnLvalues,
                       //     belowBarData: BarAreaData(
                       //       show: true,
-                      //       color: Colors.green.withOpacity(0.2),
+                      //       color: Colors.green.withAlpha((0.2 * 255).round()),
                       //       cutOffY: 0,
                       //       applyCutOffY: true,
                       //     ),
                       //     aboveBarData: BarAreaData(
                       //         show: true,
-                      //         color: Colors.red.withOpacity(0.2),
+                      //         color: Colors.red.withAlpha((0.2 * 255).round()),
                       //         cutOffY: 0,
                       //         applyCutOffY: true)),
                       ...widget.helper.expirationPnLSegments.map(
@@ -190,13 +190,15 @@ class _PayoffGraphWidgetState extends State<PayoffGraphWidget> {
                               spots: e,
                               belowBarData: BarAreaData(
                                 show: true,
-                                color: Colors.green.withOpacity(0.2),
+                                color:
+                                    Colors.green.withAlpha((0.2 * 255).round()),
                                 cutOffY: 0,
                                 applyCutOffY: true,
                               ),
                               aboveBarData: BarAreaData(
                                   show: true,
-                                  color: Colors.red.withOpacity(0.2),
+                                  color:
+                                      Colors.red.withAlpha((0.2 * 255).round()),
                                   cutOffY: 0,
                                   applyCutOffY: true));
                         },

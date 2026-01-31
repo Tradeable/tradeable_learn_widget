@@ -215,10 +215,6 @@ class OrderScreenState extends State<OrderScreen> {
                                 true
                         ? () {
                             widget.onNextClick();
-                            final orderData =
-                                orderWidgetKey.currentState?.getOrderData();
-                            print('Order Data: $orderData');
-
                             if (widget.model.tutorialMode) {
                               // Handle tutorial completion
                               final isLastStep =

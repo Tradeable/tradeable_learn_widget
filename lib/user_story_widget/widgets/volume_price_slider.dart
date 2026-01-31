@@ -71,8 +71,10 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
   @override
   Widget build(BuildContext context) {
     final currentText = widget.textData[_sliderValue];
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -128,8 +130,8 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
           const SizedBox(height: 20),
           Text(widget.title, style: textStyles.mediumNormal),
           Text(widget.prompt,
-              style: textStyles.smallNormal
-                  .copyWith(color: colors.axisColor.withOpacity(0.7))),
+              style: textStyles.smallNormal.copyWith(
+                  color: colors.axisColor.withAlpha((0.7 * 255).round()))),
           const SizedBox(height: 10),
           Slider(
             value: _sliderValue.toDouble(),
@@ -151,8 +153,8 @@ class _VolumePriceSliderState extends State<VolumePriceSlider> {
           const SizedBox(height: 10),
           Text("Interpretation", style: textStyles.mediumNormal),
           Text(currentText.interpretation,
-              style: textStyles.smallNormal
-                  .copyWith(color: colors.axisColor.withOpacity(0.7))),
+              style: textStyles.smallNormal.copyWith(
+                  color: colors.axisColor.withAlpha((0.7 * 255).round()))),
         ],
       ),
     );

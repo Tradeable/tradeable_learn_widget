@@ -190,7 +190,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
       case CandleSelectState.loadUI:
         return ButtonWidget(
             color: model.selectedCandles.isNotEmpty
-                ? colors.primary
+                ? colors.primaryButtonColor
                 : colors.secondary,
             btnContent: "Submit",
             onTap: () {
@@ -200,7 +200,7 @@ class _CandleSelectQuestionState extends State<CandleSelectQuestion> {
             });
       case CandleSelectState.submitResponse:
         return ButtonWidget(
-            color: colors.primary,
+            color: colors.primaryButtonColor,
             btnContent: "Next",
             onTap: () {
               showModalBottomSheet(

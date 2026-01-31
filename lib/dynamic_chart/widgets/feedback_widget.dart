@@ -28,7 +28,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
       padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        color: colors.containerColor,
+        color: colors.feedbackWidgetBG,
       ),
       child: Row(
         children: [
@@ -50,8 +50,8 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
       height: 28,
       width: 28,
       margin: const EdgeInsets.all(4),
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color: colors.feedbackWidgetIconBorder,
         shape: BoxShape.circle,
       ),
       child: Container(
@@ -62,7 +62,7 @@ class _FeedbackWidgetState extends State<FeedbackWidget> {
         ),
         child: IconButton(
           padding: EdgeInsets.zero,
-          icon: Icon(icon, color: colors.cardBasicBackground, size: 14),
+          icon: Icon(icon, color: colors.feedbackWidgetIconBorder, size: 14),
           tooltip: "Provide feedback",
           onPressed: () => _showFeedbackDialog(context),
         ),

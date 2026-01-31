@@ -45,7 +45,7 @@ class _CandleBodySelectState extends State<CandleBodySelect> {
           child: ButtonWidget(
             color: (model.userResponse ?? "").isEmpty
                 ? colors.secondary
-                : colors.primary,
+                : colors.primaryButtonColor,
             btnContent: "Submit",
             onTap: submitResponse,
           ),

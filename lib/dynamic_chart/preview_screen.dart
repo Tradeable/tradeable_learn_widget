@@ -822,7 +822,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     return Container(
       height: 56,
       padding: const EdgeInsets.all(2),
-      color: colors.strikePriceColumnColor,
+      color: colors.strikePriceHeaderColor,
       alignment: Alignment.center,
       child: AutoSizeText(
         strikeColumn.columnTitle,
@@ -889,7 +889,7 @@ class PreviewScreenState extends State<PreviewScreen> {
             selectionMode: selectionMode,
           );
 
-          cellColor ??= colors.strikePriceColumnColor;
+          cellColor ??= colors.strikePriceCellColor;
 
           return Container(
             height: cellHeight,
@@ -938,7 +938,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     );
 
     if (column.columnType == ColumnType.strike && cellColor == null) {
-      cellColor = colors.strikePriceColumnColor;
+      cellColor = colors.strikePriceHeaderColor;
     }
 
     bool isSelectable = _isCellSelectable(
@@ -1008,7 +1008,7 @@ class PreviewScreenState extends State<PreviewScreen> {
     if (strikePrice != null && strikeColumnIndex != null) {
       if (currentRowStrike < strikePrice &&
           actualColumnIndex < strikeColumnIndex) {
-        cellColor = colors.selectedRowColor.withAlpha((0.1 * 255).round());
+        cellColor = colors.selectedRowColor;
       } else if (currentRowStrike > strikePrice &&
           actualColumnIndex > strikeColumnIndex) {
         cellColor = colors.incorrectRowColor.withAlpha((0.1 * 255).round());
@@ -1081,7 +1081,7 @@ class PreviewScreenState extends State<PreviewScreen> {
               !widget.previewData.correctRowIndices.contains(rowIndex)) {
             cellColor = colors.incorrectRowColor.withAlpha((0.2 * 255).round());
           } else {
-            cellColor = colors.selectedRowColor.withAlpha((0.2 * 255).round());
+            cellColor = colors.selectedRowColor.withAlpha((0.4 * 255).round());
           }
         }
       }

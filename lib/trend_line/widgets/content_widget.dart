@@ -13,8 +13,10 @@ class ContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
@@ -33,7 +35,7 @@ class ContentWidget extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: 'Next',
               onTap: () {
                 moveNext();

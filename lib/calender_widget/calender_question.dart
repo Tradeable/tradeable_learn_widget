@@ -30,7 +30,8 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Center(
       child: Column(
@@ -82,11 +83,12 @@ class _CalenderQuestionState extends State<CalenderQuestion> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
-              color:
-                  selectedDates.isNotEmpty ? colors.primary : colors.secondary,
+              color: selectedDates.isNotEmpty
+                  ? colors.primaryButtonColor
+                  : colors.secondary,
               btnContent: "Submit",
               onTap: () {
-                if(selectedDates.isNotEmpty) {
+                if (selectedDates.isNotEmpty) {
                   widget.onNextClick();
                 }
               },

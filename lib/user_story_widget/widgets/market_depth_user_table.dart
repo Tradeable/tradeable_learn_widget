@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/user_story_widget/models/table_model.dart';
 import 'package:tradeable_learn_widget/user_story_widget/widgets/custom_table.dart';
+import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class MarketDepthTableWidget extends StatelessWidget {
   final String title;
@@ -18,6 +20,9 @@ class MarketDepthTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
     List<Widget> tables = tableData.map((tableEntry) {
       final headers = ['Bid', 'Orders', 'Qty'];
 
@@ -39,7 +44,7 @@ class MarketDepthTableWidget extends StatelessWidget {
               tableEntry.tableColors.map((e) => Color(int.parse(e))).toList(),
           footerLabel: 'Total Orders',
           footerValue: tableEntry.totalValue,
-          footerValueColor: Colors.black,
+          footerValueColor: colors.marketDepthFooterValue,
           highlightedRowData: highlightedRowData,
         ),
       );

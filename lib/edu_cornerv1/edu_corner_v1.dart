@@ -32,8 +32,10 @@ class _EduCornerV1State extends State<EduCornerV1> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Stack(
@@ -71,11 +73,10 @@ class _EduCornerV1State extends State<EduCornerV1> {
               ),
               const Spacer(),
               Padding(
-                padding:
-                    const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: ButtonWidget(
                   color: currentPage == model.cards.length - 1
-                      ? colors.primary
+                      ? colors.primaryButtonColor
                       : colors.secondary,
                   btnContent: "Next",
                   onTap: () {
@@ -129,7 +130,8 @@ class _EduCornerV1State extends State<EduCornerV1> {
   }
 
   Widget renderTitle(String title) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return title.isEmpty
         ? Container()
@@ -170,8 +172,10 @@ class _EduCornerV1State extends State<EduCornerV1> {
   }
 
   Widget buildimageTextCard(EduCornerContent card) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return LayoutBuilder(builder: ((context, constraints) {
       return Column(
@@ -298,7 +302,8 @@ class _EduCornerV1State extends State<EduCornerV1> {
   }
 
   Widget videoButton(String? videoId) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     if (videoId == "" || videoId == null) {
       return Container();

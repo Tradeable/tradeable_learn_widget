@@ -28,8 +28,10 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       children: [
@@ -166,7 +168,9 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-            color: model.options.isEmpty ? colors.primary : colors.secondary,
+            color: model.options.isEmpty
+                ? colors.primaryButtonColor
+                : colors.secondary,
             btnContent: "Next",
             onTap: () {
               if (model.options.isEmpty) {
@@ -180,8 +184,10 @@ class _FormulaPlaceholderWidgetState extends State<FormulaPlaceholderWidget> {
   }
 
   Widget buildDraggableItem(String text) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Material(
       child: Container(

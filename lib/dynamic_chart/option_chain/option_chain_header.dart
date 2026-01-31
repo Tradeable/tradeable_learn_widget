@@ -76,7 +76,7 @@ class OptionChainHeader extends StatelessWidget {
             borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16)),
-            color: colors.containerColor),
+            color: colors.optionChainTickerBg),
         child: Text("Nifty 50", style: textStyles.smallBold));
   }
 

@@ -20,7 +20,8 @@ class QuizQuestionOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return InkWell(
       onTap: () {
@@ -30,7 +31,7 @@ class QuizQuestionOption extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: colors.cardColorSecondary.withOpacity(0.1),
+              color: colors.cardColorSecondary.withAlpha((0.1 * 255).round()),
               border: Border.all(
                   color: selectedOption == option
                       ? correctResponse == option

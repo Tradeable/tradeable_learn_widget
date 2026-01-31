@@ -38,8 +38,10 @@ class _RangeGridSliderWidgetState extends State<RatingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return LayoutBuilder(builder: (context, constraints) {
       return Column(
@@ -178,7 +180,9 @@ class _RangeGridSliderWidgetState extends State<RatingWidget> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
-                color: draggedMedal != null ? colors.primary : colors.secondary,
+                color: draggedMedal != null
+                    ? colors.primaryButtonColor
+                    : colors.secondary,
                 btnContent: "Next",
                 onTap: () {
                   if (draggedMedal != null) {

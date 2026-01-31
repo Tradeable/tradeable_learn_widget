@@ -120,7 +120,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-            color: colors.primary,
+            color: colors.primaryButtonColor,
             btnContent: "Next",
             onTap: () {
               if (currentIndex == 1) {
@@ -169,7 +169,7 @@ class _DemandSuplyEduCornerMain extends State<DemandSuplyEduCornerMain> {
                       Text(infoContent, style: textStyles.smallNormal),
                       const SizedBox(height: 20),
                       ButtonWidget(
-                        color: colors.primary,
+                        color: colors.primaryButtonColor,
                         btnContent: "Okay",
                         onTap: () {
                           Navigator.of(context).pop();

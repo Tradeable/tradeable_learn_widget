@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tradeable_learn_widget/expandable_edutile_widget/expandable_edutile_model.dart';
 import 'package:tradeable_learn_widget/tradeable_learn_widget.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
 import 'package:tradeable_learn_widget/utils/info_bottom_sheet.dart';
@@ -28,8 +27,10 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
     return Stack(
       children: [
         Padding(
@@ -108,7 +109,7 @@ class _ExpandableEduTileMainState extends State<ExpandableEduTileMain> {
               SizedBox(
                 height: 50,
                 child: ButtonWidget(
-                  color: colors.primary,
+                  color: colors.primaryButtonColor,
                   btnContent: "Next",
                   onTap: () {
                     showModalBottomSheet(
@@ -179,8 +180,10 @@ class _ExpandableEduTileState extends State<ExpandableEduTile> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),

@@ -26,8 +26,10 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Stack(
       fit: StackFit.passthrough,
@@ -95,7 +97,7 @@ class _IndexPageState extends State<IndexPage> {
             height: 70,
             padding: const EdgeInsets.all(16),
             child: ButtonWidget(
-                color: colors.primary,
+                color: colors.primaryButtonColor,
                 btnContent: "Next",
                 onTap: () {
                   widget.onNextClick();

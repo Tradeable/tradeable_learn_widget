@@ -255,9 +255,14 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         });
         break;
       case TaskType.popUpTask:
+        final colors =
+            TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
         WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((c) {
           showDialog(
               context: context,
+              barrierColor:
+                  colors.dynamicChartBlurBg.withAlpha((0.5 * 255).round()),
               builder: (context) {
                 ShowPopupTask task = currentTask as ShowPopupTask;
                 return CustomDialogWidget(
@@ -272,10 +277,15 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         break;
       case TaskType.showBottomSheet:
+        final colors =
+            TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
         WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((c) {
           showModalBottomSheet(
               context: context,
               isScrollControlled: true,
+              barrierColor:
+                  colors.dynamicChartBlurBg.withAlpha((0.5 * 255).round()),
               builder: (context) {
                 ShowBottomSheetTask task = currentTask as ShowBottomSheetTask;
                 return CustomBottomSheetWidget(
@@ -598,7 +608,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         return mcqWidget();
       case TaskType.waitTask:
         return ButtonWidget(
-          color: colors.primary,
+          color: colors.primaryButtonColor,
           btnContent: (currentTask as WaitTask).btnText,
           onTap: () => onTaskFinish(),
         );
@@ -684,7 +694,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: colors.cardBasicBackground,
+        color: colors.dynamicChartInstructionBG,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -733,7 +743,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                             padding: const EdgeInsets.all(6),
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: colors.containerColor,
+                                              color: colors.feedbackWidgetBG,
                                             ),
                                             child: SvgPicture.asset(
                                               "assets/instruction_hint.svg",
@@ -803,17 +813,17 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                                 horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                                 color: currentPageIndex == tabs.indexOf(tab)
-                                    ? colors.borderColorPrimary
-                                    : colors.cardBasicBackground,
+                                    ? colors.dynamicChartActiveTabColor
+                                    : colors.dynamicChartInactiveTabColor,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                    color: colors.borderColorSecondary)),
+                                    color: colors.dynamicChartTabBorderColor)),
                             child: Text(
                               tab["title"] ?? "",
                               style: textStyles.smallNormal.copyWith(
                                 color: currentPageIndex == tabs.indexOf(tab)
-                                    ? colors.cardColorPrimary
-                                    : colors.axisColor,
+                                    ? colors.dynamicChartActiveTextColor
+                                    : colors.dynamicChartInactiveTextColor,
                               ),
                             ),
                           ),

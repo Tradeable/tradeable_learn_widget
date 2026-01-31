@@ -268,15 +268,16 @@ class AppTheme {
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: customColors.sliderColor,
-        inactiveTrackColor: customColors.sliderColor.withOpacity(0.3),
+        inactiveTrackColor:
+            customColors.sliderColor.withAlpha((0.3 * 255).round()),
         thumbColor: customColors.sliderColor,
-        overlayColor: customColors.sliderColor.withOpacity(0.2),
+        overlayColor: customColors.sliderColor.withAlpha((0.2 * 255).round()),
         valueIndicatorColor: customColors.sliderColor,
         valueIndicatorTextStyle: const TextStyle(color: Colors.white),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return customColors.primary;
           }
           return null;
@@ -284,25 +285,25 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return customColors.primary;
           }
           return null;
         }),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return customColors.primary;
           }
           return Colors.grey;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
-            return customColors.primary.withOpacity(0.5);
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return customColors.primary.withAlpha((0.5 * 255).round());
           }
-          return Colors.grey.withOpacity(0.5);
+          return Colors.grey.withAlpha((0.5 * 255).round());
         }),
       ),
       tabBarTheme: TabBarThemeData(
@@ -313,7 +314,7 @@ class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(
-        color: customColors.borderColorSecondary.withOpacity(0.5),
+        color: customColors.borderColorSecondary.withAlpha((0.5 * 255).round()),
         thickness: 1,
         space: 1,
       ),
@@ -453,15 +454,16 @@ class AppTheme {
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: customColors.sliderColor,
-        inactiveTrackColor: customColors.sliderColor.withOpacity(0.3),
+        inactiveTrackColor:
+            customColors.sliderColor.withAlpha((0.3 * 255).round()),
         thumbColor: customColors.sliderColor,
-        overlayColor: customColors.sliderColor.withOpacity(0.2),
+        overlayColor: customColors.sliderColor.withAlpha((0.2 * 255).round()),
         valueIndicatorColor: customColors.sliderColor,
         valueIndicatorTextStyle: const TextStyle(color: Colors.white),
       ),
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return customColors.primary;
           }
           return null;
@@ -469,25 +471,25 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
       radioTheme: RadioThemeData(
-        fillColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return customColors.primary;
           }
           return null;
         }),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
             return customColors.primary;
           }
           return Colors.grey;
         }),
-        trackColor: MaterialStateProperty.resolveWith((states) {
-          if (states.contains(MaterialState.selected)) {
-            return customColors.primary.withOpacity(0.5);
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return customColors.primary.withAlpha((0.5 * 255).round());
           }
-          return Colors.grey.withOpacity(0.5);
+          return Colors.grey.withAlpha((0.5 * 255).round());
         }),
       ),
       tabBarTheme: TabBarThemeData(
@@ -498,7 +500,7 @@ class AppTheme {
         ),
       ),
       dividerTheme: DividerThemeData(
-        color: Colors.grey.withOpacity(0.3),
+        color: Colors.grey.withAlpha((0.3 * 255).round()),
         thickness: 1,
         space: 1,
       ),
@@ -532,8 +534,10 @@ class AppTheme {
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: customColors.primary,
-        circularTrackColor: customColors.cardColorPrimary.withOpacity(0.5),
-        linearTrackColor: customColors.cardColorPrimary.withOpacity(0.5),
+        circularTrackColor:
+            customColors.cardColorPrimary.withAlpha((0.5 * 255).round()),
+        linearTrackColor:
+            customColors.cardColorPrimary.withAlpha((0.5 * 255).round()),
       ),
     );
   }

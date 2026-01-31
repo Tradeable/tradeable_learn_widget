@@ -35,7 +35,8 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -79,8 +80,10 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
   }
 
   Widget optionWidget(String option, BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     final isSelected = selectedOptions.contains(option);
 
     return InkWell(
@@ -91,7 +94,7 @@ class _MCQQuestionWidgetState extends State<MCQQuestionWidget> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: isSelected
-              ? colors.selectedItemColor.withOpacity(0.1)
+              ? colors.selectedItemColor.withAlpha((0.1 * 255).round())
               : colors.buttonColor,
           border: Border.all(
               color: isSelected

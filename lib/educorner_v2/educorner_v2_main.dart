@@ -197,8 +197,9 @@ class _EduCornerV2Main extends State<EduCornerV2Main> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ButtonWidget(
-        color:
-            currentPage == items.length - 1 ? colors.primary : colors.secondary,
+        color: currentPage == items.length - 1
+            ? colors.primaryButtonColor
+            : colors.secondary,
         btnContent: "Next",
         onTap: () {
           if (currentPage == items.length - 1) {

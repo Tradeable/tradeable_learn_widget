@@ -167,7 +167,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                     ? Padding(
                         padding: const EdgeInsets.all(16),
                         child: ButtonWidget(
-                            color: colors.primary,
+                            color: colors.primaryButtonColor,
                             btnContent: "Submit",
                             onTap: submit),
                       )
@@ -288,7 +288,7 @@ class _CandleFormationV2MainState extends State<CandleFormationV2Main>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
                   child: ButtonWidget(
-                      color: colors.primary,
+                      color: colors.primaryButtonColor,
                       btnContent: "Next",
                       onTap: () {
                         widget.onNextClick();

@@ -18,8 +18,10 @@ class BuildTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return Container(
       decoration: BoxDecoration(
@@ -64,9 +66,9 @@ class BuildTable extends StatelessWidget {
                 (index) => TableCell(
                   child: Container(
                     color: i < 4 && !isReversed
-                        ? colors.buttonColor.withOpacity(0.5)
+                        ? colors.buttonColor.withAlpha((0.5 * 255).round())
                         : i > 3 && isReversed
-                            ? colors.buttonColor.withOpacity(0.5)
+                            ? colors.buttonColor.withAlpha((0.5 * 255).round())
                             : bgColor,
                     padding: const EdgeInsets.all(4), // Adjust padding here
                     child: Text('', style: textStyles.smallNormal),

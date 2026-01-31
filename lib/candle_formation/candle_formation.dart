@@ -123,7 +123,8 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
   }
 
   Widget renderSubmitBtn() {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     switch (model.state) {
       case CandleFormationState.loadUI:
@@ -132,7 +133,7 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
           child: ButtonWidget(
               color: model.selectedOptions.length < 3
                   ? colors.secondary
-                  : colors.primary,
+                  : colors.primaryButtonColor,
               btnContent: "Submit",
               onTap: () {
                 if (model.selectedOptions.length >= 3) {
@@ -144,7 +145,7 @@ class _CandlePartMatchLinkState extends State<CandleFormation> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
           child: ButtonWidget(
-              color: colors.primary,
+              color: colors.primaryButtonColor,
               btnContent: "Next",
               onTap: () {
                 widget.onNextClick();

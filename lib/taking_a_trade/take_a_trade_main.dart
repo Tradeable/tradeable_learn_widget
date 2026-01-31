@@ -6,7 +6,7 @@ class TakeATradeMain extends StatefulWidget {
   const TakeATradeMain({super.key, required this.workflowJson});
 
   @override
-  _TakeATradeMainState createState() => _TakeATradeMainState();
+  State<StatefulWidget> createState() => _TakeATradeMainState();
 }
 
 class _TakeATradeMainState extends State<TakeATradeMain> {
@@ -78,8 +78,8 @@ class _TakeATradeMainState extends State<TakeATradeMain> {
 
   void _handleTakeTradeButton() {
     // Find the text fields step
-    var textFieldsStep = widget.workflowJson['steps']
-        .firstWhere((step) => step['stepId'] == '5');
+    // var textFieldsStep = widget.workflowJson['steps']
+    //     .firstWhere((step) => step['stepId'] == '5');
 
     // Show bottom sheet with text fields
     showModalBottomSheet(

@@ -21,8 +21,10 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
     SliderPoint currentPoint =
         widget.sliderData.sliderPoints[_currentIndex.toInt()];
 
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +36,8 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
               color: colors.cardBasicBackground,
               boxShadow: [
                 BoxShadow(
-                    color: colors.borderColorSecondary.withOpacity(0.6),
+                    color: colors.borderColorSecondary
+                        .withAlpha((0.6 * 255).round()),
                     spreadRadius: 0.4)
               ],
               borderRadius: BorderRadius.circular(10),
@@ -93,8 +96,10 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
   }
 
   Widget buildDataPoints(String title, String value) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),

@@ -70,7 +70,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
                   ? SizedBox(
                       width: double.infinity,
                       child: ButtonWidget(
-                          color: colors.primary,
+                          color: colors.primaryButtonColor,
                           btnContent: task.primaryButtonText,
                           onTap: () => moveNext()))
                   : Row(
@@ -89,15 +89,15 @@ class CustomBottomSheetWidget extends StatelessWidget {
                             child: Center(
                               child: Text(
                                   task.secondaryButtonText ?? "Continue",
-                                  style: textStyles.mediumBold.copyWith(
-                                      fontSize: 16, color: colors.primary)),
+                                  style: textStyles.mediumBold
+                                      .copyWith(fontSize: 16)),
                             ),
                           ),
                         )),
                         const SizedBox(width: 8),
                         Expanded(
                             child: ButtonWidget(
-                                color: colors.primary,
+                                color: colors.primaryButtonColor,
                                 btnContent: task.primaryButtonText,
                                 onTap: () => moveNext())),
                       ],

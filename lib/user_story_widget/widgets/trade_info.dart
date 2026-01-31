@@ -17,8 +17,10 @@ class TradeInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -30,21 +32,21 @@ class TradeInfo extends StatelessWidget {
           Row(
             children: [
               Text("Limit Price:",
-                  style: textStyles.smallNormal
-                      .copyWith(color: colors.axisColor.withOpacity(0.8))),
+                  style: textStyles.smallNormal.copyWith(
+                      color: colors.axisColor.withAlpha((0.8 * 255).round()))),
               const SizedBox(width: 14),
               Text(limitPrice, style: textStyles.smallNormal),
               const Spacer(),
               Text("Status",
-                  style: textStyles.smallNormal
-                      .copyWith(color: colors.axisColor.withOpacity(0.8)))
+                  style: textStyles.smallNormal.copyWith(
+                      color: colors.axisColor.withAlpha((0.8 * 255).round())))
             ],
           ),
           Row(
             children: [
               Text("Quantity:",
-                  style: textStyles.smallNormal
-                      .copyWith(color: colors.axisColor.withOpacity(0.8))),
+                  style: textStyles.smallNormal.copyWith(
+                      color: colors.axisColor.withAlpha((0.8 * 255).round()))),
               const SizedBox(width: 14),
               Text(quantity, style: textStyles.smallNormal),
               const Spacer(),

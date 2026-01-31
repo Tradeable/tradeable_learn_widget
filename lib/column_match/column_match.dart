@@ -96,7 +96,9 @@ class _ColumnMatchState extends State<ColumnMatch> {
         Padding(
           padding: const EdgeInsets.all(16),
           child: ButtonWidget(
-            color: answeredAllCorrectly() ? colors.primary : colors.secondary,
+            color: answeredAllCorrectly()
+                ? colors.primaryButtonColor
+                : colors.secondary,
             btnContent: "Next",
             onTap: () {
               widget.onNextClick();

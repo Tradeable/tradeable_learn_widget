@@ -17,8 +17,10 @@ class BricksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     double brickHeight = constraints.maxHeight / (values.length * 2 + 1);
 
@@ -35,7 +37,8 @@ class BricksWidget extends StatelessWidget {
             BricksContainer(
               height: brickHeight,
               width: (i % 2 == 0) ? brickWidth1 : brickWidth2 - 30,
-              borderColor: colors.borderColorPrimary.withOpacity(0.4),
+              borderColor:
+                  colors.borderColorPrimary.withAlpha((0.4 * 255).round()),
               containerColor: colors.cardColorPrimary,
               removeLeftBorder: true,
             ),
@@ -117,12 +120,16 @@ class BricksContainer extends StatelessWidget {
         border: Border(
           top: removeTopBorder
               ? BorderSide.none
-              : BorderSide(color: borderColor.withOpacity(0.4), width: 2),
-          right: BorderSide(color: borderColor.withOpacity(0.4), width: 2),
-          bottom: BorderSide(color: borderColor.withOpacity(0.4), width: 2),
+              : BorderSide(
+                  color: borderColor.withAlpha((0.4 * 255).round()), width: 2),
+          right: BorderSide(
+              color: borderColor.withAlpha((0.4 * 255).round()), width: 2),
+          bottom: BorderSide(
+              color: borderColor.withAlpha((0.4 * 255).round()), width: 2),
           left: removeLeftBorder
               ? BorderSide.none
-              : BorderSide(color: borderColor.withOpacity(0.4), width: 2),
+              : BorderSide(
+                  color: borderColor.withAlpha((0.4 * 255).round()), width: 2),
         ),
       ),
     );
@@ -145,8 +152,10 @@ class ValueWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = TLW().themeData?.customColors ?? Theme.of(context).customColors;
-    final textStyles = TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+    final colors =
+        TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
     return value.model.isQuestion
         ? buildDragTarget(value)
@@ -158,16 +167,20 @@ class ValueWidget extends StatelessWidget {
               color: colors.cardColorPrimary,
               border: Border(
                 top: BorderSide(
-                    color: colors.borderColorPrimary.withOpacity(0.4),
+                    color: colors.borderColorPrimary
+                        .withAlpha((0.4 * 255).round()),
                     width: 2),
                 right: BorderSide(
-                    color: colors.borderColorPrimary.withOpacity(0.4),
+                    color: colors.borderColorPrimary
+                        .withAlpha((0.4 * 255).round()),
                     width: 3),
                 bottom: BorderSide(
-                    color: colors.borderColorPrimary.withOpacity(0.4),
+                    color: colors.borderColorPrimary
+                        .withAlpha((0.4 * 255).round()),
                     width: 2),
                 left: BorderSide(
-                    color: colors.borderColorPrimary.withOpacity(0.4),
+                    color: colors.borderColorPrimary
+                        .withAlpha((0.4 * 255).round()),
                     width: 2),
               ),
             ),

@@ -54,7 +54,7 @@ class _CandlePartMatchLinkState extends State<CandlePartMatchLink> {
             child: ButtonWidget(
                 color: model.state == CandlePartMatchLinkState.loadUI
                     ? colors.secondary
-                    : colors.primary,
+                    : colors.primaryButtonColor,
                 btnContent: "Submit",
                 onTap: () {
                   submitResponse();
