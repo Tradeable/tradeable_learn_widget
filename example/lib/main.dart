@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       initialRoute: "/homeIntermediate",
       routes: {
         "/": (context) => const TradeableWidgetDemoPage(),

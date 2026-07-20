@@ -6,7 +6,29 @@ import 'package:fin_chart/models/tasks/add_indicator.task.dart';
 import 'package:fin_chart/models/tasks/add_layer.task.dart';
 import 'package:fin_chart/models/tasks/add_option_chain.task.dart';
 import 'package:fin_chart/models/tasks/add_prompt.task.dart';
+import 'package:fin_chart/models/tasks/add_remove_tools.task.dart';
+import 'package:fin_chart/models/tasks/show_tools.task.dart';
+import 'package:fin_chart/models/tasks/toggle_tool_visibility.task.dart';
 import 'package:fin_chart/models/enums/task_type.dart';
+import 'package:fin_chart/models/enums/layer_type.dart';
+import 'package:fin_chart/models/indicators/indicator.dart';
+import 'package:fin_chart/models/indicators/pivot_point.dart';
+import 'package:fin_chart/models/indicators/pe.dart';
+import 'package:fin_chart/models/indicators/pb.dart';
+import 'package:fin_chart/models/indicators/supertrend.dart';
+import 'package:fin_chart/models/indicators/vwap.dart';
+import 'package:fin_chart/models/indicators/ev_ebitda.dart';
+import 'package:fin_chart/models/indicators/ev_sales.dart';
+import 'package:fin_chart/models/indicators/scanner_indicator.dart';
+import 'package:fin_chart/models/indicators/roc.dart';
+import 'package:fin_chart/models/layers/label.dart';
+import 'package:fin_chart/models/layers/trend_line.dart';
+import 'package:fin_chart/models/layers/horizontal_line.dart';
+import 'package:fin_chart/models/layers/rect_area.dart';
+import 'package:fin_chart/models/layers/circular_area.dart';
+import 'package:fin_chart/models/layers/arrow.dart';
+import 'package:fin_chart/models/layers/layer.dart';
+import 'package:fin_chart/models/sahi_tools_model.dart';
 import 'package:fin_chart/models/recipe.dart';
 import 'package:fin_chart/models/tasks/choose_bucket_rows_task.dart';
 import 'package:fin_chart/models/tasks/choose_correct_option_chain_task.dart';
@@ -22,6 +44,7 @@ import 'package:fin_chart/fin_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:tradeable_learn_widget/dynamic_chart/widgets/sahi_tools_bar.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_v2.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
@@ -79,6 +102,19 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   String? expandedSideNavId;
   late SideNavController sideNavController;
 
+  Map<String, GlobalKey<ChartState>> chartKeys = {};
+  GlobalKey<ChartState>? _activeChartKey;
+  ShowToolsTask? _currentShowToolsTask;
+  LayerType? _selectedLayerType;
+  List<Offset> drawPoints = [];
+  Offset? startingPoint;
+  // bool _isToolPanelOpen = false;
+  // OpenToolPanelTask? _currentToolPanelTask;
+  String? _activeChartId;
+  int _activeChartStartOffset = 0;
+  int _activeChartEndOffset = -1;
+  final Map<String, bool> _hasPlottedFirstChunk = {};
+
   @override
   void initState() {
     recipe = widget.model.recipe;
@@ -86,8 +122,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       currentTask = recipe.tasks.first;
       dd();
     }
-    tabs.add({"type": "chart", "title": "Chart"});
     sideNavController = SideNavController();
+    _activeChartKey = _chartKey;
     super.initState();
   }
 
@@ -100,24 +136,72 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
     switch (currentTask.taskType) {
       case TaskType.addData:
         AddDataTask task = currentTask as AddDataTask;
-        _chartKey.currentState
-            ?.addDataWithAnimation(
-                recipe.data.sublist(task.fromPoint, task.tillPoint),
-                const Duration(milliseconds: 10))
-            .then((value) {
-          if (value) {
-            onTaskFinish();
+        final chartKey =
+            task.chartId != null ? chartKeys[task.chartId] : _activeChartKey;
+        if (chartKey == null) {
+          onTaskFinish();
+          break;
+        }
+        final state = chartKey.currentState;
+        if (state == null) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            onTaskRun();
+          });
+          break;
+        }
+
+        int from = task.fromPoint;
+        int till = task.tillPoint;
+
+        final targetChartId = task.chartId ?? _activeChartId;
+        if (targetChartId != null) {
+          final chartTask = recipe.tasks
+              .whereType<AddChartTabTask>()
+              .where((t) => t.id == targetChartId)
+              .firstOrNull;
+          final startOffset = chartTask?.fromPoint ?? _activeChartStartOffset;
+          final endOffset = chartTask?.tillPoint ?? _activeChartEndOffset;
+
+          final isFirstChunk = _hasPlottedFirstChunk[targetChartId] != true;
+          if (isFirstChunk) {
+            from = startOffset;
+          } else if (from < startOffset) {
+            from = startOffset;
           }
+
+          if (endOffset >= 0 && till > endOffset) {
+            till = endOffset;
+          }
+        }
+
+        from = from.clamp(0, recipe.data.length);
+        till = till.clamp(from, recipe.data.length);
+        if (till <= from) {
+          onTaskFinish();
+          break;
+        }
+
+        state
+            .addDataWithAnimation(recipe.data.sublist(from, till),
+                const Duration(milliseconds: 10))
+            .then((_) {
+          if (targetChartId != null) {
+            _hasPlottedFirstChunk[targetChartId] = true;
+          }
+          onTaskFinish();
         });
         break;
       case TaskType.addIndicator:
         AddIndicatorTask task = currentTask as AddIndicatorTask;
-        _chartKey.currentState?.addIndicator(task.indicator);
+        final targetChartKey =
+            task.chartId != null ? chartKeys[task.chartId] : _activeChartKey;
+        targetChartKey?.currentState?.addIndicator(task.indicator);
         onTaskFinish();
         break;
       case TaskType.addLayer:
         AddLayerTask task = currentTask as AddLayerTask;
-        _chartKey.currentState?.addLayerAtRegion(task.regionId, task.layer);
+        _activeChartKey?.currentState
+            ?.addLayerAtRegion(task.regionId, task.layer);
         onTaskFinish();
         break;
       case TaskType.addPrompt:
@@ -134,7 +218,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         break;
       case TaskType.clearTask:
-        _chartKey.currentState?.clearChart();
+        final chartKey = _chartKeyForCurrentTab();
+        if (chartKey?.currentState != null) {
+          chartKey?.currentState?.clearChart();
+        }
         onTaskFinish();
         break;
       case TaskType.addOptionChain:
@@ -175,56 +262,122 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         payoffGraphTasks.add(task);
         onTaskFinish();
         break;
-      case TaskType.addTab:
+      case TaskType.addChartTab:
         setState(() {
-          final task = currentTask as AddTabTask;
-          previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
-
-          if (!tabs.any((tab) => tab["taskId"] == task.taskId)) {
-            if (recipe.tasks.any((t) =>
-                t is ChooseCorrectOptionValueChainTask &&
-                t.taskId == task.taskId)) {
-              tabs.add({
-                "type": "option_chain",
-                "title": task.tabTitle,
-                "taskId": task.taskId
-              });
-            } else if (recipe.tasks
-                .any((t) => t is ShowInsightsPageTask && t.id == task.taskId)) {
-              tabs.add({
-                "type": "insights",
-                "title": task.tabTitle,
-                "taskId": task.taskId,
-              });
-            } else if (recipe.tasks
-                .any((t) => t is TableTask && t.id == task.taskId)) {
-              tabs.add({
-                "type": "table",
-                "title": task.tabTitle,
-                "taskId": task.taskId,
-              });
-            } else if (recipe.tasks
-                .any((t) => t is ShowPayOffGraphTask && t.id == task.taskId)) {
-              tabs.add({
-                "type": "payoff",
-                "title": task.tabTitle,
-                "taskId": task.taskId
-              });
-            } else if (recipe.tasks.any(
-                (t) => t is ShowInsightsPageV2Task && t.id == task.taskId)) {
-              tabs.add({
-                "type": "insights_v2",
-                "title": task.tabTitle,
-                "taskId": task.taskId,
-              });
-            }
-          }
+          final task = currentTask as AddChartTabTask;
+          final chartKey = GlobalKey<ChartState>();
+          chartKeys[task.id] = chartKey;
+          _activeChartId = task.id;
+          _activeChartStartOffset = task.fromPoint;
+          _activeChartEndOffset = task.tillPoint;
+          _hasPlottedFirstChunk[task.id] = false;
+          _activeChartKey = chartKey;
         });
         onTaskFinish();
+        break;
+      case TaskType.addTab:
+        {
+          final task = currentTask as AddTabTask;
+
+          final chartTask = recipe.tasks
+              .whereType<AddChartTabTask>()
+              .where((t) => t.id == task.taskId)
+              .toList();
+
+          if (chartTask.isNotEmpty) {
+            int addedIndex = -1;
+            setState(() {
+              final existingIndex = tabs.indexWhere((tab) =>
+                  tab["type"] == "chart" && tab["taskId"] == task.taskId);
+              if (existingIndex == -1) {
+                tabs.add({
+                  "type": "chart",
+                  "title": task.tabTitle,
+                  "taskId": task.taskId,
+                });
+                addedIndex = tabs.length - 1;
+              } else {
+                addedIndex = existingIndex;
+              }
+            });
+            _activeChartKey = chartKeys[task.taskId];
+            if (addedIndex >= 0 && addedIndex != currentPageIndex) {
+              navigateToPage(addedIndex).then((_) {
+                onTaskFinish();
+              });
+            } else {
+              onTaskFinish();
+            }
+          } else {
+            int addedIndex = -1;
+            setState(() {
+              previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
+
+              if (!tabs.any((tab) => tab["taskId"] == task.taskId)) {
+                if (recipe.tasks.any((t) =>
+                    t is ChooseCorrectOptionValueChainTask &&
+                    t.taskId == task.taskId)) {
+                  tabs.add({
+                    "type": "option_chain",
+                    "title": task.tabTitle,
+                    "taskId": task.taskId
+                  });
+                  addedIndex = tabs.length - 1;
+                } else if (recipe.tasks.any(
+                    (t) => t is ShowInsightsPageTask && t.id == task.taskId)) {
+                  tabs.add({
+                    "type": "insights",
+                    "title": task.tabTitle,
+                    "taskId": task.taskId,
+                  });
+                  addedIndex = tabs.length - 1;
+                } else if (recipe.tasks
+                    .any((t) => t is TableTask && t.id == task.taskId)) {
+                  tabs.add({
+                    "type": "table",
+                    "title": task.tabTitle,
+                    "taskId": task.taskId,
+                  });
+                  addedIndex = tabs.length - 1;
+                } else if (recipe.tasks.any(
+                    (t) => t is ShowPayOffGraphTask && t.id == task.taskId)) {
+                  tabs.add({
+                    "type": "payoff",
+                    "title": task.tabTitle,
+                    "taskId": task.taskId
+                  });
+                  addedIndex = tabs.length - 1;
+                } else if (recipe.tasks.any((t) =>
+                    t is ShowInsightsPageV2Task && t.id == task.taskId)) {
+                  tabs.add({
+                    "type": "insights_v2",
+                    "title": task.tabTitle,
+                    "taskId": task.taskId,
+                  });
+                  addedIndex = tabs.length - 1;
+                }
+              }
+            });
+            if (addedIndex >= 0 && addedIndex != currentPageIndex) {
+              navigateToPage(addedIndex).then((_) {
+                onTaskFinish();
+              });
+            } else {
+              onTaskFinish();
+            }
+          }
+        }
         break;
       case TaskType.removeTab:
         setState(() {
           final task = currentTask as RemoveTabTask;
+          final removedTab = tabs.firstWhere(
+            (tab) => tab["title"] == task.tabTitle,
+            orElse: () => {},
+          );
+          if (removedTab["type"] == "chart" && removedTab["taskId"] != null) {
+            chartKeys.remove(removedTab["taskId"]);
+          }
           tabs.removeWhere((tab) => tab["title"] == task.tabTitle);
         });
         onTaskFinish();
@@ -235,22 +388,30 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
           navigateToPage(0).then((_) {
             onTaskFinish();
           });
-          return;
+          break;
         }
-        final addTabTasks = recipe.tasks.whereType<AddTabTask>().toList();
-        if (addTabTasks.isEmpty) {
-          onTaskFinish();
-          return;
-        }
-        final targetTabTask =
-            addTabTasks.firstWhere((t) => t.taskId == task.tabTaskID);
-        final targetTab = tabs.firstWhere(
-          (tab) => tab["title"] == targetTabTask.tabTitle,
-          orElse: () => tabs.first,
+        final targetIndex = tabs.indexWhere(
+          (tab) => tab["taskId"] == task.tabTaskID,
         );
-        final targetTabIndex = tabs.indexOf(targetTab);
-
-        navigateToPage(targetTabIndex).then((_) {
+        if (targetIndex == -1) {
+          onTaskFinish();
+          break;
+        }
+        final targetTab = tabs[targetIndex];
+        if (targetTab["type"] == "chart") {
+          final taskId = targetTab["taskId"];
+          if (taskId != null && chartKeys.containsKey(taskId)) {
+            _activeChartId = taskId;
+            _activeChartKey = chartKeys[taskId];
+            final chartTask = recipe.tasks
+                .whereType<AddChartTabTask>()
+                .firstWhere((t) => t.id == taskId,
+                    orElse: () => AddChartTabTask(tabTitle: '', id: taskId));
+            _activeChartStartOffset = chartTask.fromPoint;
+            _activeChartEndOffset = chartTask.tillPoint;
+          }
+        }
+        navigateToPage(targetIndex).then((_) {
           onTaskFinish();
         });
         break;
@@ -362,7 +523,252 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         onTaskFinish();
         break;
+      case TaskType.showTools:
+        final task = currentTask as ShowToolsTask;
+        setState(() {
+          _currentShowToolsTask = task;
+        });
+        onTaskFinish();
+        break;
+      case TaskType.toggleToolVisibility:
+        setState(() {});
+        onTaskFinish();
+        break;
+      case TaskType.addRemoveTools:
+        setState(() {});
+        onTaskFinish();
+        break;
+      case TaskType.openToolPanel:
+        // final task = currentTask as OpenToolPanelTask;
+        setState(() {
+          // _isToolPanelOpen = task.open;
+          // _currentToolPanelTask = task;
+        });
+        onTaskFinish();
+        break;
     }
+  }
+
+  GlobalKey<ChartState>? _chartKeyForCurrentTab() {
+    if (currentPageIndex < 0 || currentPageIndex >= tabs.length) {
+      if (tabs.isNotEmpty && tabs.first["type"] == "chart") {
+        return _activeChartKey;
+      }
+      return _chartKey;
+    }
+    final tab = tabs[currentPageIndex];
+    if (tab["type"] != "chart") return _activeChartKey ?? _chartKey;
+    final taskId = tab["taskId"];
+    if (taskId != null && chartKeys.containsKey(taskId)) {
+      return chartKeys[taskId];
+    }
+    return _activeChartKey ?? _chartKey;
+  }
+
+  void _onToolTap(String toolName) {
+    final chartState = _chartKeyForCurrentTab()?.currentState;
+    if (chartState == null) return;
+
+    for (final indicatorType in IndicatorType.values) {
+      if (indicatorType.name == toolName) {
+        Indicator indicator;
+        switch (indicatorType) {
+          case IndicatorType.rsi:
+            indicator = Rsi();
+            break;
+          case IndicatorType.macd:
+            indicator = Macd();
+            break;
+          case IndicatorType.sma:
+            indicator = Sma();
+            break;
+          case IndicatorType.ema:
+            indicator = Ema();
+            break;
+          case IndicatorType.bollingerBand:
+            indicator = BollingerBands();
+            break;
+          case IndicatorType.stochastic:
+            indicator = Stochastic();
+            break;
+          case IndicatorType.atr:
+            indicator = Atr();
+            break;
+          case IndicatorType.mfi:
+            indicator = Mfi();
+            break;
+          case IndicatorType.adx:
+            indicator = Adx();
+            break;
+          case IndicatorType.pivotPoint:
+            indicator = PivotPoint();
+            break;
+          case IndicatorType.pe:
+            indicator = Pe();
+            break;
+          case IndicatorType.pb:
+            indicator = Pb();
+            break;
+          case IndicatorType.supertrend:
+            indicator = Supertrend();
+            break;
+          case IndicatorType.vwap:
+            indicator = Vwap();
+            break;
+          case IndicatorType.evEbitda:
+            indicator = EvEbitda();
+            break;
+          case IndicatorType.evSales:
+            indicator = EvSales();
+            break;
+          case IndicatorType.scanner:
+            indicator = ScannerIndicator();
+            break;
+          case IndicatorType.roc:
+            indicator = Roc();
+            break;
+        }
+        chartState.addIndicator(indicator);
+        return;
+      }
+    }
+
+    for (final layerType in LayerType.values) {
+      if (layerType.name == toolName) {
+        setState(() {
+          _selectedLayerType = layerType;
+        });
+        chartState.updateLayerGettingAddedState(layerType);
+        return;
+      }
+    }
+  }
+
+  void _onClearTools() {
+    final chartState = _chartKeyForCurrentTab()?.currentState;
+    if (chartState == null) return;
+    chartState.clearAllTools();
+    setState(() {
+      _selectedLayerType = null;
+      drawPoints.clear();
+      startingPoint = null;
+    });
+  }
+
+  void _onInteraction(Offset tapDownPoint, Offset updatedPoint) {
+    if (_selectedLayerType == null) return;
+
+    drawPoints.add(tapDownPoint);
+    startingPoint = updatedPoint;
+    Layer? layer;
+    switch (_selectedLayerType) {
+      case LayerType.label:
+        layer = Label.fromTool(
+            pos: drawPoints.first,
+            label: "Text",
+            textStyle: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold));
+        break;
+      case LayerType.trendLine:
+        if (drawPoints.length >= 2) {
+          layer = TrendLine.fromTool(
+              from: drawPoints.first,
+              to: drawPoints.last,
+              startPoint: startingPoint!);
+        }
+        break;
+      case LayerType.horizontalLine:
+        layer = HorizontalLine.fromTool(value: drawPoints.first.dy);
+        break;
+      case LayerType.horizontalBand:
+        layer = HorizontalBand.fromTool(
+            value: drawPoints.first.dy, allowedError: 70);
+        break;
+      case LayerType.rectArea:
+        if (drawPoints.length >= 2) {
+          layer = RectArea.fromTool(
+              topLeft: drawPoints.first,
+              bottomRight: drawPoints.last,
+              dragStartPos: startingPoint!);
+        }
+        break;
+      case LayerType.circularArea:
+        layer = CircularArea.fromTool(point: drawPoints.first);
+        break;
+      case LayerType.arrow:
+        if (drawPoints.length >= 2) {
+          layer = Arrow.fromTool(
+              from: drawPoints.first,
+              to: drawPoints.last,
+              startPoint: startingPoint!);
+        }
+        break;
+      case LayerType.verticalLine:
+        layer = VerticalLine.fromTool(pos: tapDownPoint.dx);
+        break;
+      case LayerType.parallelChannel:
+        if (drawPoints.length >= 2) {
+          layer = ParallelChannel.fromTool(
+              topLeft: drawPoints.first,
+              bottomRight: drawPoints.last,
+              dragPoint: startingPoint!);
+        }
+        break;
+      case LayerType.arrowTextPointer:
+        layer = ArrowTextPointer.fromTool(pos: drawPoints.first, label: "");
+        break;
+      case null:
+        break;
+    }
+
+    if (layer != null) {
+      final chartState = _chartKeyForCurrentTab()?.currentState;
+      if (chartState != null) {
+        setState(() {
+          _selectedLayerType = null;
+          drawPoints.clear();
+        });
+        chartState.addLayerUsingTool(layer);
+      }
+    }
+  }
+
+  List<SahiToolsModel> _buildToolsList() {
+    final List<String> allToolNames = [];
+    for (final indicator in IndicatorType.values) {
+      allToolNames.add(indicator.name);
+    }
+    for (final layer in LayerType.values) {
+      allToolNames.add(layer.name);
+    }
+
+    final Map<String, bool> visibility = {};
+    final Map<String, bool> enabled = {};
+
+    final executedTasks = recipe.tasks.sublist(0, taskPointer);
+    for (final t in executedTasks) {
+      if (t is ShowToolsTask) {
+        for (final tool in t.tools) {
+          visibility[tool.title] = tool.isVisible;
+          enabled[tool.title] = tool.isEnabled;
+        }
+      } else if (t is ToggleToolVisibilityTask) {
+        visibility.addAll(t.visibility);
+      } else if (t is AddRemoveToolsTask) {
+        enabled.addAll(t.enabled);
+      }
+    }
+
+    return allToolNames
+        .where((name) => visibility[name] ?? false)
+        .map((name) => SahiToolsModel(
+              title: name,
+              isVisible: true,
+              isEnabled: enabled[name] ?? false,
+            ))
+        .toList();
   }
 
   Future<void> navigateToPage(int pageIndex) async {
@@ -429,160 +835,210 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
+              if (tabs.isNotEmpty) renderTabs(),
               if (promptTask == null) Container() else renderPrompt(),
+              if (_currentShowToolsTask != null)
+                SahiToolsBar(
+                  tools: _buildToolsList(),
+                  onToolTap: _onToolTap,
+                  trailing: GestureDetector(
+                    onTap: _onClearTools,
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: const Color(0x80C9C4D3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.delete_outline,
+                              size: 14, color: const Color(0xFF2D2D2D)),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Clear',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF2D2D2D),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               Expanded(
-                child: PageView.builder(
-                    controller: controller,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final tab = tabs[index];
-                      switch (tab["type"]) {
-                        case "chart":
-                          return Container(
-                            decoration: BoxDecoration(
-                                color: colors.cardBasicBackground,
-                                borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.all(16),
-                            child: Chart.from(
-                                key: _chartKey,
-                                recipe: recipe,
-                                onInteraction: (p0, p1) {}),
-                          );
-                        case "option_chain":
-                          if (_isOptionChainLoading) {
-                            return Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        colors.primary),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    "Loading option chain...",
-                                    style: textStyles.mediumNormal.copyWith(
-                                      color: colors.textColorSecondary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-
-                          final taskId = tab["taskId"]!;
-                          final chooseTask = recipe.tasks
-                              .whereType<ChooseCorrectOptionValueChainTask>()
-                              .firstWhere((t) => t.taskId == taskId);
-
-                          final optionChainTask = optionChainTasks.firstWhere(
-                            (t) => t.optionChainId == chooseTask.taskId,
-                            orElse: () => optionChainTasks.first,
-                          );
-
-                          return PreviewScreen.from(
-                              key: previewScreenKeys[taskId] ?? GlobalKey(),
-                              task: optionChainTask,
-                              onViewChartClicked: () {
-                                navigateToPage(0);
-                              },
-                              onSettingsClicked: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) => ColumnVisibilityEditor(
-                                    columns: optionChainTask.columns,
-                                    onVisibilityChanged: (updatedColumns) {
-                                      setState(() {
-                                        optionChainTask.columns =
-                                            updatedColumns;
-                                      });
-                                    },
-                                  ),
-                                );
-                              },
-                              onBuySellSelected: _handleBuySellSelection,
-                              isEditorMode: false);
-                        case "payoff":
-                          final taskId = tab["taskId"]!;
-                          final payoffTask = payoffGraphTasks.firstWhere(
-                            (t) => t.id == taskId,
-                            orElse: () => payoffGraphTasks.first,
-                          );
-                          return selectedLegs.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    "Select buy/sell positions in the option chain to view payoff",
-                                    style: textStyles.mediumNormal.copyWith(
-                                      color: colors.textColorSecondary,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              : OptionStrategyContainer(
-                                  spotPrice: payoffTask.spotPrice,
-                                  spotPriceDayDelta:
-                                      payoffTask.spotPriceDayDelta,
-                                  spotPriceDayDeltaPer:
-                                      payoffTask.spotPriceDayDeltaPer,
-                                  onExecute: () {},
-                                  legs: selectedLegs
-                                      .map((e) => strategy.OptionLeg.fromJson(
-                                          e.toJson()))
-                                      .toList(),
-                                );
-                        case "insights":
-                          final taskId = tab["taskId"]!;
-                          final insightsTask = recipe.tasks
-                              .whereType<ShowInsightsPageTask>()
-                              .firstWhere(
-                                (t) => t.id == taskId,
-                                orElse: () => insightsTasks.first,
+                child: tabs.isEmpty
+                    ? const SizedBox.shrink()
+                    : PageView.builder(
+                        controller: controller,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final tab = tabs[index];
+                          switch (tab["type"]) {
+                            case "chart":
+                              final chartTaskId = tab["taskId"];
+                              final chartKey = chartTaskId != null &&
+                                      chartKeys.containsKey(chartTaskId)
+                                  ? chartKeys[chartTaskId]!
+                                  : _chartKey;
+                              return Container(
+                                decoration: BoxDecoration(
+                                    color: colors.cardBasicBackground,
+                                    borderRadius: BorderRadius.circular(12)),
+                                margin: const EdgeInsets.all(16),
+                                child: Chart.from(
+                                    key: chartKey,
+                                    recipe: recipe,
+                                    onInteraction: _onInteraction),
                               );
-                          return InsightsWidget(insightsTask: insightsTask);
-                        case "table":
-                          final taskId = tab["taskId"]!;
-                          final tableTask = recipe.tasks
-                              .whereType<TableTask>()
-                              .firstWhere((t) => t.id == taskId);
-                          if (tableWidgetKeys[taskId] == null ||
-                              tableWidgetKeys[taskId]!.length !=
-                                  tableTask.tables.tables.length) {
-                            tableWidgetKeys[taskId] = List.generate(
-                              tableTask.tables.tables.length,
-                              (_) => GlobalKey<CustomTableState>(),
-                            );
-                          }
-                          return SingleChildScrollView(
-                            child: Column(
-                              children: List.generate(
-                                tableTask.tables.tables.length,
-                                (tableIdx) => CustomTable.from(
-                                  key: tableWidgetKeys[taskId]![tableIdx],
-                                  tableTask: TableTask(
-                                    tables: TablesModel(
-                                      tables: [
-                                        tableTask.tables.tables[tableIdx]
-                                      ],
+                            case "option_chain":
+                              if (_isOptionChainLoading) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                colors.primary),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        "Loading option chain...",
+                                        style: textStyles.mediumNormal.copyWith(
+                                          color: colors.textColorSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+
+                              final taskId = tab["taskId"]!;
+                              final chooseTask = recipe.tasks
+                                  .whereType<
+                                      ChooseCorrectOptionValueChainTask>()
+                                  .firstWhere((t) => t.taskId == taskId);
+
+                              final optionChainTask =
+                                  optionChainTasks.firstWhere(
+                                (t) => t.optionChainId == chooseTask.taskId,
+                                orElse: () => optionChainTasks.first,
+                              );
+
+                              return PreviewScreen.from(
+                                  key: previewScreenKeys[taskId] ?? GlobalKey(),
+                                  task: optionChainTask,
+                                  onViewChartClicked: () {
+                                    navigateToPage(0);
+                                  },
+                                  onSettingsClicked: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) =>
+                                          ColumnVisibilityEditor(
+                                        columns: optionChainTask.columns,
+                                        onVisibilityChanged: (updatedColumns) {
+                                          setState(() {
+                                            optionChainTask.columns =
+                                                updatedColumns;
+                                          });
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  onBuySellSelected: _handleBuySellSelection,
+                                  isEditorMode: false);
+                            case "payoff":
+                              final taskId = tab["taskId"]!;
+                              final payoffTask = payoffGraphTasks.firstWhere(
+                                (t) => t.id == taskId,
+                                orElse: () => payoffGraphTasks.first,
+                              );
+                              return selectedLegs.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        "Select buy/sell positions in the option chain to view payoff",
+                                        style: textStyles.mediumNormal.copyWith(
+                                          color: colors.textColorSecondary,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  : OptionStrategyContainer(
+                                      spotPrice: payoffTask.spotPrice,
+                                      spotPriceDayDelta:
+                                          payoffTask.spotPriceDayDelta,
+                                      spotPriceDayDeltaPer:
+                                          payoffTask.spotPriceDayDeltaPer,
+                                      onExecute: () {},
+                                      legs: selectedLegs
+                                          .map((e) =>
+                                              strategy.OptionLeg.fromJson(
+                                                  e.toJson()))
+                                          .toList(),
+                                    );
+                            case "insights":
+                              final taskId = tab["taskId"]!;
+                              final insightsTask = recipe.tasks
+                                  .whereType<ShowInsightsPageTask>()
+                                  .firstWhere(
+                                    (t) => t.id == taskId,
+                                    orElse: () => insightsTasks.first,
+                                  );
+                              return InsightsWidget(insightsTask: insightsTask);
+                            case "table":
+                              final taskId = tab["taskId"]!;
+                              final tableTask = recipe.tasks
+                                  .whereType<TableTask>()
+                                  .firstWhere((t) => t.id == taskId);
+                              if (tableWidgetKeys[taskId] == null ||
+                                  tableWidgetKeys[taskId]!.length !=
+                                      tableTask.tables.tables.length) {
+                                tableWidgetKeys[taskId] = List.generate(
+                                  tableTask.tables.tables.length,
+                                  (_) => GlobalKey<CustomTableState>(),
+                                );
+                              }
+                              return SingleChildScrollView(
+                                child: Column(
+                                  children: List.generate(
+                                    tableTask.tables.tables.length,
+                                    (tableIdx) => CustomTable.from(
+                                      key: tableWidgetKeys[taskId]![tableIdx],
+                                      tableTask: TableTask(
+                                        tables: TablesModel(
+                                          tables: [
+                                            tableTask.tables.tables[tableIdx]
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-
-                        case "insights_v2":
-                          final taskId = tab["taskId"]!;
-                          final v2insightsTask = recipe.tasks
-                              .whereType<ShowInsightsPageV2Task>()
-                              .firstWhere(
-                                (t) => t.id == taskId,
-                                orElse: () => v2insightsTasks.first,
                               );
-                          return InsightsV2Widget(task: v2insightsTask);
-                        default:
-                          return Container();
-                      }
-                    }),
+
+                            case "insights_v2":
+                              final taskId = tab["taskId"]!;
+                              final v2insightsTask = recipe.tasks
+                                  .whereType<ShowInsightsPageV2Task>()
+                                  .firstWhere(
+                                    (t) => t.id == taskId,
+                                    orElse: () => v2insightsTasks.first,
+                                  );
+                              return InsightsV2Widget(task: v2insightsTask);
+                            default:
+                              return Container();
+                          }
+                        }),
               ),
               Container(
                   padding: const EdgeInsets.all(16),
@@ -618,6 +1074,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.highlightCorrectOptionChainValue:
       case TaskType.showPayOffGraph:
       case TaskType.addTab:
+      case TaskType.addChartTab:
       case TaskType.removeTab:
       case TaskType.moveTab:
       case TaskType.popUpTask:
@@ -628,6 +1085,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.tableTask:
       case TaskType.highlightTableRow:
       case TaskType.showInsightsV2Page:
+      case TaskType.showTools:
+      case TaskType.toggleToolVisibility:
+      case TaskType.addRemoveTools:
+      case TaskType.openToolPanel:
         return Container();
     }
   }
@@ -699,7 +1160,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          renderTabs(),
           AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
               transitionBuilder: (child, animation) => SlideTransition(
