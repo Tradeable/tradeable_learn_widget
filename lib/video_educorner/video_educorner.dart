@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -25,43 +27,45 @@ class _VideoEduCorner extends State<VideoEduCorner> {
   bool isPlay = false;
   bool finishedPlaying = false;
   bool showVideo = false;
+  StreamSubscription<YoutubeVideoState>? _videoSubscription;
 
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.model.videoId,
-      flags: const YoutubePlayerFlags(
-          captionLanguage: "en",
-          enableCaption: true,
-          autoPlay: true,
-          mute: false,
-          hideControls: false),
-    );
-    _controller.addListener(() {
-      if (_controller.value.isReady && _controller.value.isPlaying) {
-        setState(() {
-          videoDuration = _controller.metadata.duration;
-        });
-      }
-      if (videoDuration != null &&
-          videoDuration!.inSeconds != 0 &&
-          _controller.value.position.inSeconds == videoDuration!.inSeconds) {
-        setState(() {
-          isPlay = false;
-          finishedPlaying = true;
-        });
-      } else {
-        setState(() {
-          finishedPlaying = false;
-        });
-      }
-    });
-  }
+    _controller = YoutubePlayerController.fromVideoId(
+    videoId: widget.model.videoId,
+    autoPlay: true,
+    params: const YoutubePlayerParams(
+      captionLanguage: 'en',
+      enableCaption: true,
+      mute: false,
+      showControls: true,
+    ),
+  );
 
+_videoSubscription = _controller.videoStateStream.listen((state) {
+  final duration = _controller.metadata.duration;
+  final position = state.position;
+
+  if (!mounted) return;
+
+  final finished =
+      duration.inSeconds > 0 && position >= duration;
+
+  setState(() {
+    videoDuration = duration;
+    finishedPlaying = finished;
+
+    if (finished) {
+      isPlay = false;
+    }
+  });
+});
+  }
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.close();
+    _videoSubscription?.cancel();
     super.dispose();
   }
 
@@ -95,7 +99,7 @@ class _VideoEduCorner extends State<VideoEduCorner> {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     final thumbnailUrl =
-        YoutubePlayer.getThumbnail(videoId: widget.model.videoId);
+        YoutubePlayerController.getThumbnail(videoId: widget.model.videoId);
 
     return Container(
       width: double.infinity,
@@ -208,8 +212,8 @@ class _VideoEduCorner extends State<VideoEduCorner> {
             finishedPlaying
                 ? IconButton(
                     onPressed: () {
-                      _controller.seekTo(Duration.zero);
-                      _controller.play();
+                      _controller.seekTo(seconds: 0);
+                      _controller.playVideo();
                       setState(() {
                         isPlay = true;
                       });
@@ -223,3 +227,4 @@ class _VideoEduCorner extends State<VideoEduCorner> {
     );
   }
 }
+

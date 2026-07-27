@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   auto_size_text: ^3.0.0
   intl: ^0.20.2
-  youtube_player_flutter: ^9.1.0
+  youtube_player_flutter: ^10.0.1
   flutter_markdown: ^0.7.7+1
   smooth_page_indicator: ^1.2.0+3
   syncfusion_flutter_gauges: ^30.2.6
@@ -27,7 +27,7 @@ dependencies:
   fin_chart:
     git:
       url: https://github.com/adityagohad/fin_chart.git
-      ref: axis_main
+      ref: latest_flutter_gradle_update
   dio: ^5.8.0+1
   aws_s3_upload_lite: ^0.1.6
   path: ^1.9.1
