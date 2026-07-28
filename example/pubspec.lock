@@ -254,7 +254,7 @@ packages:
     description:
       path: "."
       ref: sahi
-      resolved-ref: f6607ed5227748b84bce97318ca4eb2b23976f53
+      resolved-ref: a6947ac569b037eba78823e2b3020df97559a13c
       url: "https://github.com/Tradeable/fin_chart.git"
     source: git
     version: "0.0.1"

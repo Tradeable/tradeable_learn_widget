@@ -115,6 +115,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
   int _activeChartEndOffset = -1;
   final Map<String, bool> _hasPlottedFirstChunk = {};
 
+  List<JourneyState> journeys = [];
+  String? _activeJourneyId;
+  String? courseVideoUrl;
+
   @override
   void initState() {
     recipe = widget.model.recipe;
@@ -543,6 +547,65 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {
           // _isToolPanelOpen = task.open;
           // _currentToolPanelTask = task;
+        });
+        onTaskFinish();
+        break;
+      case TaskType.startJourney:
+        final task = currentTask as StartJourneyTask;
+        setState(() {
+          journeys.add(JourneyState(id: task.journeyId));
+          _activeJourneyId = task.journeyId;
+        });
+        onTaskFinish();
+        break;
+      case TaskType.completeJourney:
+        setState(() {
+          if (_activeJourneyId != null) {
+            final journey = journeys.firstWhere(
+              (j) => j.id == _activeJourneyId,
+              orElse: () => JourneyState(id: ''),
+            );
+            journey.completed = true;
+          }
+        });
+        onTaskFinish();
+        break;
+      case TaskType.attachVideoToJourney:
+        final task = currentTask as AttachVideoToJourneyTask;
+        if (_activeJourneyId == null) {
+          onTaskFinish();
+          break;
+        }
+        setState(() {
+          task.journeyId = _activeJourneyId!;
+          final journey = journeys.firstWhere(
+            (j) => j.id == _activeJourneyId,
+            orElse: () => JourneyState(id: _activeJourneyId!),
+          );
+          journey.videoUrl = task.videoUrl;
+        });
+        onTaskFinish();
+        break;
+      case TaskType.hideVideoBtnInJourney:
+        final task = currentTask as HideVideoBtnInJourneyTask;
+        if (_activeJourneyId == null) {
+          onTaskFinish();
+          break;
+        }
+        setState(() {
+          task.journeyId = _activeJourneyId!;
+          final journey = journeys.firstWhere(
+            (j) => j.id == _activeJourneyId,
+            orElse: () => JourneyState(id: _activeJourneyId!),
+          );
+          journey.hideVideoBtn = true;
+        });
+        onTaskFinish();
+        break;
+      case TaskType.addCourseVideo:
+        final task = currentTask as AddCourseVideoTask;
+        setState(() {
+          courseVideoUrl = task.videoUrl;
         });
         onTaskFinish();
         break;
@@ -1089,6 +1152,11 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.toggleToolVisibility:
       case TaskType.addRemoveTools:
       case TaskType.openToolPanel:
+      case TaskType.startJourney:
+      case TaskType.completeJourney:
+      case TaskType.attachVideoToJourney:
+      case TaskType.hideVideoBtnInJourney:
+      case TaskType.addCourseVideo:
         return Container();
     }
   }

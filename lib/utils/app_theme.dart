@@ -67,6 +67,34 @@ class ThemeColors {
   final Color disabledContainer;
   final Color supportItemColor;
 
+  final Color sahiTopBarBg;
+  final Color sahiTopBarBorder;
+  final Color sahiAcademyTextColor;
+  final Color sahiStreakColor;
+  final Color sahiStreakIconColor;
+  final Color sahiXpColor;
+  final Color sahiXpTextColor;
+  final Color sahiNotificationIconColor;
+  final Color sahiNotificationBadgeColor;
+  final Color sahiNotificationBadgeTextColor;
+  final Color sahiProfileAvatarBg;
+  final Color sahiProfileIconColor;
+  final Color sahiToolbarBg;
+  final Color sahiToolbarIconColor;
+  final Color sahiToolbarActiveIconColor;
+  final Color sahiToolbarActiveBg;
+  final Color sahiToolbarShadow;
+  final Color sahiTabBg;
+  final Color sahiTabBorder;
+  final Color sahiPanelItemBg;
+  final Color sahiTabActiveBg;
+  final Color sahiTabInactiveText;
+  final Color sahiPrimaryTextColor;
+  final Color sahiSearchBarBg;
+  final Color sahiSearchBarBorder;
+  final Color sahiSearchBarIconColor;
+  final Color sahiSearchBarHintColor;
+
   ThemeColors({
     required this.primary,
     required this.secondary,
@@ -88,6 +116,33 @@ class ThemeColors {
     required this.textColorSecondary,
     required this.disabledContainer,
     required this.supportItemColor,
+    required this.sahiTopBarBg,
+    required this.sahiTopBarBorder,
+    required this.sahiAcademyTextColor,
+    required this.sahiStreakColor,
+    required this.sahiStreakIconColor,
+    required this.sahiXpColor,
+    required this.sahiXpTextColor,
+    required this.sahiNotificationIconColor,
+    required this.sahiNotificationBadgeColor,
+    required this.sahiNotificationBadgeTextColor,
+    required this.sahiProfileAvatarBg,
+    required this.sahiProfileIconColor,
+    required this.sahiToolbarBg,
+    required this.sahiToolbarIconColor,
+    required this.sahiToolbarActiveIconColor,
+    required this.sahiToolbarActiveBg,
+    required this.sahiToolbarShadow,
+    required this.sahiTabBg,
+    required this.sahiTabBorder,
+    required this.sahiPanelItemBg,
+    required this.sahiTabActiveBg,
+    required this.sahiTabInactiveText,
+    required this.sahiPrimaryTextColor,
+    required this.sahiSearchBarBg,
+    required this.sahiSearchBarBorder,
+    required this.sahiSearchBarIconColor,
+    required this.sahiSearchBarHintColor,
   });
 
   // Light theme colors factory
@@ -113,6 +168,33 @@ class ThemeColors {
       textColorSecondary: const Color(0xff6E6E6E),
       disabledContainer: const Color(0xffB3BCB9),
       supportItemColor: const Color(0xff165964),
+      sahiTopBarBg: Color.fromRGBO(251, 251, 253, 1),
+      sahiTopBarBorder: Color.fromRGBO(3, 4, 5, 1),
+      sahiAcademyTextColor: const Color(0xff97144D),
+      sahiStreakColor: Color.fromRGBO(248, 248, 251, 1),
+      sahiStreakIconColor: Color.fromRGBO(224, 159, 135, 1),
+      sahiXpColor: Color.fromRGBO(102, 89, 176, 0.1),
+      sahiXpTextColor: Color.fromRGBO(90, 79, 160, 1),
+      sahiNotificationIconColor: Color.fromRGBO(148, 153, 166, 1),
+      sahiNotificationBadgeColor: Colors.redAccent,
+      sahiNotificationBadgeTextColor: Colors.white,
+      sahiProfileAvatarBg: const Color(0xffB4B4B4),
+      sahiProfileIconColor: const Color(0xff6E6E6E),
+      sahiToolbarBg: Colors.white,
+      sahiToolbarIconColor: Color.fromRGBO(148, 153, 166, 1),
+      sahiToolbarActiveIconColor: const Color.fromRGBO(90, 79, 160, 1),
+      sahiToolbarActiveBg: const Color.fromRGBO(102, 89, 176, 0.1),
+      sahiToolbarShadow: Colors.black12,
+      sahiTabBg: const Color.fromRGBO(255, 255, 255, 1),
+      sahiTabBorder: const Color(0xFFE0E0E0),
+      sahiPanelItemBg: const Color(0xFFF5F5F5),
+      sahiTabActiveBg: const Color(0xff97144D),
+      sahiTabInactiveText: const Color(0xff6E6E6E),
+      sahiPrimaryTextColor: const Color(0xff333333),
+      sahiSearchBarBg: const Color.fromRGBO(255, 255, 255, 1),
+      sahiSearchBarBorder: Color.fromRGBO(0, 0, 0, 0.05),
+      sahiSearchBarIconColor: const Color.fromRGBO(121, 117, 130, 1),
+      sahiSearchBarHintColor: const Color(0xff9499A6),
     );
   }
 
@@ -139,6 +221,33 @@ class ThemeColors {
       textColorSecondary: Colors.white,
       disabledContainer: const Color(0xffB3BCB9),
       supportItemColor: const Color(0xff165964),
+      sahiTopBarBg: const Color(0xFF161A26),
+      sahiTopBarBorder: const Color(0xff303030),
+      sahiAcademyTextColor: const Color(0xff38EB54),
+      sahiStreakColor: const Color(0xFFFF8C42),
+      sahiStreakIconColor: Color.fromRGBO(224, 159, 135, 1),
+      sahiXpColor: const Color(0xff38EB54),
+      sahiXpTextColor: Color.fromRGBO(90, 79, 160, 1),
+      sahiNotificationIconColor: Colors.white70,
+      sahiNotificationBadgeColor: const Color(0xff38EB54),
+      sahiNotificationBadgeTextColor: Colors.black,
+      sahiProfileAvatarBg: const Color(0xff303030),
+      sahiProfileIconColor: Colors.white70,
+      sahiToolbarBg: const Color(0xFF1E2230),
+      sahiToolbarIconColor: Colors.white54,
+      sahiToolbarActiveIconColor: const Color(0xff38EB54),
+      sahiToolbarActiveBg: const Color(0xff222838),
+      sahiToolbarShadow: Colors.black45,
+      sahiTabBg: const Color(0xFF1A1A2E),
+      sahiTabBorder: const Color(0xFF2A2A3E),
+      sahiPanelItemBg: const Color(0xFF252540),
+      sahiTabActiveBg: const Color(0xff38EB54),
+      sahiTabInactiveText: const Color(0xff999999),
+      sahiPrimaryTextColor: const Color(0xffEEEEEE),
+      sahiSearchBarBg: const Color(0xff222838),
+      sahiSearchBarBorder: const Color(0xff303030),
+      sahiSearchBarIconColor: Colors.white54,
+      sahiSearchBarHintColor: Colors.white38,
     );
   }
 }

@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
         "/": (context) => const TradeableWidgetDemoPage(),
         "/deepak": (context) => const MyHomePage(),
         "/homeIntermediate": (context) => const HomeIntermediateScreen(),
-        "/axis_levels": (context) => const AxisLevelsScreen()
+        "/axis_levels": (context) => const AxisLevelsScreen(),
       },
     );
   }

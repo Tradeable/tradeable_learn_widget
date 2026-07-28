@@ -101,6 +101,33 @@ class CustomColors {
   final Color customTableHeaderFontColor;
   final Color customTableCellFontColor;
 
+  final Color sahiTopBarBg;
+  final Color sahiTopBarBorder;
+  final Color sahiAcademyTextColor;
+  final Color sahiStreakColor;
+  final Color sahiXpColor;
+  final Color sahiNotificationIconColor;
+  final Color sahiNotificationBadgeColor;
+  final Color sahiNotificationBadgeTextColor;
+  final Color sahiProfileAvatarBg;
+  final Color sahiProfileIconColor;
+  final Color sahiToolbarBg;
+  final Color sahiToolbarIconColor;
+  final Color sahiToolbarActiveIconColor;
+  final Color sahiToolbarActiveBg;
+  final Color sahiToolbarShadow;
+  final Color sahiSearchBarBg;
+  final Color sahiSearchBarBorder;
+  final Color sahiSearchBarIconColor;
+  final Color sahiSearchBarHintColor;
+  final Color sahiUtilityBg;
+  final Color sahiTabBg;
+  final Color sahiTabBorder;
+  final Color sahiPanelItemBg;
+  final Color sahiTabActiveBg;
+  final Color sahiTabInactiveText;
+  final Color sahiPrimaryTextColor;
+
   CustomColors(
       {required this.primary,
       required this.secondary,
@@ -155,7 +182,33 @@ class CustomColors {
       required this.customTableHeaderColor,
       required this.customTableBackground,
       required this.customTableHeaderFontColor,
-      required this.customTableCellFontColor});
+      required this.customTableCellFontColor,
+      required this.sahiTopBarBg,
+      required this.sahiTopBarBorder,
+      required this.sahiAcademyTextColor,
+      required this.sahiStreakColor,
+      required this.sahiXpColor,
+      required this.sahiNotificationIconColor,
+      required this.sahiNotificationBadgeColor,
+      required this.sahiNotificationBadgeTextColor,
+      required this.sahiProfileAvatarBg,
+      required this.sahiProfileIconColor,
+      required this.sahiToolbarBg,
+      required this.sahiToolbarIconColor,
+      required this.sahiToolbarActiveIconColor,
+      required this.sahiToolbarActiveBg,
+      required this.sahiToolbarShadow,
+      required this.sahiSearchBarBg,
+      required this.sahiSearchBarBorder,
+      required this.sahiSearchBarIconColor,
+      required this.sahiSearchBarHintColor,
+      required this.sahiUtilityBg,
+      required this.sahiTabBg,
+      required this.sahiTabBorder,
+      required this.sahiPanelItemBg,
+      required this.sahiTabActiveBg,
+      required this.sahiTabInactiveText,
+      required this.sahiPrimaryTextColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -215,7 +268,33 @@ extension ThemeDataExtension on ThemeData {
           customTableHeaderColor: Colors.white,
           customTableBackground: const Color(0xffF9F9F9),
           customTableHeaderFontColor: Colors.black54,
-          customTableCellFontColor: Colors.black87);
+          customTableCellFontColor: Colors.black87,
+          sahiTopBarBg: Color.fromRGBO(251, 251, 253, 1),
+          sahiTopBarBorder: Color.fromRGBO(3, 4, 5, 1),
+          sahiAcademyTextColor: const Color(0xff97144D),
+          sahiStreakColor: Color.fromRGBO(248, 248, 251, 1),
+          sahiXpColor: Color.fromRGBO(102, 89, 176, 0.1),
+          sahiNotificationIconColor: Color.fromRGBO(148, 153, 166, 1),
+          sahiNotificationBadgeColor: Colors.redAccent,
+          sahiNotificationBadgeTextColor: Colors.white,
+          sahiProfileAvatarBg: const Color(0xffB4B4B4),
+          sahiProfileIconColor: const Color(0xff6E6E6E),
+          sahiToolbarBg: Colors.white,
+          sahiToolbarIconColor: Color.fromRGBO(148, 153, 166, 1),
+          sahiToolbarActiveIconColor: const Color.fromRGBO(90, 79, 160, 1),
+          sahiToolbarActiveBg: const Color.fromRGBO(102, 89, 176, 0.1),
+          sahiToolbarShadow: Colors.black12,
+          sahiSearchBarBg: const Color.fromRGBO(255, 255, 255, 1),
+          sahiSearchBarBorder: Color.fromRGBO(0, 0, 0, 0.05),
+          sahiSearchBarIconColor: const Color.fromRGBO(121, 117, 130, 1),
+          sahiSearchBarHintColor: const Color(0xff9499A6),
+          sahiUtilityBg: const Color.fromRGBO(245, 245, 245, 1),
+          sahiTabBg: const Color.fromRGBO(247, 242, 250, 1),
+          sahiTabBorder: const Color(0x80C9C4D3),
+          sahiPanelItemBg: const Color.fromRGBO(253, 248, 255, 1),
+          sahiTabActiveBg: const Color.fromRGBO(78, 64, 150, 1),
+          sahiTabInactiveText: const Color(0xFF4A4A4A),
+          sahiPrimaryTextColor: const Color(0xff333333));
     } else {
       return CustomColors(
           primary: const Color(0xff38EB54),
@@ -272,7 +351,33 @@ extension ThemeDataExtension on ThemeData {
           customTableHeaderColor: Colors.black,
           customTableBackground: const Color(0xFF404040),
           customTableHeaderFontColor: Colors.white54,
-          customTableCellFontColor: Colors.white70);
+          customTableCellFontColor: Colors.white70,
+          sahiTopBarBg: Color.fromRGBO(251, 251, 253, 1),
+          sahiTopBarBorder: Color.fromRGBO(3, 4, 5, 1),
+          sahiAcademyTextColor: const Color(0xff97144D),
+          sahiStreakColor: Color.fromRGBO(248, 248, 251, 1),
+          sahiXpColor: Color.fromRGBO(102, 89, 176, 0.1),
+          sahiNotificationIconColor: Color.fromRGBO(148, 153, 166, 1),
+          sahiNotificationBadgeColor: Colors.redAccent,
+          sahiNotificationBadgeTextColor: Colors.white,
+          sahiProfileAvatarBg: const Color(0xffB4B4B4),
+          sahiProfileIconColor: const Color(0xff6E6E6E),
+          sahiToolbarBg: Colors.white,
+          sahiToolbarIconColor: Color.fromRGBO(148, 153, 166, 1),
+          sahiToolbarActiveIconColor: const Color.fromRGBO(90, 79, 160, 1),
+          sahiToolbarActiveBg: const Color.fromRGBO(102, 89, 176, 0.1),
+          sahiToolbarShadow: Colors.black12,
+          sahiSearchBarBg: const Color.fromRGBO(255, 255, 255, 1),
+          sahiSearchBarBorder: Color.fromRGBO(0, 0, 0, 0.05),
+          sahiSearchBarIconColor: const Color.fromRGBO(121, 117, 130, 1),
+          sahiSearchBarHintColor: const Color(0xff9499A6),
+          sahiUtilityBg: const Color.fromRGBO(245, 245, 245, 1),
+          sahiTabBg: const Color(0xFF1A1A2E),
+          sahiTabBorder: const Color(0xFF2A2A3E),
+          sahiPanelItemBg: const Color(0xFF252540),
+          sahiTabActiveBg: const Color(0xff38EB54),
+          sahiTabInactiveText: const Color(0xff999999),
+          sahiPrimaryTextColor: const Color(0xffEEEEEE));
     }
   }
 

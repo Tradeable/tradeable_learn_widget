@@ -118,6 +118,8 @@ class _TradeableWidgetDemoPageState extends State<TradeableWidgetDemoPage> {
         widget: OptionEduCorner(
             model: OptionsEduCornerModel.fromJson(optionsEducornerModel),
             onNextClick: () {})),
+    WidgetChips(
+        label: "Sahi", widget: const Center(child: Text("Coming Soon"))),
   ];
 
   @override

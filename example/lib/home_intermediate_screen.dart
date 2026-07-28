@@ -1,5 +1,6 @@
 import 'package:example/main.dart';
 import 'package:example/dynamic_chart_input_screen.dart';
+import 'package:example/sahi_chart_input_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_json.dart';
 import 'package:tradeable_learn_widget/taking_a_trade/take_a_trade_main.dart';
@@ -68,6 +69,12 @@ class HomeIntermediateScreen extends StatelessWidget {
                       builder: (context) => const DynamicChartInputScreen()));
                 },
                 child: const Text("Custom Chart JSON")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SahiChartInputScreen()));
+                },
+                child: const Text("Sahi")),
           ],
         ),
       )),
