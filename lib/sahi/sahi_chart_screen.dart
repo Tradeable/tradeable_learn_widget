@@ -49,13 +49,14 @@ import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/sahi_tools_bar.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_tools_bar.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_v2.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_tabbar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_top_bar.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -81,13 +82,13 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   AddPromptTask? _promptTask;
 
   // Tabs & pages
-  PageController _pageController = PageController();
-  List<Map<String, String>> _tabs = [];
+  PageController pageController = PageController();
+  List<Map<String, String>> tabs = [];
   int _currentPageIndex = 0;
 
   // Chart keys
-  Map<String, GlobalKey<ChartState>> _chartKeys = {};
-  GlobalKey<ChartState> _chartKey = GlobalKey();
+  Map<String, GlobalKey<ChartState>> chartKeys = {};
+  GlobalKey<ChartState> chartKey = GlobalKey();
   GlobalKey<ChartState>? _activeChartKey;
   String? _activeChartId;
   int _activeChartStartOffset = 0;
@@ -95,28 +96,30 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   final Map<String, bool> _hasPlottedFirstChunk = {};
 
   // Option chain
-  Map<String, GlobalKey<PreviewScreenState>> _previewScreenKeys = {};
+  Map<String, GlobalKey<PreviewScreenState>> previewScreenKeys = {};
   List<finchart.OptionLeg> _selectedLegs = [];
-  List<AddOptionChainTask> _optionChainTasks = [];
+  List<AddOptionChainTask> optionChainTasks = [];
   bool _isOptionChainLoading = false;
 
   // Other content
-  List<ShowPayOffGraphTask> _payoffGraphTasks = [];
-  List<ShowInsightsPageTask> _insightsTasks = [];
-  List<ShowInsightsPageV2Task> _v2insightsTasks = [];
-  List<TableTask> _tableTasks = [];
-  Map<String, List<GlobalKey<CustomTableState>>> _tableWidgetKeys = {};
+  List<ShowPayOffGraphTask> payoffGraphTasks = [];
+  List<ShowInsightsPageTask> insightsTasks = [];
+  List<ShowInsightsPageV2Task> v2insightsTasks = [];
+  List<TableTask> tableTasks = [];
+  Map<String, List<GlobalKey<CustomTableState>>> tableWidgetKeys = {};
 
   // Tools
   ShowToolsTask? _currentShowToolsTask;
   LayerType? _selectedLayerType;
-  List<Offset> _drawPoints = [];
+  List<Offset> drawPoints = [];
   Offset? _startingPoint;
 
   // Journeys
   List<_JourneyItem> _journeyItems = [];
-  List<JourneyState> _journeys = [];
+  List<JourneyState> journeys = [];
   String? _activeJourneyId;
+  String? courseVideoUrl;
+  bool showCourseVideoBtn = false;
 
   @override
   void initState() {
@@ -128,7 +131,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       _currentTask = recipe.tasks.first;
       _runAfterDelay();
     }
-    _activeChartKey = _chartKey;
+    _activeChartKey = chartKey;
   }
 
   void _extractJourneys() {
@@ -141,8 +144,6 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     await Future.delayed(const Duration(milliseconds: 300));
     _onTaskRun();
   }
-
-  // ─── Task execution (adapted from DynamicChartWidget) ───
 
   void _onTaskRun() {
     switch (_currentTask.taskType) {
@@ -238,8 +239,43 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         _handleCompleteJourney();
         break;
       case TaskType.attachVideoToJourney:
+        final task = _currentTask as AttachVideoToJourneyTask;
+        if (_activeJourneyId == null) {
+          _onTaskFinish();
+          break;
+        }
+        setState(() {
+          task.journeyId = _activeJourneyId!;
+          final journey = journeys.firstWhere(
+            (j) => j.id == _activeJourneyId,
+            orElse: () => JourneyState(id: _activeJourneyId!),
+          );
+          journey.videoUrl = task.videoUrl;
+        });
+        _onTaskFinish();
+        break;
       case TaskType.hideVideoBtnInJourney:
+        final task = _currentTask as HideVideoBtnInJourneyTask;
+        if (_activeJourneyId == null) {
+          _onTaskFinish();
+          break;
+        }
+        setState(() {
+          task.journeyId = _activeJourneyId!;
+          final journey = journeys.firstWhere(
+            (j) => j.id == _activeJourneyId,
+            orElse: () => JourneyState(id: _activeJourneyId!),
+          );
+          journey.hideVideoBtn = true;
+        });
+        _onTaskFinish();
+        break;
       case TaskType.addCourseVideo:
+        final task = _currentTask as AddCourseVideoTask;
+        setState(() {
+          courseVideoUrl = task.videoUrl;
+          showCourseVideoBtn = true;
+        });
         _onTaskFinish();
         break;
     }
@@ -248,7 +284,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void _handleAddData() {
     final task = _currentTask as AddDataTask;
     final key =
-        task.chartId != null ? _chartKeys[task.chartId] : _activeChartKey;
+        task.chartId != null ? chartKeys[task.chartId] : _activeChartKey;
     if (key == null) {
       _onTaskFinish();
       return;
@@ -298,7 +334,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void _handleAddIndicator() {
     final task = _currentTask as AddIndicatorTask;
     final key =
-        task.chartId != null ? _chartKeys[task.chartId] : _activeChartKey;
+        task.chartId != null ? chartKeys[task.chartId] : _activeChartKey;
     key?.currentState?.addIndicator(task.indicator);
     _onTaskFinish();
   }
@@ -317,15 +353,15 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _handleClearTask() {
-    final key = _chartKeyForCurrentTab();
+    final key = chartKeyForCurrentTab();
     key?.currentState?.clearChart();
     _onTaskFinish();
   }
 
   void _handleAddOptionChain() {
     final task = _currentTask as AddOptionChainTask;
-    if (!_optionChainTasks.any((t) => t.optionChainId == task.optionChainId)) {
-      _optionChainTasks.add(task);
+    if (!optionChainTasks.any((t) => t.optionChainId == task.optionChainId)) {
+      optionChainTasks.add(task);
     }
     setState(() {});
     _onTaskFinish();
@@ -333,7 +369,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   void _handleHighlightOptionChain() {
     final task = _currentTask as HighlightCorrectOptionChainValueTask;
-    final key = _previewScreenKeys[task.optionChainId];
+    final key = previewScreenKeys[task.optionChainId];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if ((task.bucketRows ?? []).isNotEmpty) {
@@ -350,7 +386,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _handleShowPayoff() {
-    _payoffGraphTasks.add(_currentTask as ShowPayOffGraphTask);
+    payoffGraphTasks.add(_currentTask as ShowPayOffGraphTask);
     _onTaskFinish();
   }
 
@@ -358,7 +394,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     setState(() {
       final task = _currentTask as AddChartTabTask;
       final key = GlobalKey<ChartState>();
-      _chartKeys[task.id] = key;
+      chartKeys[task.id] = key;
       _activeChartId = task.id;
       _activeChartStartOffset = task.fromPoint;
       _activeChartEndOffset = task.tillPoint;
@@ -379,20 +415,20 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     if (chartTasks.isNotEmpty) {
       int addedIndex = -1;
       setState(() {
-        final existingIndex = _tabs.indexWhere(
+        final existingIndex = tabs.indexWhere(
             (tab) => tab["type"] == "chart" && tab["taskId"] == task.taskId);
         if (existingIndex == -1) {
-          _tabs.add({
+          tabs.add({
             "type": "chart",
             "title": task.tabTitle,
             "taskId": task.taskId,
           });
-          addedIndex = _tabs.length - 1;
+          addedIndex = tabs.length - 1;
         } else {
           addedIndex = existingIndex;
         }
       });
-      _activeChartKey = _chartKeys[task.taskId];
+      _activeChartKey = chartKeys[task.taskId];
       if (addedIndex >= 0 && addedIndex != _currentPageIndex) {
         _navigateToPage(addedIndex).then((_) => _onTaskFinish());
       } else {
@@ -401,49 +437,49 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     } else {
       int addedIndex = -1;
       setState(() {
-        _previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
-        if (!_tabs.any((tab) => tab["taskId"] == task.taskId)) {
+        previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
+        if (!tabs.any((tab) => tab["taskId"] == task.taskId)) {
           if (recipe.tasks.any((t) =>
               t is ChooseCorrectOptionValueChainTask &&
               t.taskId == task.taskId)) {
-            _tabs.add({
+            tabs.add({
               "type": "option_chain",
               "title": task.tabTitle,
               "taskId": task.taskId,
             });
-            addedIndex = _tabs.length - 1;
+            addedIndex = tabs.length - 1;
           } else if (recipe.tasks
               .any((t) => t is ShowInsightsPageTask && t.id == task.taskId)) {
-            _tabs.add({
+            tabs.add({
               "type": "insights",
               "title": task.tabTitle,
               "taskId": task.taskId,
             });
-            addedIndex = _tabs.length - 1;
+            addedIndex = tabs.length - 1;
           } else if (recipe.tasks
               .any((t) => t is TableTask && t.id == task.taskId)) {
-            _tabs.add({
+            tabs.add({
               "type": "table",
               "title": task.tabTitle,
               "taskId": task.taskId,
             });
-            addedIndex = _tabs.length - 1;
+            addedIndex = tabs.length - 1;
           } else if (recipe.tasks
               .any((t) => t is ShowPayOffGraphTask && t.id == task.taskId)) {
-            _tabs.add({
+            tabs.add({
               "type": "payoff",
               "title": task.tabTitle,
               "taskId": task.taskId,
             });
-            addedIndex = _tabs.length - 1;
+            addedIndex = tabs.length - 1;
           } else if (recipe.tasks
               .any((t) => t is ShowInsightsPageV2Task && t.id == task.taskId)) {
-            _tabs.add({
+            tabs.add({
               "type": "insights_v2",
               "title": task.tabTitle,
               "taskId": task.taskId,
             });
-            addedIndex = _tabs.length - 1;
+            addedIndex = tabs.length - 1;
           }
         }
       });
@@ -458,14 +494,14 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void _handleRemoveTab() {
     setState(() {
       final task = _currentTask as RemoveTabTask;
-      final removed = _tabs.firstWhere(
+      final removed = tabs.firstWhere(
         (tab) => tab["title"] == task.tabTitle,
         orElse: () => {},
       );
       if (removed["type"] == "chart" && removed["taskId"] != null) {
-        _chartKeys.remove(removed["taskId"]);
+        chartKeys.remove(removed["taskId"]);
       }
-      _tabs.removeWhere((tab) => tab["title"] == task.tabTitle);
+      tabs.removeWhere((tab) => tab["title"] == task.tabTitle);
     });
     _onTaskFinish();
   }
@@ -476,19 +512,19 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       _navigateToPage(0).then((_) => _onTaskFinish());
       return;
     }
-    final targetIndex = _tabs.indexWhere(
+    final targetIndex = tabs.indexWhere(
       (tab) => tab["taskId"] == task.tabTaskID,
     );
     if (targetIndex == -1) {
       _onTaskFinish();
       return;
     }
-    final targetTab = _tabs[targetIndex];
+    final targetTab = tabs[targetIndex];
     if (targetTab["type"] == "chart") {
       final taskId = targetTab["taskId"];
-      if (taskId != null && _chartKeys.containsKey(taskId)) {
+      if (taskId != null && chartKeys.containsKey(taskId)) {
         _activeChartId = taskId;
-        _activeChartKey = _chartKeys[taskId];
+        _activeChartKey = chartKeys[taskId];
         final chartTask = recipe.tasks.whereType<AddChartTabTask>().firstWhere(
             (t) => t.id == taskId,
             orElse: () => AddChartTabTask(tabTitle: '', id: taskId));
@@ -537,14 +573,14 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _handleShowInsights() {
-    _insightsTasks.add(_currentTask as ShowInsightsPageTask);
+    insightsTasks.add(_currentTask as ShowInsightsPageTask);
     setState(() {});
     _onTaskFinish();
   }
 
   void _handleChooseBucketRows() {
     final task = _currentTask as ChooseBucketRowsTask;
-    final key = _previewScreenKeys[task.optionChainId];
+    final key = previewScreenKeys[task.optionChainId];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       if (key != null &&
@@ -561,14 +597,14 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   void _handleClearBucketRows() {
     final task = _currentTask as ClearBucketRowsTask;
-    final key = _previewScreenKeys[task.optionChainId];
+    final key = previewScreenKeys[task.optionChainId];
     key?.currentState?.clearBucketSelections();
     _selectedLegs.clear();
     _onTaskFinish();
   }
 
   void _handleTableTask() {
-    _tableTasks.add(_currentTask as TableTask);
+    tableTasks.add(_currentTask as TableTask);
     setState(() {});
     _onTaskFinish();
   }
@@ -578,7 +614,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final tableTask = recipe.tasks
         .whereType<TableTask>()
         .firstWhere((t) => t.id == task.tableTaskId);
-    final keys = _tableWidgetKeys[task.tableTaskId];
+    final keys = tableWidgetKeys[task.tableTaskId];
     if (keys != null) {
       for (int i = 0; i < tableTask.tables.tables.length; i++) {
         final key = keys[i];
@@ -593,7 +629,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _handleShowInsightsV2() {
-    _v2insightsTasks.add(_currentTask as ShowInsightsPageV2Task);
+    v2insightsTasks.add(_currentTask as ShowInsightsPageV2Task);
     setState(() {});
     _onTaskFinish();
   }
@@ -608,7 +644,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void _handleStartJourney() {
     final task = _currentTask as StartJourneyTask;
     setState(() {
-      _journeys.add(JourneyState(id: task.journeyId));
+      journeys.add(JourneyState(id: task.journeyId));
       _activeJourneyId = task.journeyId;
       for (final item in _journeyItems) {
         if (item.id == task.journeyId) {
@@ -623,7 +659,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void _handleCompleteJourney() {
     setState(() {
       if (_activeJourneyId != null) {
-        final journey = _journeys.firstWhere(
+        final journey = journeys.firstWhere(
           (j) => j.id == _activeJourneyId,
           orElse: () => JourneyState(id: ''),
         );
@@ -640,20 +676,20 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     _onTaskFinish();
   }
 
-  GlobalKey<ChartState>? _chartKeyForCurrentTab() {
-    if (_currentPageIndex < 0 || _currentPageIndex >= _tabs.length) {
-      if (_tabs.isNotEmpty && _tabs.first["type"] == "chart") {
+  GlobalKey<ChartState>? chartKeyForCurrentTab() {
+    if (_currentPageIndex < 0 || _currentPageIndex >= tabs.length) {
+      if (tabs.isNotEmpty && tabs.first["type"] == "chart") {
         return _activeChartKey;
       }
-      return _chartKey;
+      return chartKey;
     }
-    final tab = _tabs[_currentPageIndex];
-    if (tab["type"] != "chart") return _activeChartKey ?? _chartKey;
+    final tab = tabs[_currentPageIndex];
+    if (tab["type"] != "chart") return _activeChartKey ?? chartKey;
     final taskId = tab["taskId"];
-    if (taskId != null && _chartKeys.containsKey(taskId)) {
-      return _chartKeys[taskId];
+    if (taskId != null && chartKeys.containsKey(taskId)) {
+      return chartKeys[taskId];
     }
-    return _activeChartKey ?? _chartKey;
+    return _activeChartKey ?? chartKey;
   }
 
   void _onTaskFinish() {
@@ -667,13 +703,13 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   Future<void> _navigateToPage(int pageIndex) async {
     setState(() {
       _currentPageIndex = pageIndex;
-      if (_tabs[pageIndex]["type"] == "option_chain") {
+      if (tabs[pageIndex]["type"] == "option_chain") {
         _isOptionChainLoading = true;
       }
     });
-    await _pageController.animateToPage(pageIndex,
+    await pageController.animateToPage(pageIndex,
         duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
-    if (_tabs[pageIndex]["type"] == "option_chain") {
+    if (tabs[pageIndex]["type"] == "option_chain") {
       await Future.delayed(const Duration(milliseconds: 100));
       if (mounted) setState(() => _isOptionChainLoading = false);
     }
@@ -712,7 +748,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _onToolTap(String toolName) {
-    final chartState = _chartKeyForCurrentTab()?.currentState;
+    final chartState = chartKeyForCurrentTab()?.currentState;
     if (chartState == null) return;
 
     for (final indicatorType in IndicatorType.values) {
@@ -789,24 +825,24 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _onClearTools() {
-    final chartState = _chartKeyForCurrentTab()?.currentState;
+    final chartState = chartKeyForCurrentTab()?.currentState;
     chartState?.clearAllTools();
     setState(() {
       _selectedLayerType = null;
-      _drawPoints.clear();
+      drawPoints.clear();
       _startingPoint = null;
     });
   }
 
   void _onChartInteraction(Offset tapDownPoint, Offset updatedPoint) {
     if (_selectedLayerType == null) return;
-    _drawPoints.add(tapDownPoint);
+    drawPoints.add(tapDownPoint);
     _startingPoint = updatedPoint;
     Layer? layer;
     switch (_selectedLayerType) {
       case LayerType.label:
         layer = Label.fromTool(
-            pos: _drawPoints.first,
+            pos: drawPoints.first,
             label: "Text",
             textStyle: const TextStyle(
                 color: Colors.black,
@@ -814,62 +850,62 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                 fontWeight: FontWeight.bold));
         break;
       case LayerType.trendLine:
-        if (_drawPoints.length >= 2) {
+        if (drawPoints.length >= 2) {
           layer = TrendLine.fromTool(
-              from: _drawPoints.first,
-              to: _drawPoints.last,
+              from: drawPoints.first,
+              to: drawPoints.last,
               startPoint: _startingPoint!);
         }
         break;
       case LayerType.horizontalLine:
-        layer = HorizontalLine.fromTool(value: _drawPoints.first.dy);
+        layer = HorizontalLine.fromTool(value: drawPoints.first.dy);
         break;
       case LayerType.horizontalBand:
         layer = HorizontalBand.fromTool(
-            value: _drawPoints.first.dy, allowedError: 70);
+            value: drawPoints.first.dy, allowedError: 70);
         break;
       case LayerType.rectArea:
-        if (_drawPoints.length >= 2) {
+        if (drawPoints.length >= 2) {
           layer = RectArea.fromTool(
-              topLeft: _drawPoints.first,
-              bottomRight: _drawPoints.last,
+              topLeft: drawPoints.first,
+              bottomRight: drawPoints.last,
               dragStartPos: _startingPoint!);
         }
         break;
       case LayerType.circularArea:
-        layer = CircularArea.fromTool(point: _drawPoints.first);
+        layer = CircularArea.fromTool(point: drawPoints.first);
         break;
       case LayerType.arrow:
-        if (_drawPoints.length >= 2) {
+        if (drawPoints.length >= 2) {
           layer = Arrow.fromTool(
-              from: _drawPoints.first,
-              to: _drawPoints.last,
+              from: drawPoints.first,
+              to: drawPoints.last,
               startPoint: _startingPoint!);
         }
         break;
       case LayerType.verticalLine:
-        layer = VerticalLine.fromTool(pos: _drawPoints.first.dx);
+        layer = VerticalLine.fromTool(pos: drawPoints.first.dx);
         break;
       case LayerType.parallelChannel:
-        if (_drawPoints.length >= 2) {
+        if (drawPoints.length >= 2) {
           layer = ParallelChannel.fromTool(
-              topLeft: _drawPoints.first,
-              bottomRight: _drawPoints.last,
+              topLeft: drawPoints.first,
+              bottomRight: drawPoints.last,
               dragPoint: _startingPoint!);
         }
         break;
       case LayerType.arrowTextPointer:
-        layer = ArrowTextPointer.fromTool(pos: _drawPoints.first, label: "");
+        layer = ArrowTextPointer.fromTool(pos: drawPoints.first, label: "");
         break;
       case null:
         break;
     }
     if (layer != null) {
-      final chartState = _chartKeyForCurrentTab()?.currentState;
+      final chartState = chartKeyForCurrentTab()?.currentState;
       if (chartState != null) {
         setState(() {
           _selectedLayerType = null;
-          _drawPoints.clear();
+          drawPoints.clear();
         });
         chartState.addLayerUsingTool(layer);
       }
@@ -898,22 +934,27 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         onNotificationTap: () {},
         onProfileTap: () {},
       ),
-      body: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: _buildJourneyToolbar(colors),
-          ),
-          Expanded(
-            flex: 3,
-            child: _buildPromptPanel(colors),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            flex: 7,
-            child: _buildChartArea(colors),
-          ),
-        ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final totalWidth = constraints.maxWidth;
+          return Row(
+            children: [
+              SizedBox(
+                width: totalWidth * 0.06,
+                child: _buildJourneyToolbar(colors),
+              ),
+              SizedBox(
+                width: totalWidth * 0.24,
+                child: _buildPromptPanel(colors),
+              ),
+              const SizedBox(width: 12),
+              SizedBox(
+                width: totalWidth * 0.70 - 12,
+                child: _buildChartArea(colors),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -921,136 +962,142 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   // ─── Left: Journey Toolbar ───
 
   Widget _buildJourneyToolbar(CustomColors colors) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(12, 14, 0, 24),
-      decoration: BoxDecoration(
-        color: colors.sahiToolbarBg,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: colors.sahiToolbarShadow,
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              width: 60,
-              height: 40,
-              decoration: BoxDecoration(
-                  color: colors.sahiStreakColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: colors.sahiUtilityBg, width: 1)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.arrow_back_ios_rounded,
-                    size: 10,
-                  ),
-                  SizedBox(width: 4),
-                  Text("Back", style: TextStyle(fontSize: 12)),
-                ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final itemWidth = constraints.maxWidth * 0.7;
+        return Container(
+          margin: const EdgeInsets.fromLTRB(12, 14, 0, 24),
+          decoration: BoxDecoration(
+            color: colors.sahiToolbarBg,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: colors.sahiToolbarShadow,
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 12),
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              width: 60,
-              height: 80,
-              decoration: BoxDecoration(
-                color: colors.sahiUtilityBg,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    height: 34,
-                    width: 34,
-                    decoration: BoxDecoration(
-                      color: colors.sahiToolbarActiveBg,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color.fromRGBO(140, 128, 229, 1),
-                            Color.fromRGBO(224, 159, 135, 1),
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                        shape: BoxShape.circle,
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  width: itemWidth,
+                  height: 30,
+                  decoration: BoxDecoration(
+                      color: colors.sahiStreakColor,
+                      borderRadius: BorderRadius.circular(10),
+                      border:
+                          Border.all(color: colors.sahiTabBorder, width: 1)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.arrow_back_ios_rounded,
+                        size: 10,
                       ),
-                      child: Icon(
-                        Icons.play_arrow_outlined,
-                        size: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Text("Watch",
-                      style:
-                          TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              'JOURNEY',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          _journeyItems.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'No journeys',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: colors.textColorSecondary,
-                      ),
-                    ),
-                  ),
-                )
-              : Center(
-                  child: Container(
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: colors.sahiUtilityBg,
-                        borderRadius: BorderRadius.circular(16)),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      shrinkWrap: true,
-                      itemCount: _journeyItems.length,
-                      itemBuilder: (context, index) {
-                        final item = _journeyItems[index];
-                        return _JourneyToolbarItem(
-                            item: item, colors: colors, index: index);
-                      },
-                    ),
+                      SizedBox(width: 4),
+                      Text("Back", style: TextStyle(fontSize: 12)),
+                    ],
                   ),
                 ),
-        ],
-      ),
+              ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: itemWidth,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: colors.sahiUtilityBg,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        height: 34,
+                        width: 34,
+                        decoration: BoxDecoration(
+                          color: colors.sahiToolbarActiveBg,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromRGBO(140, 128, 229, 1),
+                                Color.fromRGBO(224, 159, 135, 1),
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.play_arrow_outlined,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Text("Watch",
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  'JOURNEY',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              _journeyItems.isEmpty
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          'No journeys',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: colors.textColorSecondary,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: Container(
+                        width: itemWidth,
+                        decoration: BoxDecoration(
+                            color: colors.sahiUtilityBg,
+                            borderRadius: BorderRadius.circular(16)),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          shrinkWrap: true,
+                          itemCount: _journeyItems.length,
+                          itemBuilder: (context, index) {
+                            final item = _journeyItems[index];
+                            return _JourneyToolbarItem(
+                                item: item, colors: colors, index: index);
+                          },
+                        ),
+                      ),
+                    ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -1170,7 +1217,19 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          if (_tabs.isNotEmpty) _renderTabs(colors, textStyles),
+          SahiTabBar(
+            tabs: tabs,
+            currentPageIndex: _currentPageIndex,
+            onTabTap: _navigateToPage,
+            activeJourney: _activeJourneyId != null
+                ? journeys.firstWhere(
+                    (j) => j.id == _activeJourneyId,
+                    orElse: () => JourneyState(id: ''),
+                  )
+                : null,
+            courseVideoUrl: courseVideoUrl,
+            showCourseVideoBtn: showCourseVideoBtn,
+          ),
           if (_currentShowToolsTask != null)
             SahiToolsBar(
               tools: _buildToolsList(),
@@ -1206,44 +1265,54 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
               ),
             ),
           Expanded(
-            child: _tabs.isEmpty
+            child: tabs.isEmpty
                 ? const SizedBox.shrink()
-                : PageView.builder(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final tab = _tabs[index];
-                      switch (tab["type"]) {
-                        case "chart":
-                          return _buildChartTab(tab, colors);
-                        case "option_chain":
-                          return _buildOptionChainTab(tab, colors, textStyles);
-                        case "payoff":
-                          return _buildPayoffTab(tab, textStyles);
-                        case "insights":
-                          return _buildInsightsTab(tab);
-                        case "table":
-                          return _buildTableTab(tab);
-                        case "insights_v2":
-                          return _buildInsightsV2Tab(tab);
-                        default:
-                          return Container();
-                      }
-                    }),
+                : Container(
+                    color: Color(0xffFBFBFD),
+                    child: PageView.builder(
+                        controller: pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final tab = tabs[index];
+                          switch (tab["type"]) {
+                            case "chart":
+                              return _buildChartTab(tab, colors);
+                            case "option_chain":
+                              return _buildOptionChainTab(
+                                  tab, colors, textStyles);
+                            case "payoff":
+                              return _buildPayoffTab(tab, textStyles);
+                            case "insights":
+                              return _buildInsightsTab(tab);
+                            case "table":
+                              return _buildTableTab(tab);
+                            case "insights_v2":
+                              return _buildInsightsV2Tab(tab);
+                            default:
+                              return Container();
+                          }
+                        }),
+                  ),
           ),
         ],
       ),
     );
   }
 
+  // Future<void> navigateToPage(int pageIndex) async {
+  //   setState(() {
+  //     _currentPageIndex = pageIndex;
+  //   });
+  // }
+
   Widget _buildChartTab(Map<String, String> tab, CustomColors colors) {
     final taskId = tab["taskId"];
-    final key = taskId != null && _chartKeys.containsKey(taskId)
-        ? _chartKeys[taskId]!
-        : _chartKey;
+    final key = taskId != null && chartKeys.containsKey(taskId)
+        ? chartKeys[taskId]!
+        : chartKey;
     return Container(
       decoration: BoxDecoration(
-        color: colors.cardBasicBackground,
+        color: Color(0xffFBFBFD),
         borderRadius: BorderRadius.circular(12),
       ),
       margin: const EdgeInsets.all(16),
@@ -1274,12 +1343,12 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final chooseTask = recipe.tasks
         .whereType<ChooseCorrectOptionValueChainTask>()
         .firstWhere((t) => t.taskId == taskId);
-    final optionChainTask = _optionChainTasks.firstWhere(
+    final optionChainTask = optionChainTasks.firstWhere(
       (t) => t.optionChainId == chooseTask.taskId,
-      orElse: () => _optionChainTasks.first,
+      orElse: () => optionChainTasks.first,
     );
     return PreviewScreen.from(
-        key: _previewScreenKeys[taskId] ?? GlobalKey(),
+        key: previewScreenKeys[taskId] ?? GlobalKey(),
         task: optionChainTask,
         onViewChartClicked: () => _navigateToPage(0),
         onSettingsClicked: () {
@@ -1301,9 +1370,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final taskId = tab["taskId"]!;
-    final payoffTask = _payoffGraphTasks.firstWhere(
+    final payoffTask = payoffGraphTasks.firstWhere(
       (t) => t.id == taskId,
-      orElse: () => _payoffGraphTasks.first,
+      orElse: () => payoffGraphTasks.first,
     );
     return _selectedLegs.isEmpty
         ? Center(
@@ -1329,7 +1398,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final taskId = tab["taskId"]!;
     final task = recipe.tasks
         .whereType<ShowInsightsPageTask>()
-        .firstWhere((t) => t.id == taskId, orElse: () => _insightsTasks.first);
+        .firstWhere((t) => t.id == taskId, orElse: () => insightsTasks.first);
     return InsightsWidget(insightsTask: task);
   }
 
@@ -1337,9 +1406,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final taskId = tab["taskId"]!;
     final task =
         recipe.tasks.whereType<TableTask>().firstWhere((t) => t.id == taskId);
-    if (_tableWidgetKeys[taskId] == null ||
-        _tableWidgetKeys[taskId]!.length != task.tables.tables.length) {
-      _tableWidgetKeys[taskId] = List.generate(
+    if (tableWidgetKeys[taskId] == null ||
+        tableWidgetKeys[taskId]!.length != task.tables.tables.length) {
+      tableWidgetKeys[taskId] = List.generate(
         task.tables.tables.length,
         (_) => GlobalKey<CustomTableState>(),
       );
@@ -1349,7 +1418,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         children: List.generate(
           task.tables.tables.length,
           (tableIdx) => CustomTable.from(
-            key: _tableWidgetKeys[taskId]![tableIdx],
+            key: tableWidgetKeys[taskId]![tableIdx],
             tableTask: TableTask(
               tables: TablesModel(
                 tables: [task.tables.tables[tableIdx]],
@@ -1363,9 +1432,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   Widget _buildInsightsV2Tab(Map<String, String> tab) {
     final taskId = tab["taskId"]!;
-    final task = recipe.tasks.whereType<ShowInsightsPageV2Task>().firstWhere(
-        (t) => t.id == taskId,
-        orElse: () => _v2insightsTasks.first);
+    final task = recipe.tasks
+        .whereType<ShowInsightsPageV2Task>()
+        .firstWhere((t) => t.id == taskId, orElse: () => v2insightsTasks.first);
     return InsightsV2Widget(task: task);
   }
 
@@ -1397,8 +1466,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(_tabs.length, (index) {
-                final tab = _tabs[index];
+              children: List.generate(tabs.length, (index) {
+                final tab = tabs[index];
                 final isActive = index == _currentPageIndex;
                 final title = tab["title"] ?? "";
                 return GestureDetector(
@@ -1513,7 +1582,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    pageController.dispose();
     super.dispose();
   }
 }

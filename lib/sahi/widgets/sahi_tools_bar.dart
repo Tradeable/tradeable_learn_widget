@@ -26,19 +26,20 @@ class SahiToolsBar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xffFBFBFD),
         border: Border(
           bottom: BorderSide(color: colors.sahiDivider, width: 0.35),
+          top: BorderSide(color: colors.sahiDivider, width: 0.35),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Row(
         children: [
           Text(
-            'Tools',
+            'TOOLS',
             style: TextStyle(
               color: colors.sahiTextPrimary,
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -46,11 +47,6 @@ class SahiToolsBar extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: colors.sahiChipEnabledBg,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: colors.sahiTabBorder, width: 1),
-              ),
               child: SizedBox(
                 height: 32,
                 child: ListView.separated(
@@ -69,13 +65,11 @@ class SahiToolsBar extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: tool.isEnabled
-                              ? colors.sahiPanelItemBg
-                              : null,
+                          color: tool.isEnabled ? colors.sahiPanelItemBg : null,
                           borderRadius: BorderRadius.circular(6),
                           border: tool.isEnabled
                               ? Border.all(
-                                  color: colors.sahiTabBorder,
+                                  color: colors.sahiPrimaryTextColor,
                                   width: 1,
                                 )
                               : null,
