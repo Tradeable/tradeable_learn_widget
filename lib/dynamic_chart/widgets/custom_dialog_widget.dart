@@ -4,7 +4,7 @@ import 'package:markdown_widget/markdown_widget.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 
-class CustomDialogWidget extends StatelessWidget {
+class CustomDialogWidget extends StatefulWidget {
   final ShowPopupTask task;
   final VoidCallback moveNext;
 
@@ -12,11 +12,27 @@ class CustomDialogWidget extends StatelessWidget {
       {super.key, required this.task, required this.moveNext});
 
   @override
+  State<CustomDialogWidget> createState() => _CustomDialogWidgetState();
+}
+
+class _CustomDialogWidgetState extends State<CustomDialogWidget> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
+
+    final task = widget.task;
+    final moveNext = widget.moveNext;
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -46,8 +62,10 @@ class CustomDialogWidget extends StatelessWidget {
             ),
             Flexible(
               child: Scrollbar(
+                controller: _scrollController,
                 thumbVisibility: true,
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 10),

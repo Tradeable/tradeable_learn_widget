@@ -110,6 +110,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   // Tools
   ShowToolsTask? _currentShowToolsTask;
+  AddRemoveToolsTask? _currentAddRemoveToolsTask;
   LayerType? _selectedLayerType;
   List<Offset> drawPoints = [];
   Offset? _startingPoint;
@@ -120,6 +121,13 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   String? _activeJourneyId;
   String? courseVideoUrl;
   bool showCourseVideoBtn = false;
+
+  // Side nav
+  List<ShowSideNavTask> sideNavTasks = [];
+  Map<String, String?> sideNavSelectedDesc = {};
+  String? expandedSideNavId;
+  bool _questionOptionSelected = false;
+  int _promptPanelTabIndex = 0;
 
   @override
   void initState() {
@@ -217,6 +225,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       case TaskType.showInsightsV2Page:
         _handleShowInsightsV2();
         break;
+      case TaskType.showSideNav:
+        _handleShowSideNav();
+        break;
       case TaskType.showTools:
         _handleShowTools();
         break;
@@ -225,7 +236,10 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         _onTaskFinish();
         break;
       case TaskType.addRemoveTools:
-        setState(() {});
+        final task = _currentTask as AddRemoveToolsTask;
+        setState(() {
+          _currentAddRemoveToolsTask = task;
+        });
         _onTaskFinish();
         break;
       case TaskType.openToolPanel:
@@ -641,9 +655,132 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     _onTaskFinish();
   }
 
+  void _handleShowSideNav() {
+    final task = _currentTask as ShowSideNavTask;
+    setState(() {
+      if (!sideNavTasks.any((t) => t.id == task.id)) {
+        sideNavTasks.add(task);
+      }
+      _questionOptionSelected = false;
+      expandedSideNavId = task.id;
+      _promptPanelTabIndex = 1;
+    });
+  }
+
+  Widget _buildQuestionsTab(CustomColors colors) {
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: sideNavTasks
+          .map((task) => _buildQuestionCard(colors, task))
+          .toList(),
+    );
+  }
+
+  Widget _buildQuestionCard(CustomColors colors, ShowSideNavTask task) {
+    final isExpanded = expandedSideNavId == task.id;
+    final selectedDesc = sideNavSelectedDesc[task.id];
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8F8FB),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0x14030405)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            task.title,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: colors.sahiPrimaryTextColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          _buildQuestionOption(
+              colors, task, task.primaryButtonText, task.primaryDescription),
+          if (task.secondaryButtonText.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            _buildQuestionOption(colors, task, task.secondaryButtonText,
+                task.secondaryDescription),
+          ],
+          if (isExpanded && selectedDesc != null) ...[
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colors.dynamicChartInstructionBG,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0x14030405)),
+              ),
+              child: MarkdownWidget(
+                data: selectedDesc,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestionOption(CustomColors colors, ShowSideNavTask task,
+      String label, String description) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          expandedSideNavId = task.id;
+          sideNavSelectedDesc[task.id] = description;
+          _questionOptionSelected = true;
+        });
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFBFBFD),
+          borderRadius: BorderRadius.circular(9),
+          border: Border.all(color: const Color(0x14030405)),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.circle_outlined,
+              size: 8,
+              color: sideNavSelectedDesc[task.id] == description
+                  ? colors.sahiTabActiveBg
+                  : colors.sahiTabInactiveText,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: colors.sahiPrimaryTextColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handleStartJourney() {
     final task = _currentTask as StartJourneyTask;
     setState(() {
+      for (final item in _journeyItems) {
+        if (item.active) {
+          item.active = false;
+          item.completed = true;
+        }
+      }
       journeys.add(JourneyState(id: task.journeyId));
       _activeJourneyId = task.journeyId;
       for (final item in _journeyItems) {
@@ -753,62 +890,67 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
     for (final indicatorType in IndicatorType.values) {
       if (indicatorType.name == toolName) {
+        final config = _currentAddRemoveToolsTask?.getToolConfig(toolName);
         Indicator indicator;
-        switch (indicatorType) {
-          case IndicatorType.rsi:
-            indicator = Rsi();
-            break;
-          case IndicatorType.macd:
-            indicator = Macd();
-            break;
-          case IndicatorType.sma:
-            indicator = Sma();
-            break;
-          case IndicatorType.ema:
-            indicator = Ema();
-            break;
-          case IndicatorType.bollingerBand:
-            indicator = BollingerBands();
-            break;
-          case IndicatorType.stochastic:
-            indicator = Stochastic();
-            break;
-          case IndicatorType.atr:
-            indicator = Atr();
-            break;
-          case IndicatorType.mfi:
-            indicator = Mfi();
-            break;
-          case IndicatorType.adx:
-            indicator = Adx();
-            break;
-          case IndicatorType.pivotPoint:
-            indicator = PivotPoint();
-            break;
-          case IndicatorType.pe:
-            indicator = Pe();
-            break;
-          case IndicatorType.pb:
-            indicator = Pb();
-            break;
-          case IndicatorType.supertrend:
-            indicator = Supertrend();
-            break;
-          case IndicatorType.vwap:
-            indicator = Vwap();
-            break;
-          case IndicatorType.evEbitda:
-            indicator = EvEbitda();
-            break;
-          case IndicatorType.evSales:
-            indicator = EvSales();
-            break;
-          case IndicatorType.scanner:
-            indicator = ScannerIndicator();
-            break;
-          case IndicatorType.roc:
-            indicator = Roc();
-            break;
+        if (config != null) {
+          indicator = Indicator.fromJson(json: config);
+        } else {
+          switch (indicatorType) {
+            case IndicatorType.rsi:
+              indicator = Rsi();
+              break;
+            case IndicatorType.macd:
+              indicator = Macd();
+              break;
+            case IndicatorType.sma:
+              indicator = Sma();
+              break;
+            case IndicatorType.ema:
+              indicator = Ema();
+              break;
+            case IndicatorType.bollingerBand:
+              indicator = BollingerBands();
+              break;
+            case IndicatorType.stochastic:
+              indicator = Stochastic();
+              break;
+            case IndicatorType.atr:
+              indicator = Atr();
+              break;
+            case IndicatorType.mfi:
+              indicator = Mfi();
+              break;
+            case IndicatorType.adx:
+              indicator = Adx();
+              break;
+            case IndicatorType.pivotPoint:
+              indicator = PivotPoint();
+              break;
+            case IndicatorType.pe:
+              indicator = Pe();
+              break;
+            case IndicatorType.pb:
+              indicator = Pb();
+              break;
+            case IndicatorType.supertrend:
+              indicator = Supertrend();
+              break;
+            case IndicatorType.vwap:
+              indicator = Vwap();
+              break;
+            case IndicatorType.evEbitda:
+              indicator = EvEbitda();
+              break;
+            case IndicatorType.evSales:
+              indicator = EvSales();
+              break;
+            case IndicatorType.scanner:
+              indicator = ScannerIndicator();
+              break;
+            case IndicatorType.roc:
+              indicator = Roc();
+              break;
+          }
         }
         chartState.addIndicator(indicator);
         return;
@@ -901,6 +1043,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         break;
     }
     if (layer != null) {
+      layer = _applyLayerConfig(layer);
       final chartState = chartKeyForCurrentTab()?.currentState;
       if (chartState != null) {
         setState(() {
@@ -910,6 +1053,80 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         chartState.addLayerUsingTool(layer);
       }
     }
+  }
+
+  Layer _applyLayerConfig(Layer layer) {
+    final config = _currentAddRemoveToolsTask?.getToolConfig(layer.type.name);
+    if (config == null) return layer;
+
+    switch (layer.type) {
+      case LayerType.horizontalLine:
+        final c = HorizontalLine.fromJson(json: config);
+        final l = layer as HorizontalLine;
+        l.color = c.color;
+        l.strokeWidth = c.strokeWidth;
+        break;
+      case LayerType.trendLine:
+        final c = TrendLine.fromJson(json: config);
+        final l = layer as TrendLine;
+        l.color = c.color;
+        l.strokeWidth = c.strokeWidth;
+        l.endPointRadius = c.endPointRadius;
+        break;
+      case LayerType.label:
+        final c = Label.fromJson(json: config);
+        final l = layer as Label;
+        l.label = c.label;
+        l.textStyle = c.textStyle;
+        break;
+      case LayerType.horizontalBand:
+        final c = HorizontalBand.fromJson(json: config);
+        final l = layer as HorizontalBand;
+        l.color = c.color;
+        l.allowedError = c.allowedError;
+        break;
+      case LayerType.rectArea:
+        final c = RectArea.fromJson(json: config);
+        final l = layer as RectArea;
+        l.color = c.color;
+        l.alpha = c.alpha;
+        l.strokeWidth = c.strokeWidth;
+        l.endPointRadius = c.endPointRadius;
+        l.isLocked = c.isLocked;
+        break;
+      case LayerType.circularArea:
+        final c = CircularArea.fromJson(json: config);
+        final l = layer as CircularArea;
+        l.color = c.color;
+        l.radius = c.radius;
+        break;
+      case LayerType.arrow:
+        final c = Arrow.fromJson(json: config);
+        final l = layer as Arrow;
+        l.color = c.color;
+        l.strokeWidth = c.strokeWidth;
+        l.endPointRadius = c.endPointRadius;
+        l.arrowheadSize = c.arrowheadSize;
+        l.isArrowheadAtTo = c.isArrowheadAtTo;
+        break;
+      case LayerType.parallelChannel:
+        final c = ParallelChannel.fromJson(json: config);
+        final l = layer as ParallelChannel;
+        l.color = c.color;
+        l.strokeWidth = c.strokeWidth;
+        l.channelAlpha = c.channelAlpha;
+        l.endPointRadius = c.endPointRadius;
+        break;
+      case LayerType.arrowTextPointer:
+        final c = ArrowTextPointer.fromJson(json: config);
+        final l = layer as ArrowTextPointer;
+        l.label = c.label;
+        l.textAlignment = c.textAlignment;
+        break;
+      case LayerType.verticalLine:
+        break;
+    }
+    return layer;
   }
 
   void _onBuySellSelection(finchart.OptionLeg? leg) {
@@ -937,20 +1154,24 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final totalWidth = constraints.maxWidth;
-          return Row(
+          return Stack(
             children: [
-              SizedBox(
-                width: totalWidth * 0.06,
-                child: _buildJourneyToolbar(colors),
-              ),
-              SizedBox(
-                width: totalWidth * 0.24,
-                child: _buildPromptPanel(colors),
-              ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: totalWidth * 0.70 - 12,
-                child: _buildChartArea(colors),
+              Row(
+                children: [
+                  SizedBox(
+                    width: totalWidth * 0.06,
+                    child: _buildJourneyToolbar(colors),
+                  ),
+                  SizedBox(
+                    width: totalWidth * 0.24,
+                    child: _buildPromptPanel(colors),
+                  ),
+                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: totalWidth * 0.70 - 12,
+                    child: _buildChartArea(colors),
+                  ),
+                ],
               ),
             ],
           );
@@ -1088,8 +1309,20 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                           itemCount: _journeyItems.length,
                           itemBuilder: (context, index) {
                             final item = _journeyItems[index];
-                            return _JourneyToolbarItem(
-                                item: item, colors: colors, index: index);
+                            return Column(
+                              children: [
+                                _JourneyToolbarItem(
+                                    item: item, colors: colors, index: index),
+                                if (index < _journeyItems.length - 1)
+                                  Container(
+                                    width: 2,
+                                    height: 16,
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 6),
+                                    color: colors.sahiTabBorder,
+                                  ),
+                              ],
+                            );
                           },
                         ),
                       ),
@@ -1112,21 +1345,32 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       ),
       child: Column(
         children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: const Color(0x14030405),
+                  width: 1,
+                ),
+              ),
+            ),
+            padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildPromptPanelTab(colors, 'Instruction', 0),
+                  const SizedBox(width: 8),
+                  _buildPromptPanelTab(colors, 'Questions', 1),
+                  const SizedBox(width: 8),
+                  _buildPromptPanelTab(colors, 'Response Archive', 2),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
           Expanded(
-            child: _promptTask == null
-                ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        'Waiting for instruction...',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: colors.textColorSecondary,
-                        ),
-                      ),
-                    ),
-                  )
-                : _buildPromptContent(colors),
+            child: _buildPromptPanelContent(colors),
           ),
           Padding(
             padding: const EdgeInsets.all(12),
@@ -1135,6 +1379,66 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildPromptPanelTab(CustomColors colors, String label, int index) {
+    final isActive = _promptPanelTabIndex == index;
+    final tabColor =
+        isActive ? colors.sahiTopBarBorder : colors.sahiToolbarIconColor;
+    return GestureDetector(
+      onTap: () => setState(() => _promptPanelTabIndex = index),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: isActive ? tabColor : Colors.transparent,
+              width: 2,
+            ),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: tabColor,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPromptPanelContent(CustomColors colors) {
+    switch (_promptPanelTabIndex) {
+      case 1:
+        return _buildQuestionsTab(colors);
+      case 2:
+        return Center(
+          child: Text(
+            'No responses yet',
+            style: TextStyle(
+              fontSize: 13,
+              color: colors.textColorSecondary,
+            ),
+          ),
+        );
+      default:
+        return _promptTask == null
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    '',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: colors.textColorSecondary,
+                    ),
+                  ),
+                ),
+              )
+            : _buildPromptContent(colors);
+    }
   }
 
   Widget _buildPromptContent(CustomColors colors) {
@@ -1181,8 +1485,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                           ),
                         )
                       : const SizedBox.shrink(),
-                  const Spacer(),
-                  const FeedbackWidget(),
+                  // const Spacer(),
+                  // const FeedbackWidget(),
                 ],
               ),
               const SizedBox(height: 4),
@@ -1438,85 +1742,22 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     return InsightsV2Widget(task: task);
   }
 
-  // ─── Tabs bar ───
-
-  IconData _getTabIcon(String title) {
-    final lower = title.toLowerCase();
-    if (lower.contains('chart')) return Icons.candlestick_chart_outlined;
-    if (lower.contains('option')) return Icons.show_chart;
-    if (lower.contains('payoff') || lower.contains('pay off')) {
-      return Icons.account_balance_wallet_outlined;
-    }
-    if (lower.contains('table')) return Icons.table_chart_outlined;
-    if (lower.contains('insight')) return Icons.insights_outlined;
-    return Icons.tab_outlined;
-  }
-
-  Widget _renderTabs(CustomColors colors, CustomStyles textStyles) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: colors.sahiTabBg,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: colors.sahiTabBorder, width: 1),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: List.generate(tabs.length, (index) {
-                final tab = tabs[index];
-                final isActive = index == _currentPageIndex;
-                final title = tab["title"] ?? "";
-                return GestureDetector(
-                  onTap: () => _navigateToPage(index),
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: colors.sahiPanelItemBg,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: colors.sahiTabBorder, width: 1),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _getTabIcon(title),
-                          size: 14,
-                          color: isActive
-                              ? colors.sahiTabActiveBg
-                              : colors.sahiTabInactiveText,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: isActive
-                                ? colors.sahiTabActiveBg
-                                : colors.sahiTabInactiveText,
-                            fontSize: 13,
-                            fontWeight:
-                                isActive ? FontWeight.w500 : FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ─── User action area ───
 
   Widget _userActionContainer(CustomColors colors) {
+    if (_promptPanelTabIndex == 1 && _questionOptionSelected) {
+      return ButtonWidget(
+        color: colors.sahiToolbarActiveIconColor,
+        btnContent: 'Next',
+        onTap: () {
+          setState(() {
+            _promptPanelTabIndex = 0;
+            _questionOptionSelected = false;
+          });
+          _onTaskFinish();
+        },
+      );
+    }
     switch (_currentTask.taskType) {
       case TaskType.addData:
       case TaskType.addIndicator:
@@ -1636,15 +1877,21 @@ class _JourneyToolbarItem extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(4),
         child: Center(
-          child: Text(
-            index.toString(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
+          child: item.completed
+              ? const Icon(
+                  Icons.check,
+                  size: 12,
+                  color: Colors.white,
+                )
+              : Text(
+                  index.toString(),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
         ),
       ),
     );

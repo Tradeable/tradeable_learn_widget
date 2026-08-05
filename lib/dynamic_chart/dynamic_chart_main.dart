@@ -378,6 +378,10 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         onTaskFinish();
         break;
+      case TaskType.showSideNav:
+        setState(() {});
+        onTaskFinish();
+        break;
       case TaskType.addChartTab:
         setState(() {});
         onTaskFinish();
@@ -664,6 +668,7 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.popUpTask:
       case TaskType.showBottomSheet:
       case TaskType.showInsightsPage:
+      case TaskType.showSideNav:
       case TaskType.chooseBucketRows:
       case TaskType.clearBucketRows:
       case TaskType.tableTask:
