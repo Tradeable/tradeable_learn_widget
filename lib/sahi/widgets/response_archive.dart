@@ -110,10 +110,10 @@ class ResponseArchive extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Icon(
-              isSelected ? Icons.check_circle : Icons.circle_outlined,
+              isSelected ? Icons.circle_rounded : Icons.circle_outlined,
               size: 16,
               color: isSelected
-                  ? colors.sahiCompletedJourneyBg
+                  ? colors.sahiToolbarActiveIconColor
                   : colors.sahiTabInactiveText.withAlpha((0.4 * 255).round()),
             ),
           ),

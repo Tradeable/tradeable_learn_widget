@@ -7,7 +7,6 @@ import 'package:fin_chart/option_chain/models/preview_data.dart';
 import 'package:fin_chart/option_chain/utils/data_transformer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/option_chain/option_chain_header.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_option_chain_header.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';

@@ -406,6 +406,11 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
         setState(() {});
         onTaskFinish();
         break;
+      case TaskType.addCoreConcept:
+      case TaskType.removeCoreConcept:
+        setState(() {});
+        onTaskFinish();
+        break;
     }
   }
 
@@ -684,6 +689,8 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
       case TaskType.attachVideoToJourney:
       case TaskType.hideVideoBtnInJourney:
       case TaskType.addCourseVideo:
+      case TaskType.addCoreConcept:
+      case TaskType.removeCoreConcept:
         return Container();
     }
   }

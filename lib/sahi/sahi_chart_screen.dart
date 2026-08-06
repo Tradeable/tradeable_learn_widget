@@ -44,9 +44,7 @@ import 'package:fin_chart/option_chain/models/option_leg.dart' as finchart;
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/insights_v2.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/instruction_content.dart';
@@ -109,6 +107,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   List<ShowPayOffGraphTask> payoffGraphTasks = [];
   List<ShowInsightsPageTask> insightsTasks = [];
   List<ShowInsightsPageV2Task> v2insightsTasks = [];
+  AddCoreConceptTask? coreConcepts;
   List<TableTask> tableTasks = [];
   Map<String, List<GlobalKey<SahiCustomTableState>>> tableWidgetKeys = {};
 
@@ -116,6 +115,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   ShowToolsTask? _currentShowToolsTask;
   AddRemoveToolsTask? _currentAddRemoveToolsTask;
   LayerType? _selectedLayerType;
+  String? _selectedToolTitle;
   List<Offset> drawPoints = [];
   Offset? _startingPoint;
 
@@ -294,6 +294,18 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         setState(() {
           courseVideoUrl = task.videoUrl;
           showCourseVideoBtn = true;
+        });
+        _onTaskFinish();
+        break;
+      case TaskType.addCoreConcept:
+        setState(() {
+          coreConcepts = _currentTask as AddCoreConceptTask;
+        });
+        _onTaskFinish();
+        break;
+      case TaskType.removeCoreConcept:
+        setState(() {
+          coreConcepts = null;
         });
         _onTaskFinish();
         break;
@@ -730,6 +742,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   void _onTaskFinish() {
+    if (_selectedToolTitle != null && mounted) {
+      setState(() => _selectedToolTitle = null);
+    }
     _taskPointer += 1;
     if (_taskPointer < recipe.tasks.length) {
       _currentTask = recipe.tasks[_taskPointer];
@@ -852,6 +867,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
               break;
           }
         }
+        setState(() => _selectedToolTitle = toolName);
         chartState.addIndicator(indicator);
         return;
       }
@@ -859,7 +875,10 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
     for (final layerType in LayerType.values) {
       if (layerType.name == toolName) {
-        setState(() => _selectedLayerType = layerType);
+        setState(() {
+          _selectedLayerType = layerType;
+          _selectedToolTitle = toolName;
+        });
         chartState.updateLayerGettingAddedState(layerType);
         return;
       }
@@ -1073,6 +1092,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                       tabIndex: _promptPanelTabIndex,
                       onTabChange: (index) =>
                           setState(() => _promptPanelTabIndex = index),
+                      coreConcepts: coreConcepts,
                       instructionBody: InstructionContent(
                         task: _promptTask,
                         colors: colors,
@@ -1147,6 +1167,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
             SahiToolsBar(
               tools: _buildToolsList(),
               onToolTap: _onToolTap,
+              activeToolTitle: _selectedToolTitle,
               trailing: GestureDetector(
                 onTap: _onClearTools,
                 child: Container(

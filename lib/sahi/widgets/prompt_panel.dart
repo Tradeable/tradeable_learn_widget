@@ -1,5 +1,8 @@
+import 'package:fin_chart/models/tasks/add_core_concept.task.dart';
 import 'package:flutter/material.dart';
+import 'package:markdown_widget/widget/markdown.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/instruction_content.dart';
+import 'package:tradeable_learn_widget/utils/sahi_markdown_config.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class PromptPanel extends StatelessWidget {
@@ -10,6 +13,7 @@ class PromptPanel extends StatelessWidget {
   final Widget questionsBody;
   final Widget? responseArchiveBody;
   final Widget? actionContainer;
+  final AddCoreConceptTask? coreConcepts;
 
   const PromptPanel({
     super.key,
@@ -18,6 +22,7 @@ class PromptPanel extends StatelessWidget {
     required this.onTabChange,
     required this.instructionBody,
     required this.questionsBody,
+    this.coreConcepts,
     this.responseArchiveBody,
     this.actionContainer,
   });
@@ -139,7 +144,51 @@ class PromptPanel extends StatelessWidget {
               ),
             );
       default:
-        return instructionBody;
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              children: [
+                instructionBody,
+                if (coreConcepts != null && coreConcepts!.title.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                      // margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: LinearGradient(colors: [
+                            Color.fromRGBO(238, 228, 247, 1),
+                            Color.fromRGBO(251, 247, 243, 1)
+                          ])),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              coreConcepts!.title,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: colors.sahiToolbarActiveIconColor,
+                              ),
+                            ),
+                            if (coreConcepts!.description.isNotEmpty)
+                              MarkdownWidget(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                data: coreConcepts!.description,
+                                config: coreConceptConfig,
+                              ),
+                          ],
+                        ),
+                      ))
+                ],
+              ],
+            ),
+          ),
+        );
     }
   }
 }

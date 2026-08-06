@@ -2,7 +2,6 @@ import 'package:fin_chart/models/tasks/add_prompt.task.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_tooltip_widget.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/sahi_markdown_config.dart';
