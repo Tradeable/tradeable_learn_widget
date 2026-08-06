@@ -42,21 +42,25 @@ import 'package:fin_chart/models/tasks/show_insights_page.task.dart';
 import 'package:fin_chart/models/tasks/table_task.dart';
 import 'package:fin_chart/option_chain/models/option_leg.dart' as finchart;
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:markdown_widget/markdown_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/dynamic_chart_model.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet_widget.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_dialog_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_table.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/feedback_widget.dart';
-import 'package:tradeable_learn_widget/sahi/widgets/sahi_tools_bar.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/widgets/tool_tip_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/insights_v2.dart';
-import 'package:tradeable_learn_widget/dynamic_chart/preview_screen.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/instruction_content.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/journey_toolbar.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/prompt_panel.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/questions_tab.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/response_archive.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_custom_table.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_dialog_widget.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_insights_v2.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_preview_screen.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_tabbar.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_tools_bar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_top_bar.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -96,7 +100,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   final Map<String, bool> _hasPlottedFirstChunk = {};
 
   // Option chain
-  Map<String, GlobalKey<PreviewScreenState>> previewScreenKeys = {};
+  Map<String, GlobalKey<SahiPreviewScreenState>> previewScreenKeys = {};
   List<finchart.OptionLeg> _selectedLegs = [];
   List<AddOptionChainTask> optionChainTasks = [];
   bool _isOptionChainLoading = false;
@@ -106,7 +110,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   List<ShowInsightsPageTask> insightsTasks = [];
   List<ShowInsightsPageV2Task> v2insightsTasks = [];
   List<TableTask> tableTasks = [];
-  Map<String, List<GlobalKey<CustomTableState>>> tableWidgetKeys = {};
+  Map<String, List<GlobalKey<SahiCustomTableState>>> tableWidgetKeys = {};
 
   // Tools
   ShowToolsTask? _currentShowToolsTask;
@@ -116,7 +120,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   Offset? _startingPoint;
 
   // Journeys
-  List<_JourneyItem> _journeyItems = [];
+  List<JourneyItem> _journeyItems = [];
   List<JourneyState> journeys = [];
   String? _activeJourneyId;
   String? courseVideoUrl;
@@ -124,6 +128,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   // Side nav
   List<ShowSideNavTask> sideNavTasks = [];
+  List<ShowSideNavTask> answeredSideNavTasks = [];
   Map<String, String?> sideNavSelectedDesc = {};
   String? expandedSideNavId;
   bool _questionOptionSelected = false;
@@ -145,7 +150,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void _extractJourneys() {
     final startTasks = recipe.tasks.whereType<StartJourneyTask>().toList();
     _journeyItems =
-        startTasks.map((t) => _JourneyItem(id: t.journeyId)).toList();
+        startTasks.map((t) => JourneyItem(id: t.journeyId)).toList();
   }
 
   void _runAfterDelay() async {
@@ -451,7 +456,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     } else {
       int addedIndex = -1;
       setState(() {
-        previewScreenKeys[task.taskId] = GlobalKey<PreviewScreenState>();
+        previewScreenKeys[task.taskId] = GlobalKey<SahiPreviewScreenState>();
         if (!tabs.any((tab) => tab["taskId"] == task.taskId)) {
           if (recipe.tasks.any((t) =>
               t is ChooseCorrectOptionValueChainTask &&
@@ -559,7 +564,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
               colors.dynamicChartBlurBg.withAlpha((0.5 * 255).round()),
           builder: (context) {
             final task = _currentTask as ShowPopupTask;
-            return CustomDialogWidget(
+            return SahiDialogWidget(
                 task: task, moveNext: () => Navigator.of(context).pop());
           }).then((_) => _onTaskFinish());
     });
@@ -665,111 +670,6 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       expandedSideNavId = task.id;
       _promptPanelTabIndex = 1;
     });
-  }
-
-  Widget _buildQuestionsTab(CustomColors colors) {
-    return ListView(
-      padding: const EdgeInsets.all(12),
-      children: sideNavTasks
-          .map((task) => _buildQuestionCard(colors, task))
-          .toList(),
-    );
-  }
-
-  Widget _buildQuestionCard(CustomColors colors, ShowSideNavTask task) {
-    final isExpanded = expandedSideNavId == task.id;
-    final selectedDesc = sideNavSelectedDesc[task.id];
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F8FB),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0x14030405)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            task.title,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: colors.sahiPrimaryTextColor,
-            ),
-          ),
-          const SizedBox(height: 10),
-          _buildQuestionOption(
-              colors, task, task.primaryButtonText, task.primaryDescription),
-          if (task.secondaryButtonText.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _buildQuestionOption(colors, task, task.secondaryButtonText,
-                task.secondaryDescription),
-          ],
-          if (isExpanded && selectedDesc != null) ...[
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: colors.dynamicChartInstructionBG,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0x14030405)),
-              ),
-              child: MarkdownWidget(
-                data: selectedDesc,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuestionOption(CustomColors colors, ShowSideNavTask task,
-      String label, String description) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          expandedSideNavId = task.id;
-          sideNavSelectedDesc[task.id] = description;
-          _questionOptionSelected = true;
-        });
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFBFBFD),
-          borderRadius: BorderRadius.circular(9),
-          border: Border.all(color: const Color(0x14030405)),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.circle_outlined,
-              size: 8,
-              color: sideNavSelectedDesc[task.id] == description
-                  ? colors.sahiTabActiveBg
-                  : colors.sahiTabInactiveText,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: colors.sahiPrimaryTextColor,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 
   void _handleStartJourney() {
@@ -1160,11 +1060,46 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                 children: [
                   SizedBox(
                     width: totalWidth * 0.06,
-                    child: _buildJourneyToolbar(colors),
+                    child: JourneyToolbar(
+                      items: _journeyItems,
+                      colors: colors,
+                      onBack: () => Navigator.of(context).pop(),
+                    ),
                   ),
                   SizedBox(
                     width: totalWidth * 0.24,
-                    child: _buildPromptPanel(colors),
+                    child: PromptPanel(
+                      colors: colors,
+                      tabIndex: _promptPanelTabIndex,
+                      onTabChange: (index) =>
+                          setState(() => _promptPanelTabIndex = index),
+                      instructionBody: InstructionContent(
+                        task: _promptTask,
+                        colors: colors,
+                      ),
+                      questionsBody: QuestionsTab(
+                        tasks: sideNavTasks
+                            .where((t) => !answeredSideNavTasks
+                                .any((a) => a.id == t.id))
+                            .toList(),
+                        expandedTaskId: expandedSideNavId,
+                        selectedDescriptions: sideNavSelectedDesc,
+                        colors: colors,
+                        onOptionSelect: (task, description) {
+                          setState(() {
+                            expandedSideNavId = task.id;
+                            sideNavSelectedDesc[task.id] = description;
+                            _questionOptionSelected = true;
+                          });
+                        },
+                      ),
+                      responseArchiveBody: ResponseArchive(
+                        tasks: answeredSideNavTasks,
+                        selectedDescriptions: sideNavSelectedDesc,
+                        colors: colors,
+                      ),
+                      actionContainer: _userActionContainer(colors),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   SizedBox(
@@ -1176,332 +1111,6 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  // ─── Left: Journey Toolbar ───
-
-  Widget _buildJourneyToolbar(CustomColors colors) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final itemWidth = constraints.maxWidth * 0.7;
-        return Container(
-          margin: const EdgeInsets.fromLTRB(12, 14, 0, 24),
-          decoration: BoxDecoration(
-            color: colors.sahiToolbarBg,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: colors.sahiToolbarShadow,
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: Container(
-                  width: itemWidth,
-                  height: 30,
-                  decoration: BoxDecoration(
-                      color: colors.sahiStreakColor,
-                      borderRadius: BorderRadius.circular(10),
-                      border:
-                          Border.all(color: colors.sahiTabBorder, width: 1)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.arrow_back_ios_rounded,
-                        size: 10,
-                      ),
-                      SizedBox(width: 4),
-                      Text("Back", style: TextStyle(fontSize: 12)),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: itemWidth,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: colors.sahiUtilityBg,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        height: 34,
-                        width: 34,
-                        decoration: BoxDecoration(
-                          color: colors.sahiToolbarActiveBg,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(140, 128, 229, 1),
-                                Color.fromRGBO(224, 159, 135, 1),
-                              ],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.play_arrow_outlined,
-                            size: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Text("Watch",
-                          style: TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
-                  'JOURNEY',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              _journeyItems.isEmpty
-                  ? Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          'No journeys',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: colors.textColorSecondary,
-                          ),
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Container(
-                        width: itemWidth,
-                        decoration: BoxDecoration(
-                            color: colors.sahiUtilityBg,
-                            borderRadius: BorderRadius.circular(16)),
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          shrinkWrap: true,
-                          itemCount: _journeyItems.length,
-                          itemBuilder: (context, index) {
-                            final item = _journeyItems[index];
-                            return Column(
-                              children: [
-                                _JourneyToolbarItem(
-                                    item: item, colors: colors, index: index),
-                                if (index < _journeyItems.length - 1)
-                                  Container(
-                                    width: 2,
-                                    height: 16,
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 6),
-                                    color: colors.sahiTabBorder,
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // ─── Middle: Prompt Panel ───
-
-  Widget _buildPromptPanel(CustomColors colors) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(12, 14, 0, 24),
-      decoration: BoxDecoration(
-        color: colors.dynamicChartInstructionBG,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: const Color(0x14030405),
-                  width: 1,
-                ),
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildPromptPanelTab(colors, 'Instruction', 0),
-                  const SizedBox(width: 8),
-                  _buildPromptPanelTab(colors, 'Questions', 1),
-                  const SizedBox(width: 8),
-                  _buildPromptPanelTab(colors, 'Response Archive', 2),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: _buildPromptPanelContent(colors),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: _userActionContainer(colors),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromptPanelTab(CustomColors colors, String label, int index) {
-    final isActive = _promptPanelTabIndex == index;
-    final tabColor =
-        isActive ? colors.sahiTopBarBorder : colors.sahiToolbarIconColor;
-    return GestureDetector(
-      onTap: () => setState(() => _promptPanelTabIndex = index),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: isActive ? tabColor : Colors.transparent,
-              width: 2,
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: tabColor,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPromptPanelContent(CustomColors colors) {
-    switch (_promptPanelTabIndex) {
-      case 1:
-        return _buildQuestionsTab(colors);
-      case 2:
-        return Center(
-          child: Text(
-            'No responses yet',
-            style: TextStyle(
-              fontSize: 13,
-              color: colors.textColorSecondary,
-            ),
-          ),
-        );
-      default:
-        return _promptTask == null
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    '',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: colors.textColorSecondary,
-                    ),
-                  ),
-                ),
-              )
-            : _buildPromptContent(colors);
-    }
-  }
-
-  Widget _buildPromptContent(CustomColors colors) {
-    final textStyles =
-        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 400),
-      transitionBuilder: (child, animation) => SlideTransition(
-        position: Tween<Offset>(
-          begin: const Offset(1, 0),
-          end: Offset.zero,
-        ).animate(animation),
-        child: child,
-      ),
-      child: SizedBox(
-        key: ValueKey(_promptTask),
-        width: double.infinity,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  _promptTask!.isExplanation
-                      ? Text("Take Away", style: textStyles.smallBold)
-                      : Text("Instruction", style: textStyles.mediumBold),
-                  (_promptTask!.hint ?? "").isNotEmpty
-                      ? TapTooltip(
-                          message: 'Hint!\n${_promptTask!.hint}',
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colors.feedbackWidgetBG,
-                            ),
-                            child: SvgPicture.asset(
-                              "assets/instruction_hint.svg",
-                              package: 'tradeable_learn_widget/lib',
-                              height: 20,
-                            ),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  // const Spacer(),
-                  // const FeedbackWidget(),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: MarkdownWidget(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    data: _promptTask?.promptText ?? "",
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -1651,7 +1260,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       (t) => t.optionChainId == chooseTask.taskId,
       orElse: () => optionChainTasks.first,
     );
-    return PreviewScreen.from(
+    return SahiPreviewScreen.from(
         key: previewScreenKeys[taskId] ?? GlobalKey(),
         task: optionChainTask,
         onViewChartClicked: () => _navigateToPage(0),
@@ -1714,14 +1323,14 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         tableWidgetKeys[taskId]!.length != task.tables.tables.length) {
       tableWidgetKeys[taskId] = List.generate(
         task.tables.tables.length,
-        (_) => GlobalKey<CustomTableState>(),
+        (_) => GlobalKey<SahiCustomTableState>(),
       );
     }
     return SingleChildScrollView(
       child: Column(
         children: List.generate(
           task.tables.tables.length,
-          (tableIdx) => CustomTable.from(
+          (tableIdx) => SahiCustomTable.from(
             key: tableWidgetKeys[taskId]![tableIdx],
             tableTask: TableTask(
               tables: TablesModel(
@@ -1739,7 +1348,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final task = recipe.tasks
         .whereType<ShowInsightsPageV2Task>()
         .firstWhere((t) => t.id == taskId, orElse: () => v2insightsTasks.first);
-    return InsightsV2Widget(task: task);
+    return SahiInsightsV2(task: task);
   }
 
   // ─── User action area ───
@@ -1751,6 +1360,15 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         btnContent: 'Next',
         onTap: () {
           setState(() {
+            final answered = sideNavTasks
+                .where((t) => t.id == expandedSideNavId)
+                .toList();
+            for (final t in answered) {
+              if (!answeredSideNavTasks.any((a) => a.id == t.id)) {
+                answeredSideNavTasks.add(t);
+              }
+            }
+            expandedSideNavId = null;
             _promptPanelTabIndex = 0;
             _questionOptionSelected = false;
           });
@@ -1825,75 +1443,5 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   void dispose() {
     pageController.dispose();
     super.dispose();
-  }
-}
-
-// ─── Journey toolbar item model ───
-
-class _JourneyItem {
-  final String id;
-  bool active;
-  bool completed;
-
-  _JourneyItem({
-    required this.id,
-    this.active = false,
-    this.completed = false,
-  });
-}
-
-// ─── Journey toolbar item widget ───
-
-class _JourneyToolbarItem extends StatelessWidget {
-  final _JourneyItem item;
-  final CustomColors colors;
-  final int index;
-
-  const _JourneyToolbarItem({
-    required this.item,
-    required this.colors,
-    required this.index,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final iconColor = item.active
-        ? colors.sahiToolbarActiveIconColor
-        : colors.sahiToolbarIconColor;
-
-    final bgColor =
-        item.active ? colors.sahiToolbarActiveBg : Colors.transparent;
-
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: iconColor,
-          shape: BoxShape.circle,
-        ),
-        padding: const EdgeInsets.all(4),
-        child: Center(
-          child: item.completed
-              ? const Icon(
-                  Icons.check,
-                  size: 12,
-                  color: Colors.white,
-                )
-              : Text(
-                  index.toString(),
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-        ),
-      ),
-    );
   }
 }
