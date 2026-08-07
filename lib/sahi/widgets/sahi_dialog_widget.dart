@@ -35,14 +35,24 @@ class _SahiDialogWidgetState extends State<SahiDialogWidget> {
     final moveNext = widget.moveNext;
 
     return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 400, maxWidth: 500),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: colors.cardBasicBackground),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+          borderRadius: BorderRadius.circular(20),
+          border:
+              Border.all(color: Color.fromRGBO(255, 255, 255, 0.2), width: 1),
+          color: colors.cardBasicBackground,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha((0.25 * 255).round()),
+              blurRadius: 24,
+              spreadRadius: 2,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -52,9 +62,12 @@ class _SahiDialogWidgetState extends State<SahiDialogWidget> {
               shrinkWrap: true,
               data: task.title,
               config: MarkdownConfig(configs: [
+                PConfig(
+                    textStyle:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 H1Config(
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ]),
             ),
             Flexible(
@@ -71,7 +84,7 @@ class _SahiDialogWidgetState extends State<SahiDialogWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               child: InkWell(
                 onTap: () => moveNext(),
                 child: Container(

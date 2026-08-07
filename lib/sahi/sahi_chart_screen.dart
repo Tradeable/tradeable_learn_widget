@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:fin_chart/fin_chart.dart';
 import 'package:fin_chart/models/enums/task_type.dart';
 import 'package:fin_chart/models/enums/mcq_arrangment_type.dart';
@@ -116,6 +118,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   AddRemoveToolsTask? _currentAddRemoveToolsTask;
   LayerType? _selectedLayerType;
   String? _selectedToolTitle;
+  bool _isPopupVisible = false;
   List<Offset> drawPoints = [];
   Offset? _startingPoint;
 
@@ -568,17 +571,18 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   void _handlePopup() {
     WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
-      final colors =
-          TLW().themeData?.customColors ?? Theme.of(context).customColors;
+      if (mounted) setState(() => _isPopupVisible = true);
       showDialog(
+          barrierColor: Colors.transparent,
           context: context,
-          barrierColor:
-              colors.dynamicChartBlurBg.withAlpha((0.5 * 255).round()),
           builder: (context) {
             final task = _currentTask as ShowPopupTask;
             return SahiDialogWidget(
                 task: task, moveNext: () => Navigator.of(context).pop());
-          }).then((_) => _onTaskFinish());
+          }).then((_) {
+        if (mounted) setState(() => _isPopupVisible = false);
+        _onTaskFinish();
+      });
     });
     setState(() {});
   }
@@ -1083,48 +1087,53 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                       items: _journeyItems,
                       colors: colors,
                       onBack: () => Navigator.of(context).pop(),
+                      videoUrl: courseVideoUrl ?? "",
                     ),
                   ),
-                  SizedBox(
-                    width: totalWidth * 0.24,
-                    child: PromptPanel(
-                      colors: colors,
-                      tabIndex: _promptPanelTabIndex,
-                      onTabChange: (index) =>
-                          setState(() => _promptPanelTabIndex = index),
-                      coreConcepts: coreConcepts,
-                      instructionBody: InstructionContent(
-                        task: _promptTask,
+                  _blurWhenDialogVisible(
+                    SizedBox(
+                      width: totalWidth * 0.24,
+                      child: PromptPanel(
                         colors: colors,
+                        tabIndex: _promptPanelTabIndex,
+                        onTabChange: (index) =>
+                            setState(() => _promptPanelTabIndex = index),
+                        coreConcepts: coreConcepts,
+                        instructionBody: InstructionContent(
+                          task: _promptTask,
+                          colors: colors,
+                        ),
+                        questionsBody: QuestionsTab(
+                          tasks: sideNavTasks
+                              .where((t) => !answeredSideNavTasks
+                                  .any((a) => a.id == t.id))
+                              .toList(),
+                          expandedTaskId: expandedSideNavId,
+                          selectedDescriptions: sideNavSelectedDesc,
+                          colors: colors,
+                          onOptionSelect: (task, description) {
+                            setState(() {
+                              expandedSideNavId = task.id;
+                              sideNavSelectedDesc[task.id] = description;
+                              _questionOptionSelected = true;
+                            });
+                          },
+                        ),
+                        responseArchiveBody: ResponseArchive(
+                          tasks: answeredSideNavTasks,
+                          selectedDescriptions: sideNavSelectedDesc,
+                          colors: colors,
+                        ),
+                        actionContainer: _userActionContainer(colors),
                       ),
-                      questionsBody: QuestionsTab(
-                        tasks: sideNavTasks
-                            .where((t) => !answeredSideNavTasks
-                                .any((a) => a.id == t.id))
-                            .toList(),
-                        expandedTaskId: expandedSideNavId,
-                        selectedDescriptions: sideNavSelectedDesc,
-                        colors: colors,
-                        onOptionSelect: (task, description) {
-                          setState(() {
-                            expandedSideNavId = task.id;
-                            sideNavSelectedDesc[task.id] = description;
-                            _questionOptionSelected = true;
-                          });
-                        },
-                      ),
-                      responseArchiveBody: ResponseArchive(
-                        tasks: answeredSideNavTasks,
-                        selectedDescriptions: sideNavSelectedDesc,
-                        colors: colors,
-                      ),
-                      actionContainer: _userActionContainer(colors),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  SizedBox(
-                    width: totalWidth * 0.70 - 12,
-                    child: _buildChartArea(colors),
+                  _blurWhenDialogVisible(
+                    SizedBox(
+                      width: totalWidth * 0.70 - 12,
+                      child: _buildChartArea(colors),
+                    ),
                   ),
                 ],
               ),
@@ -1136,6 +1145,14 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   }
 
   // ─── Right: Chart + Tabs + Action Area ───
+
+  Widget _blurWhenDialogVisible(Widget child) {
+    if (!_isPopupVisible) return child;
+    return ImageFiltered(
+      imageFilter: ui.ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+      child: child,
+    );
+  }
 
   Widget _buildChartArea(CustomColors colors) {
     final textStyles =
@@ -1381,9 +1398,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         btnContent: 'Next',
         onTap: () {
           setState(() {
-            final answered = sideNavTasks
-                .where((t) => t.id == expandedSideNavId)
-                .toList();
+            final answered =
+                sideNavTasks.where((t) => t.id == expandedSideNavId).toList();
             for (final t in answered) {
               if (!answeredSideNavTasks.any((a) => a.id == t.id)) {
                 answeredSideNavTasks.add(t);

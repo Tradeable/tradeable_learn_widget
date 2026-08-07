@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_toolbar_item.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class JourneyToolbar extends StatelessWidget {
   final List<JourneyItem> items;
   final CustomColors colors;
   final VoidCallback onBack;
+  final String videoUrl;
 
   const JourneyToolbar({
     super.key,
     required this.items,
     required this.colors,
     required this.onBack,
+    required this.videoUrl,
   });
 
   @override
@@ -58,7 +61,10 @@ class JourneyToolbar extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  if(videoUrl.isEmpty) return;
+                  launchUrl(Uri.parse(videoUrl));
+                },
                 child: Container(
                   width: itemWidth,
                   height: 80,

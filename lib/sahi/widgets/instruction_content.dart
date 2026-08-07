@@ -91,7 +91,7 @@ class InstructionContent extends StatelessWidget {
                 data: task?.promptText ?? "",
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                config: markdownConfig,
+                config: promptConfig,
               )
             ],
           ),
