@@ -252,9 +252,11 @@ packages:
   fin_chart:
     dependency: transitive
     description:
-      path: "../../fin_chart"
-      relative: true
-    source: path
+      path: "."
+      ref: sahi
+      resolved-ref: "4712a23c14a68f52499f4fc88dd4b48ce8b83a10"
+      url: "https://github.com/Tradeable/fin_chart.git"
+    source: git
     version: "0.0.1"
   fl_chart:
     dependency: transitive
