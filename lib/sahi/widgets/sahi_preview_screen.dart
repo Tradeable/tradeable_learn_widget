@@ -59,6 +59,11 @@ class SahiPreviewScreen extends StatefulWidget {
 class SahiPreviewScreenState extends State<SahiPreviewScreen> {
   static const double cellHeight = 70;
   static const int maxColumnsWithoutScroll = 5;
+  static const double _sectionLabelHeight = 22;
+  static const double _sectionLabelGap = 4;
+  static const double _columnHeaderHeight = 36;
+
+  double get _headerSectionOffset => _sectionLabelHeight + _sectionLabelGap;
   List<int> _selectedRowIndex = [];
   bool _isChecked = false;
   List<int> userSelectedIndex = [];
@@ -551,27 +556,47 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
     switch (widget.previewData.visibility) {
       case OptionChainVisibility.call:
         final columns = _getFilteredColumns();
+        final callRegionWidth = needsScroll
+            ? _availableWidth - _cellWidth
+            : columns.length * _cellWidth;
         return Stack(
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: _leftHeaderScrollController,
-              physics: const ClampingScrollPhysics(),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...columns.map((column) => _buildColumnHeader(column)),
-                  SizedBox(
-                      width: _cellWidth, child: _buildStrikeColumnHeader()),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: callRegionWidth,
+                      child: _buildSectionLabel('CALL'),
+                    ),
+                    SizedBox(
+                        width: _cellWidth, child: _buildSectionLabel(null)),
+                  ],
+                ),
+                const SizedBox(height: _sectionLabelGap),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _leftHeaderScrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...columns.map((column) => _buildColumnHeader(column)),
+                      SizedBox(
+                          width: _cellWidth, child: _buildStrikeColumnHeader()),
+                    ],
+                  ),
+                ),
+              ],
             ),
             if (needsScroll)
               Positioned(
                 right: 0,
+                top: _headerSectionOffset,
                 child: Container(
                   width: _cellWidth,
-                  height: 56,
+                  height: _columnHeaderHeight,
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: _buildStrikeColumnHeader(),
                 ),
@@ -580,27 +605,47 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
         );
       case OptionChainVisibility.put:
         final columns = _getFilteredColumns();
+        final putRegionWidth = needsScroll
+            ? _availableWidth - _cellWidth
+            : columns.length * _cellWidth;
         return Stack(
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              controller: _rightHeaderScrollController,
-              physics: const ClampingScrollPhysics(),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                      width: _cellWidth, child: _buildStrikeColumnHeader()),
-                  ...columns.map((column) => _buildColumnHeader(column)),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                        width: _cellWidth, child: _buildSectionLabel(null)),
+                    SizedBox(
+                      width: putRegionWidth,
+                      child: _buildSectionLabel('PUT'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: _sectionLabelGap),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _rightHeaderScrollController,
+                  physics: const ClampingScrollPhysics(),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: _cellWidth, child: _buildStrikeColumnHeader()),
+                      ...columns.map((column) => _buildColumnHeader(column)),
+                    ],
+                  ),
+                ),
+              ],
             ),
             if (needsScroll)
               Positioned(
                 left: 0,
+                top: _headerSectionOffset,
                 child: Container(
                   width: _cellWidth,
-                  height: 56,
+                  height: _columnHeaderHeight,
                   color: Theme.of(context).scaffoldBackgroundColor,
                   child: _buildStrikeColumnHeader(),
                 ),
@@ -613,48 +658,89 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
         final centerPosition = (_availableWidth - _cellWidth) / 2;
 
         if (!needsScroll) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...leftColumns.map((column) => _buildColumnHeader(column)),
-              SizedBox(width: _cellWidth, child: _buildStrikeColumnHeader()),
-              ...rightColumns.map((column) => _buildColumnHeader(column)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: leftColumns.length * _cellWidth,
+                    child: _buildSectionLabel('CALL'),
+                  ),
+                  SizedBox(
+                      width: _cellWidth, child: _buildSectionLabel(null)),
+                  SizedBox(
+                    width: rightColumns.length * _cellWidth,
+                    child: _buildSectionLabel('PUT'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: _sectionLabelGap),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...leftColumns.map((column) => _buildColumnHeader(column)),
+                  SizedBox(
+                      width: _cellWidth, child: _buildStrikeColumnHeader()),
+                  ...rightColumns.map((column) => _buildColumnHeader(column)),
+                ],
+              ),
             ],
           );
         }
 
-        return Row(
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: centerPosition,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                controller: _leftHeaderScrollController,
-                physics: const ClampingScrollPhysics(),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: leftColumns
-                      .map((column) => _buildColumnHeader(column))
-                      .toList(),
+            Row(
+              children: [
+                SizedBox(
+                  width: centerPosition,
+                  child: _buildSectionLabel('CALL'),
                 ),
-              ),
+                SizedBox(width: _cellWidth, child: _buildSectionLabel(null)),
+                SizedBox(
+                  width: centerPosition,
+                  child: _buildSectionLabel('PUT'),
+                ),
+              ],
             ),
-            SizedBox(width: _cellWidth, child: _buildStrikeColumnHeader()),
-            SizedBox(
-              width: centerPosition,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                controller: _rightHeaderScrollController,
-                physics: const ClampingScrollPhysics(),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: rightColumns
-                      .map((column) => _buildColumnHeader(column))
-                      .toList(),
+            const SizedBox(height: _sectionLabelGap),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: centerPosition,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _leftHeaderScrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: leftColumns
+                          .map((column) => _buildColumnHeader(column))
+                          .toList(),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(width: _cellWidth, child: _buildStrikeColumnHeader()),
+                SizedBox(
+                  width: centerPosition,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _rightHeaderScrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: rightColumns
+                          .map((column) => _buildColumnHeader(column))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         );
@@ -784,6 +870,27 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
     }
   }
 
+  Widget _buildSectionLabel(String? text) {
+    final textStyles =
+        TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
+
+    if (text == null) {
+      return SizedBox(height: _sectionLabelHeight);
+    }
+
+    return Container(
+      height: _sectionLabelHeight,
+      alignment: Alignment.center,
+      color: Colors.white,
+      child: Text(
+        text,
+        style: textStyles.smallNormal
+            .copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
   Widget _buildColumnHeader(ColumnConfig column) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
@@ -794,7 +901,7 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
     return SizedBox(
       width: _cellWidth,
       child: Container(
-        height: 36,
+        height: _columnHeaderHeight,
         padding: const EdgeInsets.all(2),
         color: Colors.white,
         alignment: Alignment.center,
@@ -819,7 +926,7 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
         orElse: () => throw Exception("Strike column not found"));
 
     return Container(
-      height: 36,
+      height: _columnHeaderHeight,
       padding: const EdgeInsets.all(2),
       color: Colors.white,
       alignment: Alignment.center,
