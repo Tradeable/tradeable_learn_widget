@@ -6,18 +6,20 @@ class JourneyToolbarItem extends StatelessWidget {
   final JourneyItem item;
   final CustomColors colors;
   final int index;
+  final Color? activeColor;
 
   const JourneyToolbarItem({
     super.key,
     required this.item,
     required this.colors,
     required this.index,
+    this.activeColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final iconColor = item.active
-        ? colors.sahiToolbarActiveIconColor
+        ? (activeColor ?? colors.sahiToolbarActiveIconColor)
         : colors.sahiToolbarIconColor;
 
     final bgColor =

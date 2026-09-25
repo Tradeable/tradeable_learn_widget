@@ -129,6 +129,14 @@ class CustomColors {
   final Color sahiPrimaryTextColor;
   final Color sahiCompletedJourneyBg;
   final Color sahiDivider;
+  final Color sahiMobileTabBarBg;
+  final Color sahiCardBorderColor;
+  final Color sahiCardTitleColor;
+  final Color sahiStreakProgressBg;
+  final Color sahiGradientPrimaryStart;
+  final Color sahiGradientPrimaryEnd;
+  final Color sahiButtonDisabledBgColor;
+  final Color sahiButtonDisabledTextColor;
 
   CustomColors(
       {required this.primary,
@@ -212,7 +220,15 @@ class CustomColors {
       required this.sahiTabInactiveText,
       required this.sahiPrimaryTextColor,
       required this.sahiCompletedJourneyBg,
-      required this.sahiDivider});
+      required this.sahiDivider,
+      required this.sahiMobileTabBarBg,
+      required this.sahiCardBorderColor,
+      required this.sahiCardTitleColor,
+      required this.sahiStreakProgressBg,
+      required this.sahiGradientPrimaryStart,
+      required this.sahiGradientPrimaryEnd,
+      required this.sahiButtonDisabledBgColor,
+      required this.sahiButtonDisabledTextColor});
 }
 
 extension ThemeDataExtension on ThemeData {
@@ -301,6 +317,14 @@ extension ThemeDataExtension on ThemeData {
         sahiPrimaryTextColor: const Color(0xff333333),
         sahiCompletedJourneyBg: const Color.fromRGBO(31, 150, 121, 1),
         sahiDivider: const Color(0xFFC9C4D3),
+        sahiMobileTabBarBg: const Color.fromRGBO(251, 251, 253, 0.95),
+        sahiCardBorderColor: const Color(0xffECECEC),
+        sahiCardTitleColor: const Color(0xff111827),
+        sahiStreakProgressBg: const Color(0xffE5E7EB),
+        sahiGradientPrimaryStart: const Color.fromRGBO(138, 17, 87, 1),
+        sahiGradientPrimaryEnd: const Color.fromRGBO(253, 68, 175, 1),
+        sahiButtonDisabledBgColor: const Color.fromRGBO(90, 79, 160, 0.1),
+        sahiButtonDisabledTextColor: const Color(0xff5A4FA0),
       );
     } else {
       return CustomColors(
@@ -387,6 +411,14 @@ extension ThemeDataExtension on ThemeData {
         sahiPrimaryTextColor: const Color(0xffEEEEEE),
         sahiCompletedJourneyBg: const Color.fromRGBO(32, 150, 166, 1),
         sahiDivider: const Color(0xFFC9C4D3),
+        sahiMobileTabBarBg: const Color.fromRGBO(251, 251, 253, 0.95),
+        sahiCardBorderColor: const Color(0xff374151),
+        sahiCardTitleColor: const Color(0xffF3F4F6),
+        sahiStreakProgressBg: const Color(0xff374151),
+        sahiGradientPrimaryStart: const Color.fromRGBO(138, 17, 87, 1),
+        sahiGradientPrimaryEnd: const Color.fromRGBO(253, 68, 175, 1),
+        sahiButtonDisabledBgColor: const Color(0xff374151),
+        sahiButtonDisabledTextColor: const Color(0xff6B7280),
       );
     }
   }

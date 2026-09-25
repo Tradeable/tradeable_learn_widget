@@ -49,14 +49,18 @@ import 'package:tradeable_learn_widget/dynamic_chart/widgets/custom_bottom_sheet
 import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
+import 'package:tradeable_learn_widget/sahi/sahi_compact_chart_screen.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/concept_video.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/instruction_content.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_toolbar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/prompt_panel.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/questions_tab.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/response_archive.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/sahi_compact_tabbar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_custom_table.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_dialog_widget.dart';
+import 'package:tradeable_learn_widget/sahi/sahi_compact_journey_view.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_insights_v2.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_preview_screen.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/sahi_tabbar.dart';
@@ -70,8 +74,13 @@ import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_le
 
 class SahiChartScreen extends StatefulWidget {
   final DynamicChartModel model;
+  final bool isCompactMode;
 
-  const SahiChartScreen({super.key, required this.model});
+  const SahiChartScreen({
+    super.key,
+    required this.model,
+    this.isCompactMode = false,
+  });
 
   @override
   State<SahiChartScreen> createState() => _SahiChartScreenState();
@@ -137,15 +146,21 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   bool _questionOptionSelected = false;
   int _promptPanelTabIndex = 0;
 
+  // Compact mode: tasks stay paused until the learner hits Proceed.
+  late bool _showCompact;
+  bool _tasksStarted = false;
+  bool _compactQuestionsOpen = false;
+
   @override
   void initState() {
     super.initState();
     recipe = widget.model.recipe;
     _extractJourneys();
+    _showCompact = widget.isCompactMode;
 
     if (recipe.tasks.isNotEmpty) {
       _currentTask = recipe.tasks.first;
-      _runAfterDelay();
+      if (!_showCompact) _runAfterDelay();
     }
     _activeChartKey = chartKey;
   }
@@ -156,9 +171,62 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         startTasks.map((t) => JourneyItem(id: t.journeyId)).toList();
   }
 
+  int get _journeyPosition {
+    final index = _journeyItems.indexWhere((item) => item.active);
+    return index == -1 ? 1 : index + 1;
+  }
+
+  double get _journeyProgress {
+    if (_journeyItems.isEmpty) return 0.0;
+    return (_journeyPosition / _journeyItems.length).clamp(0.0, 1.0);
+  }
+
+  bool get _showCompactQuestions {
+    return widget.isCompactMode &&
+        !_showCompact &&
+        _currentTask.taskType == TaskType.showSideNav &&
+        _compactQuestionsOpen;
+  }
+
+  bool get _showSwitchToQuestions {
+    return widget.isCompactMode &&
+        !_showCompact &&
+        _currentTask.taskType == TaskType.showSideNav &&
+        sideNavTasks.isNotEmpty &&
+        !_compactQuestionsOpen &&
+        !_questionOptionSelected;
+  }
+
+  void _showQuestionsPanel() {
+    setState(() {
+      _compactQuestionsOpen = true;
+      _promptPanelTabIndex = 1;
+    });
+  }
+
+  void _switchToChart() {
+    final chartIndex = tabs.indexWhere((tab) => tab["type"] == "chart");
+    if (chartIndex == -1) return;
+    setState(() => _compactQuestionsOpen = false);
+    _navigateToPage(chartIndex);
+  }
+
   void _runAfterDelay() async {
     await Future.delayed(const Duration(milliseconds: 300));
     _onTaskRun();
+  }
+
+  void _startTasks() {
+    if (_tasksStarted || recipe.tasks.isEmpty) return;
+    _tasksStarted = true;
+    _runAfterDelay();
+  }
+
+  void _onProceed() {
+    if (_showCompact) {
+      setState(() => _showCompact = false);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _startTasks());
   }
 
   void _onTaskRun() {
@@ -685,6 +753,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       _questionOptionSelected = false;
       expandedSideNavId = task.id;
       _promptPanelTabIndex = 1;
+      if (widget.isCompactMode) {
+        _compactQuestionsOpen = true;
+      }
     });
   }
 
@@ -759,6 +830,10 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   Future<void> _navigateToPage(int pageIndex) async {
     setState(() {
       _currentPageIndex = pageIndex;
+      if (widget.isCompactMode &&
+          _currentTask.taskType == TaskType.showSideNav) {
+        _compactQuestionsOpen = tabs[pageIndex]["type"] != "chart";
+      }
       if (tabs[pageIndex]["type"] == "option_chain") {
         _isOptionChainLoading = true;
       }
@@ -1066,6 +1141,39 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
+    if (_showCompact) {
+      return SahiCompactChartView(
+        progress: _journeyProgress,
+        videoUrl: courseVideoUrl,
+        onProceed: _onProceed,
+        journeyItems: _journeyItems,
+      );
+    }
+
+    if (widget.isCompactMode) {
+      final compactChart =
+          _blurWhenDialogVisible(_buildChartArea(colors, compact: true));
+      final compactQuestions =
+          _blurWhenDialogVisible(_buildPromptPanel(colors, compact: true));
+
+      return SahiCompactChartScreen(
+        progress: _journeyProgress,
+        chart: IndexedStack(
+          index: _showCompactQuestions ? 1 : 0,
+          children: [compactChart, compactQuestions],
+        ),
+        bottomAction: SizedBox(
+          height: 40,
+          child: _compactBottomAction(colors),
+        ),
+        aboveBottomAction:
+            _showSwitchToQuestions ? _buildSwitchToQuestionsButton() : null,
+        onBack: () => Navigator.of(context).pop(),
+        onWatch: () => launchVideoUrl(courseVideoUrl ?? conceptVideoUrl),
+        journeyItems: _journeyItems,
+      );
+    }
+
     return Scaffold(
       appBar: SahiTopBar(
         streakDays: 0,
@@ -1093,39 +1201,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                   _blurWhenDialogVisible(
                     SizedBox(
                       width: totalWidth * 0.24,
-                      child: PromptPanel(
-                        colors: colors,
-                        tabIndex: _promptPanelTabIndex,
-                        onTabChange: (index) =>
-                            setState(() => _promptPanelTabIndex = index),
-                        coreConcepts: coreConcepts,
-                        instructionBody: InstructionContent(
-                          task: _promptTask,
-                          colors: colors,
-                        ),
-                        questionsBody: QuestionsTab(
-                          tasks: sideNavTasks
-                              .where((t) => !answeredSideNavTasks
-                                  .any((a) => a.id == t.id))
-                              .toList(),
-                          expandedTaskId: expandedSideNavId,
-                          selectedDescriptions: sideNavSelectedDesc,
-                          colors: colors,
-                          onOptionSelect: (task, description) {
-                            setState(() {
-                              expandedSideNavId = task.id;
-                              sideNavSelectedDesc[task.id] = description;
-                              _questionOptionSelected = true;
-                            });
-                          },
-                        ),
-                        responseArchiveBody: ResponseArchive(
-                          tasks: answeredSideNavTasks,
-                          selectedDescriptions: sideNavSelectedDesc,
-                          colors: colors,
-                        ),
-                        actionContainer: _userActionContainer(colors),
-                      ),
+                      child: _buildPromptPanel(colors),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -1146,6 +1222,83 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   // ─── Right: Chart + Tabs + Action Area ───
 
+  Widget _buildPromptPanel(CustomColors colors, {bool compact = false}) {
+    return PromptPanel(
+      colors: colors,
+      compact: compact,
+      tabIndex: _promptPanelTabIndex,
+      onTabChange: (index) => setState(() => _promptPanelTabIndex = index),
+      coreConcepts: coreConcepts,
+      instructionBody: InstructionContent(
+        task: _promptTask,
+        colors: colors,
+      ),
+      questionsBody: QuestionsTab(
+        tasks: sideNavTasks
+            .where((t) => !answeredSideNavTasks.any((a) => a.id == t.id))
+            .toList(),
+        expandedTaskId: expandedSideNavId,
+        selectedDescriptions: sideNavSelectedDesc,
+        colors: colors,
+        onOptionSelect: (task, description) {
+          setState(() {
+            expandedSideNavId = task.id;
+            sideNavSelectedDesc[task.id] = description;
+            _questionOptionSelected = true;
+          });
+        },
+      ),
+      responseArchiveBody: ResponseArchive(
+        tasks: answeredSideNavTasks,
+        selectedDescriptions: sideNavSelectedDesc,
+        colors: colors,
+      ),
+      actionContainer:
+          compact ? _buildSwitchToChartButton() : _userActionContainer(colors),
+    );
+  }
+
+  Widget _buildSwitchToChartButton() {
+    return _buildCompactSwitchButton(
+      label: 'Switch to Chart',
+      onTap: _switchToChart,
+    );
+  }
+
+  Widget _buildSwitchToQuestionsButton() {
+    return _buildCompactSwitchButton(
+      label: 'Switch to Questions',
+      onTap: _showQuestionsPanel,
+    );
+  }
+
+  Widget _buildCompactSwitchButton({
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Center(
+      child: SizedBox(
+        height: 40,
+        child: ButtonWidget(
+          color: const Color.fromRGBO(138, 17, 87, 0.1),
+          btnContent: label,
+          onTap: onTap,
+          width: 130,
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(
+            color: Color.fromRGBO(138, 17, 87, 0.2),
+          ),
+          textStyle: const TextStyle(
+            color: Color.fromRGBO(138, 17, 87, 1),
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _blurWhenDialogVisible(Widget child) {
     if (!_isPopupVisible) return child;
     return ImageFiltered(
@@ -1154,19 +1307,19 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     );
   }
 
-  Widget _buildChartArea(CustomColors colors) {
+  Widget _buildChartArea(CustomColors colors, {bool compact = false}) {
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
 
-    return Container(
-      margin: const EdgeInsets.fromLTRB(0, 14, 12, 24),
-      decoration: BoxDecoration(
-        color: colors.cardBasicBackground,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
+    final content = Column(
+      children: [
+        if (compact)
+          SahiCompactTabBar(
+            tabs: tabs,
+            currentPageIndex: _currentPageIndex,
+            onTabTap: _navigateToPage,
+          )
+        else
           SahiTabBar(
             tabs: tabs,
             currentPageIndex: _currentPageIndex,
@@ -1180,73 +1333,83 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
             courseVideoUrl: courseVideoUrl,
             showCourseVideoBtn: showCourseVideoBtn,
           ),
-          if (_currentShowToolsTask != null)
-            SahiToolsBar(
-              tools: _buildToolsList(),
-              onToolTap: _onToolTap,
-              activeToolTitle: _selectedToolTitle,
-              trailing: GestureDetector(
-                onTap: _onClearTools,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 12),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(
-                      color: const Color(0x80C9C4D3),
-                      width: 1,
-                    ),
+        if (_currentShowToolsTask != null)
+          SahiToolsBar(
+            tools: _buildToolsList(),
+            onToolTap: _onToolTap,
+            activeToolTitle: _selectedToolTitle,
+            trailing: GestureDetector(
+              onTap: _onClearTools,
+              child: Container(
+                margin: const EdgeInsets.only(left: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: const Color(0x80C9C4D3),
+                    width: 1,
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.delete_outline,
-                          size: 14, color: const Color(0xFF2D2D2D)),
-                      const SizedBox(width: 4),
-                      Text('Clear',
-                          style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF2D2D2D))),
-                    ],
-                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.delete_outline,
+                        size: 14, color: const Color(0xFF2D2D2D)),
+                    const SizedBox(width: 4),
+                    Text('Clear',
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: const Color(0xFF2D2D2D))),
+                  ],
                 ),
               ),
             ),
-          Expanded(
-            child: tabs.isEmpty
-                ? const SizedBox.shrink()
-                : Container(
-                    color: Color(0xffFBFBFD),
-                    child: PageView.builder(
-                        controller: pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final tab = tabs[index];
-                          switch (tab["type"]) {
-                            case "chart":
-                              return _buildChartTab(tab, colors);
-                            case "option_chain":
-                              return _buildOptionChainTab(
-                                  tab, colors, textStyles);
-                            case "payoff":
-                              return _buildPayoffTab(tab, textStyles);
-                            case "insights":
-                              return _buildInsightsTab(tab);
-                            case "table":
-                              return _buildTableTab(tab);
-                            case "insights_v2":
-                              return _buildInsightsV2Tab(tab);
-                            default:
-                              return Container();
-                          }
-                        }),
-                  ),
           ),
-        ],
+        Expanded(
+          child: tabs.isEmpty
+              ? const SizedBox.shrink()
+              : Container(
+                  color: Color(0xffFBFBFD),
+                  child: PageView.builder(
+                      controller: pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final tab = tabs[index];
+                        switch (tab["type"]) {
+                          case "chart":
+                            return _buildChartTab(tab, colors,
+                                compact: compact);
+                          case "option_chain":
+                            return _buildOptionChainTab(
+                                tab, colors, textStyles);
+                          case "payoff":
+                            return _buildPayoffTab(tab, textStyles);
+                          case "insights":
+                            return _buildInsightsTab(tab);
+                          case "table":
+                            return _buildTableTab(tab);
+                          case "insights_v2":
+                            return _buildInsightsV2Tab(tab);
+                          default:
+                            return Container();
+                        }
+                      }),
+                ),
+        ),
+      ],
+    );
+
+    if (!compact) return content;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.cardBasicBackground,
       ),
+      clipBehavior: Clip.antiAlias,
+      child: content,
     );
   }
 
@@ -1256,19 +1419,24 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   //   });
   // }
 
-  Widget _buildChartTab(Map<String, String> tab, CustomColors colors) {
+  Widget _buildChartTab(Map<String, String> tab, CustomColors colors,
+      {bool compact = false}) {
     final taskId = tab["taskId"];
     final key = taskId != null && chartKeys.containsKey(taskId)
         ? chartKeys[taskId]!
         : chartKey;
+    final chart = Chart.from(
+        key: key, recipe: recipe, onInteraction: _onChartInteraction);
+
+    if (!compact) return chart;
+
     return Container(
       decoration: BoxDecoration(
         color: Color(0xffFBFBFD),
         borderRadius: BorderRadius.circular(12),
       ),
       margin: const EdgeInsets.all(16),
-      child: Chart.from(
-          key: key, recipe: recipe, onInteraction: _onChartInteraction),
+      child: chart,
     );
   }
 
@@ -1391,26 +1559,76 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   // ─── User action area ───
 
+  bool get _shouldBlurCompactBottomAction {
+    if (!widget.isCompactMode) return false;
+    if (_currentTask.taskType == TaskType.waitTask ||
+        _currentTask.taskType == TaskType.addMcq) {
+      return false;
+    }
+    if (_currentTask.taskType == TaskType.showSideNav) {
+      return _promptPanelTabIndex != 1 || !_questionOptionSelected;
+    }
+    return true;
+  }
+
+  Widget _compactBottomAction(CustomColors colors) {
+    final action = _userActionContainer(colors);
+    if (!_shouldBlurCompactBottomAction) return action;
+    return IgnorePointer(
+      child: ImageFiltered(
+        imageFilter: ui.ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+        child: action,
+      ),
+    );
+  }
+
+  Widget _compactBottomButton(
+    CustomColors colors, {
+    required String label,
+    VoidCallback? onTap,
+  }) {
+    return ButtonWidget(
+      color: colors.sahiToolbarActiveIconColor,
+      btnContent: label,
+      onTap: onTap,
+      borderRadius: BorderRadius.zero,
+      gradientColors: [
+        colors.sahiGradientPrimaryStart,
+        colors.sahiGradientPrimaryEnd,
+      ],
+    );
+  }
+
+  Widget _noActionButton(CustomColors colors) {
+    if (!widget.isCompactMode) return const SizedBox.shrink();
+    return _compactBottomButton(colors, label: 'Proceed');
+  }
+
   Widget _userActionContainer(CustomColors colors) {
+    void next() {
+      setState(() {
+        final answered =
+            sideNavTasks.where((t) => t.id == expandedSideNavId).toList();
+        for (final t in answered) {
+          if (!answeredSideNavTasks.any((a) => a.id == t.id)) {
+            answeredSideNavTasks.add(t);
+          }
+        }
+        expandedSideNavId = null;
+        _promptPanelTabIndex = 0;
+        _questionOptionSelected = false;
+      });
+      _onTaskFinish();
+    }
+
     if (_promptPanelTabIndex == 1 && _questionOptionSelected) {
+      if (widget.isCompactMode) {
+        return _compactBottomButton(colors, label: 'Next', onTap: next);
+      }
       return ButtonWidget(
         color: colors.sahiToolbarActiveIconColor,
         btnContent: 'Next',
-        onTap: () {
-          setState(() {
-            final answered =
-                sideNavTasks.where((t) => t.id == expandedSideNavId).toList();
-            for (final t in answered) {
-              if (!answeredSideNavTasks.any((a) => a.id == t.id)) {
-                answeredSideNavTasks.add(t);
-              }
-            }
-            expandedSideNavId = null;
-            _promptPanelTabIndex = 0;
-            _questionOptionSelected = false;
-          });
-          _onTaskFinish();
-        },
+        onTap: next,
       );
     }
     switch (_currentTask.taskType) {
@@ -1418,17 +1636,24 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       case TaskType.addIndicator:
       case TaskType.addLayer:
       case TaskType.addPrompt:
-        return const SizedBox.shrink();
+        return _noActionButton(colors);
       case TaskType.addMcq:
         return _mcqWidget(colors);
       case TaskType.waitTask:
+        if (widget.isCompactMode) {
+          return _compactBottomButton(
+            colors,
+            label: (_currentTask as WaitTask).btnText,
+            onTap: () => _onTaskFinish(),
+          );
+        }
         return ButtonWidget(
           color: colors.sahiToolbarActiveIconColor,
           btnContent: (_currentTask as WaitTask).btnText,
           onTap: () => _onTaskFinish(),
         );
       default:
-        return const SizedBox.shrink();
+        return _noActionButton(colors);
     }
   }
 

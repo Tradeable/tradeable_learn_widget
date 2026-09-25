@@ -14,6 +14,7 @@ class PromptPanel extends StatelessWidget {
   final Widget? responseArchiveBody;
   final Widget? actionContainer;
   final AddCoreConceptTask? coreConcepts;
+  final bool compact;
 
   const PromptPanel({
     super.key,
@@ -25,15 +26,17 @@ class PromptPanel extends StatelessWidget {
     this.coreConcepts,
     this.responseArchiveBody,
     this.actionContainer,
+    this.compact = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 14, 0, 24),
+      margin:
+          compact ? EdgeInsets.zero : const EdgeInsets.fromLTRB(12, 14, 0, 24),
       decoration: BoxDecoration(
         color: colors.dynamicChartInstructionBG,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: compact ? BorderRadius.zero : BorderRadius.circular(12),
       ),
       child: Column(
         children: [
@@ -52,8 +55,10 @@ class PromptPanel extends StatelessWidget {
                 if (constraints.maxWidth >= _minTotalTabWidth) {
                   return Row(
                     children: [
-                      Expanded(child: _buildTab('Instruction', 0)),
-                      const SizedBox(width: 8),
+                      if (!compact) ...[
+                        Expanded(child: _buildTab('Instruction', 0)),
+                        const SizedBox(width: 8),
+                      ],
                       Expanded(child: _buildTab('Questions', 1)),
                       const SizedBox(width: 8),
                       Expanded(child: _buildTab('Response Archive', 2)),
@@ -64,8 +69,10 @@ class PromptPanel extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _buildTab('Instruction', 0),
-                      const SizedBox(width: 8),
+                      if (!compact) ...[
+                        _buildTab('Instruction', 0),
+                        const SizedBox(width: 8),
+                      ],
                       _buildTab('Questions', 1),
                       const SizedBox(width: 8),
                       _buildTab('Response Archive', 2),
@@ -87,8 +94,13 @@ class PromptPanel extends StatelessWidget {
     );
   }
 
+  int get _activeTabIndex {
+    if (!compact) return tabIndex;
+    return tabIndex == 2 ? 2 : 1;
+  }
+
   Widget _buildTab(String label, int index) {
-    final isActive = tabIndex == index;
+    final isActive = _activeTabIndex == index;
     final tabColor =
         isActive ? colors.sahiTopBarBorder : colors.sahiToolbarIconColor;
     return GestureDetector(
@@ -125,11 +137,11 @@ class PromptPanel extends StatelessWidget {
       textDirection: TextDirection.ltr,
     )..layout();
     final perTab = painter.width + 24;
-    return perTab * 3;
+    return perTab * (compact ? 2 : 3);
   }
 
   Widget _buildContent() {
-    switch (tabIndex) {
+    switch (_activeTabIndex) {
       case 1:
         return questionsBody;
       case 2:
@@ -154,7 +166,8 @@ class PromptPanel extends StatelessWidget {
                   const SizedBox(height: 12),
                   Container(
                       // margin: const EdgeInsets.all(8),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           gradient: LinearGradient(colors: [
