@@ -52,16 +52,15 @@ class PromptPanel extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
             child: LayoutBuilder(
               builder: (context, constraints) {
+                final labels = _tabLabels;
+                final indices = _tabIndices;
                 if (constraints.maxWidth >= _minTotalTabWidth) {
                   return Row(
                     children: [
-                      if (!compact) ...[
-                        Expanded(child: _buildTab('Instruction', 0)),
-                        const SizedBox(width: 8),
+                      for (var i = 0; i < labels.length; i++) ...[
+                        if (i > 0) const SizedBox(width: 8),
+                        Expanded(child: _buildTab(labels[i], indices[i])),
                       ],
-                      Expanded(child: _buildTab('Questions', 1)),
-                      const SizedBox(width: 8),
-                      Expanded(child: _buildTab('Response Archive', 2)),
                     ],
                   );
                 }
@@ -69,13 +68,10 @@ class PromptPanel extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      if (!compact) ...[
-                        _buildTab('Instruction', 0),
-                        const SizedBox(width: 8),
+                      for (var i = 0; i < labels.length; i++) ...[
+                        if (i > 0) const SizedBox(width: 8),
+                        _buildTab(labels[i], indices[i]),
                       ],
-                      _buildTab('Questions', 1),
-                      const SizedBox(width: 8),
-                      _buildTab('Response Archive', 2),
                     ],
                   ),
                 );
@@ -94,10 +90,13 @@ class PromptPanel extends StatelessWidget {
     );
   }
 
-  int get _activeTabIndex {
-    if (!compact) return tabIndex;
-    return tabIndex == 2 ? 2 : 1;
-  }
+  List<String> get _tabLabels => compact
+      ? const ['Questions', 'Response Archive']
+      : const ['Instruction', 'Questions', 'Response Archive'];
+
+  List<int> get _tabIndices => compact ? const [1, 2] : const [0, 1, 2];
+
+  int get _activeTabIndex => compact && tabIndex == 0 ? 1 : tabIndex;
 
   Widget _buildTab(String label, int index) {
     final isActive = _activeTabIndex == index;
@@ -137,7 +136,7 @@ class PromptPanel extends StatelessWidget {
       textDirection: TextDirection.ltr,
     )..layout();
     final perTab = painter.width + 24;
-    return perTab * (compact ? 2 : 3);
+    return perTab * _tabIndices.length;
   }
 
   Widget _buildContent() {
@@ -156,6 +155,7 @@ class PromptPanel extends StatelessWidget {
               ),
             );
       default:
+        if (compact) return questionsBody;
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12),

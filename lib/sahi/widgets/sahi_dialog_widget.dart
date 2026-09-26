@@ -7,9 +7,13 @@ import 'package:tradeable_learn_widget/tlw.dart';
 class SahiDialogWidget extends StatefulWidget {
   final ShowPopupTask task;
   final VoidCallback moveNext;
+  final bool compact;
 
   const SahiDialogWidget(
-      {super.key, required this.task, required this.moveNext});
+      {super.key,
+      required this.task,
+      required this.moveNext,
+      this.compact = false});
 
   @override
   State<SahiDialogWidget> createState() => _SahiDialogWidgetState();
@@ -93,7 +97,17 @@ class _SahiDialogWidgetState extends State<SahiDialogWidget> {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: colors.sahiToolbarActiveIconColor,
+                    color: widget.compact
+                        ? null
+                        : colors.sahiToolbarActiveIconColor,
+                    gradient: widget.compact
+                        ? LinearGradient(
+                            colors: [
+                              colors.sahiGradientPrimaryStart,
+                              colors.sahiGradientPrimaryEnd,
+                            ],
+                          )
+                        : null,
                   ),
                   child: Center(
                     child: Text(task.buttonText,

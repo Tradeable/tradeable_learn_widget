@@ -121,6 +121,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   AddCoreConceptTask? coreConcepts;
   List<TableTask> tableTasks = [];
   Map<String, List<GlobalKey<SahiCustomTableState>>> tableWidgetKeys = {};
+  final _compactTabBarKey = GlobalKey<SahiCompactTabBarState>();
+  final _compactContentLink = LayerLink();
 
   // Tools
   ShowToolsTask? _currentShowToolsTask;
@@ -150,6 +152,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   late bool _showCompact;
   bool _tasksStarted = false;
   bool _compactQuestionsOpen = false;
+  bool _compactChartSurfaceRequested = false;
 
   @override
   void initState() {
@@ -185,7 +188,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     return widget.isCompactMode &&
         !_showCompact &&
         _currentTask.taskType == TaskType.showSideNav &&
-        _compactQuestionsOpen;
+        _compactQuestionsOpen &&
+        !_compactChartSurfaceRequested;
   }
 
   bool get _showSwitchToQuestions {
@@ -193,22 +197,31 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         !_showCompact &&
         _currentTask.taskType == TaskType.showSideNav &&
         sideNavTasks.isNotEmpty &&
-        !_compactQuestionsOpen &&
-        !_questionOptionSelected;
+        !_questionOptionSelected &&
+        (_compactChartSurfaceRequested || !_compactQuestionsOpen);
   }
 
   void _showQuestionsPanel() {
+    _compactTabBarKey.currentState?.hideInstructionTooltip();
     setState(() {
       _compactQuestionsOpen = true;
+      _compactChartSurfaceRequested = false;
       _promptPanelTabIndex = 1;
     });
   }
 
   void _switchToChart() {
-    final chartIndex = tabs.indexWhere((tab) => tab["type"] == "chart");
-    if (chartIndex == -1) return;
-    setState(() => _compactQuestionsOpen = false);
-    _navigateToPage(chartIndex);
+    _compactTabBarKey.currentState?.hideInstructionTooltip();
+    var targetIndex = _currentPageIndex;
+    if (targetIndex < 0 || targetIndex >= tabs.length) {
+      targetIndex = tabs.indexWhere((tab) => tab["type"] == "chart");
+    }
+    if (targetIndex == -1) return;
+    setState(() {
+      _compactQuestionsOpen = false;
+      _compactChartSurfaceRequested = true;
+    });
+    _navigateToPage(targetIndex);
   }
 
   void _runAfterDelay() async {
@@ -372,12 +385,16 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         setState(() {
           coreConcepts = _currentTask as AddCoreConceptTask;
         });
+        if (widget.isCompactMode) {
+          _showCompactKnowledgeHub();
+        }
         _onTaskFinish();
         break;
       case TaskType.removeCoreConcept:
         setState(() {
           coreConcepts = null;
         });
+        _compactTabBarKey.currentState?.hideInstructionTooltip();
         _onTaskFinish();
         break;
     }
@@ -451,7 +468,33 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     setState(() {
       _promptTask = _currentTask as AddPromptTask;
     });
+    if (widget.isCompactMode) {
+      _showCompactInstruction();
+    }
     _onTaskFinish();
+  }
+
+  bool get _compactQuestionsVisible =>
+      widget.isCompactMode && _compactQuestionsOpen;
+
+  void _showCompactInstruction() {
+    final text = _promptTask?.promptText ?? '';
+    if (text.trim().isEmpty) return;
+    _compactTabBarKey.currentState?.showInstructionTooltip(
+      text,
+      link: _compactQuestionsVisible ? _compactContentLink : null,
+      atTopRight: _compactQuestionsVisible,
+    );
+  }
+
+  void _showCompactKnowledgeHub() {
+    final text = coreConcepts?.description ?? '';
+    if (text.trim().isEmpty) return;
+    _compactTabBarKey.currentState?.showKnowledgeHubTooltip(
+      text,
+      link: _compactQuestionsVisible ? _compactContentLink : null,
+      atTopRight: _compactQuestionsVisible,
+    );
   }
 
   void _handleClearTask() {
@@ -646,7 +689,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
           builder: (context) {
             final task = _currentTask as ShowPopupTask;
             return SahiDialogWidget(
-                task: task, moveNext: () => Navigator.of(context).pop());
+                task: task,
+                moveNext: () => Navigator.of(context).pop(),
+                compact: widget.isCompactMode);
           }).then((_) {
         if (mounted) setState(() => _isPopupVisible = false);
         _onTaskFinish();
@@ -746,15 +791,18 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   void _handleShowSideNav() {
     final task = _currentTask as ShowSideNavTask;
+    final isNewTask = !sideNavTasks.any((t) => t.id == task.id);
+    if (!isNewTask) return;
+
     setState(() {
-      if (!sideNavTasks.any((t) => t.id == task.id)) {
-        sideNavTasks.add(task);
-      }
+      sideNavTasks.add(task);
       _questionOptionSelected = false;
       expandedSideNavId = task.id;
       _promptPanelTabIndex = 1;
       if (widget.isCompactMode) {
+        _compactTabBarKey.currentState?.hideInstructionTooltip();
         _compactQuestionsOpen = true;
+        _compactChartSurfaceRequested = false;
       }
     });
   }
@@ -830,9 +878,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   Future<void> _navigateToPage(int pageIndex) async {
     setState(() {
       _currentPageIndex = pageIndex;
-      if (widget.isCompactMode &&
-          _currentTask.taskType == TaskType.showSideNav) {
-        _compactQuestionsOpen = tabs[pageIndex]["type"] != "chart";
+      if (widget.isCompactMode) {
+        _compactQuestionsOpen = false;
+        _compactChartSurfaceRequested = true;
       }
       if (tabs[pageIndex]["type"] == "option_chain") {
         _isOptionChainLoading = true;
@@ -1158,12 +1206,15 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
       return SahiCompactChartScreen(
         progress: _journeyProgress,
-        chart: IndexedStack(
-          index: _showCompactQuestions ? 1 : 0,
-          children: [compactChart, compactQuestions],
+        chart: CompositedTransformTarget(
+          link: _compactContentLink,
+          child: IndexedStack(
+            index: _showCompactQuestions ? 1 : 0,
+            children: [compactChart, compactQuestions],
+          ),
         ),
         bottomAction: SizedBox(
-          height: 40,
+          height: 52,
           child: _compactBottomAction(colors),
         ),
         aboveBottomAction:
@@ -1260,7 +1311,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   Widget _buildSwitchToChartButton() {
     return _buildCompactSwitchButton(
-      label: 'Switch to Chart',
+      label: 'Switch to ${_tabTypeLabel(_currentTabType)}',
       onTap: _switchToChart,
     );
   }
@@ -1272,27 +1323,53 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     );
   }
 
+  String get _currentTabType =>
+      (_currentPageIndex >= 0 && _currentPageIndex < tabs.length)
+          ? (tabs[_currentPageIndex]["type"] ?? 'chart')
+          : 'chart';
+
+  String _tabTypeLabel(String type) {
+    switch (type) {
+      case 'chart':
+        return 'Chart';
+      case 'option_chain':
+        return 'Option Chain';
+      case 'payoff':
+        return 'Payoff';
+      case 'insights':
+      case 'insights_v2':
+        return 'Insights';
+      case 'table':
+        return 'Table';
+      default:
+        return 'Chart';
+    }
+  }
+
   Widget _buildCompactSwitchButton({
     required String label,
     required VoidCallback onTap,
   }) {
     return Center(
       child: SizedBox(
-        height: 40,
-        child: ButtonWidget(
-          color: const Color.fromRGBO(138, 17, 87, 0.1),
-          btnContent: label,
-          onTap: onTap,
-          width: 130,
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(138, 17, 87, 0.2),
-          ),
-          textStyle: const TextStyle(
-            color: Color.fromRGBO(138, 17, 87, 1),
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+        height: 44,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: ButtonWidget(
+            color: const Color.fromRGBO(138, 17, 87, 0.1),
+            btnContent: label,
+            onTap: onTap,
+            width: null,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(138, 17, 87, 0.2),
+            ),
+            textStyle: const TextStyle(
+              color: Color.fromRGBO(138, 17, 87, 1),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ),
@@ -1315,9 +1392,12 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
       children: [
         if (compact)
           SahiCompactTabBar(
+            key: _compactTabBarKey,
             tabs: tabs,
             currentPageIndex: _currentPageIndex,
             onTabTap: _navigateToPage,
+            onTaskTap: _showCompactInstruction,
+            onInstructionTap: _showCompactKnowledgeHub,
           )
         else
           SahiTabBar(

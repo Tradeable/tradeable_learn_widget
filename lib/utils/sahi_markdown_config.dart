@@ -79,7 +79,6 @@ final promptConfig = MarkdownConfig(
   ],
 );
 
-
 final coreConceptConfig = MarkdownConfig(
   configs: [
     PConfig(
@@ -118,3 +117,41 @@ final coreConceptConfig = MarkdownConfig(
     ),
   ],
 );
+
+MarkdownConfig tooltipMarkdownConfig(Color color) {
+  return MarkdownConfig(
+    configs: [
+      PConfig(
+        textStyle: TextStyle(
+          fontSize: 12,
+          height: 1.5,
+          color: color,
+        ),
+      ),
+      H1Config(
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          height: 1.3,
+          color: color,
+        ),
+      ),
+      H2Config(
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          height: 1.35,
+          color: color,
+        ),
+      ),
+      H3Config(
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          height: 1.4,
+          color: color,
+        ),
+      ),
+    ],
+  );
+}
