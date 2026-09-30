@@ -875,7 +875,15 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     if (_taskPointer < recipe.tasks.length) {
       _currentTask = recipe.tasks[_taskPointer];
       _onTaskRun();
+      return;
     }
+    _onJourneyFinished();
+  }
+  
+  void _onJourneyFinished() {
+    final navigator = Navigator.maybeOf(context);
+    if (navigator == null || !navigator.canPop()) return;
+    navigator.pop();
   }
 
   Future<void> _navigateToPage(int pageIndex) async {

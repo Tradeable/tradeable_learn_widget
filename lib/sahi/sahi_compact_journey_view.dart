@@ -5,7 +5,6 @@ import 'package:tradeable_learn_widget/sahi/widgets/continue_journey_button.dart
 import 'package:tradeable_learn_widget/sahi/widgets/course_progress_bar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_content_view.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
-import 'package:tradeable_learn_widget/sahi/widgets/journey_tabs.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_top_bar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/video_banner.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
@@ -43,6 +42,14 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
   void _unlock() {
     if (_contentUnlocked) return;
     setState(() => _contentUnlocked = true);
+  }
+
+  void _onPrimaryAction() {
+    if (_hasRecipe) {
+      widget.onProceed();
+      return;
+    }
+    Navigator.of(context).pop();
   }
 
   /// Scrolling past the top of the page counts as engaging with the chapter.
@@ -120,7 +127,7 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
       bottomNavigationBar: ContinueJourneyButton(
         text: _hasRecipe ? "Go to Journey" : "Next Chapter",
         enabled: _contentUnlocked,
-        onPressed: widget.onProceed,
+        onPressed: _onPrimaryAction,
         disabledIcon: Icons.lock_outline,
         disabledBackgroundColor: colors.sahiButtonDisabledBgColor,
         disabledTextColor: colors.secondary,
