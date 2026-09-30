@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tradeable_learn_widget/sahi/content/journey_content.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/concept_video.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/continue_journey_button.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/course_progress_bar.dart';
+import 'package:tradeable_learn_widget/sahi/widgets/journey_content_view.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_tabs.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_top_bar.dart';
@@ -14,12 +16,14 @@ class SahiCompactChartView extends StatefulWidget {
   final String? videoUrl;
   final VoidCallback onProceed;
   final List<JourneyItem> journeyItems;
+  final List<JourneyContentItem> content;
 
   const SahiCompactChartView({
     super.key,
     required this.progress,
     required this.onProceed,
     required this.journeyItems,
+    this.content = const [],
     this.videoUrl,
   });
 
@@ -28,10 +32,27 @@ class SahiCompactChartView extends StatefulWidget {
 }
 
 class _SahiCompactChartViewState extends State<SahiCompactChartView> {
-  bool _videoTapped = false;
+  bool _contentUnlocked = false;
+
+  /// A chapter that carries a recipe is the interactive journey itself, so the
+  /// tabs and the journey call to action only make sense there.
+  bool get _hasRecipe => widget.content.any(
+        (item) => item.type == JourneyContentType.recipe,
+      );
+
+  void _unlock() {
+    if (_contentUnlocked) return;
+    setState(() => _contentUnlocked = true);
+  }
+
+  /// Scrolling past the top of the page counts as engaging with the chapter.
+  bool _onScroll(ScrollNotification notification) {
+    if (notification.metrics.pixels > 0) _unlock();
+    return false;
+  }
 
   void _onVideoTap() {
-    setState(() => _videoTapped = true);
+    _unlock();
     launchVideoUrl(widget.videoUrl ?? conceptVideoUrl);
   }
 
@@ -39,12 +60,13 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
   Widget build(BuildContext context) {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
+    final content = widget.content;
 
     return Scaffold(
       backgroundColor: colors.sahiMobileTabBarBg,
       appBar: JourneyTopBar(
         onBack: () => Navigator.of(context).pop(),
-        onWatch: () => launchVideoUrl(widget.videoUrl ?? conceptVideoUrl),
+        onWatch: _onVideoTap,
         journeyItems: widget.journeyItems,
       ),
       body: Column(
@@ -57,38 +79,47 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
           ),
           Container(height: 8, color: colors.sahiTabBg),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  VideoBanner(
-                    onTap: _onVideoTap,
-                    image: const AssetImage('assets/bull.png'),
-                    borderRadius: 0,
-                    height: 200,
-                    iconWidget: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
+            child: NotificationListener<ScrollNotification>(
+              onNotification: _onScroll,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (content.isEmpty)
+                      VideoBanner(
+                        onTap: _onVideoTap,
+                        image: const AssetImage('assets/bull.png'),
+                        borderRadius: 0,
+                        height: 200,
+                        iconWidget: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Icon(
+                            Icons.play_arrow_outlined,
+                            color: Colors.black,
+                          ),
+                        ),
+                      )
+                    else
+                      JourneyContentView(
+                        items: content,
+                        onVideoTap: _onVideoTap,
+                        onInfographicSwipe: _unlock,
                       ),
-                      child: const Icon(
-                        Icons.play_arrow_outlined,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  const JourneyTabs(),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ],
       ),
       bottomNavigationBar: ContinueJourneyButton(
-        text: "Proceed",
-        enabled: _videoTapped,
+        text: _hasRecipe ? "Go to Journey" : "Next Chapter",
+        enabled: _contentUnlocked,
         onPressed: widget.onProceed,
         disabledIcon: Icons.lock_outline,
         disabledBackgroundColor: colors.sahiButtonDisabledBgColor,

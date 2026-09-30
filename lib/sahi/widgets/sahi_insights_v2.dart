@@ -37,7 +37,7 @@ class SahiInsightsV2 extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               final block = task.blocks[index];
-    
+
               if (block is TextBlock) {
                 return MarkdownWidget(
                     physics: const NeverScrollableScrollPhysics(),
@@ -103,7 +103,7 @@ class SahiInsightsV2 extends StatelessWidget {
                   ),
                 );
               }
-    
+
               return const SizedBox.shrink();
             },
           ),

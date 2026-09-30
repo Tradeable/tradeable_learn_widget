@@ -50,6 +50,7 @@ import 'package:tradeable_learn_widget/dynamic_chart/insights_widget.dart';
 import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibility_editor.dart';
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
 import 'package:tradeable_learn_widget/sahi/sahi_compact_chart_screen.dart';
+import 'package:tradeable_learn_widget/sahi/content/journey_content.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/concept_video.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/instruction_content.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
@@ -75,11 +76,13 @@ import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_le
 class SahiChartScreen extends StatefulWidget {
   final DynamicChartModel model;
   final bool isCompactMode;
+  final List<JourneyContentItem> content;
 
   const SahiChartScreen({
     super.key,
     required this.model,
     this.isCompactMode = false,
+    this.content = const [],
   });
 
   @override
@@ -1195,6 +1198,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         videoUrl: courseVideoUrl,
         onProceed: _onProceed,
         journeyItems: _journeyItems,
+        content: widget.content,
       );
     }
 

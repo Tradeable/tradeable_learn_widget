@@ -668,8 +668,7 @@ class SahiPreviewScreenState extends State<SahiPreviewScreen> {
                     width: leftColumns.length * _cellWidth,
                     child: _buildSectionLabel('CALL'),
                   ),
-                  SizedBox(
-                      width: _cellWidth, child: _buildSectionLabel(null)),
+                  SizedBox(width: _cellWidth, child: _buildSectionLabel(null)),
                   SizedBox(
                     width: rightColumns.length * _cellWidth,
                     child: _buildSectionLabel('PUT'),

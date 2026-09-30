@@ -96,7 +96,8 @@ class ResponseArchive extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: isSelected ? colors.sahiToolbarActiveBg : const Color(0xFFFBFBFD),
+        color:
+            isSelected ? colors.sahiToolbarActiveBg : const Color(0xFFFBFBFD),
         borderRadius: BorderRadius.circular(9),
         border: Border.all(
           color: isSelected

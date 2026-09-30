@@ -120,8 +120,8 @@ class _QuestionsTabState extends State<QuestionsTab>
           const SizedBox(height: 14),
           _AnimatedQuestionOption(
             label: task.primaryButtonText,
-            isSelected: widget.selectedDescriptions[task.id] ==
-                task.primaryDescription,
+            isSelected:
+                widget.selectedDescriptions[task.id] == task.primaryDescription,
             colors: widget.colors,
             onTap: () => widget.onOptionSelect(task, task.primaryDescription),
           ),
@@ -269,14 +269,13 @@ class _AnimatedQuestionOptionState extends State<_AnimatedQuestionOption> {
                   duration: const Duration(milliseconds: 240),
                   switchInCurve: Curves.easeOutBack,
                   switchOutCurve: Curves.easeIn,
-                  transitionBuilder: (child, animation) =>
-                      ScaleTransition(
-                        scale: animation,
-                        child: FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
-                      ),
+                  transitionBuilder: (child, animation) => ScaleTransition(
+                    scale: animation,
+                    child: FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    ),
+                  ),
                   child: isSelected
                       ? Icon(
                           Icons.check_circle_rounded,

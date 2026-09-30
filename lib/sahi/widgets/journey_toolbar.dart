@@ -62,7 +62,7 @@ class JourneyToolbar extends StatelessWidget {
               const SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
-                  if(videoUrl.isEmpty) return;
+                  if (videoUrl.isEmpty) return;
                   launchUrl(Uri.parse(videoUrl));
                 },
                 child: Container(
@@ -162,8 +162,8 @@ class JourneyToolbar extends StatelessWidget {
                                   Container(
                                     width: 2,
                                     height: 16,
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 6),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 6),
                                     color: colors.sahiTabBorder,
                                   ),
                               ],
