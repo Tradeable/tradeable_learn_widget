@@ -11,7 +11,6 @@ class SahiCompactChartScreen extends StatelessWidget {
   final Widget? aboveBottomAction;
   final double progress;
   final VoidCallback onBack;
-  final VoidCallback onWatch;
   final List<JourneyItem> journeyItems;
 
   const SahiCompactChartScreen({
@@ -21,7 +20,6 @@ class SahiCompactChartScreen extends StatelessWidget {
     this.aboveBottomAction,
     required this.progress,
     required this.onBack,
-    required this.onWatch,
     required this.journeyItems,
   });
 
@@ -34,7 +32,6 @@ class SahiCompactChartScreen extends StatelessWidget {
       backgroundColor: colors.sahiMobileTabBarBg,
       appBar: JourneyTopBar(
         onBack: onBack,
-        onWatch: onWatch,
         journeyItems: journeyItems,
         muted: true,
       ),

@@ -7,14 +7,12 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 
 class JourneyTopBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBack;
-  final VoidCallback onWatch;
   final List<JourneyItem> journeyItems;
   final bool muted;
 
   const JourneyTopBar({
     super.key,
     required this.onBack,
-    required this.onWatch,
     this.journeyItems = const [],
     this.muted = false,
   });
@@ -41,7 +39,6 @@ class JourneyTopBar extends StatelessWidget implements PreferredSizeWidget {
           SahiIosBackButton(onTap: onBack),
           const SizedBox(width: 12),
           _WatchButton(
-            onPressed: onWatch,
             startColor: colors.sahiGradientPrimaryStart,
             endColor: colors.sahiGradientPrimaryEnd,
             primaryColor: muted ? brandColor : colors.primary,
@@ -115,14 +112,12 @@ class _JourneyStrip extends StatelessWidget {
 }
 
 class _WatchButton extends StatelessWidget {
-  final VoidCallback onPressed;
   final Color startColor;
   final Color endColor;
   final Color primaryColor;
   final bool muted;
 
   const _WatchButton({
-    required this.onPressed,
     required this.startColor,
     required this.endColor,
     required this.primaryColor,
@@ -142,7 +137,6 @@ class _WatchButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onPressed,
           borderRadius: BorderRadius.circular(8),
           child: Row(
             mainAxisSize: MainAxisSize.min,

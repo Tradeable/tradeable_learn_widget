@@ -32,9 +32,6 @@ class SahiCompactChartView extends StatefulWidget {
 
 class _SahiCompactChartViewState extends State<SahiCompactChartView> {
   bool _contentUnlocked = false;
-
-  /// A chapter that carries a recipe is the interactive journey itself, so the
-  /// tabs and the journey call to action only make sense there.
   bool get _hasRecipe => widget.content.any(
         (item) => item.type == JourneyContentType.recipe,
       );
@@ -52,15 +49,29 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
     Navigator.of(context).pop();
   }
 
-  /// Scrolling past the top of the page counts as engaging with the chapter.
   bool _onScroll(ScrollNotification notification) {
     if (notification.metrics.pixels > 0) _unlock();
     return false;
   }
 
-  void _onVideoTap() {
+  String? get _videoUrl {
+    for (final item in widget.content) {
+      final url = item.url;
+      if (item.type == JourneyContentType.video &&
+          url != null &&
+          url.isNotEmpty) {
+        return url;
+      }
+    }
+    return widget.videoUrl;
+  }
+
+  void _onContentVideoTap() => _unlock();
+
+  void _onWatchTap() {
     _unlock();
-    launchVideoUrl(widget.videoUrl ?? conceptVideoUrl);
+    final url = _videoUrl;
+    if (url != null && url.isNotEmpty) launchVideoUrl(url);
   }
 
   @override
@@ -73,7 +84,6 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
       backgroundColor: colors.sahiMobileTabBarBg,
       appBar: JourneyTopBar(
         onBack: () => Navigator.of(context).pop(),
-        onWatch: _onVideoTap,
         journeyItems: widget.journeyItems,
       ),
       body: Column(
@@ -94,7 +104,7 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
                   children: [
                     if (content.isEmpty)
                       VideoBanner(
-                        onTap: _onVideoTap,
+                        onTap: _onWatchTap,
                         image: const AssetImage('assets/bull.png'),
                         borderRadius: 0,
                         height: 200,
@@ -114,7 +124,7 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
                     else
                       JourneyContentView(
                         items: content,
-                        onVideoTap: _onVideoTap,
+                        onVideoTap: _onContentVideoTap,
                         onInfographicSwipe: _unlock,
                       ),
                   ],

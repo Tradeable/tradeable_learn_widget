@@ -879,7 +879,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     }
     _onJourneyFinished();
   }
-  
+
   void _onJourneyFinished() {
     final navigator = Navigator.maybeOf(context);
     if (navigator == null || !navigator.canPop()) return;
@@ -1232,7 +1232,6 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         aboveBottomAction:
             _showSwitchToQuestions ? _buildSwitchToQuestionsButton() : null,
         onBack: () => Navigator.of(context).pop(),
-        onWatch: () => launchVideoUrl(courseVideoUrl ?? conceptVideoUrl),
         journeyItems: _journeyItems,
       );
     }
