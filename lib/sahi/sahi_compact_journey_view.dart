@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/sahi/content/journey_content.dart';
-import 'package:tradeable_learn_widget/sahi/widgets/concept_video.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/continue_journey_button.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/course_progress_bar.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_content_view.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_top_bar.dart';
-import 'package:tradeable_learn_widget/sahi/widgets/video_banner.dart';
 import 'package:tradeable_learn_widget/tlw.dart';
 import 'package:tradeable_learn_widget/utils/theme.dart';
 
@@ -14,6 +12,7 @@ class SahiCompactChartView extends StatefulWidget {
   final double progress;
   final String? videoUrl;
   final VoidCallback onProceed;
+  final VoidCallback onPlayWidget;
   final List<JourneyItem> journeyItems;
   final List<JourneyContentItem> content;
 
@@ -21,6 +20,7 @@ class SahiCompactChartView extends StatefulWidget {
     super.key,
     required this.progress,
     required this.onProceed,
+    required this.onPlayWidget,
     required this.journeyItems,
     this.content = const [],
     this.videoUrl,
@@ -35,6 +35,14 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
   bool get _hasRecipe => widget.content.any(
         (item) => item.type == JourneyContentType.recipe,
       );
+  bool get _hasPlayWidget => widget.content.any(
+        (item) => item.type == JourneyContentType.widget,
+      );
+
+  String get _primaryActionText {
+    if (_hasPlayWidget) return "Let's Play";
+    return _hasRecipe ? "Go to Journey" : "Next Chapter";
+  }
 
   void _unlock() {
     if (_contentUnlocked) return;
@@ -42,6 +50,10 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
   }
 
   void _onPrimaryAction() {
+    if (_hasPlayWidget) {
+      widget.onPlayWidget();
+      return;
+    }
     if (_hasRecipe) {
       widget.onProceed();
       return;
@@ -54,25 +66,7 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
     return false;
   }
 
-  String? get _videoUrl {
-    for (final item in widget.content) {
-      final url = item.url;
-      if (item.type == JourneyContentType.video &&
-          url != null &&
-          url.isNotEmpty) {
-        return url;
-      }
-    }
-    return widget.videoUrl;
-  }
-
   void _onContentVideoTap() => _unlock();
-
-  void _onWatchTap() {
-    _unlock();
-    final url = _videoUrl;
-    if (url != null && url.isNotEmpty) launchVideoUrl(url);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +79,9 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
       appBar: JourneyTopBar(
         onBack: () => Navigator.of(context).pop(),
         journeyItems: widget.journeyItems,
+        showJourney: _hasRecipe,
+        showPlayIcon: _hasPlayWidget,
+        playMuted: true,
       ),
       body: Column(
         children: [
@@ -102,31 +99,11 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (content.isEmpty)
-                      VideoBanner(
-                        onTap: _onWatchTap,
-                        image: const AssetImage('assets/bull.png'),
-                        borderRadius: 0,
-                        height: 200,
-                        iconWidget: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: const Icon(
-                            Icons.play_arrow_outlined,
-                            color: Colors.black,
-                          ),
-                        ),
-                      )
-                    else
-                      JourneyContentView(
-                        items: content,
-                        onVideoTap: _onContentVideoTap,
-                        onInfographicSwipe: _unlock,
-                      ),
+                    JourneyContentView(
+                      items: content,
+                      onVideoTap: _onContentVideoTap,
+                      onInfographicSwipe: _unlock,
+                    ),
                   ],
                 ),
               ),
@@ -135,7 +112,7 @@ class _SahiCompactChartViewState extends State<SahiCompactChartView> {
         ],
       ),
       bottomNavigationBar: ContinueJourneyButton(
-        text: _hasRecipe ? "Go to Journey" : "Next Chapter",
+        text: _primaryActionText,
         enabled: _contentUnlocked,
         onPressed: _onPrimaryAction,
         disabledIcon: Icons.lock_outline,

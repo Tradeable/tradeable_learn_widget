@@ -9,12 +9,18 @@ class JourneyTopBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBack;
   final List<JourneyItem> journeyItems;
   final bool muted;
+  final bool showJourney;
+  final bool showPlayIcon;
+  final bool playMuted;
 
   const JourneyTopBar({
     super.key,
     required this.onBack,
     this.journeyItems = const [],
     this.muted = false,
+    this.showJourney = true,
+    this.showPlayIcon = false,
+    this.playMuted = false,
   });
 
   @override
@@ -44,17 +50,28 @@ class JourneyTopBar extends StatelessWidget implements PreferredSizeWidget {
             primaryColor: muted ? brandColor : colors.primary,
             muted: muted,
           ),
-          const SizedBox(width: 20),
-          const Text("JOURNEY", style: TextStyle(fontSize: 10)),
-          if (journeyItems.isNotEmpty) ...[
-            const SizedBox(width: 12),
-            Expanded(
-              child: _JourneyStrip(
-                items: journeyItems,
-                colors: colors,
-                activeColor: brandColor,
-              ),
+          if (showPlayIcon) ...[
+            const SizedBox(width: 8),
+            _PlayIcon(
+              startColor: colors.sahiGradientPrimaryStart,
+              endColor: colors.sahiGradientPrimaryEnd,
+              primaryColor: playMuted ? brandColor : colors.primary,
+              muted: playMuted,
             ),
+          ],
+          if (showJourney) ...[
+            const SizedBox(width: 20),
+            const Text("JOURNEY", style: TextStyle(fontSize: 10)),
+            if (journeyItems.isNotEmpty) ...[
+              const SizedBox(width: 12),
+              Expanded(
+                child: _JourneyStrip(
+                  items: journeyItems,
+                  colors: colors,
+                  activeColor: brandColor,
+                ),
+              ),
+            ],
           ],
         ],
       ),
@@ -106,6 +123,38 @@ class _JourneyStrip extends StatelessWidget {
             );
           }),
         ),
+      ),
+    );
+  }
+}
+
+class _PlayIcon extends StatelessWidget {
+  final Color startColor;
+  final Color endColor;
+  final Color primaryColor;
+  final bool muted;
+
+  const _PlayIcon({
+    required this.startColor,
+    required this.endColor,
+    required this.primaryColor,
+    this.muted = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        gradient: muted ? null : LinearGradient(colors: [startColor, endColor]),
+        color: muted ? startColor.withAlpha((0.1 * 255).round()) : null,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(
+        Icons.videogame_asset_rounded,
+        size: 20,
+        color: muted ? primaryColor : Colors.white,
       ),
     );
   }

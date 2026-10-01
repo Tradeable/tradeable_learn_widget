@@ -12,6 +12,9 @@ class SahiCompactChartScreen extends StatelessWidget {
   final double progress;
   final VoidCallback onBack;
   final List<JourneyItem> journeyItems;
+  final bool showJourney;
+  final bool showPlayIcon;
+  final bool playMuted;
 
   const SahiCompactChartScreen({
     super.key,
@@ -21,6 +24,9 @@ class SahiCompactChartScreen extends StatelessWidget {
     required this.progress,
     required this.onBack,
     required this.journeyItems,
+    this.showJourney = true,
+    this.showPlayIcon = false,
+    this.playMuted = true,
   });
 
   @override
@@ -34,6 +40,9 @@ class SahiCompactChartScreen extends StatelessWidget {
         onBack: onBack,
         journeyItems: journeyItems,
         muted: true,
+        showJourney: showJourney,
+        showPlayIcon: showPlayIcon,
+        playMuted: playMuted,
       ),
       body: Column(
         children: [

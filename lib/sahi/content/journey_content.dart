@@ -9,13 +9,24 @@
 /// {"model_type": "blog",          "data": {"title": "...", "url": "..."}}
 /// {"model_type": "markdown_text", "data": {"content": "## Heading"}}
 /// {"model_type": "recipe",        "data": {"recipe": {...}}}
+/// {"model_type": "widget",        "data": {"type": "CA1.2", "data": {...}}}
 /// ```
 ///
 /// `recipe` is not rendered as a content block: it marks the chapter as the
 /// interactive journey itself, and carries the chart recipe json.
+///
+/// `widget` is not rendered either: it marks the chapter as having a playable
+/// activity, opened from the "Let's Play" action.
 library;
 
-enum JourneyContentType { video, infographic, blog, markdownText, recipe }
+enum JourneyContentType {
+  video,
+  infographic,
+  blog,
+  markdownText,
+  recipe,
+  widget
+}
 
 /// A single image inside an infographic block.
 class JourneyContentImage {
@@ -86,6 +97,13 @@ class JourneyContentItem {
   const JourneyContentItem.recipe(Map<String, dynamic> data)
       : this(type: JourneyContentType.recipe, data: data);
 
+  const JourneyContentItem.widget(Map<String, dynamic> data)
+      : this(type: JourneyContentType.widget, data: data);
+
+  /// The playable activity this block opens, e.g. `CA1.2` for
+  /// `{"type": "CA1.2", "data": {...}}`.
+  String? get widgetType => data == null ? null : _string(data, const ['type']);
+
   bool get hasMedia =>
       (url != null && url!.isNotEmpty) ||
       (image != null && image!.isNotEmpty) ||
@@ -129,6 +147,10 @@ class JourneyContentItem {
         final recipe = _map(data);
         if (recipe == null) return const [];
         return [JourneyContentItem.recipe(recipe)];
+      case 'widget':
+        final widgetData = _map(data);
+        if (widgetData == null) return const [];
+        return [JourneyContentItem.widget(widgetData)];
       case 'markdown_text':
       case 'markdown':
         return [
@@ -181,7 +203,7 @@ class JourneyContentItem {
 /// Parses a list of `{model_type, data}` widgets into renderable items.
 ///
 /// Accepts the raw `FlowWidget` payload, ignoring entries whose `model_type`
-/// is not one of the four supported types.
+/// is not supported.
 List<JourneyContentItem> parseJourneyWidgets(dynamic widgets) {
   if (widgets is! List) return const [];
   return widgets.expand((widget) {

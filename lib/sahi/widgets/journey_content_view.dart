@@ -70,6 +70,8 @@ class _ContentBlock extends StatelessWidget {
         return _MarkdownBlock(item: item);
       case JourneyContentType.recipe:
         return const SizedBox.shrink();
+      case JourneyContentType.widget:
+        return const SizedBox.shrink();
     }
   }
 }

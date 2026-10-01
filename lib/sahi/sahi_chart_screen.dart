@@ -51,7 +51,7 @@ import 'package:tradeable_learn_widget/dynamic_chart/option_chain/column_visibil
 import 'package:tradeable_learn_widget/option_strategy/option_strategy_container.dart';
 import 'package:tradeable_learn_widget/sahi/sahi_compact_chart_screen.dart';
 import 'package:tradeable_learn_widget/sahi/content/journey_content.dart';
-import 'package:tradeable_learn_widget/sahi/widgets/concept_video.dart';
+import 'package:tradeable_learn_widget/sahi/sahi_widget_screen.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/instruction_content.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
 import 'package:tradeable_learn_widget/sahi/widgets/journey_toolbar.dart';
@@ -153,6 +153,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   // Compact mode: tasks stay paused until the learner hits Proceed.
   late bool _showCompact;
+  bool _showPlayWidget = false;
+  bool _playWidgetLoading = false;
+  int _playWidgetIndex = 0;
   bool _tasksStarted = false;
   bool _compactQuestionsOpen = false;
   bool _compactChartSurfaceRequested = false;
@@ -185,6 +188,49 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   double get _journeyProgress {
     if (_journeyItems.isEmpty) return 0.0;
     return (_journeyPosition / _journeyItems.length).clamp(0.0, 1.0);
+  }
+
+  bool get _hasPlayWidget => widget.content.any(
+        (item) => item.type == JourneyContentType.widget,
+      );
+
+  bool get _hasRecipe => widget.content.any(
+        (item) => item.type == JourneyContentType.recipe,
+      );
+
+  List<JourneyContentItem> get _playWidgetItems => widget.content
+      .where((item) => item.type == JourneyContentType.widget)
+      .toList();
+
+  JourneyContentItem? get _playWidgetItem =>
+      _playWidgetItems.isEmpty ? null : _playWidgetItems[_playWidgetIndex];
+
+  bool get _hasNextPlayWidget => _playWidgetIndex + 1 < _playWidgetItems.length;
+
+  void _onPlayWidget() => setState(() {
+        _playWidgetIndex = 0;
+        _showPlayWidget = true;
+      });
+
+  void _onClosePlayWidget() => setState(() => _showPlayWidget = false);
+
+  void _onNextPlayWidget() async {
+    if (_hasNextPlayWidget) {
+      setState(() => _playWidgetLoading = true);
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
+      setState(() {
+        _playWidgetIndex++;
+        _playWidgetLoading = false;
+      });
+      return;
+    }
+    if (!_hasRecipe) {
+      Navigator.of(context).pop();
+      return;
+    }
+    setState(() => _showPlayWidget = false);
+    _onProceed();
   }
 
   bool get _showCompactQuestions {
@@ -1200,11 +1246,30 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     final colors =
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
 
+    if (_showPlayWidget) {
+      return SahiCompactChartScreen(
+        progress: _journeyProgress,
+        chart: _playWidgetLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SahiWidgetScreen(
+                activity: _playWidgetItem!,
+                onNext: _onNextPlayWidget,
+              ),
+        bottomAction: const SizedBox.shrink(),
+        onBack: _onClosePlayWidget,
+        journeyItems: _journeyItems,
+        showJourney: _hasRecipe,
+        showPlayIcon: _hasPlayWidget,
+        playMuted: false,
+      );
+    }
+
     if (_showCompact) {
       return SahiCompactChartView(
         progress: _journeyProgress,
         videoUrl: courseVideoUrl,
         onProceed: _onProceed,
+        onPlayWidget: _onPlayWidget,
         journeyItems: _journeyItems,
         content: widget.content,
       );
@@ -1233,6 +1298,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
             _showSwitchToQuestions ? _buildSwitchToQuestionsButton() : null,
         onBack: () => Navigator.of(context).pop(),
         journeyItems: _journeyItems,
+        showJourney: _hasRecipe,
+        showPlayIcon: _hasPlayWidget,
       );
     }
 
