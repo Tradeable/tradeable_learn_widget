@@ -98,7 +98,6 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
   AddPromptTask? _promptTask;
 
   // Tabs & pages
-  PageController pageController = PageController();
   List<Map<String, String>> tabs = [];
   int _currentPageIndex = 0;
 
@@ -943,8 +942,8 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
         _isOptionChainLoading = true;
       }
     });
-    await pageController.animateToPage(pageIndex,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    
+    await WidgetsBinding.instance.endOfFrame;
     if (tabs[pageIndex]["type"] == "option_chain") {
       await Future.delayed(const Duration(milliseconds: 100));
       if (mounted) setState(() => _isOptionChainLoading = false);
@@ -1531,11 +1530,9 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
               ? const SizedBox.shrink()
               : Container(
                   color: Color(0xffFBFBFD),
-                  child: PageView.builder(
-                      controller: pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final tab = tabs[index];
+                  child: IndexedStack(
+                      index: _currentPageIndex.clamp(0, tabs.length - 1),
+                      children: tabs.map((tab) {
                         switch (tab["type"]) {
                           case "chart":
                             return _buildChartTab(tab, colors,
@@ -1554,7 +1551,7 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
                           default:
                             return Container();
                         }
-                      }),
+                      }).toList()),
                 ),
         ),
       ],
@@ -1598,32 +1595,40 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     );
   }
 
+  Widget _optionChainLoading(
+      CustomColors colors, CustomStyles textStyles) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+          ),
+          const SizedBox(height: 16),
+          Text("Loading option chain...",
+              style: textStyles.mediumNormal
+                  .copyWith(color: colors.textColorSecondary)),
+        ],
+      ),
+    );
+  }
+
   Widget _buildOptionChainTab(
       Map<String, String> tab, CustomColors colors, CustomStyles textStyles) {
     if (_isOptionChainLoading) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-            ),
-            const SizedBox(height: 16),
-            Text("Loading option chain...",
-                style: textStyles.mediumNormal
-                    .copyWith(color: colors.textColorSecondary)),
-          ],
-        ),
-      );
+      return _optionChainLoading(colors, textStyles);
     }
     final taskId = tab["taskId"]!;
     final chooseTask = recipe.tasks
         .whereType<ChooseCorrectOptionValueChainTask>()
         .firstWhere((t) => t.taskId == taskId);
-    final optionChainTask = optionChainTasks.firstWhere(
-      (t) => t.optionChainId == chooseTask.taskId,
-      orElse: () => optionChainTasks.first,
-    );
+    final AddOptionChainTask? matched = optionChainTasks
+        .where((t) => t.optionChainId == chooseTask.taskId)
+        .firstOrNull;
+    final optionChainTask = matched ?? (optionChainTasks.isEmpty ? null : optionChainTasks.first);
+    if (optionChainTask == null) {
+      return _optionChainLoading(colors, textStyles);
+    }
     return SahiPreviewScreen.from(
         key: previewScreenKeys[taskId] ?? GlobalKey(),
         task: optionChainTask,
@@ -1861,7 +1866,6 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
 
   @override
   void dispose() {
-    pageController.dispose();
     super.dispose();
   }
 }
