@@ -446,7 +446,6 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                             child: Chart.from(
                                 key: _chartKey,
                                 recipe: recipe,
-                                theme: TLW().themeData,
                                 onInteraction: (p0, p1) {}),
                           );
                         case "option_chain":
