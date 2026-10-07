@@ -73,16 +73,28 @@ import 'package:tradeable_learn_widget/utils/theme.dart';
 import 'package:tradeable_learn_widget/option_strategy/models/option_strategy_leg.model.dart'
     as strategy;
 
+typedef SahiCompactIntroBuilder = Widget Function(
+  BuildContext context, {
+  required double progress,
+  required String? videoUrl,
+  required VoidCallback onProceed,
+  required VoidCallback onPlayWidget,
+  required List<JourneyItem> journeyItems,
+  required List<JourneyContentItem> content,
+});
+
 class SahiChartScreen extends StatefulWidget {
   final DynamicChartModel model;
   final bool isCompactMode;
   final List<JourneyContentItem> content;
+  final SahiCompactIntroBuilder? compactIntroBuilder;
 
   const SahiChartScreen({
     super.key,
     required this.model,
     this.isCompactMode = false,
     this.content = const [],
+    this.compactIntroBuilder,
   });
 
   @override
@@ -1264,6 +1276,18 @@ class _SahiChartScreenState extends State<SahiChartScreen> {
     }
 
     if (_showCompact) {
+      final introBuilder = widget.compactIntroBuilder;
+      if (introBuilder != null) {
+        return introBuilder(
+          context,
+          progress: _journeyProgress,
+          videoUrl: courseVideoUrl,
+          onProceed: _onProceed,
+          onPlayWidget: _onPlayWidget,
+          journeyItems: _journeyItems,
+          content: widget.content,
+        );
+      }
       return SahiCompactChartView(
         progress: _journeyProgress,
         videoUrl: courseVideoUrl,

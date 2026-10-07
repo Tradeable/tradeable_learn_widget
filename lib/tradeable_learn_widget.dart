@@ -125,3 +125,11 @@ export 'package:tradeable_learn_widget/order_type_v1/order_screen.dart';
 export 'package:tradeable_learn_widget/order_type_v1/order_type_v1.model.dart';
 
 export 'package:tradeable_learn_widget/sahi/sahi_chart_screen.dart';
+
+export 'package:tradeable_learn_widget/sahi/content/journey_content.dart';
+export 'package:tradeable_learn_widget/sahi/widgets/continue_journey_button.dart';
+export 'package:tradeable_learn_widget/sahi/widgets/course_progress_bar.dart';
+export 'package:tradeable_learn_widget/sahi/widgets/journey_content_view.dart';
+export 'package:tradeable_learn_widget/sahi/widgets/journey_item.dart';
+export 'package:tradeable_learn_widget/sahi/widgets/journey_toolbar_item.dart';
+export 'package:tradeable_learn_widget/sahi/widgets/sahi_ios_back_button.dart';
