@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:tradeable_learn_widget/utils/button_widget.dart';
@@ -21,7 +23,7 @@ class VideoEduCorner extends StatefulWidget {
 
 class _VideoEduCorner extends State<VideoEduCorner> {
   late YoutubePlayerController _controller;
-  Duration? videoDuration;
+  StreamSubscription<YoutubePlayerValue>? _playerStateSubscription;
   bool isPlay = false;
   bool finishedPlaying = false;
   bool showVideo = false;
@@ -29,24 +31,18 @@ class _VideoEduCorner extends State<VideoEduCorner> {
   @override
   void initState() {
     super.initState();
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.model.videoId,
-      flags: const YoutubePlayerFlags(
+    _controller = YoutubePlayerController.fromVideoId(
+      videoId: widget.model.videoId,
+      autoPlay: true,
+      params: const YoutubePlayerParams(
           captionLanguage: "en",
           enableCaption: true,
-          autoPlay: true,
           mute: false,
-          hideControls: false),
+          showControls: true),
     );
-    _controller.addListener(() {
-      if (_controller.value.isReady && _controller.value.isPlaying) {
-        setState(() {
-          videoDuration = _controller.metadata.duration;
-        });
-      }
-      if (videoDuration != null &&
-          videoDuration!.inSeconds != 0 &&
-          _controller.value.position.inSeconds == videoDuration!.inSeconds) {
+    _playerStateSubscription = _controller.stream.listen((value) {
+      if (!mounted) return;
+      if (value.playerState == PlayerState.ended) {
         setState(() {
           isPlay = false;
           finishedPlaying = true;
@@ -61,7 +57,8 @@ class _VideoEduCorner extends State<VideoEduCorner> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    unawaited(_playerStateSubscription?.cancel());
+    unawaited(_controller.close());
     super.dispose();
   }
 
@@ -94,8 +91,8 @@ class _VideoEduCorner extends State<VideoEduCorner> {
         TLW().themeData?.customColors ?? Theme.of(context).customColors;
     final textStyles =
         TLW().themeData?.customTextStyles ?? Theme.of(context).customTextStyles;
-    final thumbnailUrl =
-        YoutubePlayer.getThumbnail(videoId: widget.model.videoId);
+    final thumbnailUrl = YoutubePlayerController.getThumbnail(
+        videoId: widget.model.videoId);
 
     return Container(
       width: double.infinity,
@@ -207,12 +204,14 @@ class _VideoEduCorner extends State<VideoEduCorner> {
             ),
             finishedPlaying
                 ? IconButton(
-                    onPressed: () {
-                      _controller.seekTo(Duration.zero);
-                      _controller.play();
-                      setState(() {
-                        isPlay = true;
-                      });
+                    onPressed: () async {
+                      await _controller.seekTo(seconds: 0);
+                      await _controller.playVideo();
+                      if (mounted) {
+                        setState(() {
+                          isPlay = true;
+                        });
+                      }
                     },
                     icon: const Icon(Icons.replay, size: 50),
                   )
