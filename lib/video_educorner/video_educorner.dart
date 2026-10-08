@@ -27,6 +27,7 @@ class _VideoEduCorner extends State<VideoEduCorner> {
   bool isPlay = false;
   bool finishedPlaying = false;
   bool showVideo = false;
+  bool _loggedPlaying = false;
 
   @override
   void initState() {
@@ -42,6 +43,12 @@ class _VideoEduCorner extends State<VideoEduCorner> {
     );
     _playerStateSubscription = _controller.stream.listen((value) {
       if (!mounted) return;
+      // Diagnostic marker for on-device playback tests (logcat):
+      // proves the player actually reached playing state.
+      if (value.playerState == PlayerState.playing && !_loggedPlaying) {
+        _loggedPlaying = true;
+        debugPrint('TLW_VIDEO_PLAYING videoId=${widget.model.videoId}');
+      }
       if (value.playerState == PlayerState.ended) {
         setState(() {
           isPlay = false;
