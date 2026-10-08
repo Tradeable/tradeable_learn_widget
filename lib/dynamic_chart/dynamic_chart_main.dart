@@ -760,10 +760,18 @@ class _DynamicChartWidgetState extends State<DynamicChartWidget> {
                               ],
                             ),
                             const SizedBox(height: 4),
-                            MarkdownWidget(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                data: promptTask?.promptText ?? "")
+                            SizedBox(
+                              height: 120,
+                              child: Scrollbar(
+                                thumbVisibility: true,
+                                child: SingleChildScrollView(
+                                  child: MarkdownWidget(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      data: promptTask?.promptText ?? ""),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
