@@ -1150,7 +1150,7 @@ const dynamicChartModel = {
         "actionType": "empty",
         "taskType": "addPrompt",
         "promptText":
-            "On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.",
+            "On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.On Options Chain, pick a call with high Delta. This means you’ll capture more of each ₹1 move in the stock.",
         "isExplanation": false,
         "hint": "Delta above 0.7"
       },
